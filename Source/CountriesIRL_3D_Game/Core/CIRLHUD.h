@@ -21,6 +21,10 @@ public:
 
 	virtual void DrawHUD() override;
 
+	/** Dev/testing: date and time in the top-left corner */
+	void SetShowClock(bool bShow) { bShowClock = bShow; }
+	bool IsShowingClock() const { return bShowClock; }
+
 protected:
 
 	/** Distance from the left and bottom screen edges (1080p pixels) */
@@ -47,6 +51,10 @@ private:
 
 	/** Draws a bar with a dark frame; Percent fills from the left */
 	void DrawBar(float X, float Y, float Width, float Height, float Percent, const FLinearColor& Fill, float Alpha);
+
+	void DrawClock(float Scale);
+
+	bool bShowClock = false;
 
 	float StaminaBarAlpha = 0.f;
 	float TimeSinceStaminaFull = 0.f;

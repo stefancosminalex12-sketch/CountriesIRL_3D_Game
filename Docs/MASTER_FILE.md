@@ -60,6 +60,12 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
 - **Seasons and weather** are dynamic and affect the world [Decided]
 - **Story chapters can jump the calendar** (no waiting literal years) [Decided]
 - A playthrough covers a few in-game years; no fixed end date [Decided]
+- **Implementation (v0.1)** [Built]:
+  - **Start: Thursday 1 May 1455, 07:00** (a few weeks before St Albans, 22 May); set in Project Settings > CountriesIRL World, so DLC regions can change it
+  - **Julian calendar**, as England used until 1752: dates show as contemporaries wrote them; sun, moon and weekdays use the real astronomy (Julian + 9 days in the 1400s). Check: 22 May 1455 comes out as a Thursday, matching the historical record. The English year officially began on 25 March (Lady Day); the game shows the modern year number [Proposed]
+  - Clock = **local solar time** (medieval hours followed the sun); **real sun path for York (54°N)**: long summer days, short winter days; **moon with real phases** (1 May 1455 was near full moon)
+  - Nights are dark blue and moonlit but playable; new-moon nights keep a little starlight. Stars in the sky: later polish
+  - World orientation convention: **+X = north, +Y = east**
 
 ---
 
@@ -249,13 +255,15 @@ Start with the **commoner origin**; build what's designed so far and add feature
    - Fixed: feet crossing each other when strafing (A/D) → side-steps now; hands/feet going through objects → hands stop at walls, feet plant on the real ground (slopes/steps)
    - Playtest round 2 (user): hands confirmed fixed. Feet still overlapped a bit sideways → **sideways (A/D) movement in first-person is slower (70%)**, stance widens while side-stepping and feet keep an edge-to-edge gap. Stamina bar moved bottom-left and enlarged; **HP bar added** (100 base)
 2. [ ] Day/night (48 min) + weather
+   - 2a [x] World clock + calendar and `DayNightSky` (sun, moon, atmosphere, clouds, fog, exposure) following it
+   - 2b [ ] Weather (clear/cloudy/overcast/rain), seasons
 3. [ ] Yorkshire test landscape
 4. [ ] Village (free Fab assets, approved by the user first)
 5. [ ] Rideable horse
 6. [ ] Hit-zone combat + bandits
 7. [ ] Compass bar
 
-**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · V first/third-person · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing), `DevDamage 25`, `DevHeal 25`. Dev test level: `L_DevSandbox`.
+**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · V first/third-person · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing), `DevDamage 25`, `DevHeal 25`, `DevTime 21.5` (jump to a time), `DevTimeSpeed 60` (fast-forward; 1 = normal), `DevClock` (show date/time). Dev test level: `L_DevSandbox`.
 
 **Budget rule** [Decided]: use **free assets and tools as much as possible**, plus our own creations; only consider paid assets when nothing free works.
 

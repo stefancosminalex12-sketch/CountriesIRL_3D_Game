@@ -4,7 +4,9 @@
 #include "Characters/BallCharacter.h"
 #include "Characters/HealthComponent.h"
 #include "Characters/StaminaComponent.h"
+#include "World/WorldClockSubsystem.h"
 #include "Engine/Canvas.h"
+#include "Engine/Engine.h"
 
 void ACIRLHUD::DrawHUD()
 {
@@ -43,6 +45,23 @@ void ACIRLHUD::DrawHUD()
 		const FLinearColor Fill = Stamina->IsExhausted() ? FLinearColor(0.75f, 0.2f, 0.12f) : FLinearColor(0.92f, 0.82f, 0.55f);
 		DrawBar(X, StaminaY, Width, StaminaBarHeight * Scale, Percent, Fill, StaminaBarAlpha);
 	}
+
+	if (bShowClock)
+	{
+		DrawClock(Scale);
+	}
+}
+
+void ACIRLHUD::DrawClock(float Scale)
+{
+	const UWorldClockSubsystem* Clock = GetWorld()->GetSubsystem<UWorldClockSubsystem>();
+	if (!Clock)
+	{
+		return;
+	}
+
+	const FString Text = FString::Printf(TEXT("%s   %s"), *Clock->FormatDate(), *Clock->FormatTime());
+	DrawText(Text, FLinearColor(0.95f, 0.9f, 0.75f), Margin.X * Scale, Margin.X * Scale, GEngine->GetMediumFont(), Scale * 1.2f);
 }
 
 void ACIRLHUD::DrawBar(float X, float Y, float Width, float Height, float Percent, const FLinearColor& Fill, float Alpha)
