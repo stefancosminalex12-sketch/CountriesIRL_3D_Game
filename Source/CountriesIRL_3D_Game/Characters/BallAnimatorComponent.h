@@ -38,7 +38,7 @@ protected:
 
 	/** Distance covered by one full walk cycle (two steps), at walking and running speed */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
-	FVector2D StrideLength = FVector2D(80.f, 140.f);
+	FVector2D StrideLength = FVector2D(90.f, 130.f);
 
 	/** How far feet swing forward/back, walking and running */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
@@ -59,10 +59,6 @@ protected:
 	/** Forward lean at full run (degrees) */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
 	float MaxLean = 10.f;
-
-	/** Speed treated as a full run for blending */
-	UPROPERTY(EditAnywhere, Category="Ball|Animation")
-	float RunSpeedReference = 600.f;
 
 	/** Size of hands and feet in cm */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")

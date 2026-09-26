@@ -57,7 +57,8 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	// Movement state
 	const FVector Velocity2D = Ball->GetVelocity() * FVector(1.f, 1.f, 0.f);
 	const float Speed = Velocity2D.Size();
-	const float SpeedAlpha = FMath::Clamp(Speed / RunSpeedReference, 0.f, 1.f);
+	// 0 at a standstill, 1 at the owner's full running speed
+	const float SpeedAlpha = FMath::Clamp(Speed / FMath::Max(Ball->GetRunSpeed(), 1.f), 0.f, 1.f);
 	const bool bFalling = Ball->GetCharacterMovement()->IsFalling();
 	const bool bMoving = Speed > 10.f && !bFalling;
 

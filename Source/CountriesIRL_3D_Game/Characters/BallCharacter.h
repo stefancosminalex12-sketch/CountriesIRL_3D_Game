@@ -34,6 +34,8 @@ public:
 
 	float GetBallRadius() const { return BallRadius; }
 
+	float GetRunSpeed() const { return RunSpeed; }
+
 	/** Height of the ball's center relative to the capsule center */
 	float GetBallCenterZ() const;
 
@@ -84,10 +86,13 @@ protected:
 	EBallEmotion StartingEmotion = EBallEmotion::Neutral;
 
 	UPROPERTY(EditAnywhere, Category="Ball|Movement")
-	float WalkSpeed = 300.f;
+	float WalkSpeed = 220.f;
 
 	UPROPERTY(EditAnywhere, Category="Ball|Movement")
-	float RunSpeed = 600.f;
+	float RunSpeed = 400.f;
+
+	UPROPERTY(EditAnywhere, Category="Ball|Movement")
+	float JumpVelocity = 340.f;
 
 	bool bSprinting = false;
 };

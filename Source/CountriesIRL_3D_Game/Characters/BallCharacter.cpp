@@ -24,7 +24,7 @@ ABallCharacter::ABallCharacter()
 	Movement->MaxWalkSpeed = WalkSpeed;
 	Movement->MinAnalogWalkSpeed = 20.f;
 	Movement->BrakingDecelerationWalking = 2000.f;
-	Movement->JumpZVelocity = 450.f;
+	Movement->JumpZVelocity = JumpVelocity;
 	Movement->AirControl = 0.35f;
 
 	bUseControllerRotationPitch = false;
