@@ -12,8 +12,13 @@ class USceneComponent;
 class ABallCharacter;
 
 /**
- *  Procedural animation for a ball: floating Rayman-style hands and feet that step with movement,
- *  plus a body bob and lean. No skeleton needed; everything is driven by the owner's velocity.
+ *  Procedural animation for a ball: floating Rayman-style hands and feet, plus a body bob and lean.
+ *  No skeleton needed.
+ *
+ *  Feet really step: each foot stays planted on the ground until the body has moved too far from it,
+ *  then takes a step (an arc) to where it should be. So starting, stopping, strafing and turning on the
+ *  spot all produce natural footwork, and stopping ends with a settling step instead of a slide.
+ *  Hands swing with the opposite foot, and the body bobs with the steps.
  */
 UCLASS(ClassGroup=(Ball), meta=(BlueprintSpawnableComponent))
 class UBallAnimatorComponent : public UActorComponent
@@ -36,25 +41,27 @@ public:
 
 protected:
 
-	/** Distance covered by one full walk cycle (two steps), at walking and running speed */
-	UPROPERTY(EditAnywhere, Category="Ball|Animation")
-	FVector2D StrideLength = FVector2D(90.f, 130.f);
+	virtual void BeginPlay() override;
 
-	/** How far feet swing forward/back, walking and running */
+	/** How long one step takes, walking and running (seconds) */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
-	FVector2D FootSwing = FVector2D(14.f, 26.f);
+	FVector2D StepDuration = FVector2D(0.22f, 0.16f);
 
-	/** How high feet lift, walking and running */
+	/** How high feet lift during a step, walking and running */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
-	FVector2D FootLift = FVector2D(8.f, 16.f);
+	FVector2D FootLift = FVector2D(8.f, 15.f);
 
-	/** How far hands swing, walking and running */
+	/** When standing still, a foot this far from its resting spot takes a small settling step */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
-	FVector2D HandSwing = FVector2D(10.f, 24.f);
+	float SettleDistance = 4.f;
 
-	/** How much the body bounces each step, walking and running */
+	/** Hand swing per cm of foot offset (hands swing with the opposite foot) */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
-	FVector2D BodyBob = FVector2D(3.f, 7.f);
+	float HandSwingPerFootOffset = 0.8f;
+
+	/** How much the body rises with each step (fraction of the step's lift) */
+	UPROPERTY(EditAnywhere, Category="Ball|Animation")
+	float BodyBobPerLift = 0.4f;
 
 	/** Forward lean at full run (degrees) */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
@@ -67,17 +74,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
 	FVector FootSize = FVector(26.f, 15.f, 11.f);
 
-	/** Distance from the center line to each foot */
+	/** Distance from the center line to each foot's resting spot */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
-	float FootHalfSpacing = 16.f;
+	float FootHalfSpacing = 17.f;
 
-	/** Gap kept between the feet's edges when side-stepping, so they never overlap */
+	/** Gap kept between the feet's edges, so they never overlap */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
 	float MinFootGap = 4.f;
-
-	/** Extra distance each foot moves outward while side-stepping (wider stance) */
-	UPROPERTY(EditAnywhere, Category="Ball|Animation")
-	float StrafeStanceWiden = 7.f;
 
 	/** How far up/down a foot may reach to find the ground (slopes, steps) */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
@@ -85,8 +88,32 @@ protected:
 
 private:
 
-	/** Height of the ground under a foot relative to the capsule bottom (0 if nothing in reach) */
-	float GroundHeightUnder(const FVector& LocalFoot, float GroundZ) const;
+	/** Per-foot stepping state. Positions are world space, at the bottom center of the foot. */
+	struct FFootState
+	{
+		FVector Planted = FVector::ZeroVector;
+		FVector StepFrom = FVector::ZeroVector;
+		FVector StepTo = FVector::ZeroVector;
+		float StepAlpha = -1.f;
+		float StepTime = 0.2f;
+		float StepLift = 8.f;
+
+		bool IsStepping() const { return StepAlpha >= 0.f; }
+	};
+
+	void UpdateFeet(float DeltaTime, float SpeedAlpha, bool bFalling);
+
+	/** Where a foot should rest right now (world, on the ground) */
+	FVector FootRestWorld(int32 Index) const;
+
+	/** Current foot position (world, bottom center) including the step arc */
+	FVector FootWorld(int32 Index) const;
+
+	/** Keeps a target on the foot's own side of the body so the feet never cross or overlap */
+	FVector KeepOnOwnSide(int32 Index, const FVector& WorldTarget) const;
+
+	/** Ground height at a world XY near ReferenceZ (returns ReferenceZ if nothing in reach) */
+	float GroundZAt(const FVector& WorldPoint, float ReferenceZ) const;
 
 	/** Pulls a hand back toward the ball if it would go into a wall. Positions are in limb-root space. */
 	FVector KeepHandOutOfWalls(int32 Index, const FVector& LocalStart, const FVector& LocalTarget, float DeltaTime);
@@ -99,13 +126,10 @@ private:
 	UPROPERTY() TObjectPtr<UStaticMeshComponent> RightFoot;
 	UPROPERTY() TObjectPtr<USceneComponent> BodyPivot;
 
+	FFootState Feet[2];
+	bool bFeetPlanted = false;
+
 	bool bFirstPersonHands = false;
-
-	/** Walk cycle phase in radians */
-	float Phase = 0.f;
-
-	/** 0 = standing, 1 = moving (smoothed) */
-	float MoveBlend = 0.f;
 
 	/** 0 = grounded, 1 = in the air (smoothed) */
 	float AirBlend = 0.f;
@@ -113,12 +137,12 @@ private:
 	/** 0 = third-person hand pose, 1 = first-person hand pose (smoothed) */
 	float FirstPersonBlend = 0.f;
 
+	/** 0 = standing, 1 = moving (smoothed); used for idle breathing */
+	float MoveBlend = 0.f;
+
 	/** Local-space lean direction scaled by lean strength (smoothed) */
 	FVector SmoothedLean = FVector::ZeroVector;
 	float IdleTime = 0.f;
-
-	/** Smoothed ground height under each foot (left, right) */
-	float FootGroundOffset[2] = { 0.f, 0.f };
 
 	/** How far each hand may reach before a wall (1 = full reach) */
 	float HandReach[2] = { 1.f, 1.f };

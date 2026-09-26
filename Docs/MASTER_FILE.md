@@ -254,6 +254,7 @@ Start with the **commoner origin**; build what's designed so far and add feature
    - Stamina for running/jumping (see Gameplay Systems)
    - Fixed: feet crossing each other when strafing (A/D) → side-steps now; hands/feet going through objects → hands stop at walls, feet plant on the real ground (slopes/steps)
    - Playtest round 2 (user): hands confirmed fixed. Feet still overlapped a bit sideways → **sideways (A/D) movement in first-person is slower (70%)**, stance widens while side-stepping and feet keep an edge-to-edge gap. Stamina bar moved bottom-left and enlarged; **HP bar added** (100 base)
+   - Playtest round 3 (user): stopping (especially after walking sideways) looked abrupt because feet slid back to the idle pose → **feet now really step**: each foot stays planted until the body moves too far, then steps in an arc; stopping ends with small settling steps, turning on the spot steps too; hands swing with the opposite foot, the body bobs with the steps
 2. [ ] Day/night (48 min) + weather
    - 2a [x] World clock + calendar and `DayNightSky` (sun, moon, atmosphere, clouds, fog, exposure) following it
    - 2b [ ] Weather (clear/cloudy/overcast/rain), seasons
