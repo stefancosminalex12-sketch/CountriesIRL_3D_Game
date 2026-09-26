@@ -51,9 +51,7 @@ void APlayerBallCharacter::SetFirstPerson(bool bEnable)
 	FirstPersonCamera->SetActive(bEnable);
 	ThirdPersonCamera->SetActive(!bEnable);
 
-	// In first-person the body turns with the view; in third-person it turns toward where it walks
-	bUseControllerRotationYaw = bEnable;
-	GetCharacterMovement()->bOrientRotationToMovement = !bEnable;
+	UpdateRotationMode();
 
 	// Don't draw the ball from the inside; hands and feet stay visible
 	BodyMesh->SetOwnerNoSee(bEnable);
@@ -82,6 +80,8 @@ void APlayerBallCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	EIC->BindAction(Input->ToggleView, ETriggerEvent::Started, this, &APlayerBallCharacter::ToggleView);
 	EIC->BindAction(Input->CycleEmotion, ETriggerEvent::Started, this, &APlayerBallCharacter::CycleEmotion);
 	EIC->BindAction(Input->Attack, ETriggerEvent::Started, this, &APlayerBallCharacter::Attack);
+	EIC->BindAction(Input->Guard, ETriggerEvent::Started, this, &APlayerBallCharacter::StartGuard);
+	EIC->BindAction(Input->Guard, ETriggerEvent::Completed, this, &APlayerBallCharacter::StopGuard);
 }
 
 void APlayerBallCharacter::Move(const FInputActionValue& Value)
@@ -146,6 +146,39 @@ void APlayerBallCharacter::Tick(float DeltaTime)
 void APlayerBallCharacter::Attack()
 {
 	Melee->TryPunch();
+}
+
+void APlayerBallCharacter::StartGuard()
+{
+	Melee->SetGuarding(true);
+	UpdateRotationMode();
+}
+
+void APlayerBallCharacter::StopGuard()
+{
+	Melee->SetGuarding(false);
+	UpdateRotationMode();
+}
+
+void APlayerBallCharacter::DevGuard()
+{
+	if (Melee->WantsGuard())
+	{
+		StopGuard();
+	}
+	else
+	{
+		StartGuard();
+	}
+}
+
+void APlayerBallCharacter::UpdateRotationMode()
+{
+	// Face the view in first-person, and in third-person while guarding (fighting stance);
+	// otherwise turn toward where we walk
+	const bool bFaceView = bFirstPerson || Melee->WantsGuard();
+	bUseControllerRotationYaw = bFaceView;
+	GetCharacterMovement()->bOrientRotationToMovement = !bFaceView;
 }
 
 void APlayerBallCharacter::CycleEmotion()

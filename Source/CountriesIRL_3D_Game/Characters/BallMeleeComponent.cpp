@@ -57,6 +57,12 @@ void UBallMeleeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	CooldownLeft = FMath::Max(CooldownLeft - DeltaTime, 0.f);
+
+	if (IsGuarding())
+	{
+		CastChecked<ABallCharacter>(GetOwner())->GetStamina()->Drain(GuardStaminaPerSecond, DeltaTime);
+	}
+
 	if (!IsPunching())
 	{
 		return;
@@ -72,6 +78,30 @@ void UBallMeleeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	{
 		PunchTime = -1.f;
 	}
+}
+
+bool UBallMeleeComponent::IsGuarding() const
+{
+	const ABallCharacter* Ball = Cast<ABallCharacter>(GetOwner());
+	return bWantsGuard && Ball && !Ball->IsDead() && Ball->GetStamina()->HasStamina();
+}
+
+float UBallMeleeComponent::ModifyIncomingDamage(float Damage, const AActor* DamageCauser)
+{
+	const ABallCharacter* Ball = Cast<ABallCharacter>(GetOwner());
+	if (!IsGuarding() || !DamageCauser || !Ball)
+	{
+		return Damage;
+	}
+
+	// Only hits from roughly in front can be blocked
+	const FVector ToAttacker = (DamageCauser->GetActorLocation() - Ball->GetActorLocation()).GetSafeNormal2D();
+	if (FVector::DotProduct(Ball->GetActorForwardVector(), ToAttacker) < BlockCosine)
+	{
+		return Damage;
+	}
+
+	return Ball->GetStamina()->TryConsume(BlockStaminaCost) ? Damage * BlockDamageMultiplier : Damage;
 }
 
 EBallHitZone UBallMeleeComponent::ZoneForPoint(const ABallCharacter* Target, const FVector& WorldPoint)

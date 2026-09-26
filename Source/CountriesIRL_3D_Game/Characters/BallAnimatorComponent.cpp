@@ -28,18 +28,36 @@ void UBallAnimatorComponent::CreateLimbMeshes(AActor* Owner, USceneComponent* Li
 	BodyPivot = InBodyPivot;
 	LimbRoot = LimbParent;
 
-	LeftHand = BallParts::Create(Owner, TEXT("LeftHand"), LimbParent, SphereMesh);
-	RightHand = BallParts::Create(Owner, TEXT("RightHand"), LimbParent, SphereMesh);
-	LeftFoot = BallParts::Create(Owner, TEXT("LeftFoot"), LimbParent, SphereMesh);
-	RightFoot = BallParts::Create(Owner, TEXT("RightFoot"), LimbParent, SphereMesh);
+	UStaticMesh* CubeMesh = BallParts::LoadCube();
+	UStaticMesh* CylinderMesh = BallParts::LoadCylinder();
 
-	for (UStaticMeshComponent* Hand : { LeftHand.Get(), RightHand.Get() })
+	for (int32 Index = 0; Index < 2; ++Index)
 	{
-		Hand->SetRelativeScale3D(FVector(HandSize / 100.f));
-	}
-	for (UStaticMeshComponent* Foot : { LeftFoot.Get(), RightFoot.Get() })
-	{
-		Foot->SetRelativeScale3D(FootSize / 100.f);
+		const TCHAR* Prefix = Index == 0 ? TEXT("Left") : TEXT("Right");
+		auto PartName = [Prefix](const FString& Part) { return FName(*FString::Printf(TEXT("%s%s"), Prefix, *Part)); };
+
+		// Hand: palm plus four fingers and a thumb, each a cylinder with a round tip
+		FBallHandParts& Hand = Hands[Index];
+		Hand.Root = Owner->CreateDefaultSubobject<USceneComponent>(PartName(TEXT("Hand")));
+		Hand.Root->SetupAttachment(LimbParent);
+		Hand.Palm = BallParts::Create(Owner, PartName(TEXT("Palm")), Hand.Root, SphereMesh);
+		Hand.Palm->SetRelativeScale3D(PalmSize / 100.f);
+		for (int32 Finger = 0; Finger < 5; ++Finger)
+		{
+			Hand.Fingers.Add(BallParts::Create(Owner, PartName(FString::Printf(TEXT("Finger%d"), Finger)), Hand.Root, CylinderMesh));
+			Hand.Tips.Add(BallParts::Create(Owner, PartName(FString::Printf(TEXT("FingerTip%d"), Finger)), Hand.Root, SphereMesh));
+		}
+
+		// Boot: a flat sole, the foot and a short ankle shaft (origin at the middle of the foot)
+		FBallFootParts& Boot = Boots[Index];
+		Boot.Root = Owner->CreateDefaultSubobject<USceneComponent>(PartName(TEXT("Boot")));
+		Boot.Root->SetupAttachment(LimbParent);
+		Boot.Sole = BallParts::Create(Owner, PartName(TEXT("BootSole")), Boot.Root, CubeMesh);
+		Boot.Sole->SetRelativeTransform(FTransform(FRotator::ZeroRotator, FVector(0.f, 0.f, -FootSize.Z * 0.5f + 1.5f), FVector(FootSize.X + 1.f, FootSize.Y - 1.f, 3.f) / 100.f));
+		Boot.Upper = BallParts::Create(Owner, PartName(TEXT("BootUpper")), Boot.Root, SphereMesh);
+		Boot.Upper->SetRelativeTransform(FTransform(FRotator::ZeroRotator, FVector(1.5f, 0.f, 1.f), FVector(FootSize.X, FootSize.Y, FootSize.Z - 1.f) / 100.f));
+		Boot.Shaft = BallParts::Create(Owner, PartName(TEXT("BootShaft")), Boot.Root, CylinderMesh);
+		Boot.Shaft->SetRelativeTransform(FTransform(FRotator::ZeroRotator, FVector(-5.f, 0.f, 6.f), FVector(12.f, 12.f, 12.f) / 100.f));
 	}
 }
 
@@ -51,10 +69,57 @@ void UBallAnimatorComponent::BeginPlay()
 
 void UBallAnimatorComponent::ApplyColors(const FLinearColor& HandColor, const FLinearColor& FootColor)
 {
-	BallParts::SetColor(LeftHand, HandColor);
-	BallParts::SetColor(RightHand, HandColor);
-	BallParts::SetColor(LeftFoot, FootColor);
-	BallParts::SetColor(RightFoot, FootColor);
+	const FLinearColor SoleColor = FootColor * 0.45f;
+	for (int32 Index = 0; Index < 2; ++Index)
+	{
+		BallParts::SetColor(Hands[Index].Palm, HandColor);
+		for (UStaticMeshComponent* Part : Hands[Index].Fingers)
+		{
+			BallParts::SetColor(Part, HandColor);
+		}
+		for (UStaticMeshComponent* Part : Hands[Index].Tips)
+		{
+			BallParts::SetColor(Part, HandColor);
+		}
+
+		BallParts::SetColor(Boots[Index].Sole, SoleColor.CopyWithNewOpacity(1.f));
+		BallParts::SetColor(Boots[Index].Upper, FootColor);
+		BallParts::SetColor(Boots[Index].Shaft, FootColor);
+	}
+}
+
+void UBallAnimatorComponent::PoseHand(FBallHandParts& Hand, float Fist, float ThumbSide) const
+{
+	const float Curl = FMath::Lerp(RelaxedCurl, FistCurl, Fist);
+	if (FMath::Abs(Curl - Hand.AppliedCurl) < 0.5f || Hand.Fingers.Num() < 5)
+	{
+		return;
+	}
+	Hand.AppliedCurl = Curl;
+
+	// Hand space: X = along the fingers, Y = across the knuckles, Z = back of the hand. Fingers curl toward the palm (-Z).
+	auto PlaceFinger = [this](UStaticMeshComponent* Bone, UStaticMeshComponent* Tip, const FVector& Knuckle, const FVector& Direction, float Length, float Thickness)
+	{
+		const FRotator AlongFinger = FRotationMatrix::MakeFromZ(Direction).Rotator();
+		Bone->SetRelativeTransform(FTransform(AlongFinger, Knuckle + Direction * (Length * 0.5f), FVector(Thickness, Thickness, Length) / 100.f));
+		Tip->SetRelativeTransform(FTransform(FRotator::ZeroRotator, Knuckle + Direction * Length, FVector(Thickness * 1.05f) / 100.f));
+	};
+
+	const float CurlRadians = FMath::DegreesToRadians(Curl);
+	const FVector FingerDirection(FMath::Cos(CurlRadians), 0.f, -FMath::Sin(CurlRadians));
+	const float Lengths[4] = { 9.f, 10.f, 9.5f, 7.5f };   // index, middle, ring, little
+	for (int32 Finger = 0; Finger < 4; ++Finger)
+	{
+		// The index finger sits next to the thumb
+		const FVector Knuckle(PalmSize.X * 0.35f, ThumbSide * (6.f - 4.f * Finger), 0.5f);
+		PlaceFinger(Hand.Fingers[Finger], Hand.Tips[Finger], Knuckle, FingerDirection, Lengths[Finger], FingerThickness);
+	}
+
+	// Thumb: sticks out forward when relaxed, folds across the curled fingers in a fist
+	const FVector OpenThumb(0.7f, ThumbSide * 0.6f, -0.3f);
+	const FVector FistThumb(0.45f, -ThumbSide * 0.55f, -0.7f);
+	const FVector ThumbDirection = FMath::Lerp(OpenThumb, FistThumb, Fist).GetSafeNormal();
+	PlaceFinger(Hand.Fingers[4], Hand.Tips[4], FVector(0.5f, ThumbSide * 7.f, -2.f), ThumbDirection, 7.f, FingerThickness * 1.1f);
 }
 
 FVector UBallAnimatorComponent::FootRestWorld(int32 Index) const
@@ -190,7 +255,7 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	const ABallCharacter* Ball = Cast<ABallCharacter>(GetOwner());
-	if (!Ball || !LeftHand || !BodyPivot || !LimbRoot)
+	if (!Ball || !Hands[0].Root || !BodyPivot || !LimbRoot)
 	{
 		return;
 	}
@@ -245,30 +310,48 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 			? FVector(-96.f, Side(Index) * 16.f, GroundZ + FootSize.Z * 0.5f)
 			: FVector(Radius + 8.f, Side(Index) * 24.f, GroundZ + FootSize.Z * 0.5f);
 		Local = FMath::Lerp(Local, DeadFoot, DeadBlend);
-		(Index == 0 ? LeftFoot : RightFoot)->SetRelativeLocation(Local);
+		Boots[Index].Root->SetRelativeLocation(Local);
 	}
+
+	// Guard: fists up in front of the face
+	const UBallMeleeComponent* Melee = Ball->GetMelee();
+	GuardBlend = FMath::FInterpTo(GuardBlend, (Melee && Melee->IsGuarding() && !bDead) ? 1.f : 0.f, DeltaTime, 12.f);
+	int32 PunchHand = 0;
+	const float PunchExtension = Melee ? Melee->GetPunchExtension(PunchHand) : 0.f;
+	const FVector AimLocal = Root.InverseTransformVectorNoScale(Ball->GetBaseAimRotation().Vector());
 
 	// Hands: swing with the opposite foot (left hand forward when the right foot is forward)
 	const FVector ThirdPersonRest(8.f, Radius + 14.f, CenterZ - 4.f);
 	const FVector FirstPersonRest(Radius * 0.55f + 95.f, 45.f, CenterZ - 32.f);
 	const FVector HandRest = FMath::Lerp(ThirdPersonRest, FirstPersonRest, FirstPersonBlend);
-	const float SwingScale = HandSwingPerFootOffset * FMath::Lerp(1.f, 0.3f, FirstPersonBlend) * (1.f - AirBlend);
+	const FVector GuardRest = FMath::Lerp(FVector(Radius + 20.f, 17.f, CenterZ + 14.f), FVector(Radius * 0.55f + 58.f, 19.f, CenterZ + 2.f), FirstPersonBlend);
+	const float SwingScale = HandSwingPerFootOffset * FMath::Lerp(1.f, 0.3f, FirstPersonBlend) * (1.f - AirBlend) * (1.f - GuardBlend);
 	for (int32 Index = 0; Index < 2; ++Index)
 	{
 		FVector Hand(HandRest.X, Side(Index) * HandRest.Y, HandRest.Z);
 		Hand.X += FMath::Clamp(FootOffsetX[1 - Index] * SwingScale, -28.f, 28.f);
 		Hand.Z += FMath::Sin(IdleTime * 2.2f + Side(Index)) * 1.5f;
 		Hand += FVector(0.f, Side(Index) * 8.f, 22.f) * AirBlend;
+		Hand = FMath::Lerp(Hand, FVector(GuardRest.X, Side(Index) * GuardRest.Y, GuardRest.Z), GuardBlend);
 
-		// Punch: the fist shoots out toward where the ball is aiming, then pulls back
-		int32 PunchHand = 0;
-		const float PunchExtension = Ball->GetMelee() ? Ball->GetMelee()->GetPunchExtension(PunchHand) : 0.f;
+		// Which way the hand faces (hand X = along the fingers, Z = back of the hand)
+		const FQuat RelaxedRotation = FQuat::Slerp(
+			FRotationMatrix::MakeFromXZ(FVector(0.35f, 0.f, -1.f), FVector(0.f, Side(Index), 0.f)).ToQuat(),
+			FRotationMatrix::MakeFromXZ(FVector(1.f, 0.f, -0.6f), FVector(0.f, Side(Index) * 0.5f, 1.f)).ToQuat(),
+			FirstPersonBlend);
+		FQuat TargetRotation = GuardBlend > 0.5f
+			? FRotationMatrix::MakeFromXZ(FVector(0.9f, 0.f, 0.45f), FVector(0.f, Side(Index) * 0.8f, 0.6f)).ToQuat()
+			: RelaxedRotation;
+		bool bFist = GuardBlend > 0.5f;
+
+		// Punch: the fist shoots out toward where the ball is aiming, knuckles first, then pulls back
 		if (PunchExtension > 0.f && PunchHand == Index)
 		{
-			const FVector AimLocal = Root.InverseTransformVectorNoScale(Ball->GetBaseAimRotation().Vector());
 			const float PunchReach = FMath::Lerp(Radius + 55.f, FirstPersonRest.X + 25.f, FirstPersonBlend);
 			const FVector PunchTarget = FVector(0.f, 0.f, CenterZ) + AimLocal * PunchReach + FVector(0.f, Side(Index) * 10.f, 0.f);
 			Hand = FMath::Lerp(Hand, PunchTarget, PunchExtension);
+			TargetRotation = FRotationMatrix::MakeFromXZ(AimLocal, FVector::UpVector).ToQuat();
+			bFist = true;
 		}
 
 		Hand = KeepHandOutOfWalls(Index, FVector(0.f, 0.f, CenterZ), Hand, DeltaTime);
@@ -277,7 +360,18 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 			? FVector(-30.f, Side(Index) * 54.f, GroundZ + HandSize * 0.5f)
 			: FVector(-5.f, Side(Index) * (Radius + 10.f), GroundZ + HandSize * 0.5f);
 		Hand = FMath::Lerp(Hand, DeadHand, DeadBlend);
-		(Index == 0 ? LeftHand : RightHand)->SetRelativeLocation(Hand);
+		if (DeadBlend > 0.5f)
+		{
+			TargetRotation = FRotationMatrix::MakeFromXZ(FVector::ForwardVector, FVector::UpVector).ToQuat();
+			bFist = false;
+		}
+
+		HandRotation[Index] = FQuat::Slerp(HandRotation[Index], TargetRotation, 1.f - FMath::Exp(-DeltaTime * 18.f));
+		FistAmount[Index] = FMath::FInterpTo(FistAmount[Index], bFist ? 1.f : 0.f, DeltaTime, 20.f);
+
+		// The thumb is on the side of the hand facing the body
+		PoseHand(Hands[Index], FistAmount[Index], -Side(Index));
+		Hands[Index].Root->SetRelativeLocationAndRotation(Hand, HandRotation[Index]);
 	}
 
 	// Body: rises a little with each step, breathes when idle, leans into movement

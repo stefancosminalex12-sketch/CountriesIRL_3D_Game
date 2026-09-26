@@ -32,6 +32,7 @@ public:
 	UPROPERTY() TObjectPtr<UInputAction> Sprint;
 	UPROPERTY() TObjectPtr<UInputAction> ToggleView;
 	UPROPERTY() TObjectPtr<UInputAction> Attack;
+	UPROPERTY() TObjectPtr<UInputAction> Guard;
 
 	/** Debug: cycles through the ball's eye emotions */
 	UPROPERTY() TObjectPtr<UInputAction> CycleEmotion;

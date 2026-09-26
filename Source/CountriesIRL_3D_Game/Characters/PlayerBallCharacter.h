@@ -52,6 +52,10 @@ public:
 	UFUNCTION(Exec)
 	void DevPunch() { Attack(); }
 
+	/** Console (testing): toggle the guard (same as holding right click) */
+	UFUNCTION(Exec)
+	void DevGuard();
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -84,6 +88,9 @@ private:
 	void ToggleView() { SetFirstPerson(!bFirstPerson); }
 	void CycleEmotion();
 	void Attack();
+	void StartGuard();
+	void StopGuard();
+	void UpdateRotationMode();
 
 	bool bFirstPerson = false;
 

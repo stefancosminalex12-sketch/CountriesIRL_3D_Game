@@ -19,8 +19,7 @@ UBallSkeletonComponent::UBallSkeletonComponent()
 
 	SphereMesh = BallParts::LoadSphere();
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> Cylinder(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
-	CylinderMesh = Cylinder.Object;
+	CylinderMesh = BallParts::LoadCylinder();
 
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> Eyes(TEXT("/Game/CountriesIRL/Characters/Materials/M_BallEyes.M_BallEyes"));
 	EyeMaterial = Eyes.Object;

@@ -21,6 +21,8 @@ namespace BallParts
 	/** Gives a part a flat color (creates a dynamic material instance; call at runtime) */
 	void SetColor(UStaticMeshComponent* Part, const FLinearColor& Color);
 
-	/** Engine placeholder sphere (100 cm across at scale 1). Only valid inside a constructor. */
+	/** Engine placeholder shapes (100 cm across, cylinder 100 cm tall, at scale 1). Only valid inside a constructor. */
 	UStaticMesh* LoadSphere();
+	UStaticMesh* LoadCube();
+	UStaticMesh* LoadCylinder();
 }

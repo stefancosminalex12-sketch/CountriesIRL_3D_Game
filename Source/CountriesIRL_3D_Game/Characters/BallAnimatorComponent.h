@@ -11,6 +11,36 @@ class UStaticMeshComponent;
 class USceneComponent;
 class ABallCharacter;
 
+/** A floating hand: a palm, four cylinder fingers and a thumb (each with a round tip), posed by curling the fingers. */
+USTRUCT()
+struct FBallHandParts
+{
+	GENERATED_BODY()
+
+	/** Moved and rotated by the animator; everything else hangs from it */
+	UPROPERTY() TObjectPtr<USceneComponent> Root;
+	UPROPERTY() TObjectPtr<UStaticMeshComponent> Palm;
+
+	/** Index, middle, ring, little finger, then the thumb */
+	UPROPERTY() TArray<TObjectPtr<UStaticMeshComponent>> Fingers;
+	UPROPERTY() TArray<TObjectPtr<UStaticMeshComponent>> Tips;
+
+	/** Finger curl currently applied, to skip re-posing when nothing changed */
+	float AppliedCurl = -1.f;
+};
+
+/** A floating boot: sole, foot and a short ankle shaft. */
+USTRUCT()
+struct FBallFootParts
+{
+	GENERATED_BODY()
+
+	UPROPERTY() TObjectPtr<USceneComponent> Root;
+	UPROPERTY() TObjectPtr<UStaticMeshComponent> Sole;
+	UPROPERTY() TObjectPtr<UStaticMeshComponent> Upper;
+	UPROPERTY() TObjectPtr<UStaticMeshComponent> Shaft;
+};
+
 /**
  *  Procedural animation for a ball: floating Rayman-style hands and feet, plus a body bob and lean.
  *  No skeleton needed.
@@ -70,9 +100,24 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
 	float MaxLean = 10.f;
 
-	/** Size of hands and feet in cm */
+	/** Size of hands and feet in cm (HandSize is the space a hand takes, for wall checks) */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
 	float HandSize = 20.f;
+
+	/** Palm size in cm (length along the fingers, width across the knuckles, thickness) */
+	UPROPERTY(EditAnywhere, Category="Ball|Hands")
+	FVector PalmSize = FVector(14.f, 17.f, 9.f);
+
+	/** Finger thickness in cm */
+	UPROPERTY(EditAnywhere, Category="Ball|Hands")
+	float FingerThickness = 4.3f;
+
+	/** Finger bend in degrees: relaxed hands and clenched fists */
+	UPROPERTY(EditAnywhere, Category="Ball|Hands")
+	float RelaxedCurl = 30.f;
+
+	UPROPERTY(EditAnywhere, Category="Ball|Hands")
+	float FistCurl = 155.f;
 
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
 	FVector FootSize = FVector(26.f, 15.f, 11.f);
@@ -118,15 +163,17 @@ private:
 	/** Ground height at a world XY near ReferenceZ (returns ReferenceZ if nothing in reach) */
 	float GroundZAt(const FVector& WorldPoint, float ReferenceZ) const;
 
+	/** Places fingers and thumb for a curl between relaxed (0) and fist (1) */
+	void PoseHand(FBallHandParts& Hand, float FistAmount, float ThumbSide) const;
+
 	/** Pulls a hand back toward the ball if it would go into a wall. Positions are in limb-root space. */
 	FVector KeepHandOutOfWalls(int32 Index, const FVector& LocalStart, const FVector& LocalTarget, float DeltaTime);
 
 	UPROPERTY() TObjectPtr<USceneComponent> LimbRoot;
 
-	UPROPERTY() TObjectPtr<UStaticMeshComponent> LeftHand;
-	UPROPERTY() TObjectPtr<UStaticMeshComponent> RightHand;
-	UPROPERTY() TObjectPtr<UStaticMeshComponent> LeftFoot;
-	UPROPERTY() TObjectPtr<UStaticMeshComponent> RightFoot;
+	/** Left, right */
+	UPROPERTY() FBallHandParts Hands[2];
+	UPROPERTY() FBallFootParts Boots[2];
 	UPROPERTY() TObjectPtr<USceneComponent> BodyPivot;
 
 	FFootState Feet[2];
@@ -150,6 +197,13 @@ private:
 
 	/** 0 = alive pose, 1 = lying dead (smoothed) */
 	float DeadBlend = 0.f;
+
+	/** Smoothed hand orientation and fist amount (left, right) */
+	FQuat HandRotation[2] = { FQuat::Identity, FQuat::Identity };
+	float FistAmount[2] = { 0.f, 0.f };
+
+	/** 0 = hands down, 1 = guard up (smoothed) */
+	float GuardBlend = 0.f;
 
 	/** How far each hand may reach before a wall (1 = full reach) */
 	float HandReach[2] = { 1.f, 1.f };

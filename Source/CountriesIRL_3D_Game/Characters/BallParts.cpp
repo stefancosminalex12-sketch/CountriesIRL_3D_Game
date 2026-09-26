@@ -64,4 +64,16 @@ namespace BallParts
 		static ConstructorHelpers::FObjectFinder<UStaticMesh> Sphere(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
 		return Sphere.Object;
 	}
+
+	UStaticMesh* LoadCube()
+	{
+		static ConstructorHelpers::FObjectFinder<UStaticMesh> Cube(TEXT("/Engine/BasicShapes/Cube.Cube"));
+		return Cube.Object;
+	}
+
+	UStaticMesh* LoadCylinder()
+	{
+		static ConstructorHelpers::FObjectFinder<UStaticMesh> Cylinder(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
+		return Cylinder.Object;
+	}
 }

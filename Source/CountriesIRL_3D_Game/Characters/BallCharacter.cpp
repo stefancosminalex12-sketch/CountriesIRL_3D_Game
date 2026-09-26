@@ -83,7 +83,8 @@ bool ABallCharacter::IsDead() const
 
 float ABallCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	const float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	Damage = Melee->ModifyIncomingDamage(Damage, DamageCauser);
 	const float Removed = Health->ApplyDamage(Damage);
 	if (Removed > 0.f)
 	{
@@ -181,13 +182,15 @@ void ABallCharacter::Tick(float DeltaTime)
 
 	// Only drain stamina while actually running on the ground, not while holding the key standing still
 	const bool bMovingOnGround = GetVelocity().Size2D() > 10.f && GetCharacterMovement()->IsMovingOnGround();
-	bRunning = bWantsToRun && bMovingOnGround && Stamina->HasStamina();
+	// No running with the guard up, and moving is slower
+	const bool bGuarding = Melee->IsGuarding();
+	bRunning = bWantsToRun && bMovingOnGround && !bGuarding && Stamina->HasStamina();
 	if (bRunning)
 	{
 		Stamina->Drain(RunStaminaCost, DeltaTime);
 	}
 
-	GetCharacterMovement()->MaxWalkSpeed = bRunning ? RunSpeed : WalkSpeed;
+	GetCharacterMovement()->MaxWalkSpeed = bRunning ? RunSpeed : (bGuarding ? WalkSpeed * Melee->GetGuardMoveSpeedScale() : WalkSpeed);
 }
 
 bool ABallCharacter::CanJumpInternal_Implementation() const
