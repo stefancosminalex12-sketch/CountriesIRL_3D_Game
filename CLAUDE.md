@@ -6,6 +6,7 @@ Unreal Engine 5.8 C++ project (module `CountriesIRL_3D_Game`, started from the T
 - **Build (editor):** `"C:\Program Files\Epic Games\UE_5.8\Engine\Build\BatchFiles\Build.bat" CountriesIRL_3D_GameEditor Win64 Development "-Project=C:\Dev\CountriesIRL_3D_Game\CountriesIRL_3D_Game.uproject" -WaitMutex`
 - **MCP:** Unreal MCP auto-starts with the editor (http://127.0.0.1:8000/mcp). Blender MCP needs Blender opened via the "Blender MCP" desktop shortcut (localhost:9876).
 - Gameplay logic goes in C++; use Blueprints only for small visual hookups.
+- **Build it like a proper game, not a one-shot prompt:** implement one focused system/feature at a time, with a clean architecture that later features can build on; compile and test each step in the editor before moving on; commit each working step with a clear message; no giant all-at-once code dumps or throwaway hacks.
 - World data (settlements, houses, characters, units, events, quests) should be data-driven so DLC regions can be added as new data + art.
 - Large binary assets go through Git LFS (see `.gitattributes`).
 - **Current work:** follow the Build Roadmap in `Docs/MASTER_FILE.md` (commoner origin first, v0.1 → v0.2 → v0.3).
