@@ -71,9 +71,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
 	float FootHalfSpacing = 16.f;
 
-	/** Feet never get closer than this to each other when side-stepping */
+	/** Gap kept between the feet's edges when side-stepping, so they never overlap */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
-	float MinFootGap = 8.f;
+	float MinFootGap = 4.f;
+
+	/** Extra distance each foot moves outward while side-stepping (wider stance) */
+	UPROPERTY(EditAnywhere, Category="Ball|Animation")
+	float StrafeStanceWiden = 7.f;
 
 	/** How far up/down a foot may reach to find the ground (slopes, steps) */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")

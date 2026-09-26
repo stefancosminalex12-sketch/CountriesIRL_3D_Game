@@ -84,14 +84,19 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	// Feet: swing forward while lifted, push back while planted. Left and right are half a cycle apart.
 	// Sideways swing is limited so that when strafing the feet side-step instead of crossing each other.
 	const float FootSwingNow = FMath::Lerp(FootSwing.X, FootSwing.Y, SpeedAlpha) * MoveBlend;
-	const float SideSwingNow = FMath::Min(FootSwingNow, FMath::Max(FootHalfSpacing - MinFootGap * 0.5f, 0.f));
+	const float Lateral = FMath::Abs(MoveDirection.Y) * MoveBlend;
+	const float HalfSpacing = FootHalfSpacing + StrafeStanceWiden * Lateral;
+	// At closest approach the feet are 2 * (HalfSpacing - SideSwing) apart (center to center), which must
+	// leave MinFootGap between their edges
+	const float MaxSideSwing = FMath::Max(HalfSpacing - (FootSize.Y + MinFootGap) * 0.5f, 0.f);
+	const float SideSwingNow = FMath::Min(FootSwingNow, MaxSideSwing);
 	const FVector FootSwingVector(MoveDirection.X * FootSwingNow, MoveDirection.Y * SideSwingNow, 0.f);
 	const float FootLiftNow = FMath::Lerp(FootLift.X, FootLift.Y, SpeedAlpha) * MoveBlend;
 	for (int32 Index = 0; Index < 2; ++Index)
 	{
 		const float Side = Index == 0 ? -1.f : 1.f;
 		const float Theta = Phase + (Side > 0.f ? UE_PI : 0.f);
-		FVector Foot(2.f, Side * FootHalfSpacing, GroundZ + FootSize.Z * 0.5f);
+		FVector Foot(2.f, Side * HalfSpacing, GroundZ + FootSize.Z * 0.5f);
 		Foot += FootSwingVector * FMath::Sin(Theta);
 
 		// Plant on the real ground (slopes, steps) rather than the flat bottom of the capsule

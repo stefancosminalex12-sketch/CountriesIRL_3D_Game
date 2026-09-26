@@ -2,6 +2,8 @@
 
 #include "Characters/PlayerBallCharacter.h"
 #include "Characters/BallAnimatorComponent.h"
+#include "Characters/HealthComponent.h"
+#include "Engine/DamageEvents.h"
 #include "Core/CIRLInputConfig.h"
 #include "Core/CIRLPlayerController.h"
 #include "Camera/CameraComponent.h"
@@ -82,10 +84,16 @@ void APlayerBallCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 void APlayerBallCharacter::Move(const FInputActionValue& Value)
 {
-	const FVector2D Input = Value.Get<FVector2D>();
+	FVector2D Input = Value.Get<FVector2D>();
 	if (!Controller)
 	{
 		return;
+	}
+
+	// Side-steps are slower. Only in first-person: in third-person the ball turns to face where it walks.
+	if (bFirstPerson)
+	{
+		Input.X *= StrafeSpeedScale;
 	}
 
 	const FRotator YawRotation(0.f, Controller->GetControlRotation().Yaw, 0.f);
@@ -106,6 +114,16 @@ void APlayerBallCharacter::DevWalk(float Forward, float Right, float Seconds, bo
 	DevMoveInput = FVector2D(Right, Forward);
 	DevMoveTimeLeft = Seconds;
 	SetSprinting(bRun);
+}
+
+void APlayerBallCharacter::DevDamage(float Amount)
+{
+	TakeDamage(Amount, FDamageEvent(), GetController(), this);
+}
+
+void APlayerBallCharacter::DevHeal(float Amount)
+{
+	Health->Heal(Amount);
 }
 
 void APlayerBallCharacter::Tick(float DeltaTime)

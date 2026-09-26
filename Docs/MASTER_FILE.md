@@ -131,6 +131,8 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
 
 - Travel the world as your character; horses [Decided]
 - **Stamina** [Decided]: you can't run or jump indefinitely. Running drains stamina, each jump costs a chunk; it refills after a short rest. Running it to zero leaves you **exhausted** (can't run/jump) until it recovers partway. A small bar shows at the bottom of the screen only while stamina is not full (clean screen). Same component will serve NPCs, horses and later combat actions
+- **Health (HP)** [Decided]: **100 HP base**. Damage lowers it; at 0 the ball dies (x_x eyes, stops). For the player this leads to the reload flow in §7 (Death & saving) once saving exists. Whether HP regenerates on its own or only through rest/food/treatment: [Open]
+- **HUD bars** [Decided]: **bottom-left**, HP bar (red) with the stamina bar (parchment yellow) under it; bars are a bit larger and scale with resolution. HP always shown, stamina only while not full
 - **Equipment & inventory** [Decided]:
   - Equipment menu with gear slots: head, body, hands, feet, weapons (sword/shield/spear/bow… whatever you want to use)
   - **Layered clothing & armor, KCD-style** [Decided]: head = arming cap/coif + helmet (+ crest); body = undergarments (shirt/doublet) + padding (gambeson/aketon) + armor (mail/brigandine/plate) + optional over-layer (tabard/surcoat/livery jacket); hands = gloves/gauntlets; feet = shoes/boots/sabatons; plus cloak
@@ -245,6 +247,7 @@ Start with the **commoner origin**; build what's designed so far and add feature
    - Playtest tuning (user): walk 300→220, run 600→400, jump 450→340 ("a bit better now", fine for now)
    - Stamina for running/jumping (see Gameplay Systems)
    - Fixed: feet crossing each other when strafing (A/D) → side-steps now; hands/feet going through objects → hands stop at walls, feet plant on the real ground (slopes/steps)
+   - Playtest round 2 (user): hands confirmed fixed. Feet still overlapped a bit sideways → **sideways (A/D) movement in first-person is slower (70%)**, stance widens while side-stepping and feet keep an edge-to-edge gap. Stamina bar moved bottom-left and enlarged; **HP bar added** (100 base)
 2. [ ] Day/night (48 min) + weather
 3. [ ] Yorkshire test landscape
 4. [ ] Village (free Fab assets, approved by the user first)
@@ -252,7 +255,7 @@ Start with the **commoner origin**; build what's designed so far and add feature
 6. [ ] Hit-zone combat + bandits
 7. [ ] Compass bar
 
-**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · V first/third-person · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing). Dev test level: `L_DevSandbox`.
+**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · V first/third-person · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing), `DevDamage 25`, `DevHeal 25`. Dev test level: `L_DevSandbox`.
 
 **Budget rule** [Decided]: use **free assets and tools as much as possible**, plus our own creations; only consider paid assets when nothing free works.
 

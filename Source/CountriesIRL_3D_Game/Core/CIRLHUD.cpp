@@ -2,42 +2,57 @@
 
 #include "Core/CIRLHUD.h"
 #include "Characters/BallCharacter.h"
+#include "Characters/HealthComponent.h"
 #include "Characters/StaminaComponent.h"
 #include "Engine/Canvas.h"
 
 void ACIRLHUD::DrawHUD()
 {
 	Super::DrawHUD();
-	DrawStaminaBar();
+
+	const ABallCharacter* Ball = Cast<ABallCharacter>(GetOwningPawn());
+	if (!Ball || !Canvas)
+	{
+		return;
+	}
+
+	const float Scale = Canvas->ClipY / 1080.f;
+	const float X = Margin.X * Scale;
+	const float Width = BarWidth * Scale;
+
+	// Stack from the bottom up: stamina at the bottom, health above it
+	const float StaminaY = Canvas->ClipY - (Margin.Y + StaminaBarHeight) * Scale;
+	const float HealthY = StaminaY - (BarSpacing + HealthBarHeight) * Scale;
+
+	if (const UHealthComponent* Health = Ball->GetHealth())
+	{
+		DrawBar(X, HealthY, Width, HealthBarHeight * Scale, Health->GetHealthPercent(), FLinearColor(0.62f, 0.07f, 0.05f), 1.f);
+	}
+
+	if (const UStaminaComponent* Stamina = Ball->GetStamina())
+	{
+		const float DeltaTime = GetWorld()->GetDeltaSeconds();
+		const float Percent = Stamina->GetStaminaPercent();
+
+		// Show while not full; fade out a moment after it fills up
+		TimeSinceStaminaFull = Percent >= 1.f ? TimeSinceStaminaFull + DeltaTime : 0.f;
+		const float TargetAlpha = TimeSinceStaminaFull < StaminaFadeDelay ? 1.f : 0.f;
+		StaminaBarAlpha = FMath::FInterpTo(StaminaBarAlpha, TargetAlpha, DeltaTime, 6.f);
+
+		// Parchment-ish fill; turns reddish while exhausted
+		const FLinearColor Fill = Stamina->IsExhausted() ? FLinearColor(0.75f, 0.2f, 0.12f) : FLinearColor(0.92f, 0.82f, 0.55f);
+		DrawBar(X, StaminaY, Width, StaminaBarHeight * Scale, Percent, Fill, StaminaBarAlpha);
+	}
 }
 
-void ACIRLHUD::DrawStaminaBar()
+void ACIRLHUD::DrawBar(float X, float Y, float Width, float Height, float Percent, const FLinearColor& Fill, float Alpha)
 {
-	const ABallCharacter* Ball = Cast<ABallCharacter>(GetOwningPawn());
-	const UStaminaComponent* Stamina = Ball ? Ball->GetStamina() : nullptr;
-	if (!Stamina || !Canvas)
+	if (Alpha < 0.01f)
 	{
 		return;
 	}
 
-	const float DeltaTime = GetWorld()->GetDeltaSeconds();
-	const float Percent = Stamina->GetStaminaPercent();
-
-	// Show while not full; fade out a moment after it fills up
-	TimeSinceStaminaFull = Percent >= 1.f ? TimeSinceStaminaFull + DeltaTime : 0.f;
-	const float TargetAlpha = TimeSinceStaminaFull < StaminaFadeDelay ? 1.f : 0.f;
-	StaminaBarAlpha = FMath::FInterpTo(StaminaBarAlpha, TargetAlpha, DeltaTime, 6.f);
-	if (StaminaBarAlpha < 0.01f)
-	{
-		return;
-	}
-
-	const float X = (Canvas->ClipX - StaminaBarSize.X) * 0.5f;
-	const float Y = Canvas->ClipY * StaminaBarHeight;
-
-	// Parchment-ish fill; turns reddish while exhausted
-	const FLinearColor Fill = Stamina->IsExhausted() ? FLinearColor(0.75f, 0.2f, 0.12f) : FLinearColor(0.92f, 0.82f, 0.55f);
-
-	DrawRect(FLinearColor(0.f, 0.f, 0.f, 0.45f * StaminaBarAlpha), X - 2.f, Y - 2.f, StaminaBarSize.X + 4.f, StaminaBarSize.Y + 4.f);
-	DrawRect(Fill.CopyWithNewOpacity(0.9f * StaminaBarAlpha), X, Y, StaminaBarSize.X * Percent, StaminaBarSize.Y);
+	const float Border = FMath::Max(2.f, Height * 0.2f);
+	DrawRect(FLinearColor(0.f, 0.f, 0.f, 0.5f * Alpha), X - Border, Y - Border, Width + Border * 2.f, Height + Border * 2.f);
+	DrawRect(Fill.CopyWithNewOpacity(0.92f * Alpha), X, Y, Width * FMath::Clamp(Percent, 0.f, 1.f), Height);
 }

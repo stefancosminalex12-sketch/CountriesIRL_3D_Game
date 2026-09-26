@@ -10,6 +10,7 @@
 class UStaticMeshComponent;
 class UBallAnimatorComponent;
 class UStaminaComponent;
+class UHealthComponent;
 
 /**
  *  Base class for every person in the game: a countryball with eyes, floating hands and feet.
@@ -38,6 +39,14 @@ public:
 	bool IsRunning() const { return bRunning; }
 
 	UStaminaComponent* GetStamina() const { return Stamina; }
+
+	UHealthComponent* GetHealth() const { return Health; }
+
+	UFUNCTION(BlueprintPure, Category="Ball")
+	bool IsDead() const;
+
+	/** All damage goes through here (combat, falls, fire...) */
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	float GetBallRadius() const { return BallRadius; }
 
@@ -75,6 +84,13 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	TObjectPtr<UStaminaComponent> Stamina;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	TObjectPtr<UHealthComponent> Health;
+
+	/** Health reached zero: x_x eyes, stop moving. (Player reload/capture flow comes later.) */
+	UFUNCTION()
+	virtual void HandleDeath(UHealthComponent* DepletedHealth);
 
 	/** Ball radius in cm */
 	UPROPERTY(VisibleAnywhere, Category="Ball")

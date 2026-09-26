@@ -4,6 +4,7 @@
 #include "Characters/BallAnimatorComponent.h"
 #include "Characters/BallParts.h"
 #include "Characters/StaminaComponent.h"
+#include "Characters/HealthComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -51,6 +52,7 @@ ABallCharacter::ABallCharacter()
 	Animator->CreateLimbMeshes(this, VisualRoot, BodyPivot, Sphere);
 
 	Stamina = CreateDefaultSubobject<UStaminaComponent>(TEXT("Stamina"));
+	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 }
 
 void ABallCharacter::BeginPlay()
@@ -62,6 +64,26 @@ void ABallCharacter::BeginPlay()
 
 	SetEmotion(StartingEmotion);
 	SetSprinting(false);
+
+	Health->OnDepleted.AddDynamic(this, &ABallCharacter::HandleDeath);
+}
+
+bool ABallCharacter::IsDead() const
+{
+	return Health->IsDepleted();
+}
+
+float ABallCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	const float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	return Health->ApplyDamage(Damage);
+}
+
+void ABallCharacter::HandleDeath(UHealthComponent* DepletedHealth)
+{
+	SetEmotion(EBallEmotion::Dead);
+	SetSprinting(false);
+	GetCharacterMovement()->DisableMovement();
 }
 
 float ABallCharacter::GetBallCenterZ() const

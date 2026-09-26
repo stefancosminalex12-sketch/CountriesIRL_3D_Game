@@ -7,9 +7,10 @@
 #include "CIRLHUD.generated.h"
 
 /**
- *  Minimal in-game HUD. Keeps the screen clean (design: no clutter): the stamina bar only shows
- *  while stamina is being used or refilling, then fades out.
- *  Placeholder drawing; moves to UMG when the compass bar is built.
+ *  Minimal in-game HUD, bottom-left: health bar (always shown) with the stamina bar under it
+ *  (only while stamina is not full, then it fades so the screen stays clean).
+ *  Sizes are for a 1080p screen and scale with resolution.
+ *  Placeholder canvas drawing; moves to UMG when the compass bar is built.
  */
 UCLASS()
 class ACIRLHUD : public AHUD
@@ -22,20 +23,30 @@ public:
 
 protected:
 
+	/** Distance from the left and bottom screen edges (1080p pixels) */
 	UPROPERTY(EditAnywhere, Category="HUD")
-	FVector2D StaminaBarSize = FVector2D(260.f, 6.f);
+	FVector2D Margin = FVector2D(40.f, 48.f);
 
-	/** Bar position from the top of the screen, as a fraction of screen height */
 	UPROPERTY(EditAnywhere, Category="HUD")
-	float StaminaBarHeight = 0.9f;
+	float BarWidth = 320.f;
 
-	/** Seconds the bar stays visible after stamina is full again */
+	UPROPERTY(EditAnywhere, Category="HUD")
+	float HealthBarHeight = 12.f;
+
+	UPROPERTY(EditAnywhere, Category="HUD")
+	float StaminaBarHeight = 9.f;
+
+	UPROPERTY(EditAnywhere, Category="HUD")
+	float BarSpacing = 7.f;
+
+	/** Seconds the stamina bar stays visible after stamina is full again */
 	UPROPERTY(EditAnywhere, Category="HUD")
 	float StaminaFadeDelay = 1.f;
 
 private:
 
-	void DrawStaminaBar();
+	/** Draws a bar with a dark frame; Percent fills from the left */
+	void DrawBar(float X, float Y, float Width, float Height, float Percent, const FLinearColor& Fill, float Alpha);
 
 	float StaminaBarAlpha = 0.f;
 	float TimeSinceStaminaFull = 0.f;

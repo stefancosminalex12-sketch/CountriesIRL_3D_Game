@@ -40,6 +40,14 @@ public:
 	UFUNCTION(Exec)
 	void DevWalk(float Forward, float Right, float Seconds, bool bRun = false);
 
+	/** Console (testing): DevDamage 25 */
+	UFUNCTION(Exec)
+	void DevDamage(float Amount);
+
+	/** Console (testing): DevHeal 25 */
+	UFUNCTION(Exec)
+	void DevHeal(float Amount);
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -58,6 +66,10 @@ protected:
 	/** The design calls for first-person by default */
 	UPROPERTY(EditAnywhere, Category="Camera")
 	bool bStartInFirstPerson = true;
+
+	/** In first-person, sideways (A/D) movement is slower than forward, like a real side-step */
+	UPROPERTY(EditAnywhere, Category="Ball|Movement", meta=(ClampMin=0.1, ClampMax=1.0))
+	float StrafeSpeedScale = 0.7f;
 
 private:
 
