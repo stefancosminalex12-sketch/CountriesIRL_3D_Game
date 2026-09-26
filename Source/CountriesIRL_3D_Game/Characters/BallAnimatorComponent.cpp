@@ -110,16 +110,18 @@ void UBallAnimatorComponent::PoseHand(FBallHandParts& Hand, float Fist, float Th
 	const float Lengths[4] = { 9.f, 10.f, 9.5f, 7.5f };   // index, middle, ring, little
 	for (int32 Finger = 0; Finger < 4; ++Finger)
 	{
-		// The index finger sits next to the thumb
-		const FVector Knuckle(PalmSize.X * 0.35f, ThumbSide * (6.f - 4.f * Finger), 0.5f);
+		// The index finger sits next to the thumb; fingers pack snugly like a glove
+		const FVector Knuckle(PalmSize.X * 0.35f, ThumbSide * (5.2f - 3.47f * Finger), 0.5f);
 		PlaceFinger(Hand.Fingers[Finger], Hand.Tips[Finger], Knuckle, FingerDirection, Lengths[Finger], FingerThickness);
 	}
 
-	// Thumb: sticks out forward when relaxed, folds across the curled fingers in a fist
-	const FVector OpenThumb(0.7f, ThumbSide * 0.6f, -0.3f);
-	const FVector FistThumb(0.45f, -ThumbSide * 0.55f, -0.7f);
+	// Thumb: rooted on the side edge of the palm, clear of the index finger. It points forward and outward
+	// when relaxed, and in a fist runs down along the outside of the curled fingers (never through them).
+	const FVector ThumbKnuckle(1.f, ThumbSide * 9.f, -1.f);
+	const FVector OpenThumb(0.7f, ThumbSide * 0.55f, -0.45f);
+	const FVector FistThumb(0.85f, ThumbSide * 0.2f, -0.45f);
 	const FVector ThumbDirection = FMath::Lerp(OpenThumb, FistThumb, Fist).GetSafeNormal();
-	PlaceFinger(Hand.Fingers[4], Hand.Tips[4], FVector(0.5f, ThumbSide * 7.f, -2.f), ThumbDirection, 7.f, FingerThickness * 1.1f);
+	PlaceFinger(Hand.Fingers[4], Hand.Tips[4], ThumbKnuckle, ThumbDirection, FMath::Lerp(7.5f, 5.5f, Fist), FingerThickness * 1.1f);
 }
 
 FVector UBallAnimatorComponent::FootRestWorld(int32 Index) const
