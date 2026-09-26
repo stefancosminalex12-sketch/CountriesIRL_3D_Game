@@ -36,9 +36,14 @@ public:
 	UFUNCTION(Exec)
 	void ToggleCamera() { ToggleView(); }
 
+	/** Console (testing): acts as if movement keys are held. DevWalk 0 1 3 1 = strafe right for 3s while running */
+	UFUNCTION(Exec)
+	void DevWalk(float Forward, float Right, float Seconds, bool bRun = false);
+
 protected:
 
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
@@ -64,4 +69,8 @@ private:
 	void CycleEmotion();
 
 	bool bFirstPerson = false;
+
+	/** DevWalk state */
+	FVector2D DevMoveInput = FVector2D::ZeroVector;
+	float DevMoveTimeLeft = 0.f;
 };

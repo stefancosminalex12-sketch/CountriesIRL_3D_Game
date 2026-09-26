@@ -5,6 +5,7 @@
 #include "Characters/BallParts.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Engine/World.h"
 
 UBallAnimatorComponent::UBallAnimatorComponent()
 {
@@ -16,6 +17,7 @@ UBallAnimatorComponent::UBallAnimatorComponent()
 void UBallAnimatorComponent::CreateLimbMeshes(AActor* Owner, USceneComponent* LimbParent, USceneComponent* InBodyPivot, UStaticMesh* SphereMesh)
 {
 	BodyPivot = InBodyPivot;
+	LimbRoot = LimbParent;
 
 	LeftHand = BallParts::Create(Owner, TEXT("LeftHand"), LimbParent, SphereMesh);
 	RightHand = BallParts::Create(Owner, TEXT("RightHand"), LimbParent, SphereMesh);
@@ -45,7 +47,7 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	const ABallCharacter* Ball = Cast<ABallCharacter>(GetOwner());
-	if (!Ball || !LeftHand || !BodyPivot)
+	if (!Ball || !LeftHand || !BodyPivot || !LimbRoot)
 	{
 		return;
 	}
@@ -80,17 +82,27 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	}
 
 	// Feet: swing forward while lifted, push back while planted. Left and right are half a cycle apart.
+	// Sideways swing is limited so that when strafing the feet side-step instead of crossing each other.
 	const float FootSwingNow = FMath::Lerp(FootSwing.X, FootSwing.Y, SpeedAlpha) * MoveBlend;
+	const float SideSwingNow = FMath::Min(FootSwingNow, FMath::Max(FootHalfSpacing - MinFootGap * 0.5f, 0.f));
+	const FVector FootSwingVector(MoveDirection.X * FootSwingNow, MoveDirection.Y * SideSwingNow, 0.f);
 	const float FootLiftNow = FMath::Lerp(FootLift.X, FootLift.Y, SpeedAlpha) * MoveBlend;
-	for (const float Side : { -1.f, 1.f })
+	for (int32 Index = 0; Index < 2; ++Index)
 	{
+		const float Side = Index == 0 ? -1.f : 1.f;
 		const float Theta = Phase + (Side > 0.f ? UE_PI : 0.f);
-		FVector Foot(2.f, Side * 16.f, GroundZ + FootSize.Z * 0.5f);
-		Foot += MoveDirection * FootSwingNow * FMath::Sin(Theta);
+		FVector Foot(2.f, Side * FootHalfSpacing, GroundZ + FootSize.Z * 0.5f);
+		Foot += FootSwingVector * FMath::Sin(Theta);
+
+		// Plant on the real ground (slopes, steps) rather than the flat bottom of the capsule
+		const float TargetGround = bFalling ? 0.f : GroundHeightUnder(Foot, GroundZ);
+		FootGroundOffset[Index] = FMath::FInterpTo(FootGroundOffset[Index], TargetGround, DeltaTime, 18.f);
+		Foot.Z += FootGroundOffset[Index];
+
 		Foot.Z += FootLiftNow * FMath::Max(0.f, FMath::Cos(Theta));
 		Foot += FVector(-3.f, Side * 3.f, 14.f) * AirBlend;
 
-		(Side < 0.f ? LeftFoot : RightFoot)->SetRelativeLocation(Foot);
+		(Index == 0 ? LeftFoot : RightFoot)->SetRelativeLocation(Foot);
 	}
 
 	// Hands: swing opposite to the foot on the same side
@@ -98,8 +110,9 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	const FVector FirstPersonRest(Radius * 0.55f + 95.f, 45.f, CenterZ - 32.f);
 	const FVector HandRest = FMath::Lerp(ThirdPersonRest, FirstPersonRest, FirstPersonBlend);
 	const float HandSwingNow = FMath::Lerp(HandSwing.X, HandSwing.Y, SpeedAlpha) * MoveBlend * FMath::Lerp(1.f, 0.3f, FirstPersonBlend);
-	for (const float Side : { -1.f, 1.f })
+	for (int32 Index = 0; Index < 2; ++Index)
 	{
+		const float Side = Index == 0 ? -1.f : 1.f;
 		const float Theta = Phase + (Side > 0.f ? 0.f : UE_PI);
 		FVector Hand(HandRest.X, Side * HandRest.Y, HandRest.Z);
 		Hand.X += HandSwingNow * FMath::Sin(Theta);
@@ -107,7 +120,8 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		Hand.Z += FMath::Sin(IdleTime * 2.2f + Side) * 1.5f;
 		Hand += FVector(0.f, Side * 8.f, 22.f) * AirBlend;
 
-		(Side < 0.f ? LeftHand : RightHand)->SetRelativeLocation(Hand);
+		Hand = KeepHandOutOfWalls(Index, FVector(0.f, 0.f, CenterZ), Hand, DeltaTime);
+		(Index == 0 ? LeftHand : RightHand)->SetRelativeLocation(Hand);
 	}
 
 	// Body: bounce on each step, breathe when idle, lean into movement
@@ -118,4 +132,39 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	const FRotator Lean(-MaxLean * SmoothedLean.X, 0.f, MaxLean * 0.6f * SmoothedLean.Y);
 
 	BodyPivot->SetRelativeLocationAndRotation(FVector(0.f, 0.f, CenterZ + Bob), Lean);
+}
+
+float UBallAnimatorComponent::GroundHeightUnder(const FVector& LocalFoot, float GroundZ) const
+{
+	// The limb root only yaws with the actor, so a local Z offset equals a world Z offset
+	const FVector Base = LimbRoot->GetComponentTransform().TransformPosition(FVector(LocalFoot.X, LocalFoot.Y, GroundZ));
+	const FVector Reach(0.f, 0.f, MaxFootAdjust);
+
+	FHitResult Hit;
+	const FCollisionQueryParams Params(SCENE_QUERY_STAT(BallFootTrace), false, GetOwner());
+	if (GetWorld()->LineTraceSingleByChannel(Hit, Base + Reach, Base - Reach, ECC_Visibility, Params) && !Hit.bStartPenetrating)
+	{
+		return Hit.ImpactPoint.Z - Base.Z;
+	}
+	return 0.f;
+}
+
+FVector UBallAnimatorComponent::KeepHandOutOfWalls(int32 Index, const FVector& LocalStart, const FVector& LocalTarget, float DeltaTime)
+{
+	// Sweep a hand-sized sphere from the ball's center out to where the hand wants to be
+	const FTransform& Root = LimbRoot->GetComponentTransform();
+	const FVector Start = Root.TransformPosition(LocalStart);
+	const FVector End = Root.TransformPosition(LocalTarget);
+
+	float Reach = 1.f;
+	FHitResult Hit;
+	const FCollisionQueryParams Params(SCENE_QUERY_STAT(BallHandSweep), false, GetOwner());
+	if (GetWorld()->SweepSingleByChannel(Hit, Start, End, FQuat::Identity, ECC_Visibility, FCollisionShape::MakeSphere(HandSize * 0.5f), Params))
+	{
+		Reach = Hit.bStartPenetrating ? 0.f : Hit.Time;
+	}
+
+	// Pull in instantly so hands never poke through; ease back out once the way is clear
+	HandReach[Index] = Reach < HandReach[Index] ? Reach : FMath::FInterpTo(HandReach[Index], Reach, DeltaTime, 10.f);
+	return FMath::Lerp(LocalStart, LocalTarget, HandReach[Index]);
 }

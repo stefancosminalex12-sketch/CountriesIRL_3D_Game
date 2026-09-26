@@ -101,6 +101,28 @@ void APlayerBallCharacter::Look(const FInputActionValue& Value)
 	AddControllerPitchInput(Input.Y);
 }
 
+void APlayerBallCharacter::DevWalk(float Forward, float Right, float Seconds, bool bRun)
+{
+	DevMoveInput = FVector2D(Right, Forward);
+	DevMoveTimeLeft = Seconds;
+	SetSprinting(bRun);
+}
+
+void APlayerBallCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (DevMoveTimeLeft > 0.f)
+	{
+		Move(FInputActionValue(DevMoveInput));
+		DevMoveTimeLeft -= DeltaTime;
+		if (DevMoveTimeLeft <= 0.f)
+		{
+			SetSprinting(false);
+		}
+	}
+}
+
 void APlayerBallCharacter::CycleEmotion()
 {
 	const uint8 Next = (static_cast<uint8>(GetEmotion()) + 1) % static_cast<uint8>(EBallEmotion::Count);

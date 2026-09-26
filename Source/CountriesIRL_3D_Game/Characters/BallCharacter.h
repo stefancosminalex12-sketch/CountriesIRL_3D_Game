@@ -9,6 +9,7 @@
 
 class UStaticMeshComponent;
 class UBallAnimatorComponent;
+class UStaminaComponent;
 
 /**
  *  Base class for every person in the game: a countryball with eyes, floating hands and feet.
@@ -29,8 +30,14 @@ public:
 	UFUNCTION(BlueprintPure, Category="Ball")
 	EBallEmotion GetEmotion() const;
 
+	/** Whether the ball wants to run. It only actually runs while it has stamina. */
 	UFUNCTION(BlueprintCallable, Category="Ball|Movement")
 	void SetSprinting(bool bNewSprinting);
+
+	UFUNCTION(BlueprintPure, Category="Ball|Movement")
+	bool IsRunning() const { return bRunning; }
+
+	UStaminaComponent* GetStamina() const { return Stamina; }
 
 	float GetBallRadius() const { return BallRadius; }
 
@@ -45,6 +52,9 @@ public:
 protected:
 
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+	virtual bool CanJumpInternal_Implementation() const override;
+	virtual void OnJumped_Implementation() override;
 
 	/** Visual root: everything that is drawn hangs from here */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
@@ -62,6 +72,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	TObjectPtr<UBallAnimatorComponent> Animator;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	TObjectPtr<UStaminaComponent> Stamina;
 
 	/** Ball radius in cm */
 	UPROPERTY(VisibleAnywhere, Category="Ball")
@@ -94,5 +107,17 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ball|Movement")
 	float JumpVelocity = 340.f;
 
-	bool bSprinting = false;
+	/** Stamina per second while running */
+	UPROPERTY(EditAnywhere, Category="Ball|Movement")
+	float RunStaminaCost = 12.f;
+
+	/** Stamina per jump */
+	UPROPERTY(EditAnywhere, Category="Ball|Movement")
+	float JumpStaminaCost = 15.f;
+
+	/** Run key held */
+	bool bWantsToRun = false;
+
+	/** Actually running this frame (wants to, has stamina, moving on the ground) */
+	bool bRunning = false;
 };

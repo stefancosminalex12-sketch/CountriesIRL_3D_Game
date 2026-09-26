@@ -3,6 +3,7 @@
 #include "Characters/BallCharacter.h"
 #include "Characters/BallAnimatorComponent.h"
 #include "Characters/BallParts.h"
+#include "Characters/StaminaComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -48,6 +49,8 @@ ABallCharacter::ABallCharacter()
 
 	Animator = CreateDefaultSubobject<UBallAnimatorComponent>(TEXT("Animator"));
 	Animator->CreateLimbMeshes(this, VisualRoot, BodyPivot, Sphere);
+
+	Stamina = CreateDefaultSubobject<UStaminaComponent>(TEXT("Stamina"));
 }
 
 void ABallCharacter::BeginPlay()
@@ -84,6 +87,31 @@ EBallEmotion ABallCharacter::GetEmotion() const
 
 void ABallCharacter::SetSprinting(bool bNewSprinting)
 {
-	bSprinting = bNewSprinting;
-	GetCharacterMovement()->MaxWalkSpeed = bSprinting ? RunSpeed : WalkSpeed;
+	bWantsToRun = bNewSprinting;
+}
+
+void ABallCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	// Only drain stamina while actually running on the ground, not while holding the key standing still
+	const bool bMovingOnGround = GetVelocity().Size2D() > 10.f && GetCharacterMovement()->IsMovingOnGround();
+	bRunning = bWantsToRun && bMovingOnGround && Stamina->HasStamina();
+	if (bRunning)
+	{
+		Stamina->Drain(RunStaminaCost, DeltaTime);
+	}
+
+	GetCharacterMovement()->MaxWalkSpeed = bRunning ? RunSpeed : WalkSpeed;
+}
+
+bool ABallCharacter::CanJumpInternal_Implementation() const
+{
+	return Super::CanJumpInternal_Implementation() && Stamina->HasStamina(JumpStaminaCost);
+}
+
+void ABallCharacter::OnJumped_Implementation()
+{
+	Super::OnJumped_Implementation();
+	Stamina->TryConsume(JumpStaminaCost);
 }

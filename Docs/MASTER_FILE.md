@@ -130,6 +130,7 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
 ## 9. Gameplay Systems (outline)
 
 - Travel the world as your character; horses [Decided]
+- **Stamina** [Decided]: you can't run or jump indefinitely. Running drains stamina, each jump costs a chunk; it refills after a short rest. Running it to zero leaves you **exhausted** (can't run/jump) until it recovers partway. A small bar shows at the bottom of the screen only while stamina is not full (clean screen). Same component will serve NPCs, horses and later combat actions
 - **Equipment & inventory** [Decided]:
   - Equipment menu with gear slots: head, body, hands, feet, weapons (sword/shield/spear/bow… whatever you want to use)
   - **Layered clothing & armor, KCD-style** [Decided]: head = arming cap/coif + helmet (+ crest); body = undergarments (shirt/doublet) + padding (gambeson/aketon) + armor (mail/brigandine/plate) + optional over-layer (tabard/surcoat/livery jacket); hands = gloves/gauntlets; feet = shoes/boots/sabatons; plus cloak
@@ -241,6 +242,9 @@ Start with the **commoner origin**; build what's designed so far and add feature
 
 **v0.1 progress** (build order; one tested, committed step at a time):
 1. [x] Player ball: C++ `ABallCharacter` (base for every person) + `APlayerBallCharacter`; procedural floating hands/feet (walk cycle, bob, lean, jump tuck); 8 eye emotions (Neutral, Happy, Sad, Angry, Scared, Tired, Suspicious, Dead) drawn by the `M_BallEyes` shader with blinking; walk/run; first-person default, third-person toggle. Placeholder shapes until the Blender art pass
+   - Playtest tuning (user): walk 300→220, run 600→400, jump 450→340 ("a bit better now", fine for now)
+   - Stamina for running/jumping (see Gameplay Systems)
+   - Fixed: feet crossing each other when strafing (A/D) → side-steps now; hands/feet going through objects → hands stop at walls, feet plant on the real ground (slopes/steps)
 2. [ ] Day/night (48 min) + weather
 3. [ ] Yorkshire test landscape
 4. [ ] Village (free Fab assets, approved by the user first)
@@ -248,7 +252,7 @@ Start with the **commoner origin**; build what's designed so far and add feature
 6. [ ] Hit-zone combat + bandits
 7. [ ] Compass bar
 
-**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · V first/third-person · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`. Dev test level: `L_DevSandbox`.
+**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · V first/third-person · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing). Dev test level: `L_DevSandbox`.
 
 **Budget rule** [Decided]: use **free assets and tools as much as possible**, plus our own creations; only consider paid assets when nothing free works.
 

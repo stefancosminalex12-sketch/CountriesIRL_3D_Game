@@ -67,7 +67,27 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
 	FVector FootSize = FVector(26.f, 15.f, 11.f);
 
+	/** Distance from the center line to each foot */
+	UPROPERTY(EditAnywhere, Category="Ball|Animation")
+	float FootHalfSpacing = 16.f;
+
+	/** Feet never get closer than this to each other when side-stepping */
+	UPROPERTY(EditAnywhere, Category="Ball|Animation")
+	float MinFootGap = 8.f;
+
+	/** How far up/down a foot may reach to find the ground (slopes, steps) */
+	UPROPERTY(EditAnywhere, Category="Ball|Animation")
+	float MaxFootAdjust = 35.f;
+
 private:
+
+	/** Height of the ground under a foot relative to the capsule bottom (0 if nothing in reach) */
+	float GroundHeightUnder(const FVector& LocalFoot, float GroundZ) const;
+
+	/** Pulls a hand back toward the ball if it would go into a wall. Positions are in limb-root space. */
+	FVector KeepHandOutOfWalls(int32 Index, const FVector& LocalStart, const FVector& LocalTarget, float DeltaTime);
+
+	UPROPERTY() TObjectPtr<USceneComponent> LimbRoot;
 
 	UPROPERTY() TObjectPtr<UStaticMeshComponent> LeftHand;
 	UPROPERTY() TObjectPtr<UStaticMeshComponent> RightHand;
@@ -92,4 +112,10 @@ private:
 	/** Local-space lean direction scaled by lean strength (smoothed) */
 	FVector SmoothedLean = FVector::ZeroVector;
 	float IdleTime = 0.f;
+
+	/** Smoothed ground height under each foot (left, right) */
+	float FootGroundOffset[2] = { 0.f, 0.f };
+
+	/** How far each hand may reach before a wall (1 = full reach) */
+	float HandReach[2] = { 1.f, 1.f };
 };
