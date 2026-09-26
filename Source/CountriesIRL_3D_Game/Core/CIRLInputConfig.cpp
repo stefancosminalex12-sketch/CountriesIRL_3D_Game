@@ -1,0 +1,75 @@
+// CountriesIRL 3D Game
+
+#include "Core/CIRLInputConfig.h"
+#include "InputAction.h"
+#include "InputMappingContext.h"
+#include "InputModifiers.h"
+
+namespace
+{
+	UInputAction* MakeAction(UObject* Outer, const TCHAR* Name, EInputActionValueType Type)
+	{
+		UInputAction* Action = NewObject<UInputAction>(Outer, Name);
+		Action->ValueType = Type;
+		return Action;
+	}
+
+	template<typename TModifier>
+	TModifier* AddModifier(UInputMappingContext* Context, FEnhancedActionKeyMapping& Mapping)
+	{
+		TModifier* Modifier = NewObject<TModifier>(Context);
+		Mapping.Modifiers.Add(Modifier);
+		return Modifier;
+	}
+}
+
+void UCIRLInputConfig::Build()
+{
+	Move = MakeAction(this, TEXT("IA_Move"), EInputActionValueType::Axis2D);
+	Look = MakeAction(this, TEXT("IA_Look"), EInputActionValueType::Axis2D);
+	Jump = MakeAction(this, TEXT("IA_Jump"), EInputActionValueType::Boolean);
+	Sprint = MakeAction(this, TEXT("IA_Sprint"), EInputActionValueType::Boolean);
+	ToggleView = MakeAction(this, TEXT("IA_ToggleView"), EInputActionValueType::Boolean);
+	CycleEmotion = MakeAction(this, TEXT("IA_CycleEmotion"), EInputActionValueType::Boolean);
+
+	UInputMappingContext* C = NewObject<UInputMappingContext>(this, TEXT("IMC_Default"));
+	DefaultContext = C;
+
+	// Move: WASD (X = right, Y = forward) and left stick
+	AddModifier<UInputModifierSwizzleAxis>(C, C->MapKey(Move, EKeys::W));
+	{
+		FEnhancedActionKeyMapping& S = C->MapKey(Move, EKeys::S);
+		AddModifier<UInputModifierSwizzleAxis>(C, S);
+		AddModifier<UInputModifierNegate>(C, S);
+	}
+	AddModifier<UInputModifierNegate>(C, C->MapKey(Move, EKeys::A));
+	C->MapKey(Move, EKeys::D);
+	AddModifier<UInputModifierDeadZone>(C, C->MapKey(Move, EKeys::Gamepad_Left2D));
+
+	// Look: mouse and right stick. Y is negated here because the project's legacy input scales
+	// (DefaultInput.ini bEnableLegacyInputScales) apply a negative pitch scale in the controller.
+	{
+		FEnhancedActionKeyMapping& Mouse = C->MapKey(Look, EKeys::Mouse2D);
+		UInputModifierNegate* Negate = AddModifier<UInputModifierNegate>(C, Mouse);
+		Negate->bX = false;
+		Negate->bZ = false;
+	}
+	{
+		FEnhancedActionKeyMapping& Stick = C->MapKey(Look, EKeys::Gamepad_Right2D);
+		AddModifier<UInputModifierDeadZone>(C, Stick);
+		UInputModifierNegate* Negate = AddModifier<UInputModifierNegate>(C, Stick);
+		Negate->bX = false;
+		Negate->bZ = false;
+	}
+
+	C->MapKey(Jump, EKeys::SpaceBar);
+	C->MapKey(Jump, EKeys::Gamepad_FaceButton_Bottom);
+
+	C->MapKey(Sprint, EKeys::LeftShift);
+	C->MapKey(Sprint, EKeys::Gamepad_LeftThumbstick);
+
+	C->MapKey(ToggleView, EKeys::V);
+	C->MapKey(ToggleView, EKeys::Gamepad_DPad_Up);
+
+	C->MapKey(CycleEmotion, EKeys::T);
+}

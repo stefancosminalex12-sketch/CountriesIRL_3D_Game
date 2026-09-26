@@ -239,6 +239,17 @@ Start with the **commoner origin**; build what's designed so far and add feature
 - **v0.2 "A slice of life"**: commoner origin + simple character creator (name + looks); NPC balls living in the village; talking/asking directions; buying/selling, money; first quest; M map (Gough style)
 - **v0.3 "Going to war"**: recruitment letter from the local lord; small skirmish with your troops, simple commands, side markers; XP and leveling
 
+**v0.1 progress** (build order; one tested, committed step at a time):
+1. [x] Player ball: C++ `ABallCharacter` (base for every person) + `APlayerBallCharacter`; procedural floating hands/feet (walk cycle, bob, lean, jump tuck); 8 eye emotions (Neutral, Happy, Sad, Angry, Scared, Tired, Suspicious, Dead) drawn by the `M_BallEyes` shader with blinking; walk/run; first-person default, third-person toggle. Placeholder shapes until the Blender art pass
+2. [ ] Day/night (48 min) + weather
+3. [ ] Yorkshire test landscape
+4. [ ] Village (free Fab assets, approved by the user first)
+5. [ ] Rideable horse
+6. [ ] Hit-zone combat + bandits
+7. [ ] Compass bar
+
+**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · V first/third-person · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`. Dev test level: `L_DevSandbox`.
+
 **Budget rule** [Decided]: use **free assets and tools as much as possible**, plus our own creations; only consider paid assets when nothing free works.
 
 **Asset workflow** [Decided]: Claude searches Fab for free assets that fit, **shows them to the user and asks for approval**; the user claims them with their Epic account and adds them to the project; then Claude integrates them.
