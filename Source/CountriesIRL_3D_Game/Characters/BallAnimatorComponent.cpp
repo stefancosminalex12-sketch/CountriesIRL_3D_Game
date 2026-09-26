@@ -3,6 +3,7 @@
 #include "Characters/BallAnimatorComponent.h"
 #include "Characters/BallCharacter.h"
 #include "Characters/BallParts.h"
+#include "Characters/BallMeleeComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/World.h"
@@ -258,6 +259,17 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		Hand.X += FMath::Clamp(FootOffsetX[1 - Index] * SwingScale, -28.f, 28.f);
 		Hand.Z += FMath::Sin(IdleTime * 2.2f + Side(Index)) * 1.5f;
 		Hand += FVector(0.f, Side(Index) * 8.f, 22.f) * AirBlend;
+
+		// Punch: the fist shoots out toward where the ball is aiming, then pulls back
+		int32 PunchHand = 0;
+		const float PunchExtension = Ball->GetMelee() ? Ball->GetMelee()->GetPunchExtension(PunchHand) : 0.f;
+		if (PunchExtension > 0.f && PunchHand == Index)
+		{
+			const FVector AimLocal = Root.InverseTransformVectorNoScale(Ball->GetBaseAimRotation().Vector());
+			const float PunchReach = FMath::Lerp(Radius + 55.f, FirstPersonRest.X + 25.f, FirstPersonBlend);
+			const FVector PunchTarget = FVector(0.f, 0.f, CenterZ) + AimLocal * PunchReach + FVector(0.f, Side(Index) * 10.f, 0.f);
+			Hand = FMath::Lerp(Hand, PunchTarget, PunchExtension);
+		}
 
 		Hand = KeepHandOutOfWalls(Index, FVector(0.f, 0.f, CenterZ), Hand, DeltaTime);
 

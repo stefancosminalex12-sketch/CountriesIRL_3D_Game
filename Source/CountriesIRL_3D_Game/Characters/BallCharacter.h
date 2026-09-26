@@ -13,6 +13,7 @@ class UStaminaComponent;
 class UHealthComponent;
 class UCorpseComponent;
 class UBallSkeletonComponent;
+class UBallMeleeComponent;
 
 /**
  *  Base class for every person in the game: a countryball with eyes, floating hands and feet.
@@ -43,6 +44,8 @@ public:
 	UStaminaComponent* GetStamina() const { return Stamina; }
 
 	UHealthComponent* GetHealth() const { return Health; }
+
+	UBallMeleeComponent* GetMelee() const { return Melee; }
 
 	UFUNCTION(BlueprintPure, Category="Ball")
 	bool IsDead() const;
@@ -97,6 +100,10 @@ protected:
 	/** Cartoon bones shown once the corpse has decayed to the skeleton stage */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	TObjectPtr<UBallSkeletonComponent> Skeleton;
+
+	/** Unarmed fighting (punches); weapons build on this later */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	TObjectPtr<UBallMeleeComponent> Melee;
 
 	/** Applies base colors, decay tint and the damage flash to body, hands and feet */
 	void RefreshColors();

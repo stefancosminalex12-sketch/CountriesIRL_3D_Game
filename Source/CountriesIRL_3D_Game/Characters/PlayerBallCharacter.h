@@ -48,6 +48,10 @@ public:
 	UFUNCTION(Exec)
 	void DevHeal(float Amount);
 
+	/** Console (testing): throw a punch (same as left click) */
+	UFUNCTION(Exec)
+	void DevPunch() { Attack(); }
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -79,6 +83,7 @@ private:
 	void StopSprint() { SetSprinting(false); }
 	void ToggleView() { SetFirstPerson(!bFirstPerson); }
 	void CycleEmotion();
+	void Attack();
 
 	bool bFirstPerson = false;
 

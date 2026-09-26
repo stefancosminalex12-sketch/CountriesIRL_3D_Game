@@ -7,6 +7,7 @@
 #include "Characters/HealthComponent.h"
 #include "Characters/CorpseComponent.h"
 #include "Characters/BallSkeletonComponent.h"
+#include "Characters/BallMeleeComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -57,6 +58,10 @@ ABallCharacter::ABallCharacter()
 	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 	Corpse = CreateDefaultSubobject<UCorpseComponent>(TEXT("Corpse"));
 	Skeleton = CreateDefaultSubobject<UBallSkeletonComponent>(TEXT("Skeleton"));
+	Melee = CreateDefaultSubobject<UBallMeleeComponent>(TEXT("Melee"));
+
+	// Eyes are where the ball looks and punches from
+	BaseEyeHeight = GetBallCenterZ() + 10.f;
 }
 
 void ABallCharacter::BeginPlay()

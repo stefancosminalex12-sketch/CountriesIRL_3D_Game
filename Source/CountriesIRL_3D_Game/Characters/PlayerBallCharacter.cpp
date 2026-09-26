@@ -3,6 +3,7 @@
 #include "Characters/PlayerBallCharacter.h"
 #include "Characters/BallAnimatorComponent.h"
 #include "Characters/HealthComponent.h"
+#include "Characters/BallMeleeComponent.h"
 #include "Engine/DamageEvents.h"
 #include "Core/CIRLInputConfig.h"
 #include "Core/CIRLPlayerController.h"
@@ -80,6 +81,7 @@ void APlayerBallCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	EIC->BindAction(Input->Sprint, ETriggerEvent::Completed, this, &APlayerBallCharacter::StopSprint);
 	EIC->BindAction(Input->ToggleView, ETriggerEvent::Started, this, &APlayerBallCharacter::ToggleView);
 	EIC->BindAction(Input->CycleEmotion, ETriggerEvent::Started, this, &APlayerBallCharacter::CycleEmotion);
+	EIC->BindAction(Input->Attack, ETriggerEvent::Started, this, &APlayerBallCharacter::Attack);
 }
 
 void APlayerBallCharacter::Move(const FInputActionValue& Value)
@@ -139,6 +141,11 @@ void APlayerBallCharacter::Tick(float DeltaTime)
 			SetSprinting(false);
 		}
 	}
+}
+
+void APlayerBallCharacter::Attack()
+{
+	Melee->TryPunch();
 }
 
 void APlayerBallCharacter::CycleEmotion()

@@ -30,6 +30,7 @@ void UCIRLInputConfig::Build()
 	Jump = MakeAction(this, TEXT("IA_Jump"), EInputActionValueType::Boolean);
 	Sprint = MakeAction(this, TEXT("IA_Sprint"), EInputActionValueType::Boolean);
 	ToggleView = MakeAction(this, TEXT("IA_ToggleView"), EInputActionValueType::Boolean);
+	Attack = MakeAction(this, TEXT("IA_Attack"), EInputActionValueType::Boolean);
 	CycleEmotion = MakeAction(this, TEXT("IA_CycleEmotion"), EInputActionValueType::Boolean);
 
 	UInputMappingContext* C = NewObject<UInputMappingContext>(this, TEXT("IMC_Default"));
@@ -70,6 +71,9 @@ void UCIRLInputConfig::Build()
 
 	C->MapKey(ToggleView, EKeys::V);
 	C->MapKey(ToggleView, EKeys::Gamepad_DPad_Up);
+
+	C->MapKey(Attack, EKeys::LeftMouseButton);
+	C->MapKey(Attack, EKeys::Gamepad_RightTrigger);
 
 	C->MapKey(CycleEmotion, EKeys::T);
 }
