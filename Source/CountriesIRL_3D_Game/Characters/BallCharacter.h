@@ -12,6 +12,7 @@ class UBallAnimatorComponent;
 class UStaminaComponent;
 class UHealthComponent;
 class UCorpseComponent;
+class UBallSkeletonComponent;
 
 /**
  *  Base class for every person in the game: a countryball with eyes, floating hands and feet.
@@ -92,6 +93,10 @@ protected:
 	/** Decay after death (pale, flies, rotting, bones) */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	TObjectPtr<UCorpseComponent> Corpse;
+
+	/** Cartoon bones shown once the corpse has decayed to the skeleton stage */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	TObjectPtr<UBallSkeletonComponent> Skeleton;
 
 	/** Applies base colors, decay tint and the damage flash to body, hands and feet */
 	void RefreshColors();

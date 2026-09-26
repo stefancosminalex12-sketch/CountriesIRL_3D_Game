@@ -74,6 +74,14 @@ void UBallFaceComponent::SetOwnerNoSee(bool bNoSee)
 	}
 }
 
+void UBallFaceComponent::SetFaceVisible(bool bVisible)
+{
+	if (FaceShell)
+	{
+		FaceShell->SetVisibility(bVisible);
+	}
+}
+
 void UBallFaceComponent::SetEmotion(EBallEmotion NewEmotion)
 {
 	if (EmotionPoses.Contains(NewEmotion))
@@ -142,6 +150,6 @@ void UBallFaceComponent::PushPoseToMaterial()
 	FaceMaterial->SetScalarParameterValue(TEXT("UpperLid"), UpperLid);
 	FaceMaterial->SetScalarParameterValue(TEXT("UpperLidAngle"), LidAngle);
 	FaceMaterial->SetScalarParameterValue(TEXT("LowerLid"), FMath::Min(CurrentPose.LowerLid, MaxLidClosure));
-	// Dead: 0 = alive, 1 = x_x, 2 = hollow skull sockets
-	FaceMaterial->SetScalarParameterValue(TEXT("Dead"), bSkull ? 2.f : (CurrentPose.bDead ? 1.f : 0.f));
+	// Dead: 0 = alive, 1 = x_x (2 = hollow skull sockets, used by the skeleton's skull)
+	FaceMaterial->SetScalarParameterValue(TEXT("Dead"), CurrentPose.bDead ? 1.f : 0.f);
 }

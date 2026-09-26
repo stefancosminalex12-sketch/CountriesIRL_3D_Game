@@ -37,6 +37,9 @@ public:
 	/** In first-person the hands are held in front of the camera so the player can see them */
 	void SetFirstPersonHands(bool bEnable) { bFirstPersonHands = bEnable; }
 
+	/** Only bones remain: hands and boots lie beside the skeleton instead of the body */
+	void SetSkeletonPose(bool bEnable) { bSkeletonPose = bEnable; }
+
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 protected:
@@ -130,6 +133,7 @@ private:
 	bool bFeetPlanted = false;
 
 	bool bFirstPersonHands = false;
+	bool bSkeletonPose = false;
 
 	/** 0 = grounded, 1 = in the air (smoothed) */
 	float AirBlend = 0.f;

@@ -6,6 +6,7 @@
 #include "Characters/StaminaComponent.h"
 #include "Characters/HealthComponent.h"
 #include "Characters/CorpseComponent.h"
+#include "Characters/BallSkeletonComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -55,6 +56,7 @@ ABallCharacter::ABallCharacter()
 	Stamina = CreateDefaultSubobject<UStaminaComponent>(TEXT("Stamina"));
 	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 	Corpse = CreateDefaultSubobject<UCorpseComponent>(TEXT("Corpse"));
+	Skeleton = CreateDefaultSubobject<UBallSkeletonComponent>(TEXT("Skeleton"));
 }
 
 void ABallCharacter::BeginPlay()
@@ -159,7 +161,15 @@ void ABallCharacter::Tick(float DeltaTime)
 		if (Corpse->IsDecaying())
 		{
 			BodyPivot->SetRelativeScale3D(FVector(Corpse->GetBodyScale()));
-			Face->SetSkull(Corpse->IsSkeleton());
+
+			// Decayed to bones: swap the ball for the cartoon skeleton
+			if (Corpse->IsSkeleton() && !Skeleton->IsShown())
+			{
+				Skeleton->Show(VisualRoot, -GetGroundOffset(), Corpse->GetTint());
+				BodyMesh->SetVisibility(false);
+				Face->SetFaceVisible(false);
+				Animator->SetSkeletonPose(true);
+			}
 		}
 		return;
 	}

@@ -240,7 +240,9 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 		FootOffsetX[Index] = Local.X - 2.f;
 
-		const FVector DeadFoot(Radius + 8.f, Side(Index) * 24.f, GroundZ + FootSize.Z * 0.5f);
+		const FVector DeadFoot = bSkeletonPose
+			? FVector(-96.f, Side(Index) * 16.f, GroundZ + FootSize.Z * 0.5f)
+			: FVector(Radius + 8.f, Side(Index) * 24.f, GroundZ + FootSize.Z * 0.5f);
 		Local = FMath::Lerp(Local, DeadFoot, DeadBlend);
 		(Index == 0 ? LeftFoot : RightFoot)->SetRelativeLocation(Local);
 	}
@@ -259,7 +261,9 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 		Hand = KeepHandOutOfWalls(Index, FVector(0.f, 0.f, CenterZ), Hand, DeltaTime);
 
-		const FVector DeadHand(-5.f, Side(Index) * (Radius + 10.f), GroundZ + HandSize * 0.5f);
+		const FVector DeadHand = bSkeletonPose
+			? FVector(-30.f, Side(Index) * 54.f, GroundZ + HandSize * 0.5f)
+			: FVector(-5.f, Side(Index) * (Radius + 10.f), GroundZ + HandSize * 0.5f);
 		Hand = FMath::Lerp(Hand, DeadHand, DeadBlend);
 		(Index == 0 ? LeftHand : RightHand)->SetRelativeLocation(Hand);
 	}
