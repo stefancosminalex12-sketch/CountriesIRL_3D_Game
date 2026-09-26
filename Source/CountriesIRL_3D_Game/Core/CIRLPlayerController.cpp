@@ -4,6 +4,9 @@
 #include "Core/CIRLInputConfig.h"
 #include "Core/CIRLHUD.h"
 #include "World/WorldClockSubsystem.h"
+#include "Characters/BallCharacter.h"
+#include "Engine/DamageEvents.h"
+#include "EngineUtils.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
 
@@ -51,5 +54,43 @@ void ACIRLPlayerController::DevClock()
 	if (ACIRLHUD* GameHUD = GetHUD<ACIRLHUD>())
 	{
 		GameHUD->SetShowClock(!GameHUD->IsShowingClock());
+	}
+}
+
+void ACIRLPlayerController::DevAdvance(float Hours)
+{
+	if (UWorldClockSubsystem* Clock = GetWorld()->GetSubsystem<UWorldClockSubsystem>())
+	{
+		Clock->AdvanceTime(FTimespan::FromHours(Hours));
+	}
+}
+
+void ACIRLPlayerController::DevHitNearest(float Amount)
+{
+	const APawn* Self = GetPawn();
+	if (!Self)
+	{
+		return;
+	}
+
+	ABallCharacter* Nearest = nullptr;
+	double NearestDistance = TNumericLimits<double>::Max();
+	for (TActorIterator<ABallCharacter> It(GetWorld()); It; ++It)
+	{
+		if (*It == Self || It->IsDead())
+		{
+			continue;
+		}
+		const double Distance = FVector::DistSquared(It->GetActorLocation(), Self->GetActorLocation());
+		if (Distance < NearestDistance)
+		{
+			NearestDistance = Distance;
+			Nearest = *It;
+		}
+	}
+
+	if (Nearest)
+	{
+		Nearest->TakeDamage(Amount, FDamageEvent(), this, GetPawn());
 	}
 }

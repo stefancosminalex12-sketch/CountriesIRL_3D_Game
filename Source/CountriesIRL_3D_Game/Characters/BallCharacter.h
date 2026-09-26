@@ -11,6 +11,7 @@ class UStaticMeshComponent;
 class UBallAnimatorComponent;
 class UStaminaComponent;
 class UHealthComponent;
+class UCorpseComponent;
 
 /**
  *  Base class for every person in the game: a countryball with eyes, floating hands and feet.
@@ -88,6 +89,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	TObjectPtr<UHealthComponent> Health;
 
+	/** Decay after death (pale, flies, rotting, bones) */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	TObjectPtr<UCorpseComponent> Corpse;
+
+	/** Applies base colors, decay tint and the damage flash to body, hands and feet */
+	void RefreshColors();
+
 	/** Health reached zero: x_x eyes, stop moving. (Player reload/capture flow comes later.) */
 	UFUNCTION()
 	virtual void HandleDeath(UHealthComponent* DepletedHealth);
@@ -130,6 +138,18 @@ protected:
 	/** Stamina per jump */
 	UPROPERTY(EditAnywhere, Category="Ball|Movement")
 	float JumpStaminaCost = 15.f;
+
+	/** Seconds the ball stays tinted red after taking damage */
+	UPROPERTY(EditAnywhere, Category="Ball|Look")
+	float DamageFlashDuration = 0.35f;
+
+	UPROPERTY(EditAnywhere, Category="Ball|Look")
+	FLinearColor DamageFlashColor = FLinearColor(1.f, 0.06f, 0.04f);
+
+	UPROPERTY(EditAnywhere, Category="Ball|Look", meta=(ClampMin=0, ClampMax=1))
+	float DamageFlashStrength = 0.65f;
+
+	float DamageFlashTime = 0.f;
 
 	/** Run key held */
 	bool bWantsToRun = false;

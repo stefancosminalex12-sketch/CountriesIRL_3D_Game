@@ -138,6 +138,14 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
 - Travel the world as your character; horses [Decided]
 - **Stamina** [Decided]: you can't run or jump indefinitely. Running drains stamina, each jump costs a chunk; it refills after a short rest. Running it to zero leaves you **exhausted** (can't run/jump) until it recovers partway. A small bar shows at the bottom of the screen only while stamina is not full (clean screen). Same component will serve NPCs, horses and later combat actions
 - **Health (HP)** [Decided]: **100 HP base**. Damage lowers it; at 0 the ball dies (x_x eyes, stops). For the player this leads to the reload flow in §7 (Death & saving) once saving exists. Whether HP regenerates on its own or only through rest/food/treatment: [Open]
+- **Damage flash** [Decided]: a ball flashes **red** for a moment while taking damage (Minecraft-mob style) [Built]
+- **Death & corpses** [Decided] (user idea): dead balls get x_x eyes, topple onto their back and **stay in the world and decay over in-game time**, so you can see the outcome of a recent battle. Only the moment of death is stored and the look is always worked out from the world clock, so sleeping, waiting, travel or returning days later all show the right state (and saving is one timestamp). Stage table is data, tunable per creature (horses too) [Built]
+  - Stages (in-game time; 1 day = 48 real min): fresh → **pale** 6 h (~12 min) → **flies** 12 h (~24 min) → **decomposing** (greenish, bloated) 1 day → **rotting** 2 days → **bones** 3 days (bone-white, hollow eye sockets) → gone after 7 days. Colors blend gradually between stages
+  - The living can walk over corpses; traces still hit them (for looting/interaction later)
+  - Only the body and hands decay; **boots (feet) stay as they are** and are left lying with the bones
+  - **Scavengers** [Planned, needs bird art]: **ravens and crows** (common across medieval England; ravens and **red kites** even scavenged town streets) come to pick at bodies from the decomposing stage on. Flag is in the stage table already
+  - Historical notes [Proposed]: after Wars of the Roses battles the dead were **stripped** of armour, weapons and valuables (by the victors, camp followers and locals) and usually **buried in grave pits** near the field within days (e.g. the Towton grave pit, 1461); nobles' bodies were often taken for burial in churches, and heralds counted the dead. Ideas: burial parties clear battlefields after a few days; you (and others) can **loot** corpses; sound of flies; crows cawing on old battlefields
+  - Later: cap on how many corpses stay loaded; decomposing smell/fly sound; bone piles as proper art
 - **HUD bars** [Decided]: **bottom-left**, HP bar (red) with the stamina bar (parchment yellow) under it; bars are a bit larger and scale with resolution. HP always shown, stamina only while not full
 - **Equipment & inventory** [Decided]:
   - Equipment menu with gear slots: head, body, hands, feet, weapons (sword/shield/spear/bow… whatever you want to use)
@@ -264,7 +272,7 @@ Start with the **commoner origin**; build what's designed so far and add feature
 6. [ ] Hit-zone combat + bandits
 7. [ ] Compass bar
 
-**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · V first/third-person · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing), `DevDamage 25`, `DevHeal 25`, `DevTime 21.5` (jump to a time), `DevTimeSpeed 60` (fast-forward; 1 = normal), `DevClock` (show date/time). Dev test level: `L_DevSandbox`.
+**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · V first/third-person · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing), `DevDamage 25`, `DevHeal 25`, `DevTime 21.5` (jump to a time), `DevTimeSpeed 60` (fast-forward; 1 = normal), `DevClock` (show date/time), `DevAdvance 24` (skip hours), `DevHitNearest 20` (damage nearest ball; 1000 kills). Dev test level: `L_DevSandbox`.
 
 **Budget rule** [Decided]: use **free assets and tools as much as possible**, plus our own creations; only consider paid assets when nothing free works.
 

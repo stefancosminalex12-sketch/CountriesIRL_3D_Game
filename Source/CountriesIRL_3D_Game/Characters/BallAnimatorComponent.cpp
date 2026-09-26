@@ -211,7 +211,13 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	FirstPersonBlend = FMath::FInterpTo(FirstPersonBlend, bFirstPersonHands ? 1.f : 0.f, DeltaTime, 8.f);
 	IdleTime += DeltaTime;
 
-	UpdateFeet(DeltaTime, SpeedAlpha, bFalling);
+	// Dead balls stop stepping and topple over onto their back
+	const bool bDead = Ball->IsDead();
+	DeadBlend = FMath::FInterpTo(DeadBlend, bDead ? 1.f : 0.f, DeltaTime, 4.f);
+	if (!bDead)
+	{
+		UpdateFeet(DeltaTime, SpeedAlpha, bFalling);
+	}
 
 	// Feet: planted/stepping positions, blended toward a tucked pose while in the air
 	float FootOffsetX[2] = { 0.f, 0.f };
@@ -233,6 +239,9 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		}
 
 		FootOffsetX[Index] = Local.X - 2.f;
+
+		const FVector DeadFoot(Radius + 8.f, Side(Index) * 24.f, GroundZ + FootSize.Z * 0.5f);
+		Local = FMath::Lerp(Local, DeadFoot, DeadBlend);
 		(Index == 0 ? LeftFoot : RightFoot)->SetRelativeLocation(Local);
 	}
 
@@ -249,6 +258,9 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		Hand += FVector(0.f, Side(Index) * 8.f, 22.f) * AirBlend;
 
 		Hand = KeepHandOutOfWalls(Index, FVector(0.f, 0.f, CenterZ), Hand, DeltaTime);
+
+		const FVector DeadHand(-5.f, Side(Index) * (Radius + 10.f), GroundZ + HandSize * 0.5f);
+		Hand = FMath::Lerp(Hand, DeadHand, DeadBlend);
 		(Index == 0 ? LeftHand : RightHand)->SetRelativeLocation(Hand);
 	}
 
@@ -259,7 +271,13 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	SmoothedLean = FMath::VInterpTo(SmoothedLean, MoveDirection * SpeedAlpha, DeltaTime, 6.f);
 	const FRotator Lean(-MaxLean * SmoothedLean.X, 0.f, MaxLean * 0.6f * SmoothedLean.Y);
 
-	BodyPivot->SetRelativeLocationAndRotation(FVector(0.f, 0.f, CenterZ + Bob), Lean);
+	// Lying on the ground, tipped back so the eyes face the sky (scale shrinks the body as it decays)
+	const float BodyScale = BodyPivot->GetRelativeScale3D().Z;
+	const FVector AliveLocation(0.f, 0.f, CenterZ + Bob);
+	const FVector DeadLocation(0.f, 0.f, GroundZ + Radius * BodyScale);
+	const FQuat Rotation = FQuat::Slerp(Lean.Quaternion(), FRotator(70.f, 0.f, 12.f).Quaternion(), DeadBlend);
+
+	BodyPivot->SetRelativeLocationAndRotation(FMath::Lerp(AliveLocation, DeadLocation, DeadBlend), Rotation);
 }
 
 float UBallAnimatorComponent::GroundZAt(const FVector& WorldPoint, float ReferenceZ) const

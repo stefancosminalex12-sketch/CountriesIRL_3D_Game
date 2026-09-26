@@ -144,6 +144,9 @@ private:
 	FVector SmoothedLean = FVector::ZeroVector;
 	float IdleTime = 0.f;
 
+	/** 0 = alive pose, 1 = lying dead (smoothed) */
+	float DeadBlend = 0.f;
+
 	/** How far each hand may reach before a wall (1 = full reach) */
 	float HandReach[2] = { 1.f, 1.f };
 };

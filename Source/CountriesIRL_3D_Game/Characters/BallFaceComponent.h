@@ -79,6 +79,9 @@ public:
 	UFUNCTION(BlueprintPure, Category="Ball|Face")
 	EBallEmotion GetEmotion() const { return Emotion; }
 
+	/** Skeleton remains: hollow black eye sockets instead of eyes */
+	void SetSkull(bool bNewSkull) { bSkull = bNewSkull; }
+
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 protected:
@@ -106,6 +109,7 @@ private:
 	UPROPERTY(Transient) TObjectPtr<UMaterialInstanceDynamic> FaceMaterial;
 
 	EBallEmotion Emotion = EBallEmotion::Neutral;
+	bool bSkull = false;
 
 	/** Pose currently shown (blending toward the emotion's pose) */
 	FBallEyePose CurrentPose;

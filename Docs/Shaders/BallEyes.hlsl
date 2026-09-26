@@ -1,6 +1,7 @@
 // Source of the Custom node in /Game/CountriesIRL/Characters/Materials/M_BallEyes.
 // Draws both countryball eyes on a sphere shell around the ball body.
-// Inputs:  P (local position on the shell), EyeScale, UpperLid, UpperLidAngle, LowerLid, Dead
+// Inputs:  P (local position on the shell), EyeScale, UpperLid, UpperLidAngle, LowerLid,
+//          Dead (0 = alive, 1 = x_x, 2 = hollow skull sockets)
 // Output:  float2(opacity mask, whiteness)  -> x drives Opacity Mask, y drives Base Color
 // Eye placement and size constants live only here; UBallFaceComponent drives the parameters.
 // The shell mesh is the engine sphere (radius 50 in local space) scaled to just above the body.
@@ -27,6 +28,13 @@ for (int i = 0; i < 2; i++)
     float3 r = float3(-sin(yaw), cos(yaw), 0.0);
     float3 u = normalize(float3(0.0, 0.0, 1.0) - c * c.z);
     float2 q = float2(dot(d, r), dot(d, u)) * Radius;
+
+    if (Dead > 1.5)
+    {
+        // Skull: hollow black sockets, a little wider than living eyes
+        if (length(q / float2(W * 1.15, H)) < 1.0) { mask = 1.0; white = 0.0; }
+        continue;
+    }
 
     if (Dead > 0.5)
     {

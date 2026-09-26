@@ -32,6 +32,14 @@ public:
 	UFUNCTION(Exec)
 	void DevClock();
 
+	/** Console (testing): skip time forward. DevAdvance 24 = one day later */
+	UFUNCTION(Exec)
+	void DevAdvance(float Hours);
+
+	/** Console (testing): damage the nearest other ball. DevHitNearest 1000 kills it */
+	UFUNCTION(Exec)
+	void DevHitNearest(float Amount);
+
 protected:
 
 	virtual void PostInitializeComponents() override;

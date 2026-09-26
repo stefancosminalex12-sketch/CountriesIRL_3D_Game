@@ -5,6 +5,7 @@
 #include "Characters/BallParts.h"
 #include "Characters/StaminaComponent.h"
 #include "Characters/HealthComponent.h"
+#include "Characters/CorpseComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -53,14 +54,14 @@ ABallCharacter::ABallCharacter()
 
 	Stamina = CreateDefaultSubobject<UStaminaComponent>(TEXT("Stamina"));
 	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
+	Corpse = CreateDefaultSubobject<UCorpseComponent>(TEXT("Corpse"));
 }
 
 void ABallCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	BallParts::SetColor(BodyMesh, BodyColor);
-	Animator->ApplyColors(HandColor, FootColor);
+	RefreshColors();
 
 	SetEmotion(StartingEmotion);
 	SetSprinting(false);
@@ -76,7 +77,31 @@ bool ABallCharacter::IsDead() const
 float ABallCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	const float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	return Health->ApplyDamage(Damage);
+	const float Removed = Health->ApplyDamage(Damage);
+	if (Removed > 0.f)
+	{
+		// Minecraft-style red flash while being hurt
+		DamageFlashTime = DamageFlashDuration;
+	}
+	return Removed;
+}
+
+void ABallCharacter::RefreshColors()
+{
+	const float Flash = DamageFlashDuration > 0.f ? FMath::Clamp(DamageFlashTime / DamageFlashDuration, 0.f, 1.f) : 0.f;
+	auto Shade = [this, Flash](const FLinearColor& Base, bool bDecays)
+	{
+		FLinearColor Color = Base;
+		if (bDecays && Corpse->IsDecaying())
+		{
+			Color = FMath::Lerp(Color, Corpse->GetTint(), Corpse->GetTintStrength());
+		}
+		return FMath::Lerp(Color, DamageFlashColor, Flash * DamageFlashStrength);
+	};
+
+	// Feet are boots: they don't rot
+	BallParts::SetColor(BodyMesh, Shade(BodyColor, true));
+	Animator->ApplyColors(Shade(HandColor, true), Shade(FootColor, false));
 }
 
 void ABallCharacter::HandleDeath(UHealthComponent* DepletedHealth)
@@ -84,6 +109,11 @@ void ABallCharacter::HandleDeath(UHealthComponent* DepletedHealth)
 	SetEmotion(EBallEmotion::Dead);
 	SetSprinting(false);
 	GetCharacterMovement()->DisableMovement();
+
+	// The living can walk over the dead; traces (looting, interaction) still hit them
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+
+	Corpse->StartDecay();
 }
 
 float ABallCharacter::GetBallCenterZ() const
@@ -115,6 +145,24 @@ void ABallCharacter::SetSprinting(bool bNewSprinting)
 void ABallCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// Colors change while flashing red and while a corpse decays
+	const bool bFlashing = DamageFlashTime > 0.f;
+	DamageFlashTime = FMath::Max(DamageFlashTime - DeltaTime, 0.f);
+	if (bFlashing || Corpse->IsDecaying())
+	{
+		RefreshColors();
+	}
+
+	if (IsDead())
+	{
+		if (Corpse->IsDecaying())
+		{
+			BodyPivot->SetRelativeScale3D(FVector(Corpse->GetBodyScale()));
+			Face->SetSkull(Corpse->IsSkeleton());
+		}
+		return;
+	}
 
 	// Only drain stamina while actually running on the ground, not while holding the key standing still
 	const bool bMovingOnGround = GetVelocity().Size2D() > 10.f && GetCharacterMovement()->IsMovingOnGround();
