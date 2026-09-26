@@ -1,0 +1,23 @@
+# Normalize text files
+* text=auto
+
+# Unity YAML assets: merge as text
+*.unity   text eol=lf merge=unityyamlmerge
+*.prefab  text eol=lf merge=unityyamlmerge
+*.asset   text eol=lf merge=unityyamlmerge
+*.meta    text eol=lf
+*.mat     text eol=lf
+*.anim    text eol=lf
+*.controller text eol=lf
+*.cs      text diff=csharp
+
+# Binary assets
+*.png  binary
+*.jpg  binary
+*.psd  binary
+*.wav  binary
+*.mp3  binary
+*.ogg  binary
+*.ttf  binary
+*.otf  binary
+*.fbx  binary
