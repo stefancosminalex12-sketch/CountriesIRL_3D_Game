@@ -8,4 +8,6 @@ Unreal Engine 5.8 C++ project (module `CountriesIRL_3D_Game`, started from the T
 - Gameplay logic goes in C++; use Blueprints only for small visual hookups.
 - World data (settlements, houses, characters, units, events, quests) should be data-driven so DLC regions can be added as new data + art.
 - Large binary assets go through Git LFS (see `.gitattributes`).
+- **Current work:** follow the Build Roadmap in `Docs/MASTER_FILE.md` (commoner origin first, v0.1 → v0.2 → v0.3).
+- **Assets:** search Fab for free assets that fit, show them to the user and ask before using any; the user claims them with their Epic account (Claude cannot sign in).
 - The user is a beginner: explain plainly, prefer doing things directly over click-by-click UI instructions.

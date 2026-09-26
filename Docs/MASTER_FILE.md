@@ -97,7 +97,19 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
 - **Rising from the bottom:** enlist, fight skirmishes, loot and resell, do work/jobs, buy better gear, meet influential people [Decided]
 - **Main quest, side quests and treasures** [Decided]
 - **Main quest hook:** fairly early, a **local lord recruits you**, which introduces you to the main quest (KCD-style) [Decided]
-- **You basically never die**: losing a big battle means capture (ransom, escape, bargaining, losses) instead of game over. Details [Open]
+- **Main quest unlocks at a certain level:** you receive a **letter** telling you to go somewhere, and the main story starts. Since you can be anyone, anywhere, the letter adapts: a **knight is summoned to fight**; a **noble is called to the battlefield** [Decided]
+- **Only historically accurate participants:** research which real nobles actually fought (even once) and include only those as fighting nobles [Decided]
+- **Death & saving** [Decided]: you *can* die (e.g. if you just stand there taking damage), which means reloading. **Frequent autosaves**, and an **autosave at the start of every random battle**
+- **Defeat** [Decided]: you can **retreat/run away** before the fight is lost. If you lose and can't escape, you are **captured along with a few others** → cutscene → taken to the enemy's town/castle, followed by a consequence (see historical options in the capture section) [consequence details: Open]
+- **Advisor** [Decided]: hire an advisor who gives recommendations before and during battles
+- **Capture: historical reality in the Wars of the Roses** [Decided]:
+  - **Commoners** were usually spared ("spare the commons"), often stripped of gear/money and sent home, or absorbed into the winning side
+  - **Knights/gentry** could be ransomed, pardoned, or switch allegiance
+  - **Nobles** were in real danger: many captured lords were **executed** as traitors (e.g. Salisbury after Wakefield 1460, Owen Tudor after Mortimer's Cross 1461, Somerset after Tewkesbury 1471). Ransom was more typical of the Hundred Years' War than of this civil war
+  - **Attainder:** Parliament could confiscate a defeated lord's lands and titles (Act of Attainder), and they could later be **restored** (reversal of attainder)
+  - Forced labour and being "sold" were **not** English practices then
+  - Game version [Decided]: the player never gets executed; instead: imprisonment and escape quest, ransom paid by your lord/family, swearing to the other side, **losing lands via attainder** (restorable later), losing gear/money
+  - **Consequences depend on your *current* social rank, not your origin** [Decided]: a peasant who rose to knight or noble is treated as a knight or noble when captured (and the same goes for how NPCs, letters and quests treat you)
 - **No inheritor/succession system** (probably) [Decided]
 
 ---
@@ -128,7 +140,7 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
   - **Storage** in your house/estates; if an estate is attacked and you lose, **part** of the stored items can be looted (not all)
   - **Hidden stashes** that raiders can't find
 - **Heraldry over armor:** identity shows through a **tabard/surcoat with your arms, livery badges, painted shield and helmet crest** when the ball is armored [Decided]
-- **Travel & mounts** (historically grounded) [Proposed]:
+- **Travel & mounts** (historically grounded) [Decided]:
   - **On foot** is the default for commoners (~15–20 miles/day historically)
   - **Horse tiers:** affer/stott (farm workhorse) → hackney (hired/ordinary riding horse) → rouncey → palfrey → courser → destrier (warhorse, a status symbol). Better horses are faster, carry more, have more endurance, and change how NPCs treat you
   - **Renting horses ("hackneys")** at inns and towns, returned at another inn on the same road (historically real, e.g. regulated hire on the London–Dover road in the late 1300s)
@@ -150,7 +162,15 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
   - **Marker setting on/off**; off = identify sides by heraldry and livery [Decided]
   - **Hitting your own troops lowers morale and loyalty**; badly treated men can **desert** (run away) [Decided]
 - **Artillery mishaps** [Decided]: cannons (and other gear) can go wrong and blow up your own side, for fun moments. Historically real: early bombards sometimes burst; King James II of Scotland was killed in 1460 at the siege of Roxburgh when a cannon exploded beside him
-- Battles: **"command, don't control"**, fewer and simpler fights than Bannerlord [Proposed]
+- **Camera** [Decided]: **first-person by default**, switchable to third-person
+- **Personal combat is simple, with hit zones** [Decided]: strikes to the **head/face** do the most damage, **chest** is high, lower areas do less. Hit zones to be defined
+- **Commanding troops** [Decided]: **fight alongside your troops or just watch**. Commands similar to Bannerlord but simpler and smaller scale: **formations, fall back, attack, split, encircle**, etc.
+- **Progression** [Decided]: **levels and stats** (Skyrim/KCD-like). Gain **XP** from fighting, trading, communicating and period skills; **level up and assign skill points**. Less complex than KCD2/Skyrim; exact skill list [Open]
+- **Economy** [Decided]:
+  - A **limited list of relevant commodities**, plus **building materials** (stone, timber) for rebuilding, plus **food** (what armies, villages and everything run on), plus **money** (what you do everything with)
+  - **Every village produces a couple of things** (mining, fishing, timber…), and all can have multiple outputs including food
+  - Keep it **simple, only what is needed**; no micromanagement; only relevant if you own something
+  - Historically accurate commodity candidates for 1455 England [Proposed]: **wool** (England's great export) and **cloth**, grain, livestock, fish, **salt**, timber, stone, iron, **lead**, **tin** (Cornwall/Devon), sea-coal, hides/leather, ale, imported **wine**; gold/silver mainly as coin and plate (oil is not a period commodity)
 - News and orders travel at messenger speed [Proposed]
 - Living chronicle of your playthrough [Proposed]
 
@@ -163,7 +183,8 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
 - **Place statuses** in the same style: (Burning), (Under Siege), (Rebuilding), (Abandoned), (Plundered) [Decided]
 - **Maps show only what you know** [Decided]: map information updates only when **your scouts, troops, allies (or you yourself)** learn about it; until then it shows the last known state
 - **Ask the locals** [Decided]: you can ask people in an area for news, rumors and directions; this information is dynamic and changes over time
-- [Decided] Local info can be **outdated or wrong** (rumors, exaggeration, lies from enemies); directions from locals get drawn onto your M map
+- [Decided] **Reliability depends on who you ask:** only **peasants/commoners** can give outdated or wrong info; **nobles, knights and scholars always give correct details**
+- [Decided] Peasant info can be **outdated or wrong** (rumors, exaggeration, lies from enemies); directions from locals get drawn onto your M map
 - Fire details [Decided]: fire **spreads** between close wooden/thatched buildings; **weather matters** (rain slows it, dry summers spread it); stone buildings resist; villagers form **bucket chains** to fight fires. Historical note: burning and plundering was a real tactic, e.g. Queen Margaret's northern army plundering on its march south in early 1461
 - **Siege equipment of the period** [Decided]. Accuracy notes [Proposed]:
   - By 1455 England, **gunpowder artillery** (bombards, serpentines, handgonnes) was the main wall-breaker; e.g. Bamburgh (1464) fell to Warwick's cannon
@@ -210,7 +231,19 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
 
 ---
 
-## 11. First Playable Slice [Proposed]
+## 11a. Build Roadmap [Decided]
+
+Start with the **commoner origin**; build what's designed so far and add features as we progress.
+
+- **v0.1 "Does it feel good?"**: small stylized Yorkshire countryside with day/night and weather; one tiny village (houses, church, smithy, alehouse); player ball (walk/run, first/third-person, floating hands and feet, eye emotions); rideable horse; simple hit-zone combat vs a bandit or two; compass bar
+- **v0.2 "A slice of life"**: commoner origin + simple character creator (name + looks); NPC balls living in the village; talking/asking directions; buying/selling, money; first quest; M map (Gough style)
+- **v0.3 "Going to war"**: recruitment letter from the local lord; small skirmish with your troops, simple commands, side markers; XP and leveling
+
+**Asset workflow** [Decided]: Claude searches Fab for free assets that fit, **shows them to the user and asks for approval**; the user claims them with their Epic account and adds them to the project; then Claude integrates them.
+
+---
+
+## 11. First Playable Slice (original proposal)
 
 Yorkshire & the North, spring 1455:
 - A small stretch of stylized terrain with day/night and weather
