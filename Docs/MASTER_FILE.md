@@ -239,6 +239,8 @@ Start with the **commoner origin**; build what's designed so far and add feature
 - **v0.2 "A slice of life"**: commoner origin + simple character creator (name + looks); NPC balls living in the village; talking/asking directions; buying/selling, money; first quest; M map (Gough style)
 - **v0.3 "Going to war"**: recruitment letter from the local lord; small skirmish with your troops, simple commands, side markers; XP and leveling
 
+**Budget rule** [Decided]: use **free assets and tools as much as possible**, plus our own creations; only consider paid assets when nothing free works.
+
 **Asset workflow** [Decided]: Claude searches Fab for free assets that fit, **shows them to the user and asks for approval**; the user claims them with their Epic account and adds them to the project; then Claude integrates them.
 
 ---
