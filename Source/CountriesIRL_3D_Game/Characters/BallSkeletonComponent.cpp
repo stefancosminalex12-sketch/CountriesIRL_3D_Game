@@ -48,13 +48,14 @@ void UBallSkeletonComponent::Show(USceneComponent* Parent, float GroundZ, const 
 		return;
 	}
 
-	// Laid out along the ball's forward axis: skull in front, then neck, chest with ribs, pelvis.
-	// Every piece rests on the ground (GroundZ + half its thickness).
+	// A dead ball lies on its back: the top of the ball ends up behind (-X), the boots in front (+X).
+	// So the skull goes behind, then neck, chest with ribs, and the pelvis toward the boots.
+	// Everything fits inside the lying ball's outline and rests on the ground (GroundZ + half its thickness).
 	const FRotator AlongX(90.f, 0.f, 0.f);   // turns a cylinder's axis from Z to X
 
 	// Skull: big, tipped back so the hollow sockets look at the sky
 	const float SkullRadius = SkullSize * 0.5f;
-	UStaticMeshComponent* Skull = AddPart(Parent, SphereMesh, FVector(40.f, 0.f, GroundZ + SkullRadius), FRotator(60.f, 0.f, 15.f), FVector(SkullSize / 100.f), &BoneColor);
+	UStaticMeshComponent* Skull = AddPart(Parent, SphereMesh, FVector(-30.f, 0.f, GroundZ + SkullRadius), FRotator(60.f, 0.f, 15.f), FVector(SkullSize / 100.f), &BoneColor);
 	if (EyeMaterial)
 	{
 		// The same eye shader as living balls, in "skull" mode (Dead = 2), on a shell just above the skull
@@ -66,19 +67,19 @@ void UBallSkeletonComponent::Show(USceneComponent* Parent, float GroundZ, const 
 	}
 
 	// Neck: two chunky vertebrae, thick but thinner than the chest
-	for (const float X : { 3.f, -8.f })
+	for (const float X : { 2.f, 11.f })
 	{
-		AddPart(Parent, CylinderMesh, FVector(X, 0.f, GroundZ + 8.5f), AlongX, SizeToScale(FVector(17.f, 17.f, 8.f)), &BoneColor);
+		AddPart(Parent, CylinderMesh, FVector(X, 0.f, GroundZ + 7.f), AlongX, SizeToScale(FVector(14.f, 14.f, 7.f)), &BoneColor);
 	}
 
 	// Chest: the thickest bone, the core of the skeleton
-	AddPart(Parent, SphereMesh, FVector(-36.f, 0.f, GroundZ + 11.f), FRotator::ZeroRotator, SizeToScale(FVector(48.f, 25.f, 22.f)), &BoneColor);
+	AddPart(Parent, SphereMesh, FVector(32.f, 0.f, GroundZ + 9.5f), FRotator::ZeroRotator, SizeToScale(FVector(40.f, 21.f, 19.f)), &BoneColor);
 
 	// Three chunky ribs across the chest, cartoon bones with knobby ends
 	const float RibThickness = RibThicknessAndKnob.X;
 	const float KnobSize = RibThicknessAndKnob.Y;
-	const float RibX[] = { -22.f, -36.f, -50.f };
-	const float RibLength[] = { 66.f, 72.f, 58.f };
+	const float RibX[] = { 21.f, 32.f, 43.f };
+	const float RibLength[] = { 54.f, 60.f, 48.f };
 	for (int32 Index = 0; Index < 3; ++Index)
 	{
 		AddPart(Parent, SphereMesh, FVector(RibX[Index], 0.f, GroundZ + RibThickness * 0.5f + 1.f), FRotator::ZeroRotator,
@@ -91,5 +92,5 @@ void UBallSkeletonComponent::Show(USceneComponent* Parent, float GroundZ, const 
 	}
 
 	// Small pelvis
-	AddPart(Parent, SphereMesh, FVector(-72.f, 0.f, GroundZ + 6.f), FRotator::ZeroRotator, SizeToScale(FVector(22.f, 40.f, 12.f)), &BoneColor);
+	AddPart(Parent, SphereMesh, FVector(56.f, 0.f, GroundZ + 5.f), FRotator::ZeroRotator, SizeToScale(FVector(18.f, 34.f, 10.f)), &BoneColor);
 }

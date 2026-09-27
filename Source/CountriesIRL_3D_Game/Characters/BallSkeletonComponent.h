@@ -34,11 +34,11 @@ protected:
 
 	/** Skull diameter in cm: big, it was a countryball after all */
 	UPROPERTY(EditAnywhere, Category="Skeleton")
-	float SkullSize = 58.f;
+	float SkullSize = 46.f;
 
 	/** Thickness of the ribs and the knobs at their ends */
 	UPROPERTY(EditAnywhere, Category="Skeleton")
-	FVector2D RibThicknessAndKnob = FVector2D(12.f, 16.f);
+	FVector2D RibThicknessAndKnob = FVector2D(10.f, 13.f);
 
 private:
 
