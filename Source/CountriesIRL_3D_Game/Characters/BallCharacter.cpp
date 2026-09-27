@@ -270,7 +270,7 @@ void ABallCharacter::ApplyBodyStyle()
 		Body->SetSkeletalMesh(BodyAsset);
 		Body->SetAnimInstanceClass(AnimClass);
 		Body->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -HumanoidCapsule.Y), FRotator(0.f, -90.f, 0.f));
-		Body->SetRelativeScale3D(FVector(HumanoidBodyScale));
+		Body->SetRelativeScale3D(HumanoidBodyScale);
 		Body->SetVisibility(true);
 		// The mannequin's own head is replaced by the countryball
 		Body->HideBoneByName(HumanoidHeadBone, EPhysBodyOp::PBO_None);

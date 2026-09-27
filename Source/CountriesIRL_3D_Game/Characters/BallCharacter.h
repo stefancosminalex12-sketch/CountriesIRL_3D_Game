@@ -180,17 +180,17 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
 	TArray<TSoftObjectPtr<UAnimSequenceBase>> HumanoidPunchAnims;
 
-	/** Size of the humanoid body relative to the original mesh (small cartoon body) */
+	/** Size of the humanoid body relative to the original mesh: wider than tall makes a chunky, chibi-style body */
 	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
-	float HumanoidBodyScale = 0.55f;
+	FVector HumanoidBodyScale = FVector(0.8f, 0.8f, 0.5f);
 
-	/** Head ball diameter in cm on the humanoid body */
+	/** Head ball diameter in cm on the humanoid body (big, cartoon proportions) */
 	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
-	float HumanoidHeadSize = 62.f;
+	float HumanoidHeadSize = 72.f;
 
-	/** Capsule half height and radius for the humanoid body */
+	/** Capsule radius and half height for the humanoid body */
 	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
-	FVector2D HumanoidCapsule = FVector2D(30.f, 72.f);
+	FVector2D HumanoidCapsule = FVector2D(35.f, 68.f);
 
 	/** Bone at the top of the neck that the head ball sits on */
 	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
@@ -198,7 +198,7 @@ protected:
 
 	/** How far above the neck the head's center sits, as a fraction of the head's radius */
 	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
-	float HumanoidHeadLift = 0.8f;
+	float HumanoidHeadLift = 0.45f;
 
 	/** How smoothly the head follows the neck (higher = tighter). Filters out animation jitter. */
 	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
