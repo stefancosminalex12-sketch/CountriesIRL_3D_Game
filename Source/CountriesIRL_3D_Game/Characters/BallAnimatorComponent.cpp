@@ -364,8 +364,9 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 		FootOffsetX[Index] = Local.X - 2.f;
 
+		// Bones stage: the boots lie past the pelvis, at the opposite end from the skull
 		const FVector DeadFoot = bSkeletonPose
-			? FVector(-96.f, Side(Index) * 16.f, GroundZ + FootSize.Z * 0.5f)
+			? FVector(80.f, Side(Index) * 14.f, GroundZ + FootSize.Z * 0.5f)
 			: FVector(Radius + 8.f, Side(Index) * 24.f, GroundZ + FootSize.Z * 0.5f);
 		Local = FMath::Lerp(Local, DeadFoot, DeadBlend);
 		Boots[Index].Root->SetRelativeLocation(Local);
@@ -438,9 +439,11 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 		Hand = KeepHandOutOfWalls(Index, FVector(0.f, 0.f, CenterZ), Hand, DeltaTime);
 
+		// Lying flat on the ground: beside the ball, or beside the ribs once only bones are left
+		const float LyingHandZ = GroundZ + PalmSize.Z * 0.5f + 1.f;
 		const FVector DeadHand = bSkeletonPose
-			? FVector(-30.f, Side(Index) * 54.f, GroundZ + HandSize * 0.5f)
-			: FVector(-5.f, Side(Index) * (Radius + 10.f), GroundZ + HandSize * 0.5f);
+			? FVector(30.f, Side(Index) * 42.f, LyingHandZ)
+			: FVector(-5.f, Side(Index) * (Radius + 10.f), LyingHandZ);
 		Hand = FMath::Lerp(Hand, DeadHand, DeadBlend);
 		if (DeadBlend > 0.5f)
 		{

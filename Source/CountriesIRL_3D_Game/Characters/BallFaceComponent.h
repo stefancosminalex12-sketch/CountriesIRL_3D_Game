@@ -115,4 +115,7 @@ private:
 
 	float TimeToNextBlink = 3.f;
 	float BlinkTime = -1.f;
+
+	/** How much taller than wide the face shell is (the ball's egg shape); passed to the eye shader */
+	float ShellStretch = 1.f;
 };

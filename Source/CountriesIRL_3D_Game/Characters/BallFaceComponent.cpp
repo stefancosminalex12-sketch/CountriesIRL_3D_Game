@@ -48,6 +48,8 @@ void UBallFaceComponent::CreateFaceMesh(AActor* Owner, USceneComponent* Parent, 
 
 	FaceShell = BallParts::Create(Owner, TEXT("FaceShell"), Parent, SphereMesh);
 	FaceShell->SetRelativeScale3D(FVector(BallRadius + ShellOffset, BallRadius + ShellOffset, BallRadius * HeightScale + ShellOffset) / 50.f);
+	// The shell follows the egg shape; the eye shader undoes the stretch so eyes keep their round shape
+	ShellStretch = (BallRadius * HeightScale + ShellOffset) / (BallRadius + ShellOffset);
 	FaceShell->SetMaterial(0, EyeMaterial.Object);
 	FaceShell->SetCastShadow(false);
 }
@@ -152,4 +154,5 @@ void UBallFaceComponent::PushPoseToMaterial()
 	FaceMaterial->SetScalarParameterValue(TEXT("LowerLid"), FMath::Min(CurrentPose.LowerLid, MaxLidClosure));
 	// Dead: 0 = alive, 1 = x_x (2 = hollow skull sockets, used by the skeleton's skull)
 	FaceMaterial->SetScalarParameterValue(TEXT("Dead"), CurrentPose.bDead ? 1.f : 0.f);
+	FaceMaterial->SetScalarParameterValue(TEXT("ShellStretch"), ShellStretch);
 }
