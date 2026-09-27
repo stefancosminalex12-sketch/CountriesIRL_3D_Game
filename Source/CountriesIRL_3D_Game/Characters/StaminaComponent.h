@@ -43,7 +43,13 @@ public:
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	/** Changes the capacity (e.g. a horse has far more than a person), keeping how full it is */
+	void SetMaxStamina(float NewMax);
+
 protected:
+
+	/** Everyone starts rested */
+	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, Category="Stamina", meta=(ClampMin=1))
 	float MaxStamina = 100.f;

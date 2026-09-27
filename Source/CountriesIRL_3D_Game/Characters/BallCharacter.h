@@ -177,6 +177,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ball|Movement")
 	float RunStaminaCost = 12.f;
 
+	/** Stamina per second while galloping on a horse: riding hard tires you too, as slowly as holding the guard */
+	UPROPERTY(EditAnywhere, Category="Ball|Movement")
+	float RidingStaminaCost = 1.5f;
+
 	/** Stamina per jump */
 	UPROPERTY(EditAnywhere, Category="Ball|Movement")
 	float JumpStaminaCost = 15.f;

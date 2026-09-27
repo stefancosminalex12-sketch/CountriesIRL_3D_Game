@@ -68,6 +68,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement")
 	float JumpVelocity = 450.f;
 
+	/** How much stamina the horse has: far more than a person (100), so it can gallop about a minute */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Stamina")
+	float MaxStamina = 400.f;
+
 	/** Horse stamina spent per second of galloping, and per jump */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Stamina")
 	float GallopStaminaPerSecond = 6.f;

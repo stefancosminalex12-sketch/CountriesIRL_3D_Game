@@ -63,6 +63,8 @@ void AHorse::ApplyDefinition()
 		Body->SetAnimInstanceClass(UHorseAnimInstance::StaticClass());
 	}
 
+	Stamina->SetMaxStamina(Definition->MaxStamina);
+
 	UCharacterMovementComponent* Movement = GetCharacterMovement();
 	Movement->MaxWalkSpeed = Definition->WalkSpeed;
 	Movement->MaxAcceleration = Definition->Acceleration;
@@ -152,8 +154,9 @@ void AHorse::Tick(float DeltaTime)
 		Movement->StopMovementImmediately();
 	}
 
-	// Gallop while asked, moving forward on the ground and not out of breath
-	bGalloping = bWantsGallop && Throttle > 0.5f && Movement->IsMovingOnGround() && Stamina->HasStamina();
+	// Gallop while asked, moving forward on the ground, and neither the horse nor its rider is out of breath
+	const bool bRiderFresh = !Rider || Rider->GetStamina()->HasStamina();
+	bGalloping = bWantsGallop && Throttle > 0.5f && Movement->IsMovingOnGround() && Stamina->HasStamina() && bRiderFresh;
 	if (bGalloping)
 	{
 		Stamina->Drain(Definition->GallopStaminaPerSecond, DeltaTime);

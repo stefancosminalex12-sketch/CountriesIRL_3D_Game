@@ -207,8 +207,12 @@ void ABallCharacter::Tick(float DeltaTime)
 
 	if (MountedHorse)
 	{
-		// The horse does the running; we just sit in the saddle
+		// The horse does the running; we sit in the saddle, and a hard gallop slowly tires us too
 		UpdateSeat();
+		if (MountedHorse->IsGalloping())
+		{
+			Stamina->Drain(RidingStaminaCost, DeltaTime);
+		}
 		bRunning = false;
 		return;
 	}

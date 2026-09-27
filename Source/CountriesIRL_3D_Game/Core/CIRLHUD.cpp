@@ -57,7 +57,9 @@ void ACIRLHUD::DrawHUD()
 		const UStaminaComponent* HorseStamina = Horse->GetStamina();
 		const float HorseY = HealthY - (BarSpacing + StaminaBarHeight) * Scale;
 		const FLinearColor Fill = HorseStamina->IsExhausted() ? FLinearColor(0.75f, 0.2f, 0.12f) : FLinearColor(0.55f, 0.33f, 0.14f);
-		DrawBar(X, HorseY, Width, StaminaBarHeight * Scale, HorseStamina->GetStaminaPercent(), Fill, 1.f);
+		// A longer bar for a bigger pool (a horse has several times a person's stamina)
+		const float HorseWidth = Width * FMath::Clamp(FMath::Sqrt(HorseStamina->GetMaxStamina() / 100.f), 1.f, 1.6f);
+		DrawBar(X, HorseY, HorseWidth, StaminaBarHeight * Scale, HorseStamina->GetStaminaPercent(), Fill, 1.f);
 	}
 
 	// What the interact key would do (e.g. "E  Get on the horse"), bottom center

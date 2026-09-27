@@ -59,3 +59,17 @@ void UStaminaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 		bExhausted = false;
 	}
 }
+
+void UStaminaComponent::SetMaxStamina(float NewMax)
+{
+	const float Percent = GetStaminaPercent();
+	MaxStamina = FMath::Max(NewMax, 1.f);
+	Stamina = MaxStamina * Percent;
+}
+
+void UStaminaComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	Stamina = MaxStamina;
+	bExhausted = false;
+}
