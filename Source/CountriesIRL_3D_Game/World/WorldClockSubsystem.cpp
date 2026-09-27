@@ -49,6 +49,18 @@ void UWorldClockSubsystem::SetTimeOfDay(float Hours)
 	BroadcastChanges(Previous);
 }
 
+bool UWorldClockSubsystem::SetDate(int32 Year, int32 Month, int32 Day)
+{
+	if (!FDateTime::Validate(Year, Month, Day, 0, 0, 0, 0))
+	{
+		return false;
+	}
+	const FDateTime Previous = Now;
+	Now = FDateTime(Year, Month, Day) + Now.GetTimeOfDay();
+	BroadcastChanges(Previous);
+	return true;
+}
+
 void UWorldClockSubsystem::AdvanceTime(FTimespan Duration)
 {
 	const FDateTime Previous = Now;

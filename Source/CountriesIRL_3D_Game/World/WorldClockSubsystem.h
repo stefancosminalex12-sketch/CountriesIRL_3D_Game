@@ -42,6 +42,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Clock")
 	void SetTimeOfDay(float Hours);
 
+	/** Jumps to a date (Julian), keeping the time of day. Returns false if the date doesn't exist. */
+	UFUNCTION(BlueprintCallable, Category="Clock")
+	bool SetDate(int32 Year, int32 Month, int32 Day);
+
 	/** Moves time forward (waiting, sleeping, travel, story jumps) */
 	UFUNCTION(BlueprintCallable, Category="Clock")
 	void AdvanceTime(FTimespan Duration);

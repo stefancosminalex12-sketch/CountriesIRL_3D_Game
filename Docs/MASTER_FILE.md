@@ -66,6 +66,15 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
   - Clock = **local solar time** (medieval hours followed the sun); **real sun path for York (54°N)**: long summer days, short winter days; **moon with real phases** (1 May 1455 was near full moon)
   - Nights are dark blue and moonlit but playable; new-moon nights keep a little starlight. Stars in the sky: later polish
   - World orientation convention: **+X = north, +Y = east**
+- **Seasons (v0.1)** [Built]:
+  - Region **climate profile** (data asset `DA_Climate_Yorkshire`, DLC regions bring their own): per month the mean temperature, day/night range, how leafy the trees are, leaf colour and grass colour. Yorkshire 1450s = modern York averages ~0.5 °C colder (Little Ice Age). Nature follows the astronomical date, not the Julian calendar on the wall
+  - **Temperature** changes through the day (coldest ~3:00, warmest ~15:00) and from day to day (warmer and colder spells)
+  - **Trees**: bare Dec-Mar, buds breaking late April, fresh green May, full dark canopy June-Sept, gold/orange in October, leaves falling through November
+  - **Grass**: dull in winter, lush green May-June, hay-coloured in the dry weeks of late summer (haymaking, harvest)
+  - **Frost** on freezing nights (ground frost forms with the air a few degrees above 0 °C); it lingers in the morning and only melts once the sun is on it (slowly under the low winter sun). **Morning mist** on cool mornings, mostly autumn and winter (thicker fog)
+  - Everything goes into one material parameter set (`MPC_Season`: LeafAmount, LeafTint, GrassTint, Frost, Mist, Temperature), so any tree, grass or ground material, including free Fab assets, can follow the seasons by reading it (`M_Seasonal_Ground`, `M_Seasonal_Leaves` are the first two)
+  - **Medieval calendar** on the dev clock: feast days (fixed ones like Lady Day, May Day, Midsummer, Lammas, Michaelmas, St Crispin's, Martinmas, Christmas; moveable ones from **Easter computed the medieval Julian way**: Shrove Tuesday, Ash Wednesday, Good Friday, Easter, Ascension, Whitsun, Corpus Christi with the York mystery plays; Plough Monday), church seasons (Advent, Christmastide, Lent, Eastertide) and the farm work of the month ("labours of the months"). Check: Easter 1455 = Sunday 6 April. Later these drive NPC life (no work on feast days, fasting in Lent, markets)
+  - Test garden in `L_DevSandbox` (south side): simple placeholder trees and a grass patch using the seasonal materials; real trees/grass will come from Fab
 
 ---
 
@@ -273,14 +282,16 @@ Start with the **commoner origin**; build what's designed so far and add feature
    - Playtest round 5 (user): one-piece thumb looked wrong in a fist, and the punch looked like the hand just sliding forward → **every finger now has two segments with a joint** (fingers roll into a real fist, the **thumb wraps over the front** of the curled fingers); **the punch has phases**: short wind-up, a snap forward that accelerates into the hit and **corkscrews** from a vertical fist to palm-down, then the recoil; the **body twists into the punch** (punching side forward), leans and lunges; the **other fist comes up to guard the face**; in first-person the **view nudges forward** with each punch. Parts of one color share one material (cheaper to draw)
 2. [ ] Day/night (48 min) + weather
    - 2a [x] World clock + calendar and `DayNightSky` (sun, moon, atmosphere, clouds, fog, exposure) following it
-   - 2b [ ] Weather (clear/cloudy/overcast/rain), seasons
+   - 2b [ ] Weather (clear/cloudy/overcast/rain) and seasons
+     - [x] **Seasons** (2026-09-27, user asked for seasons first): see Time & Calendar > Seasons
+     - [ ] Weather: clear/cloudy/overcast/rain (and snow in cold months), driven by the climate profile and the seasonal temperature; snow cover, wet ground
 3. [ ] Yorkshire test landscape
 4. [ ] Village (free Fab assets, approved by the user first)
 5. [ ] Rideable horse
 6. [ ] Hit-zone combat + bandits
 7. [ ] Compass bar
 
-**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · **Left click punch** · **hold right click guard** · V first/third-person · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing), `DevDamage 25`, `DevHeal 25`, `DevTime 21.5` (jump to a time), `DevTimeSpeed 60` (fast-forward; 1 = normal), `DevClock` (show date/time), `DevAdvance 24` (skip hours), `DevHitNearest 20` (damage nearest ball; 1000 kills), `DevPunch`, `DevGuard` (toggle guard). Dev test level: `L_DevSandbox`.
+**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · **Left click punch** · **hold right click guard** · V first/third-person · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing), `DevDamage 25`, `DevHeal 25`, `DevTime 21.5` (jump to a time), `DevTimeSpeed 60` (fast-forward; 1 = normal), `DevClock` (show date/time), `DevAdvance 24` (skip hours), `DevHitNearest 20` (damage nearest ball; 1000 kills), `DevPunch`, `DevGuard` (toggle guard), `DevDate 25 12` (jump to a day of the year, shows the clock), `DevYear 1461`. Dev test level: `L_DevSandbox`.
 
 **Budget rule** [Decided]: use **free assets and tools as much as possible**, plus our own creations; only consider paid assets when nothing free works.
 

@@ -2,6 +2,7 @@
 
 #include "World/DayNightSky.h"
 #include "World/SkyMath.h"
+#include "World/SeasonSubsystem.h"
 #include "World/WorldClockSubsystem.h"
 #include "World/WorldSimulationSettings.h"
 #include "Components/DirectionalLightComponent.h"
@@ -27,6 +28,8 @@ ADayNightSky::ADayNightSky()
 	Sun->SetAtmosphereSunLightIndex(0);
 	Sun->SetIntensity(SunIntensity);
 	Sun->LightSourceAngle = 0.53f;
+	// The sun is the main light for fog, water and translucency; the moon only takes over when it is alone
+	Sun->ForwardShadingPriority = 1;
 
 	Moon = CreateDefaultSubobject<UDirectionalLightComponent>(TEXT("Moon"));
 	Moon->SetupAttachment(RootComponent);
@@ -53,7 +56,7 @@ ADayNightSky::ADayNightSky()
 
 	Fog = CreateDefaultSubobject<UExponentialHeightFogComponent>(TEXT("Fog"));
 	Fog->SetupAttachment(RootComponent);
-	Fog->SetFogDensity(0.03f);
+	Fog->SetFogDensity(FogDensity);
 	Fog->SetFogHeightFalloff(0.2f);
 
 	// Exposure is set directly from the sun height (min = max) so day and night look deliberate
@@ -83,6 +86,12 @@ void ADayNightSky::Tick(float DeltaTime)
 	if (const UWorldClockSubsystem* Clock = GetWorld()->GetSubsystem<UWorldClockSubsystem>())
 	{
 		UpdateSky(Clock->GetAstronomicalDateTime(), Clock->GetTimeOfDay());
+	}
+
+	// Cool mornings (autumn, winter) bring mist
+	if (const USeasonSubsystem* Seasons = GetWorld()->GetSubsystem<USeasonSubsystem>())
+	{
+		Fog->SetFogDensity(FogDensity * (1.f + (MistFogMultiplier - 1.f) * Seasons->GetState().Mist));
 	}
 }
 

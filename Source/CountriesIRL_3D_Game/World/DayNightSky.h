@@ -77,6 +77,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Sky")
 	float NightExposure = -1.6f;
 
+	/** Normal fog density, and how many times thicker it gets in full morning mist (from the seasons) */
+	UPROPERTY(EditAnywhere, Category="Sky")
+	float FogDensity = 0.03f;
+
+	UPROPERTY(EditAnywhere, Category="Sky")
+	float MistFogMultiplier = 6.f;
+
 private:
 
 	/** Positions the sun and moon and sets light levels for an astronomical date and solar hour */

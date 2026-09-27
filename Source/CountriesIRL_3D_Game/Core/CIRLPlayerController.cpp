@@ -65,6 +65,33 @@ void ACIRLPlayerController::DevAdvance(float Hours)
 	}
 }
 
+void ACIRLPlayerController::DevDate(int32 Day, int32 Month)
+{
+	if (UWorldClockSubsystem* Clock = GetWorld()->GetSubsystem<UWorldClockSubsystem>())
+	{
+		Clock->SetDate(Clock->GetDateTime().GetYear(), Month, Day);
+	}
+	// Show the clock so the result is visible
+	if (ACIRLHUD* GameHUD = GetHUD<ACIRLHUD>())
+	{
+		GameHUD->SetShowClock(true);
+	}
+}
+
+void ACIRLPlayerController::DevYear(int32 Year)
+{
+	if (UWorldClockSubsystem* Clock = GetWorld()->GetSubsystem<UWorldClockSubsystem>())
+	{
+		const FDateTime Now = Clock->GetDateTime();
+		Clock->SetDate(Year, Now.GetMonth(), FMath::Min(Now.GetDay(), FDateTime::DaysInMonth(Year, Now.GetMonth())));
+	}
+	// Show the clock so the result is visible
+	if (ACIRLHUD* GameHUD = GetHUD<ACIRLHUD>())
+	{
+		GameHUD->SetShowClock(true);
+	}
+}
+
 void ACIRLPlayerController::DevHitNearest(float Amount)
 {
 	const APawn* Self = GetPawn();

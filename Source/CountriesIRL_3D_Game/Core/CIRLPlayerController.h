@@ -36,6 +36,14 @@ public:
 	UFUNCTION(Exec)
 	void DevAdvance(float Hours);
 
+	/** Console (testing): jump to a day of the current year, keeping the time. DevDate 25 12 = Christmas */
+	UFUNCTION(Exec)
+	void DevDate(int32 Day, int32 Month);
+
+	/** Console (testing): jump to the same day in another year. DevYear 1461 */
+	UFUNCTION(Exec)
+	void DevYear(int32 Year);
+
 	/** Console (testing): damage the nearest other ball. DevHitNearest 1000 kills it */
 	UFUNCTION(Exec)
 	void DevHitNearest(float Amount);

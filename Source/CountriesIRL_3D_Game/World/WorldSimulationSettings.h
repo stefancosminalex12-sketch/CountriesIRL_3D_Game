@@ -6,6 +6,9 @@
 #include "Engine/DeveloperSettings.h"
 #include "WorldSimulationSettings.generated.h"
 
+class UClimateProfile;
+class UMaterialParameterCollection;
+
 /**
  *  Project-wide settings for the living world (Project Settings > Game > CountriesIRL World).
  *  Stored in Config/DefaultGame.ini so DLC regions can override them with data, not code.
@@ -32,4 +35,12 @@ public:
 	/** Latitude used for the sun and moon (degrees north). York is 53.96. */
 	UPROPERTY(config, EditAnywhere, Category="Sky")
 	float Latitude = 53.96f;
+
+	/** The region's climate (temperatures, foliage and grass through the year). Empty = built-in Yorkshire defaults. */
+	UPROPERTY(config, EditAnywhere, Category="Seasons")
+	TSoftObjectPtr<UClimateProfile> Climate = TSoftObjectPtr<UClimateProfile>(FSoftObjectPath(TEXT("/Game/CountriesIRL/World/DA_Climate_Yorkshire.DA_Climate_Yorkshire")));
+
+	/** Material parameters the seasons write to (LeafAmount, LeafTint, GrassTint, Frost, Mist, Temperature) */
+	UPROPERTY(config, EditAnywhere, Category="Seasons")
+	TSoftObjectPtr<UMaterialParameterCollection> SeasonParameters = TSoftObjectPtr<UMaterialParameterCollection>(FSoftObjectPath(TEXT("/Game/CountriesIRL/World/MPC_Season.MPC_Season")));
 };

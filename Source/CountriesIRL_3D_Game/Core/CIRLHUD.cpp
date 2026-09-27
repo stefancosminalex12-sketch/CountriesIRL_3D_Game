@@ -5,6 +5,8 @@
 #include "Characters/HealthComponent.h"
 #include "Characters/StaminaComponent.h"
 #include "World/WorldClockSubsystem.h"
+#include "World/SeasonSubsystem.h"
+#include "World/MedievalCalendar.h"
 #include "Engine/Canvas.h"
 #include "Engine/Engine.h"
 
@@ -60,8 +62,38 @@ void ACIRLHUD::DrawClock(float Scale)
 		return;
 	}
 
+	const FLinearColor TextColor(0.95f, 0.9f, 0.75f);
+	const float X = Margin.X * Scale;
+	float Y = Margin.X * Scale;
+	const float LineHeight = 22.f * Scale;
+
 	const FString Text = FString::Printf(TEXT("%s   %s"), *Clock->FormatDate(), *Clock->FormatTime());
-	DrawText(Text, FLinearColor(0.95f, 0.9f, 0.75f), Margin.X * Scale, Margin.X * Scale, GEngine->GetMediumFont(), Scale * 1.2f);
+	DrawText(Text, TextColor, X, Y, GEngine->GetMediumFont(), Scale * 1.2f);
+
+	// Season, weather-ish details and the medieval calendar
+	FString Details;
+	if (const USeasonSubsystem* Seasons = GetWorld()->GetSubsystem<USeasonSubsystem>())
+	{
+		const FSeasonState& State = Seasons->GetState();
+		Details = FString::Printf(TEXT("%s   %.0f%cC"), *USeasonSubsystem::SeasonName(State.Season), State.Temperature, TCHAR(0x00B0));
+		if (State.Frost > 0.3f) { Details += TEXT("   frost"); }
+		if (State.Mist > 0.3f) { Details += TEXT("   mist"); }
+	}
+	const FDateTime Date = Clock->GetDateTime();
+	const FString ChurchSeason = MedievalCalendar::ChurchSeason(Date);
+	if (!ChurchSeason.IsEmpty()) { Details += TEXT("   ") + ChurchSeason; }
+
+	Y += LineHeight * 1.3f;
+	DrawText(Details, TextColor, X, Y, GEngine->GetSmallFont(), Scale * 1.2f);
+
+	const FString Feast = MedievalCalendar::FeastDay(Date);
+	if (!Feast.IsEmpty())
+	{
+		Y += LineHeight;
+		DrawText(Feast, FLinearColor(1.f, 0.8f, 0.4f), X, Y, GEngine->GetSmallFont(), Scale * 1.2f);
+	}
+	Y += LineHeight;
+	DrawText(TEXT("In the fields: ") + MedievalCalendar::FarmWork(Date), TextColor, X, Y, GEngine->GetSmallFont(), Scale * 1.2f);
 }
 
 void ACIRLHUD::DrawBar(float X, float Y, float Width, float Height, float Percent, const FLinearColor& Fill, float Alpha)
