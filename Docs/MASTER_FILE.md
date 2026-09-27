@@ -279,7 +279,7 @@ Start with the **commoner origin**; build what's designed so far and add feature
 6. [ ] Hit-zone combat + bandits
 7. [ ] Compass bar
 
-**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · **Left click punch** · **hold right click guard** · V first/third-person · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing), `DevDamage 25`, `DevHeal 25`, `DevTime 21.5` (jump to a time), `DevTimeSpeed 60` (fast-forward; 1 = normal), `DevClock` (show date/time), `DevAdvance 24` (skip hours), `DevHitNearest 20` (damage nearest ball; 1000 kills), `DevPunch`, `DevGuard` (toggle guard). Dev test level: `L_DevSandbox`.
+**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · **Left click punch** · **hold right click guard** · V first/third-person · T cycle emotion (debug) · **B switch body prototype**. Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing), `DevDamage 25`, `DevHeal 25`, `DevTime 21.5` (jump to a time), `DevTimeSpeed 60` (fast-forward; 1 = normal), `DevClock` (show date/time), `DevAdvance 24` (skip hours), `DevHitNearest 20` (damage nearest ball; 1000 kills), `DevPunch`, `DevGuard` (toggle guard), `DevBodyAll` (switch every ball's body). Dev test level: `L_DevSandbox`.
 
 **Budget rule** [Decided]: use **free assets and tools as much as possible**, plus our own creations; only consider paid assets when nothing free works.
 
@@ -316,6 +316,7 @@ Yorkshire & the North, spring 1455:
   - Plan [Proposed]: build one prototype of the hybrid (Blender model + rig + a few free animations) next to the current countryball in the sandbox, play both, then decide
   - User's view (2026-09-27): leaning toward a body. A body lets the game use normal human-scale assets (and reuse them), is simpler, and the user thinks it looks better; unsure countryballs alone are relevant enough to carry the game; wants it to be unique (no 3D countryball game like this exists)
   - Claude's view: agree on the hybrid (countryball head with flag + eyes, small cartoon body): keeps the recognizable signature while unlocking human-scale Fab assets (furniture, tools, saddles), free animations (Unreal template anims already in the project, Quaternius CC0) and layered clothing/armor. (Correction noted: the current 1.25 m ball already fits human-scale doors; buildings would not need to be weird either way.) Prototype approach: Blender body rigged to Unreal's standard mannequin skeleton so existing animations work immediately
+  - **Prototype built (2026-09-27):** press **B** to switch your character between the countryball and the **ball head on a small body** (Unreal's free template mannequin at 55% size, its head hidden, our countryball head with eyes/emotions on the neck; free template walk/jog/jump animations, attack animations for punches, ragdoll on death). Console `DevBodyAll` switches every ball. Grey mannequin = shape test only; next: a free cartoon body (Quaternius CC0 / Fab free, links sent to the user first) or our own Blender body
 
 
 - Capture system details (ransom, escape, consequences)

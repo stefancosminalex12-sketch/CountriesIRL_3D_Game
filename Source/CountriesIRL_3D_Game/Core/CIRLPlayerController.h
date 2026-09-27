@@ -40,6 +40,10 @@ public:
 	UFUNCTION(Exec)
 	void DevHitNearest(float Amount);
 
+	/** Console (testing): switch every ball between countryball and ball-head-on-a-body */
+	UFUNCTION(Exec)
+	void DevBodyAll();
+
 protected:
 
 	virtual void PostInitializeComponents() override;

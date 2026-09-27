@@ -92,6 +92,7 @@ private:
 	void ToggleView() { SetFirstPerson(!bFirstPerson); }
 	void CycleEmotion();
 	void Attack();
+	void ToggleBody();
 	void StartGuard();
 	void StopGuard();
 	void UpdateRotationMode();
