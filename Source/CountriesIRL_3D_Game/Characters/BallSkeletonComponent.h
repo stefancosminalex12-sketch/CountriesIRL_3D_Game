@@ -28,6 +28,8 @@ public:
 	/** Builds the bones lying on the ground. Parent is the ball's visual root; GroundZ is the ground height in its space. */
 	void Show(USceneComponent* Parent, float GroundZ, const FLinearColor& BoneColor);
 
+	float GetSkullSize() const { return SkullSize; }
+
 	bool IsShown() const { return Parts.Num() > 0; }
 
 protected:

@@ -245,7 +245,10 @@ void UBallAnimatorComponent::UpdateFeet(float DeltaTime, float SpeedAlpha, bool 
 	FVector Landing[2];
 	for (int32 Index = 0; Index < 2; ++Index)
 	{
-		Landing[Index] = KeepOnOwnSide(Index, FootRestWorld(Index) + Velocity2D * (StepTime * 0.5f));
+		const FVector Rest = FootRestWorld(Index);
+		Landing[Index] = KeepOnOwnSide(Index, Rest + Velocity2D * (StepTime * 0.5f));
+		// Each foot finds the ground exactly where it will land (steps, slopes, bodies, edges)
+		Landing[Index].Z = GroundZAt(Landing[Index], Rest.Z);
 	}
 
 	// Advance steps in progress; keep steering them toward the moving landing spot

@@ -10,6 +10,8 @@
 #include "Characters/BallMeleeComponent.h"
 #include "Animals/Horse.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/BoxComponent.h"
+#include "Components/SphereComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -60,6 +62,22 @@ ABallCharacter::ABallCharacter()
 	Corpse = CreateDefaultSubobject<UCorpseComponent>(TEXT("Corpse"));
 	Skeleton = CreateDefaultSubobject<UBallSkeletonComponent>(TEXT("Skeleton"));
 	Melee = CreateDefaultSubobject<UBallMeleeComponent>(TEXT("Melee"));
+
+	// Other balls can land and stand on top of us (by default the engine bounces characters off each other)
+	GetCapsuleComponent()->CanCharacterStepUpOn = ECB_Yes;
+
+	// Corpse collision: off while alive, sized to the lying body or the bones after death
+	CorpseCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("CorpseCollision"));
+	SkullCollision = CreateDefaultSubobject<USphereComponent>(TEXT("SkullCollision"));
+	for (UShapeComponent* Shape : TArray<UShapeComponent*>{ CorpseCollision, SkullCollision })
+	{
+		Shape->SetupAttachment(GetCapsuleComponent());
+		Shape->SetCollisionProfileName(TEXT("BlockAllDynamic"));
+		Shape->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+		Shape->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Shape->CanCharacterStepUpOn = ECB_Yes;
+		Shape->SetCanEverAffectNavigation(false);
+	}
 
 	// Eyes are where the ball looks and punches from
 	BaseEyeHeight = GetBallCenterZ() + 10.f;
@@ -122,8 +140,10 @@ void ABallCharacter::HandleDeath(UHealthComponent* DepletedHealth)
 	SetSprinting(false);
 	GetCharacterMovement()->DisableMovement();
 
-	// The living can walk over the dead; traces (looting, interaction) still hit them
+	// The standing capsule no longer fits a body lying on the ground: a box shaped like the lying ball
+	// takes over, so the living bump into it and can climb on it; traces (looting) hit it too
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+	UpdateCorpseCollision(false);
 
 	Corpse->StartDecay();
 }
@@ -179,6 +199,7 @@ void ABallCharacter::Tick(float DeltaTime)
 				BodyMesh->SetVisibility(false);
 				Face->SetFaceVisible(false);
 				Animator->SetSkeletonPose(true);
+				UpdateCorpseCollision(true);
 			}
 		}
 		return;
@@ -284,4 +305,27 @@ void ABallCharacter::UpdateSeat()
 	const float BallBottomZ = GetBallCenterZ() - GetBallHalfHeight();
 	SetActorRelativeLocation(MountedHorse->GetSaddleOffset() - FVector(0.f, 0.f, BallBottomZ));
 	SetActorRelativeRotation(FRotator::ZeroRotator);
+}
+
+void ABallCharacter::UpdateCorpseCollision(bool bBones)
+{
+	const float GroundZ = -GetGroundOffset();
+	if (!bBones)
+	{
+		// The ball lies on its back: about as long as it is tall, as wide and high as it is wide
+		const FVector Extent(GetBallHalfHeight() * 0.9f, BallRadius * 0.95f, BallRadius * 0.95f);
+		CorpseCollision->SetBoxExtent(Extent);
+		CorpseCollision->SetRelativeLocation(FVector(0.f, 0.f, GroundZ + Extent.Z));
+		CorpseCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		SkullCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		return;
+	}
+
+	// Bones: a low box over the ribs and pelvis (easy to step onto) and a round skull
+	const FVector Extent(40.f, 34.f, 12.f);
+	CorpseCollision->SetBoxExtent(Extent);
+	CorpseCollision->SetRelativeLocation(FVector(30.f, 0.f, GroundZ + Extent.Z));
+	SkullCollision->SetSphereRadius(Skeleton->GetSkullSize() * 0.5f);
+	SkullCollision->SetRelativeLocation(FVector(-30.f, 0.f, GroundZ + Skeleton->GetSkullSize() * 0.5f));
+	SkullCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }

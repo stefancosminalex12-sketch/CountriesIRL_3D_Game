@@ -121,6 +121,16 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	TObjectPtr<UBallMeleeComponent> Melee;
 
+	/** Solid body once dead: others bump into it and can climb or stand on it (a box around the lying ball, then around the bones) */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	TObjectPtr<class UBoxComponent> CorpseCollision;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	TObjectPtr<class USphereComponent> SkullCollision;
+
+	/** Turns on corpse collision for the current decay stage (ball lying down, or bones) */
+	void UpdateCorpseCollision(bool bBones);
+
 	/** Applies base colors, decay tint and the damage flash to body, hands and feet */
 	void RefreshColors();
 
