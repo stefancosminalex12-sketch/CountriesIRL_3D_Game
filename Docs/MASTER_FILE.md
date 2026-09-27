@@ -314,6 +314,8 @@ Yorkshire & the North, spring 1455:
   - For a body: the planned KCD-style layered clothing/armor, belts, back-carried bows and tabards need a body; clearer melee and riding; free CC0 humanoid animations exist (Quaternius Universal Animation Library 1+2, 250+ animations incl. melee and farming) and can be retargeted in Unreal
   - For pure balls: instantly recognizable brand; the traditional countryball rules say no arms/legs; procedural animation already works with no rig; cheaper
   - Plan [Proposed]: build one prototype of the hybrid (Blender model + rig + a few free animations) next to the current countryball in the sandbox, play both, then decide
+  - User's view (2026-09-27): leaning toward a body. A body lets the game use normal human-scale assets (and reuse them), is simpler, and the user thinks it looks better; unsure countryballs alone are relevant enough to carry the game; wants it to be unique (no 3D countryball game like this exists)
+  - Claude's view: agree on the hybrid (countryball head with flag + eyes, small cartoon body): keeps the recognizable signature while unlocking human-scale Fab assets (furniture, tools, saddles), free animations (Unreal template anims already in the project, Quaternius CC0) and layered clothing/armor. (Correction noted: the current 1.25 m ball already fits human-scale doors; buildings would not need to be weird either way.) Prototype approach: Blender body rigged to Unreal's standard mannequin skeleton so existing animations work immediately
 
 
 - Capture system details (ransom, escape, consequences)
