@@ -36,11 +36,16 @@ public:
 	UPROPERTY(config, EditAnywhere, Category="Sky")
 	float Latitude = 53.96f;
 
+	/** World height (cm) that counts as sea level: the sandbox floor sits at York's height (about 14 m) */
+	UPROPERTY(config, EditAnywhere, Category="Sky")
+	float WorldZAtSeaLevel = -1400.f;
+
 	/** The region's climate (temperatures, foliage and grass through the year). Empty = built-in Yorkshire defaults. */
 	UPROPERTY(config, EditAnywhere, Category="Seasons")
 	TSoftObjectPtr<UClimateProfile> Climate = TSoftObjectPtr<UClimateProfile>(FSoftObjectPath(TEXT("/Game/CountriesIRL/World/DA_Climate_Yorkshire.DA_Climate_Yorkshire")));
 
-	/** Material parameters the seasons write to (LeafAmount, LeafTint, GrassTint, Frost, Mist, Temperature) */
+	/** Material parameters the seasons and weather write to (LeafAmount, LeafTint, GrassTint, Frost, Mist, Temperature,
+	 *  CloudCover, Rain, Snowfall, Wetness, SnowCover, Wind) */
 	UPROPERTY(config, EditAnywhere, Category="Seasons")
 	TSoftObjectPtr<UMaterialParameterCollection> SeasonParameters = TSoftObjectPtr<UMaterialParameterCollection>(FSoftObjectPath(TEXT("/Game/CountriesIRL/World/MPC_Season.MPC_Season")));
 };

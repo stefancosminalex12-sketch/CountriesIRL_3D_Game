@@ -44,6 +44,10 @@ public:
 	UFUNCTION(Exec)
 	void DevYear(int32 Year);
 
+	/** Console (testing): force weather: Clear, Fair, Cloudy, Overcast, Showers, Rain, HeavyRain, Storm, Snow, Fog, or Auto */
+	UFUNCTION(Exec)
+	void DevWeather(const FString& Weather);
+
 	/** Console (testing): damage the nearest other ball. DevHitNearest 1000 kills it */
 	UFUNCTION(Exec)
 	void DevHitNearest(float Amount);

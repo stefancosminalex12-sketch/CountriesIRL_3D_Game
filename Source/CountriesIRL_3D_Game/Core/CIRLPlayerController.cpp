@@ -4,6 +4,7 @@
 #include "Core/CIRLInputConfig.h"
 #include "Core/CIRLHUD.h"
 #include "World/WorldClockSubsystem.h"
+#include "World/WeatherSubsystem.h"
 #include "Characters/BallCharacter.h"
 #include "Engine/DamageEvents.h"
 #include "EngineUtils.h"
@@ -86,6 +87,21 @@ void ACIRLPlayerController::DevYear(int32 Year)
 		Clock->SetDate(Year, Now.GetMonth(), FMath::Min(Now.GetDay(), FDateTime::DaysInMonth(Year, Now.GetMonth())));
 	}
 	// Show the clock so the result is visible
+	if (ACIRLHUD* GameHUD = GetHUD<ACIRLHUD>())
+	{
+		GameHUD->SetShowClock(true);
+	}
+}
+
+void ACIRLPlayerController::DevWeather(const FString& Weather)
+{
+	UWeatherSubsystem* WeatherSystem = GetWorld()->GetSubsystem<UWeatherSubsystem>();
+	if (!WeatherSystem)
+	{
+		return;
+	}
+	const int64 Value = StaticEnum<EForcedWeather>()->GetValueByNameString(Weather);
+	WeatherSystem->ForceWeather(Value == INDEX_NONE ? EForcedWeather::None : static_cast<EForcedWeather>(Value));
 	if (ACIRLHUD* GameHUD = GetHUD<ACIRLHUD>())
 	{
 		GameHUD->SetShowClock(true);

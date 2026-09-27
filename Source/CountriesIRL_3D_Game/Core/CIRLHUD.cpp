@@ -8,6 +8,7 @@
 #include "Animals/Horse.h"
 #include "World/WorldClockSubsystem.h"
 #include "World/SeasonSubsystem.h"
+#include "World/WeatherSubsystem.h"
 #include "World/MedievalCalendar.h"
 #include "Engine/Canvas.h"
 #include "Engine/Engine.h"
@@ -103,9 +104,14 @@ void ACIRLHUD::DrawClock(float Scale)
 	if (const USeasonSubsystem* Seasons = GetWorld()->GetSubsystem<USeasonSubsystem>())
 	{
 		const FSeasonState& State = Seasons->GetState();
-		Details = FString::Printf(TEXT("%s   %.0f%cC"), *USeasonSubsystem::SeasonName(State.Season), State.Temperature, TCHAR(0x00B0));
-		if (State.Frost > 0.3f) { Details += TEXT("   frost"); }
-		if (State.Mist > 0.3f) { Details += TEXT("   mist"); }
+		const UWeatherSubsystem* Weather = GetWorld()->GetSubsystem<UWeatherSubsystem>();
+		const float Temperature = Weather ? Weather->GetState().Temperature : State.Temperature;
+		Details = FString::Printf(TEXT("%s   %.0f%cC"), *USeasonSubsystem::SeasonName(State.Season), Temperature, TCHAR(0x00B0));
+		if (Weather)
+		{
+			Details += TEXT("   ") + Weather->Describe();
+			if (Weather->GetState().Frost > 0.3f) { Details += TEXT(", frost"); }
+		}
 	}
 	const FDateTime Date = Clock->GetDateTime();
 	const FString ChurchSeason = MedievalCalendar::ChurchSeason(Date);

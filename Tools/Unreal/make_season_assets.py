@@ -21,9 +21,14 @@ assets = unreal.EditorAssetLibrary
 
 
 def fresh(name, asset_class, factory):
+    """The asset, emptied so it can be rebuilt. Existing assets are reused (not deleted), so everything that
+    already points at them (placed actors, C++ defaults) stays connected."""
     path = FOLDER + "/" + name
     if assets.does_asset_exist(path):
-        assets.delete_asset(path)
+        asset = unreal.load_asset(path)
+        if isinstance(asset, unreal.Material):
+            mel.delete_all_material_expressions(asset)
+        return asset
     return tools.create_asset(name, FOLDER, asset_class, factory)
 
 
@@ -53,13 +58,18 @@ def vector(name, value):
     return p
 
 
-existing = {str(p.get_editor_property("parameter_name")) for p in mpc.get_editor_property("scalar_parameters")}
-if "LeafAmount" not in existing:
-    mpc.set_editor_property("scalar_parameters", [
-        scalar("LeafAmount", 0.65), scalar("Frost", 0.0), scalar("Mist", 0.0), scalar("Temperature", 11.0)])
-    mpc.set_editor_property("vector_parameters", [
-        vector("LeafTint", unreal.LinearColor(0.2, 0.43, 0.04, 1.0)),
-        vector("GrassTint", unreal.LinearColor(0.12, 0.34, 0.035, 1.0))])
+# Add any missing parameters (existing ones keep their ids, so materials stay connected)
+SCALARS = [("LeafAmount", 0.65), ("Frost", 0.0), ("Mist", 0.0), ("Temperature", 11.0),
+           ("CloudCover", 0.5), ("Rain", 0.0), ("Snowfall", 0.0), ("Wetness", 0.0), ("SnowCover", 0.0), ("Wind", 4.0), ("Daylight", 1.0)]
+VECTORS = [("LeafTint", unreal.LinearColor(0.2, 0.43, 0.04, 1.0)), ("GrassTint", unreal.LinearColor(0.12, 0.34, 0.035, 1.0))]
+scalars = list(mpc.get_editor_property("scalar_parameters"))
+have = {str(p.get_editor_property("parameter_name")) for p in scalars}
+scalars += [scalar(n, v) for n, v in SCALARS if n not in have]
+mpc.set_editor_property("scalar_parameters", scalars)
+vectors = list(mpc.get_editor_property("vector_parameters"))
+have = {str(p.get_editor_property("parameter_name")) for p in vectors}
+vectors += [vector(n, v) for n, v in VECTORS if n not in have]
+mpc.set_editor_property("vector_parameters", vectors)
 
 
 def rgb(material, source, x, y):
@@ -104,11 +114,61 @@ ground_colour = mel.create_material_expression(ground, unreal.MaterialExpression
 mel.connect_material_expressions(tinted, "", ground_colour, "A")
 mel.connect_material_expressions(frost_colour, "", ground_colour, "B")
 mel.connect_material_expressions(frost_strength, "", ground_colour, "Alpha")
-mel.connect_material_property(ground_colour, "", unreal.MaterialProperty.MP_BASE_COLOR)
-rough = mel.create_material_expression(ground, unreal.MaterialExpressionConstant, -300, 250)
-rough.set_editor_property("r", 0.95)
+# Wet ground is darker and shinier; lying snow turns it white
+wetness = collection_param(ground, "Wetness", -600, 400)
+darken = mel.create_material_expression(ground, unreal.MaterialExpressionLinearInterpolate, -300, 400)
+darken.set_editor_property("const_a", 1.0)
+darken.set_editor_property("const_b", 0.55)
+mel.connect_material_expressions(wetness, "", darken, "Alpha")
+wet_colour = mel.create_material_expression(ground, unreal.MaterialExpressionMultiply, -100, 50)
+mel.connect_material_expressions(ground_colour, "", wet_colour, "A")
+mel.connect_material_expressions(darken, "", wet_colour, "B")
+snow_colour = mel.create_material_expression(ground, unreal.MaterialExpressionConstant3Vector, -100, 200)
+snow_colour.set_editor_property("constant", unreal.LinearColor(0.86, 0.89, 0.94, 1.0))
+snow_cover = collection_param(ground, "SnowCover", -300, 550)
+final_colour = mel.create_material_expression(ground, unreal.MaterialExpressionLinearInterpolate, 100, 50)
+mel.connect_material_expressions(wet_colour, "", final_colour, "A")
+mel.connect_material_expressions(snow_colour, "", final_colour, "B")
+mel.connect_material_expressions(snow_cover, "", final_colour, "Alpha")
+mel.connect_material_property(final_colour, "", unreal.MaterialProperty.MP_BASE_COLOR)
+rough = mel.create_material_expression(ground, unreal.MaterialExpressionLinearInterpolate, 100, 400)
+rough.set_editor_property("const_a", 0.95)
+rough.set_editor_property("const_b", 0.3)
+mel.connect_material_expressions(wetness, "", rough, "Alpha")
 mel.connect_material_property(rough, "", unreal.MaterialProperty.MP_ROUGHNESS)
 mel.recompile_material(ground)
+
+# --- Rain streaks (faint, see-through, lit so they are dark at night) and snowflakes ---------------
+def glowing_drop(name, colour, opacity, x=-400):
+    """Unlit drops that glow with the daylight (bright by day, faint at night), so they read as rain/snow
+    instead of dark specks against the bright sky"""
+    material = fresh(name, unreal.Material, unreal.MaterialFactoryNew())
+    material.set_editor_property("shading_model", unreal.MaterialShadingModel.MSM_UNLIT)
+    # Drops are drawn as instanced meshes: without this flag the engine silently swaps in its default material
+    material.set_editor_property("used_with_instanced_static_meshes", True)
+    if opacity < 1.0:
+        material.set_editor_property("blend_mode", unreal.BlendMode.BLEND_TRANSLUCENT)
+    tint = mel.create_material_expression(material, unreal.MaterialExpressionConstant3Vector, x, 0)
+    tint.set_editor_property("constant", colour)
+    daylight = collection_param(material, "Daylight", x, 200)
+    level = mel.create_material_expression(material, unreal.MaterialExpressionLinearInterpolate, x + 200, 200)
+    level.set_editor_property("const_a", 0.03)
+    level.set_editor_property("const_b", 0.55)
+    mel.connect_material_expressions(daylight, "", level, "Alpha")
+    glow = mel.create_material_expression(material, unreal.MaterialExpressionMultiply, x + 400, 0)
+    mel.connect_material_expressions(tint, "", glow, "A")
+    mel.connect_material_expressions(level, "", glow, "B")
+    mel.connect_material_property(glow, "", unreal.MaterialProperty.MP_EMISSIVE_COLOR)
+    if opacity < 1.0:
+        alpha = mel.create_material_expression(material, unreal.MaterialExpressionConstant, x + 400, 250)
+        alpha.set_editor_property("r", opacity)
+        mel.connect_material_property(alpha, "", unreal.MaterialProperty.MP_OPACITY)
+    mel.recompile_material(material)
+    return material
+
+
+rain = glowing_drop("M_Rain", unreal.LinearColor(0.8, 0.85, 0.9, 1.0), 0.16)
+snow = glowing_drop("M_Snow", unreal.LinearColor(1.0, 1.0, 1.0, 1.0), 1.0)
 
 # --- Leaves: seasonal colour, clusters drop out as LeafAmount falls ------------------------------
 leaves = fresh("M_Seasonal_Leaves", unreal.Material, unreal.MaterialFactoryNew())

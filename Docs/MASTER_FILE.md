@@ -75,6 +75,24 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
   - Everything goes into one material parameter set (`MPC_Season`: LeafAmount, LeafTint, GrassTint, Frost, Mist, Temperature), so any tree, grass or ground material, including free Fab assets, can follow the seasons by reading it (`M_Seasonal_Ground`, `M_Seasonal_Leaves` are the first two)
   - **Medieval calendar** on the dev clock: feast days (fixed ones like Lady Day, May Day, Midsummer, Lammas, Michaelmas, St Crispin's, Martinmas, Christmas; moveable ones from **Easter computed the medieval Julian way**: Shrove Tuesday, Ash Wednesday, Good Friday, Easter, Ascension, Whitsun, Corpus Christi with the York mystery plays; Plough Monday), church seasons (Advent, Christmastide, Lent, Eastertide) and the farm work of the month ("labours of the months"). Check: Easter 1455 = Sunday 6 April. Later these drive NPC life (no work on feast days, fasting in Lent, markets)
   - Test garden in `L_DevSandbox` (south side): simple placeholder trees and a grass patch using the seasonal materials; real trees/grass will come from Fab
+- **Weather (v0.1)** [Built] (user: "do actual England weather", keep regions and the 1450s in mind):
+  - **Realistic British pattern**: weather fronts pass every day or two (rain comes in many shortish spells, rarely all day), **afternoon showers** in spring and summer with sunny spells between, grey winters. Prevailing **south-westerly wind** that swings around and strengthens as fronts pass
+  - **Calibrated to real data** for the Vale of York (Met Office averages, Linton-on-Ouse, 15 km from York): days with rain per month (8-12), cloudiness from sunshine hours (only ~31 h of sun in December, ~186 h in July), share of rain falling as showers, wind. A 15-year simulation matches: rain ~6-10% of all hours, monthly cloudiness within ~0.02 of the data, summer rain days on target (winter slightly low, tunable)
+  - **Temperature reacts to the sky**: sunny days warm up more, cloudy nights stay milder (clear nights bring frost), rain cools; **1.5 C per 230 m colder on higher ground** (-0.65 C/100 m), so later it can snow on the Pennines while it rains in the vale
+  - **Snow** when precipitation falls below ~1.5 C; it **settles** (the ground turns white) and **melts** with warmth, rain and sun. **Wet ground** after rain dries over half a day to a day (faster when warm, sunny, windy). **Fog/mist** only on still, clear, cool mornings (radiation fog). **Thunderstorms** from heavy summer showers
+  - **The year matters**: the Little Ice Age (already ~0.5 C colder) plus **cold summers after 1453**: tree-ring studies show about 15 years of cold Northern Hemisphere summers starting 1453 (-2.5 C network mean in 1453 to -0.5 C by 1468; English oak panels have abnormally narrow rings 1453-1455), linked to a huge volcanic eruption whose identity/date is debated (Kuwae 1452/53 vs 1458). The game uses gentle estimates for England: -1.5 C in 1453 easing to -0.2 C by 1468, felt fully in summer and half in winter (data: `YearAnomalies` in the climate profile)
+  - Like corpses and seasons, weather is **worked out from the date and time**, so saves only need the clock; after time jumps the last week is replayed to get wet ground and lying snow right
+  - Looks: clouds build up and clear gradually; overcast skies block most direct sun (soft shadows, the view adapts like eyes do so grey days read grey, not dark); rain and heavy cloud darken the scene and thicken the haze; **rain streaks slanted by the wind and fluttering snowflakes** around the viewer; grass darkens and shines when wet and turns white under snow. Everything goes into `MPC_Season` (CloudCover, Rain, Snowfall, Wetness, SnowCover, Wind, Daylight) so free Fab materials can react too
+  - Dev: `DevWeather Clear|Fair|Cloudy|Overcast|Showers|Rain|HeavyRain|Storm|Snow|Fog|Auto`; the dev clock shows e.g. "Overcast, light rain, wind SW 5 m/s"
+  - Later: rain/snow stop under roofs (not yet), puddles, sounds (rain, wind, thunder), lightning flashes, NPCs sheltering, Niagara effects instead of the simple drops
+- **Regional climates (for the map)** [Proposed]: each region gets its own climate profile (same data format); the player's region decides the weather:
+  - **Vale of York / eastern lowlands**: in the rain shadow of the Pennines, fairly dry (~600-770 mm/yr), sheltered
+  - **Pennines and the Dales**: much wetter (1,000-2,000 mm), windier, colder (height), far more snow and longer-lying snow, low cloud and hill fog
+  - **North York Moors**: wet and exposed, snowy winters
+  - **East coast (Scarborough, Whitby)**: cold easterly winds off the North Sea, sea fog (**"haar"**) in spring and early summer, milder winters by the sea
+  - **West (Lancashire, Cheshire)**: the wettest lowlands, mild, frequent drizzle
+  - **South-east / London**: warmest and driest, sunniest summers
+  - Mountains and moors later also get their altitude from the terrain (-0.65 C/100 m already built in)
 
 ---
 
@@ -286,11 +304,11 @@ Start with the **commoner origin**; build what's designed so far and add feature
    - Playtest round 3 (user): stopping (especially after walking sideways) looked abrupt because feet slid back to the idle pose → **feet now really step**: each foot stays planted until the body moves too far, then steps in an arc; stopping ends with small settling steps, turning on the spot steps too; hands swing with the opposite foot, the body bobs with the steps
    - Playtest round 4 (user): thumb and index finger passed through each other → thumb moved to the side edge of the palm; in a fist it tucks on the front of the fist
    - Playtest round 5 (user): one-piece thumb looked wrong in a fist, and the punch looked like the hand just sliding forward → **every finger now has two segments with a joint** (fingers roll into a real fist, the **thumb wraps over the front** of the curled fingers); **the punch has phases**: short wind-up, a snap forward that accelerates into the hit and **corkscrews** from a vertical fist to palm-down, then the recoil; the **body twists into the punch** (punching side forward), leans and lunges; the **other fist comes up to guard the face**; in first-person the **view nudges forward** with each punch. Parts of one color share one material (cheaper to draw)
-2. [ ] Day/night (48 min) + weather
+2. [x] Day/night (48 min) + weather
    - 2a [x] World clock + calendar and `DayNightSky` (sun, moon, atmosphere, clouds, fog, exposure) following it
-   - 2b [ ] Weather (clear/cloudy/overcast/rain) and seasons
+   - 2b [x] Weather (clear/cloudy/overcast/rain/snow) and seasons
      - [x] **Seasons** (2026-09-27, user asked for seasons first): see Time & Calendar > Seasons
-     - [ ] Weather: clear/cloudy/overcast/rain (and snow in cold months), driven by the climate profile and the seasonal temperature; snow cover, wet ground
+     - [x] **Weather** (2026-09-27): see Time & Calendar > Weather
 3. [ ] Yorkshire test landscape
 4. [ ] Village (free Fab assets, approved by the user first)
 5. [x] Rideable horse (first version, 2026-09-27; user asked for it before weather)
@@ -303,7 +321,7 @@ Start with the **commoner origin**; build what's designed so far and add feature
 6. [ ] Hit-zone combat + bandits
 7. [ ] Compass bar
 
-**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · **Left click punch** · **hold right click guard** · V first/third-person · **E get on/off a horse** · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing), `DevDamage 25`, `DevHeal 25`, `DevTime 21.5` (jump to a time), `DevTimeSpeed 60` (fast-forward; 1 = normal), `DevClock` (show date/time), `DevAdvance 24` (skip hours), `DevHitNearest 20` (damage nearest ball; 1000 kills), `DevPunch`, `DevGuard` (toggle guard), `DevDate 25 12` (jump to a day of the year, shows the clock), `DevYear 1461`, `DevInteract` (press E), `DevJump`. Dev test level: `L_DevSandbox`.
+**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · **Left click punch** · **hold right click guard** · V first/third-person · **E get on/off a horse** · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing), `DevDamage 25`, `DevHeal 25`, `DevTime 21.5` (jump to a time), `DevTimeSpeed 60` (fast-forward; 1 = normal), `DevClock` (show date/time), `DevAdvance 24` (skip hours), `DevHitNearest 20` (damage nearest ball; 1000 kills), `DevPunch`, `DevGuard` (toggle guard), `DevDate 25 12` (jump to a day of the year, shows the clock), `DevYear 1461`, `DevInteract` (press E), `DevJump`, `DevWeather Rain` (Clear/Fair/Cloudy/Overcast/Showers/Rain/HeavyRain/Storm/Snow/Fog/Auto). Dev test level: `L_DevSandbox`.
 
 **Budget rule** [Decided]: use **free assets and tools as much as possible**, plus our own creations; only consider paid assets when nothing free works.
 

@@ -54,9 +54,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSeasonChanged, ESeason, NewSeason
 
 /**
  *  Seasons: turns the world clock and the region's climate profile into temperature, foliage,
- *  grass colour, frost and mist. Pushes them into the MPC_Season material parameter collection,
- *  so any tree, grass or ground material can follow the seasons by reading it.
- *  Weather (next step) builds on the temperature from here.
+ *  grass colour, frost and mist. The weather system builds on these and writes everything into the
+ *  MPC_Season material parameter collection, so any tree, grass or ground material can follow it.
  */
 UCLASS()
 class USeasonSubsystem : public UTickableWorldSubsystem
@@ -86,16 +85,11 @@ protected:
 
 private:
 
-	void PushToMaterials() const;
-
 	/** Advances the lingering frost by some hours at a moment in time */
 	void StepFrost(const FDateTime& AstronomicalDate, float Hours);
 
 	UPROPERTY(Transient)
 	TObjectPtr<UClimateProfile> Climate;
-
-	UPROPERTY(Transient)
-	TObjectPtr<UMaterialParameterCollection> Parameters;
 
 	FSeasonState State;
 	bool bHasState = false;

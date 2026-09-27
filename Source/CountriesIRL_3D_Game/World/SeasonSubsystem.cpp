@@ -6,8 +6,6 @@
 #include "World/WorldSimulationSettings.h"
 #include "World/SkyMath.h"
 #include "Engine/World.h"
-#include "Materials/MaterialParameterCollection.h"
-#include "Materials/MaterialParameterCollectionInstance.h"
 
 namespace
 {
@@ -42,7 +40,6 @@ void USeasonSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 		// Built-in Yorkshire defaults
 		Climate = GetMutableDefault<UClimateProfile>();
 	}
-	Parameters = Settings->SeasonParameters.LoadSynchronous();
 }
 
 bool USeasonSubsystem::DoesSupportWorldType(const EWorldType::Type WorldType) const
@@ -85,8 +82,6 @@ void USeasonSubsystem::Tick(float DeltaTime)
 	}
 	State.Frost = Frost;
 
-	PushToMaterials();
-
 	if (bHasState && State.Season != Previous)
 	{
 		OnSeasonChanged.Broadcast(State.Season);
@@ -123,7 +118,8 @@ FSeasonState USeasonSubsystem::Evaluate(const UClimateProfile& Profile, const FD
 	const float Mean = FMath::Lerp(A.MeanTemperature, B.MeanTemperature, Blend);
 	const float Range = FMath::Lerp(A.DailyRange, B.DailyRange, Blend);
 	const float Swing = FMath::Cos(2.f * PI * (SolarHour - 15.f) / 24.f) * Range * 0.5f;
-	Result.Temperature = Mean + DayOffset + Swing;
+	const float YearAnomaly = Profile.GetYearAnomaly(AstronomicalDate.GetYear(), AstronomicalDate.GetMonth());
+	Result.Temperature = Mean + DayOffset + Swing + YearAnomaly;
 
 	// Ground frost: grass on a still night is a few degrees colder than the air, so it forms
 	// with the air still just above freezing (melting speed is handled in Tick)
@@ -151,22 +147,6 @@ void USeasonSubsystem::StepFrost(const FDateTime& AstronomicalDate, float Hours)
 	const float SunElevation = static_cast<float>(SkyMath::SunPosition(Latitude, AstronomicalDate.GetDayOfYear(), SolarHour).ElevationDeg);
 	const float Melt = FrostMeltPerHour * FMath::SmoothStep(0.f, 20.f, SunElevation) * Hours;
 	Frost = FMath::Max(Target, Frost - Melt);
-}
-
-void USeasonSubsystem::PushToMaterials() const
-{
-	UMaterialParameterCollectionInstance* Instance = Parameters ? GetWorld()->GetParameterCollectionInstance(Parameters) : nullptr;
-	if (!Instance)
-	{
-		return;
-	}
-
-	Instance->SetScalarParameterValue(TEXT("LeafAmount"), State.LeafAmount);
-	Instance->SetScalarParameterValue(TEXT("Frost"), State.Frost);
-	Instance->SetScalarParameterValue(TEXT("Mist"), State.Mist);
-	Instance->SetScalarParameterValue(TEXT("Temperature"), State.Temperature);
-	Instance->SetVectorParameterValue(TEXT("LeafTint"), State.LeafTint);
-	Instance->SetVectorParameterValue(TEXT("GrassTint"), State.GrassTint);
 }
 
 FString USeasonSubsystem::SeasonName(ESeason Season)

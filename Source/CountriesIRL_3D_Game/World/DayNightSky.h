@@ -54,6 +54,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	TObjectPtr<UPostProcessComponent> Exposure;
 
+	/** Falling rain and snow around the viewer */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	TObjectPtr<class UPrecipitationComponent> Rain;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	TObjectPtr<class UPrecipitationComponent> Snow;
+
 	/** Time of day shown in the editor (hours) */
 	UPROPERTY(EditAnywhere, Category="Sky", meta=(ClampMin=0, ClampMax=24))
 	float PreviewHour = 10.f;
@@ -83,6 +90,35 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="Sky")
 	float MistFogMultiplier = 6.f;
+
+	/** Cloud material coverage for a clear sky and a fully overcast one */
+	UPROPERTY(EditAnywhere, Category="Weather")
+	FVector2D CloudCoverageRange = FVector2D(-0.8f, 0.7f);
+
+	/** How much sunlight still gets through a fully overcast sky */
+	UPROPERTY(EditAnywhere, Category="Weather", meta=(ClampMin=0, ClampMax=1))
+	float OvercastSunlight = 0.12f;
+
+	/** How much the camera opens up on grey days (EV at full overcast): eyes adapt, so overcast looks grey, not dark */
+	UPROPERTY(EditAnywhere, Category="Weather")
+	float OvercastExposureBoost = 2.2f;
+
+	/** How much darker everything gets in heavy rain (share of the light) */
+	UPROPERTY(EditAnywhere, Category="Weather", meta=(ClampMin=0, ClampMax=1))
+	float RainDarkening = 0.35f;
+
+	/** Makes the clouds follow the weather (a per-actor copy of the cloud material) */
+	UPROPERTY(Transient)
+	TObjectPtr<class UMaterialInstanceDynamic> CloudMaterial;
+
+	/** Weather last applied (smoothed so the sky changes gradually) */
+	float Overcast = 0.5f;
+	float RainHaze = 0.f;
+
+	/** 0 at night .. 1 in full daylight, from the sun's height */
+	float DayLight = 1.f;
+
+	virtual void BeginPlay() override;
 
 private:
 

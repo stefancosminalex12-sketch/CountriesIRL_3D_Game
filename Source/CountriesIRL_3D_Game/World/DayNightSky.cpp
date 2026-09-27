@@ -2,7 +2,12 @@
 
 #include "World/DayNightSky.h"
 #include "World/SkyMath.h"
-#include "World/SeasonSubsystem.h"
+#include "World/WeatherSubsystem.h"
+#include "World/PrecipitationComponent.h"
+#include "Engine/StaticMesh.h"
+#include "Materials/MaterialInstanceDynamic.h"
+#include "Materials/MaterialParameterCollection.h"
+#include "Materials/MaterialParameterCollectionInstance.h"
 #include "World/WorldClockSubsystem.h"
 #include "World/WorldSimulationSettings.h"
 #include "Components/DirectionalLightComponent.h"
@@ -49,15 +54,41 @@ ADayNightSky::ADayNightSky()
 	SkyLight->bRealTimeCapture = true;
 	SkyLight->SourceType = ESkyLightSourceType::SLS_CapturedScene;
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> CloudMaterial(TEXT("/Engine/EngineSky/VolumetricClouds/m_SimpleVolumetricCloud_Inst.m_SimpleVolumetricCloud_Inst"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> CloudMaterialFinder(TEXT("/Engine/EngineSky/VolumetricClouds/m_SimpleVolumetricCloud_Inst.m_SimpleVolumetricCloud_Inst"));
 	Clouds = CreateDefaultSubobject<UVolumetricCloudComponent>(TEXT("Clouds"));
 	Clouds->SetupAttachment(RootComponent);
-	Clouds->SetMaterial(CloudMaterial.Object);
+	Clouds->SetMaterial(CloudMaterialFinder.Object);
 
 	Fog = CreateDefaultSubobject<UExponentialHeightFogComponent>(TEXT("Fog"));
 	Fog->SetupAttachment(RootComponent);
 	Fog->SetFogDensity(FogDensity);
 	Fog->SetFogHeightFalloff(0.2f);
+
+	// Rain streaks and snowflakes (materials from Tools/Unreal/make_season_assets.py)
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> RainMaterial(TEXT("/Game/CountriesIRL/World/M_Rain.M_Rain"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> SnowMaterial(TEXT("/Game/CountriesIRL/World/M_Snow.M_Snow"));
+
+	Rain = CreateDefaultSubobject<UPrecipitationComponent>(TEXT("Rain"));
+	Rain->SetupAttachment(RootComponent);
+	Rain->SetStaticMesh(CubeMesh.Object);
+	Rain->SetMaterial(0, RainMaterial.Object);
+	Rain->MaxDrops = 7000;
+	Rain->AreaRadius = 900.f;
+	Rain->AreaHeight = 1200.f;
+
+	Snow = CreateDefaultSubobject<UPrecipitationComponent>(TEXT("Snow"));
+	Snow->SetupAttachment(RootComponent);
+	Snow->SetStaticMesh(SphereMesh.Object);
+	Snow->SetMaterial(0, SnowMaterial.Object);
+	Snow->bSnow = true;
+	Snow->MaxDrops = 6000;
+	Snow->AreaRadius = 800.f;
+	Snow->AreaHeight = 1000.f;
+	Snow->FallSpeed = 110.f;
+	Snow->WindInfluence = 0.8f;
+	Snow->DropSize = FVector(3.5f);
 
 	// Exposure is set directly from the sun height (min = max) so day and night look deliberate
 	// instead of the camera auto-adjusting night into day
@@ -68,6 +99,16 @@ ADayNightSky::ADayNightSky()
 	Exposure->Settings.bOverride_AutoExposureMaxBrightness = true;
 	Exposure->Settings.AutoExposureMinBrightness = DayExposure;
 	Exposure->Settings.AutoExposureMaxBrightness = DayExposure;
+}
+
+void ADayNightSky::BeginPlay()
+{
+	Super::BeginPlay();
+	if (UMaterialInterface* Base = Clouds->Material.LoadSynchronous())
+	{
+		CloudMaterial = UMaterialInstanceDynamic::Create(Base, this);
+		Clouds->SetMaterial(CloudMaterial);
+	}
 }
 
 void ADayNightSky::OnConstruction(const FTransform& Transform)
@@ -88,10 +129,43 @@ void ADayNightSky::Tick(float DeltaTime)
 		UpdateSky(Clock->GetAstronomicalDateTime(), Clock->GetTimeOfDay());
 	}
 
-	// Cool mornings (autumn, winter) bring mist
-	if (const USeasonSubsystem* Seasons = GetWorld()->GetSubsystem<USeasonSubsystem>())
+	// Weather: clouds build up and clear gradually, overcast skies dim the sun, rain and mist thicken the air
+	if (const UWeatherSubsystem* Weather = GetWorld()->GetSubsystem<UWeatherSubsystem>())
 	{
-		Fog->SetFogDensity(FogDensity * (1.f + (MistFogMultiplier - 1.f) * Seasons->GetState().Mist));
+		const FWeatherState& Now = Weather->GetState();
+		Overcast = FMath::FInterpTo(Overcast, Now.CloudCover, DeltaTime, 0.4f);
+		RainHaze = FMath::FInterpTo(RainHaze, Now.Precipitation, DeltaTime, 0.5f);
+
+		if (CloudMaterial)
+		{
+			CloudMaterial->SetScalarParameterValue(TEXT("Cloud_GlobalCoverage"), FMath::Lerp(CloudCoverageRange.X, CloudCoverageRange.Y, Overcast));
+			CloudMaterial->SetScalarParameterValue(TEXT("StormClouds"), FMath::Clamp(RainHaze * 1.2f, 0.f, 1.f));
+		}
+
+		// Thick cloud blocks nearly all direct sunlight (no sharp shadows); rain darkens everything a bit more
+		const float Sunlight = FMath::Lerp(1.f, OvercastSunlight, FMath::Square(Overcast)) * (1.f - RainDarkening * RainHaze);
+		Sun->SetIntensity(Sun->Intensity * Sunlight);
+		// Light through cloud comes from a big bright patch of sky instead of a small sun: soft shadows
+		Sun->SetLightSourceAngle(FMath::Lerp(0.53f, 12.f, Overcast));
+		Moon->SetIntensity(Moon->Intensity * Sunlight);
+		SkyLight->SetIntensity(1.f - RainDarkening * RainHaze);
+
+		const float Mist = 1.f + (MistFogMultiplier - 1.f) * Now.Fog;
+		Fog->SetFogDensity(FogDensity * Mist * (1.f + 2.f * RainHaze + 0.5f * Overcast));
+
+		// How bright the day is for glowing things like rain and snow (0 night .. 1 bright day)
+		if (UMaterialParameterCollection* Parameters = GetDefault<UWorldSimulationSettings>()->SeasonParameters.LoadSynchronous())
+		{
+			if (UMaterialParameterCollectionInstance* Instance = GetWorld()->GetParameterCollectionInstance(Parameters))
+			{
+				Instance->SetScalarParameterValue(TEXT("Daylight"), DayLight * (1.f - 0.4f * Overcast));
+			}
+		}
+
+		// Overcast days are darker, but the camera adapts a little (like our eyes do)
+		const float EV = Exposure->Settings.AutoExposureMinBrightness - OvercastExposureBoost * Overcast - 0.6f * RainHaze;
+		Exposure->Settings.AutoExposureMinBrightness = EV;
+		Exposure->Settings.AutoExposureMaxBrightness = EV;
 	}
 }
 
@@ -123,6 +197,7 @@ void ADayNightSky::UpdateSky(const FDateTime& AstronomicalDate, float SolarHour)
 
 	// Exposure eases from night to day over a long twilight, so low-sun dawns/dusks in shade stay readable
 	const float DayAmount = FMath::SmoothStep(-8.f, 15.f, static_cast<float>(SunPos.ElevationDeg));
+	DayLight = DayAmount;
 	const float EV = FMath::Lerp(NightExposure, DayExposure, DayAmount);
 	Exposure->Settings.AutoExposureMinBrightness = EV;
 	Exposure->Settings.AutoExposureMaxBrightness = EV;
