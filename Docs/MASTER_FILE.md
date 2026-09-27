@@ -309,6 +309,12 @@ Yorkshire & the North, spring 1455:
 
 ## 12. Open Questions
 
+- **Character body: pure countryball vs. countryball head on a small cartoon body** (user idea, 2026-09-27, reference: a chibi skeleton with a big head and small body). Keep the ball head with the flag and eyes either way.
+  - Research (Sept 2026): countryballs are still big across ages: ~16.6M TikTok posts (#countryballs), ~10M for countryball animations, r/polandball ~690k members, several well-reviewed countryball games in 2025 (e.g. Countryballs at War 94%, Countryballs Conquest 88%), growing "kidult" plush market (adults >20% of plush buyers). Almost all countryball games are 2D strategy/map games; a 3D open-world countryball game is an open niche
+  - For a body: the planned KCD-style layered clothing/armor, belts, back-carried bows and tabards need a body; clearer melee and riding; free CC0 humanoid animations exist (Quaternius Universal Animation Library 1+2, 250+ animations incl. melee and farming) and can be retargeted in Unreal
+  - For pure balls: instantly recognizable brand; the traditional countryball rules say no arms/legs; procedural animation already works with no rig; cheaper
+  - Plan [Proposed]: build one prototype of the hybrid (Blender model + rig + a few free animations) next to the current countryball in the sandbox, play both, then decide
+
 
 - Capture system details (ransom, escape, consequences)
 - How the command panel works in practice
