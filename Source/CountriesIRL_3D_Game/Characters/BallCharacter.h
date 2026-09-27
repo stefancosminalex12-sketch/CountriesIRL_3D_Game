@@ -55,6 +55,9 @@ public:
 
 	float GetBallRadius() const { return BallRadius; }
 
+	/** Half the ball's height (the ball is slightly taller than wide) */
+	float GetBallHalfHeight() const { return BallRadius * BallHeightScale; }
+
 	float GetRunSpeed() const { return RunSpeed; }
 
 	/** Height of the ball's center relative to the capsule center */
@@ -112,13 +115,17 @@ protected:
 	UFUNCTION()
 	virtual void HandleDeath(UHealthComponent* DepletedHealth);
 
-	/** Ball radius in cm */
+	/** Ball radius in cm, side to side */
 	UPROPERTY(VisibleAnywhere, Category="Ball")
-	float BallRadius = 50.f;
+	float BallRadius = 52.f;
+
+	/** How much taller than wide the ball is (1 = perfect sphere). A slight egg shape reads less like a toy ball. */
+	UPROPERTY(VisibleAnywhere, Category="Ball")
+	float BallHeightScale = 1.2f;
 
 	/** Gap between the bottom of the ball and the ground, where the feet float */
 	UPROPERTY(VisibleAnywhere, Category="Ball")
-	float FeetGap = 25.f;
+	float FeetGap = 32.f;
 
 	/** Placeholder color until flags/liveries are textured on the ball */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ball|Look")

@@ -68,7 +68,7 @@ public:
 	UBallFaceComponent();
 
 	/** Creates the face shell. Must be called from the owning actor's constructor. */
-	void CreateFaceMesh(AActor* Owner, USceneComponent* Parent, UStaticMesh* SphereMesh, float BallRadius);
+	void CreateFaceMesh(AActor* Owner, USceneComponent* Parent, UStaticMesh* SphereMesh, float BallRadius, float HeightScale = 1.f);
 
 	/** Hides the face for the owning player (used in first-person view) */
 	void SetOwnerNoSee(bool bNoSee);

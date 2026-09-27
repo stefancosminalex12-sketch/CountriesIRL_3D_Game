@@ -123,7 +123,7 @@ EBallHitZone UBallMeleeComponent::ZoneForPoint(const ABallCharacter* Target, con
 	// Height of the hit relative to the ball's center, in ball radii. The face (eyes) sits just above
 	// the center, so everything from there up counts as the head.
 	const float CenterZ = Target->GetActorLocation().Z + Target->GetBallCenterZ();
-	const float Height = (WorldPoint.Z - CenterZ) / FMath::Max(Target->GetBallRadius(), 1.f);
+	const float Height = (WorldPoint.Z - CenterZ) / FMath::Max(Target->GetBallHalfHeight(), 1.f);
 	if (Height > 0.05f)
 	{
 		return EBallHitZone::Head;

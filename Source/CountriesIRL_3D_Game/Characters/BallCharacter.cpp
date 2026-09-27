@@ -16,7 +16,7 @@
 ABallCharacter::ABallCharacter()
 {
 	// Capsule spans from the ground up to the top of the ball
-	const float HalfHeight = (BallRadius * 2.f + FeetGap) * 0.5f;
+	const float HalfHeight = (GetBallHalfHeight() * 2.f + FeetGap) * 0.5f;
 	GetCapsuleComponent()->InitCapsuleSize(BallRadius * 0.9f, HalfHeight);
 
 	// Balls don't use a skeleton; everything is procedural
@@ -46,10 +46,10 @@ ABallCharacter::ABallCharacter()
 	BodyPivot->SetRelativeLocation(FVector(0.f, 0.f, GetBallCenterZ()));
 
 	BodyMesh = BallParts::Create(this, TEXT("BodyMesh"), BodyPivot, Sphere);
-	BodyMesh->SetRelativeScale3D(FVector(BallRadius / 50.f));
+	BodyMesh->SetRelativeScale3D(FVector(BallRadius, BallRadius, GetBallHalfHeight()) / 50.f);
 
 	Face = CreateDefaultSubobject<UBallFaceComponent>(TEXT("Face"));
-	Face->CreateFaceMesh(this, BodyPivot, Sphere, BallRadius);
+	Face->CreateFaceMesh(this, BodyPivot, Sphere, BallRadius, BallHeightScale);
 
 	Animator = CreateDefaultSubobject<UBallAnimatorComponent>(TEXT("Animator"));
 	Animator->CreateLimbMeshes(this, VisualRoot, BodyPivot, Sphere, BallRadius, GetBallCenterZ(), -HalfHeight);
@@ -127,7 +127,7 @@ void ABallCharacter::HandleDeath(UHealthComponent* DepletedHealth)
 float ABallCharacter::GetBallCenterZ() const
 {
 	// Capsule center sits halfway between the ground and the top of the ball
-	return FeetGap + BallRadius - (BallRadius * 2.f + FeetGap) * 0.5f;
+	return FeetGap + GetBallHalfHeight() - (GetBallHalfHeight() * 2.f + FeetGap) * 0.5f;
 }
 
 float ABallCharacter::GetGroundOffset() const

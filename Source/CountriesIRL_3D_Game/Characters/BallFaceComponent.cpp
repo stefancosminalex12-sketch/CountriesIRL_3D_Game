@@ -42,12 +42,12 @@ UBallFaceComponent::UBallFaceComponent()
 	EmotionPoses.Add(EBallEmotion::Dead,       MakePose(1.0f,  0.0f,   0.f, 0.0f, true));
 }
 
-void UBallFaceComponent::CreateFaceMesh(AActor* Owner, USceneComponent* Parent, UStaticMesh* SphereMesh, float BallRadius)
+void UBallFaceComponent::CreateFaceMesh(AActor* Owner, USceneComponent* Parent, UStaticMesh* SphereMesh, float BallRadius, float HeightScale)
 {
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> EyeMaterial(TEXT("/Game/CountriesIRL/Characters/Materials/M_BallEyes.M_BallEyes"));
 
 	FaceShell = BallParts::Create(Owner, TEXT("FaceShell"), Parent, SphereMesh);
-	FaceShell->SetRelativeScale3D(FVector((BallRadius + ShellOffset) / 50.f));
+	FaceShell->SetRelativeScale3D(FVector(BallRadius + ShellOffset, BallRadius + ShellOffset, BallRadius * HeightScale + ShellOffset) / 50.f);
 	FaceShell->SetMaterial(0, EyeMaterial.Object);
 	FaceShell->SetCastShadow(false);
 }
