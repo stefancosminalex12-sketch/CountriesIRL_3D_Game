@@ -55,7 +55,7 @@ ABallCharacter::ABallCharacter()
 	Face->CreateFaceMesh(this, BodyPivot, Sphere, BallRadius);
 
 	Animator = CreateDefaultSubobject<UBallAnimatorComponent>(TEXT("Animator"));
-	Animator->CreateLimbMeshes(this, VisualRoot, BodyPivot, Sphere);
+	Animator->CreateLimbMeshes(this, VisualRoot, BodyPivot, Sphere, BallRadius, GetBallCenterZ(), -HalfHeight);
 
 	Stamina = CreateDefaultSubobject<UStaminaComponent>(TEXT("Stamina"));
 	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));

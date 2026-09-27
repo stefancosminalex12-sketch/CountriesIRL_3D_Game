@@ -64,8 +64,12 @@ public:
 
 	UBallAnimatorComponent();
 
-	/** Creates hand and foot meshes. Must be called from the owning actor's constructor. */
-	void CreateLimbMeshes(AActor* Owner, USceneComponent* LimbParent, USceneComponent* InBodyPivot, UStaticMesh* SphereMesh);
+	/**
+	 *  Creates hand and foot meshes in a resting pose (so the editor preview looks right before play).
+	 *  Must be called from the owning actor's constructor. Heights are relative to the capsule center.
+	 */
+	void CreateLimbMeshes(AActor* Owner, USceneComponent* LimbParent, USceneComponent* InBodyPivot, UStaticMesh* SphereMesh,
+		float BallRadius, float BallCenterZ, float GroundZ);
 
 	void ApplyColors(const FLinearColor& HandColor, const FLinearColor& FootColor);
 
