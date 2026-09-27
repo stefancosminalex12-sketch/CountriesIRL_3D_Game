@@ -45,3 +45,6 @@ Packaged/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Third-party art packs: downloaded originals stay local (see Art/ThirdParty/README.md)
+Art/ThirdParty/*/

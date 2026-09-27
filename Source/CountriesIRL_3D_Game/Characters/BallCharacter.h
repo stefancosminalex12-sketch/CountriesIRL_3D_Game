@@ -17,6 +17,8 @@ class UBallMeleeComponent;
 class USkeletalMesh;
 class UAnimInstance;
 class UAnimSequenceBase;
+class UCharacterOutfit;
+class USkeletalMeshComponent;
 
 /** Prototype: which body the character uses (the head is always the countryball with its eyes) */
 UENUM(BlueprintType)
@@ -180,17 +182,21 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
 	TArray<TSoftObjectPtr<UAnimSequenceBase>> HumanoidPunchAnims;
 
-	/** Size of the humanoid body relative to the original mesh: wider than tall makes a chunky, chibi-style body */
+	/** Clothes worn on the humanoid body. The mannequin above then only drives the animation and stays invisible. */
 	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
-	FVector HumanoidBodyScale = FVector(0.8f, 0.8f, 0.5f);
+	TSoftObjectPtr<UCharacterOutfit> HumanoidOutfit;
 
-	/** Head ball diameter in cm on the humanoid body (big, cartoon proportions) */
+	/** Size of the humanoid body relative to the original mesh: a little wider than tall keeps it stocky and cartoony */
 	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
-	float HumanoidHeadSize = 72.f;
+	FVector HumanoidBodyScale = FVector(0.85f, 0.85f, 0.75f);
+
+	/** Head ball diameter in cm on the humanoid body (bigger than a real head, smaller than the pure countryball) */
+	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
+	float HumanoidHeadSize = 52.f;
 
 	/** Capsule radius and half height for the humanoid body */
 	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
-	FVector2D HumanoidCapsule = FVector2D(35.f, 68.f);
+	FVector2D HumanoidCapsule = FVector2D(30.f, 84.f);
 
 	/** Bone at the top of the neck that the head ball sits on */
 	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
@@ -198,7 +204,7 @@ protected:
 
 	/** How far above the neck the head's center sits, as a fraction of the head's radius */
 	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
-	float HumanoidHeadLift = 0.45f;
+	float HumanoidHeadLift = 1.0f;
 
 	/** How smoothly the head follows the neck (higher = tighter). Filters out animation jitter. */
 	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
@@ -238,6 +244,19 @@ protected:
 
 	/** Keeps the head ball on the humanoid neck: follows it smoothly and stays upright (or lies with a ragdoll) */
 	void UpdateHumanoidHead(float DeltaTime);
+
+	/** Puts the outfit on (animated from the mannequin) or takes it off. Returns false if there is no outfit to wear. */
+	bool WearOutfit(bool bWear);
+
+	/** Mesh whose neck the head sits on: the outfit if worn, otherwise the mannequin */
+	USkeletalMeshComponent* GetHumanoidPoseMesh() const;
+
+	/** Worn outfit parts (the first one is retargeted from the mannequin, the rest follow it) */
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<USkeletalMeshComponent>> OutfitParts;
+
+	/** Neck bone of the worn outfit */
+	FName OutfitNeckBone;
 
 	/** Smoothed head position in the visual root's space */
 	FVector SmoothedHeadLocal = FVector::ZeroVector;

@@ -19,7 +19,8 @@ public class CountriesIRL_3D_Game : ModuleRules
 			"GameplayStateTreeModule",
 			"UMG",
 			"Slate",
-			"DeveloperSettings"
+			"DeveloperSettings",
+			"IKRig"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });

@@ -8,6 +8,9 @@
 #include "Characters/CorpseComponent.h"
 #include "Characters/BallSkeletonComponent.h"
 #include "Characters/BallMeleeComponent.h"
+#include "Characters/CharacterOutfit.h"
+#include "Characters/CIRLRetargetAnimInstance.h"
+#include "Retargeter/IKRetargeter.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -74,6 +77,8 @@ ABallCharacter::ABallCharacter()
 	HumanoidAnimClass = TSoftClassPtr<UAnimInstance>(FSoftObjectPath(TEXT("/Game/Variant_Combat/Anims/ABP_Manny_Combat.ABP_Manny_Combat_C")));
 	HumanoidPunchAnims.Add(TSoftObjectPtr<UAnimSequenceBase>(FSoftObjectPath(TEXT("/Game/Characters/Mannequins/Anims/Unarmed/Attack/MM_Attack_01.MM_Attack_01"))));
 	HumanoidPunchAnims.Add(TSoftObjectPtr<UAnimSequenceBase>(FSoftObjectPath(TEXT("/Game/Characters/Mannequins/Anims/Unarmed/Attack/MM_Attack_02.MM_Attack_02"))));
+	// Free CC0 medieval clothes (Quaternius), animated by retargeting the mannequin
+	HumanoidOutfit = TSoftObjectPtr<UCharacterOutfit>(FSoftObjectPath(TEXT("/Game/CountriesIRL/Characters/Outfits/DA_Outfit_MalePeasant.DA_Outfit_MalePeasant")));
 }
 
 void ABallCharacter::BeginPlay()
@@ -271,7 +276,10 @@ void ABallCharacter::ApplyBodyStyle()
 		Body->SetAnimInstanceClass(AnimClass);
 		Body->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -HumanoidCapsule.Y), FRotator(0.f, -90.f, 0.f));
 		Body->SetRelativeScale3D(HumanoidBodyScale);
-		Body->SetVisibility(true);
+		// With an outfit, the mannequin only animates (invisibly) and the outfit copies its pose
+		const bool bWearing = WearOutfit(true);
+		Body->SetVisibility(!bWearing);
+		Body->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 		// The mannequin's own head is replaced by the countryball
 		Body->HideBoneByName(HumanoidHeadBone, EPhysBodyOp::PBO_None);
 
@@ -284,6 +292,7 @@ void ABallCharacter::ApplyBodyStyle()
 	{
 		const float HalfHeight = (BallRadius * 2.f + FeetGap) * 0.5f;
 		GetCapsuleComponent()->SetCapsuleSize(BallRadius * 0.9f, HalfHeight);
+		WearOutfit(false);
 		Body->SetVisibility(false);
 		Body->SetAnimInstanceClass(nullptr);
 
@@ -294,10 +303,69 @@ void ABallCharacter::ApplyBodyStyle()
 	BaseEyeHeight = (GetHeadCenter() - GetActorLocation()).Z + 10.f;
 }
 
+bool ABallCharacter::WearOutfit(bool bWear)
+{
+	for (USkeletalMeshComponent* Part : OutfitParts)
+	{
+		if (Part)
+		{
+			Part->DestroyComponent();
+		}
+	}
+	OutfitParts.Reset();
+
+	const UCharacterOutfit* Outfit = bWear ? HumanoidOutfit.LoadSynchronous() : nullptr;
+	UIKRetargeter* Retargeter = Outfit ? Outfit->Retargeter.LoadSynchronous() : nullptr;
+	if (!Outfit || !Retargeter || Outfit->Parts.IsEmpty())
+	{
+		return false;
+	}
+
+	for (const TSoftObjectPtr<USkeletalMesh>& PartAsset : Outfit->Parts)
+	{
+		USkeletalMesh* PartMesh = PartAsset.LoadSynchronous();
+		if (!PartMesh)
+		{
+			continue;
+		}
+
+		USkeletalMeshComponent* Part = NewObject<USkeletalMeshComponent>(this, NAME_None, RF_Transient);
+		Part->SetupAttachment(GetMesh());
+		Part->SetSkeletalMesh(PartMesh);
+		Part->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Part->RegisterComponent();
+
+		if (OutfitParts.IsEmpty())
+		{
+			// The lead part copies the mannequin's pose every frame, after the mannequin has animated
+			Part->SetAnimInstanceClass(UCIRLRetargetAnimInstance::StaticClass());
+			if (UCIRLRetargetAnimInstance* Retarget = Cast<UCIRLRetargetAnimInstance>(Part->GetAnimInstance()))
+			{
+				Retarget->SetSource(Retargeter, GetMesh());
+			}
+			Part->AddTickPrerequisiteComponent(GetMesh());
+		}
+		else
+		{
+			// Other parts share the lead part's skeleton, so they simply follow its bones
+			Part->SetLeaderPoseComponent(OutfitParts[0]);
+		}
+		OutfitParts.Add(Part);
+	}
+
+	OutfitNeckBone = Outfit->NeckBone;
+	return !OutfitParts.IsEmpty();
+}
+
+USkeletalMeshComponent* ABallCharacter::GetHumanoidPoseMesh() const
+{
+	return OutfitParts.IsEmpty() ? GetMesh() : OutfitParts[0].Get();
+}
+
 void ABallCharacter::UpdateHumanoidHead(float DeltaTime)
 {
-	USkeletalMeshComponent* Body = GetMesh();
-	const FVector Neck = Body->GetSocketLocation(HumanoidHeadBone);
+	USkeletalMeshComponent* Body = GetHumanoidPoseMesh();
+	const FVector Neck = Body->GetSocketLocation(OutfitParts.IsEmpty() ? HumanoidHeadBone : OutfitNeckBone);
 
 	// Alive: the head sits straight up on the neck. Dead (ragdoll): it continues the line from the hips
 	// through the neck, so it lies with the fallen body.
