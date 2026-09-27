@@ -8,6 +8,7 @@
 
 class UMountDefinition;
 class UStaminaComponent;
+class UHealthComponent;
 class ABallCharacter;
 
 /**
@@ -31,9 +32,13 @@ public:
 
 	const UMountDefinition* GetDefinition() const { return Definition; }
 	UStaminaComponent* GetStamina() const { return Stamina; }
+	UHealthComponent* GetHealth() const { return Health; }
+	bool IsDead() const;
+
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	ABallCharacter* GetRider() const { return Rider; }
-	bool CanBeMounted() const { return !Rider && Definition; }
+	bool CanBeMounted() const { return !Rider && Definition && !IsDead(); }
 
 	/** Called by the rider when getting on (pass nullptr when getting off) */
 	void SetRider(ABallCharacter* NewRider);
@@ -61,6 +66,13 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	TObjectPtr<UStaminaComponent> Stamina;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	TObjectPtr<UHealthComponent> Health;
+
+	/** Health ran out: the rider is thrown off and the horse falls and stays there */
+	UFUNCTION()
+	void HandleDeath(UHealthComponent* DepletedHealth);
 
 private:
 

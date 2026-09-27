@@ -40,6 +40,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Animation")
 	TObjectPtr<UAnimSequence> JumpAnim;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Animation")
+	TObjectPtr<UAnimSequence> DeathAnim;
+
 	/** Ground speed (cm/s) at which the walk and gallop animations look right at normal play rate */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Animation")
 	float WalkAnimSpeed = 170.f;
@@ -67,6 +70,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement")
 	float JumpVelocity = 450.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Health")
+	float MaxHealth = 100.f;
 
 	/** How much stamina the horse has: far more than a person (100), so it can gallop about a minute */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Stamina")

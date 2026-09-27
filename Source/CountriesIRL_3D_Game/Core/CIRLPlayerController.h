@@ -48,6 +48,10 @@ public:
 	UFUNCTION(Exec)
 	void DevWeather(const FString& Weather);
 
+	/** Console (testing): damage the horse you ride, or the nearest horse. DevHitHorse 1000 kills it */
+	UFUNCTION(Exec)
+	void DevHitHorse(float Amount);
+
 	/** Console (testing): damage the nearest other ball. DevHitNearest 1000 kills it */
 	UFUNCTION(Exec)
 	void DevHitNearest(float Amount);

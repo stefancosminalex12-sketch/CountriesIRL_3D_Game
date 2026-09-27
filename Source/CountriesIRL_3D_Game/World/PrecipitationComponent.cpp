@@ -52,7 +52,9 @@ void UPrecipitationComponent::TickComponent(float DeltaTime, ELevelTick TickType
 	// How much is falling (rain and snow each only when it's their turn), eased in and out
 	const FWeatherState& Now = Weather->GetState();
 	const float Target = (Now.bSnowing == bSnow) ? Now.Precipitation : 0.f;
-	Amount = FMath::FInterpTo(Amount, Target, DeltaTime, 0.8f);
+	// Starts at the current weather; later changes ease in and out
+	Amount = bStarted ? FMath::FInterpTo(Amount, Target, DeltaTime, 0.8f) : Target;
+	bStarted = true;
 	Time += DeltaTime;
 
 	const int32 Visible = FMath::RoundToInt(MaxDrops * Amount);

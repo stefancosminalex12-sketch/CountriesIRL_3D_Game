@@ -46,10 +46,11 @@ void UHorseAnimInstance::NativeInitializeAnimation()
 	}
 }
 
-void UHorseAnimInstance::PlayOneShot(UAnimSequence* Clip)
+void UHorseAnimInstance::PlayOneShot(UAnimSequence* Clip, bool bHoldAtEnd)
 {
 	OneShotClip = Clip;
 	OneShotTime = Clip ? 0.f : -1.f;
+	bHoldOneShot = bHoldAtEnd;
 }
 
 void UHorseAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -75,7 +76,12 @@ void UHorseAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	if (OneShotTime >= 0.f)
 	{
 		OneShotTime += DeltaSeconds;
-		if (!OneShotClip || OneShotTime >= OneShotClip->GetPlayLength())
+		if (OneShotClip && bHoldOneShot)
+		{
+			// Stays on the last frame (e.g. lying dead)
+			OneShotTime = FMath::Min(OneShotTime, OneShotClip->GetPlayLength() - 0.01f);
+		}
+		else if (!OneShotClip || OneShotTime >= OneShotClip->GetPlayLength())
 		{
 			OneShotTime = -1.f;
 			OneShotClip = nullptr;
@@ -120,7 +126,7 @@ void FHorseAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 	OneShotTime = FMath::Max(Horse->OneShotTime, 0.f);
 	if (OneShot)
 	{
-		const float Remaining = OneShot->GetPlayLength() - OneShotTime;
+		const float Remaining = Horse->bHoldOneShot ? Horse->OneShotBlend : OneShot->GetPlayLength() - OneShotTime;
 		OneShotWeight = FMath::Clamp(FMath::Min(OneShotTime, Remaining) / Horse->OneShotBlend, 0.f, 1.f);
 	}
 }

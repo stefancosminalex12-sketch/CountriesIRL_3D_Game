@@ -48,8 +48,8 @@ public:
 
 	UHorseAnimInstance();
 
-	/** Plays a clip once over the locomotion (e.g. the jump) */
-	void PlayOneShot(UAnimSequence* Clip);
+	/** Plays a clip once over the locomotion (e.g. the jump); bHoldAtEnd keeps its last pose (death) */
+	void PlayOneShot(UAnimSequence* Clip, bool bHoldAtEnd = false);
 
 protected:
 
@@ -72,6 +72,7 @@ private:
 	float GallopTime = 0.f;
 	float SmoothedSpeed = 0.f;
 	float OneShotTime = -1.f;
+	bool bHoldOneShot = false;
 
 	/** Seconds to fade a one-shot in and out */
 	float OneShotBlend = 0.15f;

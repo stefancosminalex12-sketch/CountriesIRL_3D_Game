@@ -5,6 +5,7 @@
 #include "Core/CIRLHUD.h"
 #include "World/WorldClockSubsystem.h"
 #include "World/WeatherSubsystem.h"
+#include "Animals/Horse.h"
 #include "Characters/BallCharacter.h"
 #include "Engine/DamageEvents.h"
 #include "EngineUtils.h"
@@ -105,6 +106,29 @@ void ACIRLPlayerController::DevWeather(const FString& Weather)
 	if (ACIRLHUD* GameHUD = GetHUD<ACIRLHUD>())
 	{
 		GameHUD->SetShowClock(true);
+	}
+}
+
+void ACIRLPlayerController::DevHitHorse(float Amount)
+{
+	const ABallCharacter* Ball = Cast<ABallCharacter>(GetPawn());
+	AHorse* Target = Ball ? Ball->GetMount() : nullptr;
+	if (!Target && GetPawn())
+	{
+		float Best = TNumericLimits<float>::Max();
+		for (TActorIterator<AHorse> It(GetWorld()); It; ++It)
+		{
+			const float Distance = FVector::Dist(It->GetActorLocation(), GetPawn()->GetActorLocation());
+			if (!It->IsDead() && Distance < Best)
+			{
+				Best = Distance;
+				Target = *It;
+			}
+		}
+	}
+	if (Target)
+	{
+		Target->TakeDamage(Amount, FDamageEvent(), this, GetPawn());
 	}
 }
 

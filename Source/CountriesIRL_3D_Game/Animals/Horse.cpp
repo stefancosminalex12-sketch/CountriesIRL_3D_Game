@@ -5,6 +5,8 @@
 #include "Animals/MountDefinition.h"
 #include "Characters/BallCharacter.h"
 #include "Characters/StaminaComponent.h"
+#include "Characters/HealthComponent.h"
+#include "Engine/DamageEvents.h"
 #include "AIController.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -15,6 +17,7 @@ AHorse::AHorse()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Stamina = CreateDefaultSubobject<UStaminaComponent>(TEXT("Stamina"));
+	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 
 	// Horses aren't steered by the controller's view; they turn themselves in Tick
 	bUseControllerRotationYaw = false;
@@ -44,6 +47,12 @@ void AHorse::BeginPlay()
 
 	// Horses stand upright: only their heading comes from how they were placed
 	SetActorRotation(FRotator(0.f, GetActorRotation().Yaw, 0.f));
+
+	if (Definition)
+	{
+		Health->SetMaxHealth(Definition->MaxHealth);
+	}
+	Health->OnDepleted.AddDynamic(this, &AHorse::HandleDeath);
 }
 
 void AHorse::ApplyDefinition()
@@ -70,6 +79,33 @@ void AHorse::ApplyDefinition()
 	Movement->MaxAcceleration = Definition->Acceleration;
 	Movement->BrakingDecelerationWalking = Definition->Acceleration * 1.3f;
 	Movement->JumpZVelocity = Definition->JumpVelocity;
+}
+
+bool AHorse::IsDead() const
+{
+	return Health->IsDepleted();
+}
+
+float AHorse::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	const float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	return Health->ApplyDamage(Damage);
+}
+
+void AHorse::HandleDeath(UHealthComponent* DepletedHealth)
+{
+	if (Rider)
+	{
+		Rider->Dismount();
+	}
+	DesiredDirection = FVector::ZeroVector;
+	bGalloping = false;
+	GetCharacterMovement()->StopMovementImmediately();
+	GetCharacterMovement()->DisableMovement();
+	if (UHorseAnimInstance* Anim = Cast<UHorseAnimInstance>(GetMesh()->GetAnimInstance()))
+	{
+		Anim->PlayOneShot(Definition ? Definition->DeathAnim.Get() : nullptr, true);
+	}
 }
 
 void AHorse::SetRider(ABallCharacter* NewRider)
@@ -123,6 +159,11 @@ void AHorse::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if (!Definition)
+	{
+		return;
+	}
+
+	if (IsDead())
 	{
 		return;
 	}

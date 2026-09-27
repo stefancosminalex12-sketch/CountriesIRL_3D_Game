@@ -27,6 +27,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Health")
 	float ApplyDamage(float Amount);
 
+	/** Changes the maximum (full health) */
+	void SetMaxHealth(float NewMax) { MaxHealth = FMath::Max(NewMax, 1.f); Health = MaxHealth; }
+
 	UFUNCTION(BlueprintCallable, Category="Health")
 	void Heal(float Amount);
 

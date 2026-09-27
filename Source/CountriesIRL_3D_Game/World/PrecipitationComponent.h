@@ -53,6 +53,7 @@ public:
 private:
 
 	float Amount = 0.f;
+	bool bStarted = false;
 	float Time = 0.f;
 	TArray<FTransform> Transforms;
 };

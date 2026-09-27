@@ -6,6 +6,7 @@
 #include "Characters/StaminaComponent.h"
 #include "Characters/PlayerBallCharacter.h"
 #include "Animals/Horse.h"
+#include "Characters/HealthComponent.h"
 #include "World/WorldClockSubsystem.h"
 #include "World/SeasonSubsystem.h"
 #include "World/WeatherSubsystem.h"
@@ -51,15 +52,16 @@ void ACIRLHUD::DrawHUD()
 		DrawBar(X, StaminaY, Width, StaminaBarHeight * Scale, Percent, Fill, StaminaBarAlpha);
 	}
 
-	// In the saddle: the horse's stamina above our health bar (brown), always shown
+	// In the saddle: the horse's own stamina and health above ours (brown tones), always shown
 	if (const AHorse* Horse = Ball->GetMount())
 	{
 		const UStaminaComponent* HorseStamina = Horse->GetStamina();
-		const float HorseY = HealthY - (BarSpacing + StaminaBarHeight) * Scale;
-		const FLinearColor Fill = HorseStamina->IsExhausted() ? FLinearColor(0.75f, 0.2f, 0.12f) : FLinearColor(0.55f, 0.33f, 0.14f);
-		// A longer bar for a bigger pool (a horse has several times a person's stamina)
-		const float HorseWidth = Width * FMath::Clamp(FMath::Sqrt(HorseStamina->GetMaxStamina() / 100.f), 1.f, 1.6f);
-		DrawBar(X, HorseY, HorseWidth, StaminaBarHeight * Scale, HorseStamina->GetStaminaPercent(), Fill, 1.f);
+		const float HorseStaminaY = HealthY - (BarSpacing * 2.5f + StaminaBarHeight) * Scale;
+		const FLinearColor StaminaFill = HorseStamina->IsExhausted() ? FLinearColor(0.75f, 0.2f, 0.12f) : FLinearColor(0.55f, 0.33f, 0.14f);
+		DrawBar(X, HorseStaminaY, Width, StaminaBarHeight * Scale, HorseStamina->GetStaminaPercent(), StaminaFill, 1.f);
+
+		const float HorseHealthY = HorseStaminaY - (BarSpacing + HealthBarHeight) * Scale;
+		DrawBar(X, HorseHealthY, Width, HealthBarHeight * Scale, Horse->GetHealth()->GetHealthPercent(), FLinearColor(0.4f, 0.1f, 0.07f), 1.f);
 	}
 
 	// What the interact key would do (e.g. "E  Get on the horse"), bottom center

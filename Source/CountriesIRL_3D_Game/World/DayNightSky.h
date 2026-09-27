@@ -115,6 +115,9 @@ protected:
 	float Overcast = 0.5f;
 	float RainHaze = 0.f;
 
+	/** The sky starts in the current weather instead of fading in from an average */
+	bool bWeatherApplied = false;
+
 	/** 0 at night .. 1 in full daylight, from the sun's height */
 	float DayLight = 1.f;
 

@@ -133,8 +133,9 @@ void ADayNightSky::Tick(float DeltaTime)
 	if (const UWeatherSubsystem* Weather = GetWorld()->GetSubsystem<UWeatherSubsystem>())
 	{
 		const FWeatherState& Now = Weather->GetState();
-		Overcast = FMath::FInterpTo(Overcast, Now.CloudCover, DeltaTime, 0.4f);
-		RainHaze = FMath::FInterpTo(RainHaze, Now.Precipitation, DeltaTime, 0.5f);
+		Overcast = bWeatherApplied ? FMath::FInterpTo(Overcast, Now.CloudCover, DeltaTime, 0.4f) : Now.CloudCover;
+		RainHaze = bWeatherApplied ? FMath::FInterpTo(RainHaze, Now.Precipitation, DeltaTime, 0.5f) : Now.Precipitation;
+		bWeatherApplied = true;
 
 		if (CloudMaterial)
 		{

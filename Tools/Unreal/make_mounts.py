@@ -24,6 +24,7 @@ def mount_asset(name, model):
     asset.set_editor_property("walk_anim", unreal.load_asset(base + "Walk"))
     asset.set_editor_property("gallop_anim", unreal.load_asset(base + "Gallop"))
     asset.set_editor_property("jump_anim", unreal.load_asset(base + "Gallop_Jump"))
+    asset.set_editor_property("death_anim", unreal.load_asset(base + "Death"))
     unreal.EditorAssetLibrary.save_loaded_asset(asset)
     return asset
 
