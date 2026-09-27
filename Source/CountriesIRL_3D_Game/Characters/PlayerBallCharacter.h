@@ -75,6 +75,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Camera")
 	bool bStartInFirstPerson = true;
 
+	/** How far the first-person view nudges forward with a punch (cm) */
+	UPROPERTY(EditAnywhere, Category="Camera")
+	float PunchCameraNudge = 6.f;
+
 	/** In first-person, sideways (A/D) movement is slower than forward, like a real side-step */
 	UPROPERTY(EditAnywhere, Category="Ball|Movement", meta=(ClampMin=0.1, ClampMax=1.0))
 	float StrafeSpeedScale = 0.7f;
@@ -93,6 +97,9 @@ private:
 	void UpdateRotationMode();
 
 	bool bFirstPerson = false;
+
+	/** Resting place of the first-person camera */
+	FVector FirstPersonCameraOffset = FVector::ZeroVector;
 
 	/** DevWalk state */
 	FVector2D DevMoveInput = FVector2D::ZeroVector;

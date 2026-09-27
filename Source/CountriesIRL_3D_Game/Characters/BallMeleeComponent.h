@@ -52,8 +52,16 @@ public:
 	/** Movement speed multiplier while guarding */
 	float GetGuardMoveSpeedScale() const { return GuardMoveSpeedScale; }
 
-	/** For the animator: which hand (0 left, 1 right) and how far it is extended (0..1) */
+	/**
+	 *  For the animator: which hand (0 left, 1 right) and where the fist is in the punch:
+	 *  negative during the wind-up (down to -WindUpPull), rising fast to 1 at impact, then back to 0.
+	 */
 	float GetPunchExtension(int32& OutHand) const;
+
+	/** 0..1..0 over the whole punch, for secondary motion (the other fist guarding, camera nudge) */
+	float GetPunchEnvelope() const;
+
+	float GetWindUpPull() const { return WindUpPull; }
 
 	/** Which zone a point on a target ball falls in */
 	static EBallHitZone ZoneForPoint(const ABallCharacter* Target, const FVector& WorldPoint);
@@ -83,13 +91,21 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Melee")
 	float HitRadius = 14.f;
 
+	/** Seconds of wind-up (the fist pulls back before striking) */
+	UPROPERTY(EditAnywhere, Category="Melee")
+	float WindUpTime = 0.07f;
+
+	/** How far back the wind-up goes, as a fraction of the strike */
+	UPROPERTY(EditAnywhere, Category="Melee")
+	float WindUpPull = 0.3f;
+
 	/** Seconds from starting the punch to the fist landing */
 	UPROPERTY(EditAnywhere, Category="Melee")
-	float ImpactTime = 0.1f;
+	float ImpactTime = 0.15f;
 
-	/** Seconds for a whole punch (extend and pull back) */
+	/** Seconds for a whole punch (wind-up, strike and recoil) */
 	UPROPERTY(EditAnywhere, Category="Melee")
-	float PunchDuration = 0.32f;
+	float PunchDuration = 0.38f;
 
 	/** Seconds between punches */
 	UPROPERTY(EditAnywhere, Category="Melee")

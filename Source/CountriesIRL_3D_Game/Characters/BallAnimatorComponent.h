@@ -11,7 +11,10 @@ class UStaticMeshComponent;
 class USceneComponent;
 class ABallCharacter;
 
-/** A floating hand: a palm, four cylinder fingers and a thumb (each with a round tip), posed by curling the fingers. */
+/**
+ *  A floating hand: a palm, four fingers and a thumb. Every finger has two cylinder segments with a round
+ *  joint and tip, so fingers roll into a real fist and the thumb wraps over the front of it.
+ */
 USTRUCT()
 struct FBallHandParts
 {
@@ -21,12 +24,14 @@ struct FBallHandParts
 	UPROPERTY() TObjectPtr<USceneComponent> Root;
 	UPROPERTY() TObjectPtr<UStaticMeshComponent> Palm;
 
-	/** Index, middle, ring, little finger, then the thumb */
-	UPROPERTY() TArray<TObjectPtr<UStaticMeshComponent>> Fingers;
+	/** Per finger (index, middle, ring, little, thumb): base segment, joint, outer segment, tip */
+	UPROPERTY() TArray<TObjectPtr<UStaticMeshComponent>> BaseSegments;
+	UPROPERTY() TArray<TObjectPtr<UStaticMeshComponent>> Joints;
+	UPROPERTY() TArray<TObjectPtr<UStaticMeshComponent>> OuterSegments;
 	UPROPERTY() TArray<TObjectPtr<UStaticMeshComponent>> Tips;
 
-	/** Finger curl currently applied, to skip re-posing when nothing changed */
-	float AppliedCurl = -1.f;
+	/** Fist amount currently applied, to skip re-posing when nothing changed */
+	float AppliedFist = -1.f;
 };
 
 /** A floating boot: sole, foot and a short ankle shaft. */
@@ -112,12 +117,23 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ball|Hands")
 	float FingerThickness = 4.3f;
 
-	/** Finger bend in degrees: relaxed hands and clenched fists */
+	/** Bend at each finger joint for a relaxed hand, in degrees */
 	UPROPERTY(EditAnywhere, Category="Ball|Hands")
-	float RelaxedCurl = 30.f;
+	float RelaxedJointBend = 15.f;
 
+	/** Bend at the knuckle and the middle joint in a clenched fist, in degrees */
 	UPROPERTY(EditAnywhere, Category="Ball|Hands")
-	float FistCurl = 155.f;
+	FVector2D FistJointBend = FVector2D(85.f, 100.f);
+
+	/** How far the whole body twists into a punch (degrees), leans forward and lunges (cm) */
+	UPROPERTY(EditAnywhere, Category="Ball|Punch")
+	float PunchTwist = 14.f;
+
+	UPROPERTY(EditAnywhere, Category="Ball|Punch")
+	float PunchLean = 7.f;
+
+	UPROPERTY(EditAnywhere, Category="Ball|Punch")
+	float PunchLunge = 6.f;
 
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
 	FVector FootSize = FVector(26.f, 15.f, 11.f);
@@ -163,7 +179,7 @@ private:
 	/** Ground height at a world XY near ReferenceZ (returns ReferenceZ if nothing in reach) */
 	float GroundZAt(const FVector& WorldPoint, float ReferenceZ) const;
 
-	/** Places fingers and thumb for a curl between relaxed (0) and fist (1) */
+	/** Places fingers and thumb between a relaxed hand (0) and a fist (1) */
 	void PoseHand(FBallHandParts& Hand, float FistAmount, float ThumbSide) const;
 
 	/** Pulls a hand back toward the ball if it would go into a wall. Positions are in limb-root space. */
@@ -197,6 +213,9 @@ private:
 
 	/** 0 = alive pose, 1 = lying dead (smoothed) */
 	float DeadBlend = 0.f;
+
+	/** Parts sharing one color share one material, so the renderer can draw them together */
+	void ShareColor(const TArray<UStaticMeshComponent*>& Parts, const FLinearColor& Color);
 
 	/** Smoothed hand orientation and fist amount (left, right) */
 	FQuat HandRotation[2] = { FQuat::Identity, FQuat::Identity };

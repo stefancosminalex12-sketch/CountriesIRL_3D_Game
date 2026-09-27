@@ -20,7 +20,8 @@ APlayerBallCharacter::APlayerBallCharacter()
 	// First-person camera sits just behind the eyes, inside the (hidden) ball
 	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FirstPersonCamera->SetupAttachment(GetCapsuleComponent());
-	FirstPersonCamera->SetRelativeLocation(FVector(BallRadius * 0.55f, 0.f, GetBallCenterZ() + 10.f));
+	FirstPersonCameraOffset = FVector(BallRadius * 0.55f, 0.f, GetBallCenterZ() + 10.f);
+	FirstPersonCamera->SetRelativeLocation(FirstPersonCameraOffset);
 	FirstPersonCamera->bUsePawnControlRotation = true;
 	FirstPersonCamera->SetFieldOfView(90.f);
 
@@ -131,6 +132,11 @@ void APlayerBallCharacter::DevHeal(float Amount)
 void APlayerBallCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// First-person: the view nudges forward with each punch so it lands with some weight
+	int32 PunchHand = 0;
+	const float PunchDrive = Melee->IsPunching() ? FMath::Max(Melee->GetPunchExtension(PunchHand), 0.f) : 0.f;
+	FirstPersonCamera->SetRelativeLocation(FirstPersonCameraOffset + FVector(PunchCameraNudge * PunchDrive, 0.f, -0.3f * PunchCameraNudge * PunchDrive));
 
 	if (DevMoveTimeLeft > 0.f)
 	{

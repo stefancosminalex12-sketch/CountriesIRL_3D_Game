@@ -43,13 +43,27 @@ float UBallMeleeComponent::GetPunchExtension(int32& OutHand) const
 		return 0.f;
 	}
 
-	// Snap out to the impact, then ease back
+	// Wind-up: ease back
+	if (PunchTime < WindUpTime)
+	{
+		return -WindUpPull * FMath::InterpEaseInOut(0.f, 1.f, PunchTime / WindUpTime, 2.f);
+	}
+
+	// Strike: accelerate into the impact
 	if (PunchTime < ImpactTime)
 	{
-		return FMath::InterpEaseOut(0.f, 1.f, PunchTime / ImpactTime, 2.f);
+		const float Strike = (PunchTime - WindUpTime) / FMath::Max(ImpactTime - WindUpTime, KINDA_SMALL_NUMBER);
+		return FMath::Lerp(-WindUpPull, 1.f, FMath::InterpEaseIn(0.f, 1.f, Strike, 2.f));
 	}
+
+	// Recoil: snap back, then settle
 	const float Back = (PunchTime - ImpactTime) / FMath::Max(PunchDuration - ImpactTime, KINDA_SMALL_NUMBER);
-	return 1.f - FMath::InterpEaseInOut(0.f, 1.f, FMath::Clamp(Back, 0.f, 1.f), 2.f);
+	return 1.f - FMath::InterpEaseOut(0.f, 1.f, FMath::Clamp(Back, 0.f, 1.f), 2.f);
+}
+
+float UBallMeleeComponent::GetPunchEnvelope() const
+{
+	return IsPunching() ? FMath::Sin(FMath::Clamp(PunchTime / PunchDuration, 0.f, 1.f) * UE_PI) : 0.f;
 }
 
 void UBallMeleeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
