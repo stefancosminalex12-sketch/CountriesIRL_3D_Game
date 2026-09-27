@@ -76,9 +76,6 @@ public:
 	/** In first-person the hands are held in front of the camera so the player can see them */
 	void SetFirstPersonHands(bool bEnable) { bFirstPersonHands = bEnable; }
 
-	/** Shows or hides the floating hands and boots (hidden when the ball has a humanoid body) */
-	void SetLimbsVisible(bool bVisible);
-
 	/** Only bones remain: hands and boots lie beside the skeleton instead of the body */
 	void SetSkeletonPose(bool bEnable) { bSkeletonPose = bEnable; }
 

@@ -94,14 +94,3 @@ void ACIRLPlayerController::DevHitNearest(float Amount)
 		Nearest->TakeDamage(Amount, FDamageEvent(), this, GetPawn());
 	}
 }
-
-void ACIRLPlayerController::DevBodyAll()
-{
-	// Follow the player's current style, flipped, so everyone matches
-	const ABallCharacter* Mine = Cast<ABallCharacter>(GetPawn());
-	const EBallBodyStyle Target = (Mine && Mine->GetBodyStyle() == EBallBodyStyle::Countryball) ? EBallBodyStyle::Humanoid : EBallBodyStyle::Countryball;
-	for (TActorIterator<ABallCharacter> It(GetWorld()); It; ++It)
-	{
-		It->SetBodyStyle(Target);
-	}
-}

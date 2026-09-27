@@ -509,18 +509,3 @@ FVector UBallAnimatorComponent::KeepHandOutOfWalls(int32 Index, const FVector& L
 	HandReach[Index] = Reach < HandReach[Index] ? Reach : FMath::FInterpTo(HandReach[Index], Reach, DeltaTime, 10.f);
 	return FMath::Lerp(LocalStart, LocalTarget, HandReach[Index]);
 }
-
-void UBallAnimatorComponent::SetLimbsVisible(bool bVisible)
-{
-	for (int32 Index = 0; Index < 2; ++Index)
-	{
-		if (Hands[Index].Root)
-		{
-			Hands[Index].Root->SetVisibility(bVisible, true);
-		}
-		if (Boots[Index].Root)
-		{
-			Boots[Index].Root->SetVisibility(bVisible, true);
-		}
-	}
-}

@@ -83,7 +83,6 @@ void APlayerBallCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	EIC->BindAction(Input->Attack, ETriggerEvent::Started, this, &APlayerBallCharacter::Attack);
 	EIC->BindAction(Input->Guard, ETriggerEvent::Started, this, &APlayerBallCharacter::StartGuard);
 	EIC->BindAction(Input->Guard, ETriggerEvent::Completed, this, &APlayerBallCharacter::StopGuard);
-	EIC->BindAction(Input->ToggleBody, ETriggerEvent::Started, this, &APlayerBallCharacter::ToggleBody);
 }
 
 void APlayerBallCharacter::Move(const FInputActionValue& Value)
@@ -134,13 +133,6 @@ void APlayerBallCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// First-person eyes sit at the front of the head ball (which moves with a humanoid body's neck)
-	if (GetBodyStyle() == EBallBodyStyle::Humanoid)
-	{
-		const FVector HeadLocal = GetActorTransform().InverseTransformPosition(GetHeadCenter());
-		FirstPersonCameraOffset = FVector(GetHeadRadius() * 0.55f, 0.f, HeadLocal.Z + GetHeadRadius() * 0.2f);
-	}
-
 	// First-person: the view nudges forward with each punch so it lands with some weight
 	int32 PunchHand = 0;
 	const float PunchDrive = Melee->IsPunching() ? FMath::Max(Melee->GetPunchExtension(PunchHand), 0.f) : 0.f;
@@ -160,15 +152,6 @@ void APlayerBallCharacter::Tick(float DeltaTime)
 void APlayerBallCharacter::Attack()
 {
 	Melee->TryPunch();
-}
-
-void APlayerBallCharacter::ToggleBody()
-{
-	SetBodyStyle(GetBodyStyle() == EBallBodyStyle::Countryball ? EBallBodyStyle::Humanoid : EBallBodyStyle::Countryball);
-	if (GetBodyStyle() == EBallBodyStyle::Countryball)
-	{
-		FirstPersonCameraOffset = FVector(BallRadius * 0.55f, 0.f, GetBallCenterZ() + 10.f);
-	}
 }
 
 void APlayerBallCharacter::StartGuard()

@@ -14,21 +14,6 @@ class UHealthComponent;
 class UCorpseComponent;
 class UBallSkeletonComponent;
 class UBallMeleeComponent;
-class USkeletalMesh;
-class UAnimInstance;
-class UAnimSequenceBase;
-class UCharacterOutfit;
-class USkeletalMeshComponent;
-
-/** Prototype: which body the character uses (the head is always the countryball with its eyes) */
-UENUM(BlueprintType)
-enum class EBallBodyStyle : uint8
-{
-	/** A countryball with floating hands and feet (procedural animation) */
-	Countryball,
-	/** The countryball as a head on a small humanoid body (skeletal animation) */
-	Humanoid
-};
 
 /**
  *  Base class for every person in the game: a countryball with eyes, floating hands and feet.
@@ -72,27 +57,8 @@ public:
 
 	float GetRunSpeed() const { return RunSpeed; }
 
-	/** Height of the ball's center relative to the capsule center (countryball body) */
+	/** Height of the ball's center relative to the capsule center */
 	float GetBallCenterZ() const;
-
-	/** Switches between the countryball body and the ball-head-on-a-body prototype */
-	UFUNCTION(BlueprintCallable, Category="Ball|Body")
-	void SetBodyStyle(EBallBodyStyle NewStyle);
-
-	UFUNCTION(BlueprintPure, Category="Ball|Body")
-	EBallBodyStyle GetBodyStyle() const { return BodyStyle; }
-
-	/** Center of the head ball, in world space (the whole ball for countryballs) */
-	FVector GetHeadCenter() const;
-
-	/** Radius of the head ball in world units */
-	float GetHeadRadius() const;
-
-	/** Body part at a world height on this character: head/face, chest (upper body) or lower body */
-	uint8 GetHitZoneAtHeight(float WorldZ) const;
-
-	/** Called by the melee component when a punch starts, so the body can animate it */
-	virtual void OnPunchStarted(int32 Hand);
 
 	/** Distance from the capsule center down to the ground */
 	float GetGroundOffset() const;
@@ -168,48 +134,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ball|Look")
 	EBallEmotion StartingEmotion = EBallEmotion::Neutral;
 
-	/** Which body to use (prototype comparison). The head is always the countryball. */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ball|Body")
-	EBallBodyStyle BodyStyle = EBallBodyStyle::Countryball;
-
-	/** Humanoid prototype: the body mesh, its animation blueprint and punch animations */
-	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
-	TSoftObjectPtr<USkeletalMesh> HumanoidMesh;
-
-	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
-	TSoftClassPtr<UAnimInstance> HumanoidAnimClass;
-
-	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
-	TArray<TSoftObjectPtr<UAnimSequenceBase>> HumanoidPunchAnims;
-
-	/** Clothes worn on the humanoid body. The mannequin above then only drives the animation and stays invisible. */
-	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
-	TSoftObjectPtr<UCharacterOutfit> HumanoidOutfit;
-
-	/** Size of the humanoid body relative to the original mesh: a little wider than tall keeps it stocky and cartoony */
-	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
-	FVector HumanoidBodyScale = FVector(0.85f, 0.85f, 0.75f);
-
-	/** Head ball diameter in cm on the humanoid body (bigger than a real head, smaller than the pure countryball) */
-	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
-	float HumanoidHeadSize = 52.f;
-
-	/** Capsule radius and half height for the humanoid body */
-	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
-	FVector2D HumanoidCapsule = FVector2D(30.f, 84.f);
-
-	/** Bone at the top of the neck that the head ball sits on */
-	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
-	FName HumanoidHeadBone = TEXT("head");
-
-	/** How far above the neck the head's center sits, as a fraction of the head's radius */
-	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
-	float HumanoidHeadLift = 1.0f;
-
-	/** How smoothly the head follows the neck (higher = tighter). Filters out animation jitter. */
-	UPROPERTY(EditAnywhere, Category="Ball|Body|Humanoid")
-	float HumanoidHeadSmoothing = 20.f;
-
 	UPROPERTY(EditAnywhere, Category="Ball|Movement")
 	float WalkSpeed = 220.f;
 
@@ -238,32 +162,6 @@ protected:
 	float DamageFlashStrength = 0.65f;
 
 	float DamageFlashTime = 0.f;
-
-	/** Puts the body parts, capsule and animation in place for BodyStyle */
-	void ApplyBodyStyle();
-
-	/** Keeps the head ball on the humanoid neck: follows it smoothly and stays upright (or lies with a ragdoll) */
-	void UpdateHumanoidHead(float DeltaTime);
-
-	/** Puts the outfit on (animated from the mannequin) or takes it off. Returns false if there is no outfit to wear. */
-	bool WearOutfit(bool bWear);
-
-	/** Mesh whose neck the head sits on: the outfit if worn, otherwise the mannequin */
-	USkeletalMeshComponent* GetHumanoidPoseMesh() const;
-
-	/** Worn outfit parts (the first one is retargeted from the mannequin, the rest follow it) */
-	UPROPERTY(Transient)
-	TArray<TObjectPtr<USkeletalMeshComponent>> OutfitParts;
-
-	/** Neck bone of the worn outfit */
-	FName OutfitNeckBone;
-
-	/** Smoothed head position in the visual root's space */
-	FVector SmoothedHeadLocal = FVector::ZeroVector;
-	bool bHeadPlaced = false;
-
-	/** Which punch animation plays next (alternates) */
-	int32 NextPunchAnim = 0;
 
 	/** Run key held */
 	bool bWantsToRun = false;

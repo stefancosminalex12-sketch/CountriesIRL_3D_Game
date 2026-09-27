@@ -123,7 +123,7 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
 ## 8. Characters & Art (Countryballs)
 
 - **All humans are countryballs**: coat of arms/livery on the ball, **white eyes, no mouth** [Decided]
-  - **Confirmed by community vote (2026-09-27):** the user polled their community on the body question: after ~20 minutes, **48 votes for pure countryballs**, 7 for a simplified body, 7 for a complex body (~77% countryballs). Pure countryballs stay the game's look; the humanoid body prototype is parked (see Open Questions) [Decided]
+  - **Confirmed by community vote (2026-09-27):** the user polled their community on the body question: after ~20 minutes, **48 votes for pure countryballs**, 7 for a simplified body, 7 for a complex body (~77% countryballs). Pure countryballs stay the game's look; the humanoid body prototype (B key, Quaternius outfit, retargeter) was **removed** at the user's request; it stays in git history (commits 1f445f9–6533936) if ever needed [Decided]
 - **Expressive eyes** (normal, happy, sad, angry, scared, tired, suspicious, dead ×_×…); reference: u/tengam15 "Big Chart o' Expressions" (inspiration only, draw our own set) [Decided]
 - **Rayman-style floating hands AND feet** (hands hold weapons/tools; feet wear boots/sabatons and make walking/riding read clearly) [Decided]
   - **Hands have fingers** [Decided, user]: a palm with **four cylinder-shaped fingers and a thumb** (rounded tips), needed for holding swords/tools and punching. Poses: relaxed, **fist** (punching, guard), later **grip** for weapons [Built as simple shapes; art pass can replace with Blender meshes]
@@ -280,7 +280,7 @@ Start with the **commoner origin**; build what's designed so far and add feature
 6. [ ] Hit-zone combat + bandits
 7. [ ] Compass bar
 
-**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · **Left click punch** · **hold right click guard** · V first/third-person · T cycle emotion (debug) · **B switch body prototype**. Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing), `DevDamage 25`, `DevHeal 25`, `DevTime 21.5` (jump to a time), `DevTimeSpeed 60` (fast-forward; 1 = normal), `DevClock` (show date/time), `DevAdvance 24` (skip hours), `DevHitNearest 20` (damage nearest ball; 1000 kills), `DevPunch`, `DevGuard` (toggle guard), `DevBodyAll` (switch every ball's body). Dev test level: `L_DevSandbox`.
+**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · **Left click punch** · **hold right click guard** · V first/third-person · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing), `DevDamage 25`, `DevHeal 25`, `DevTime 21.5` (jump to a time), `DevTimeSpeed 60` (fast-forward; 1 = normal), `DevClock` (show date/time), `DevAdvance 24` (skip hours), `DevHitNearest 20` (damage nearest ball; 1000 kills), `DevPunch`, `DevGuard` (toggle guard). Dev test level: `L_DevSandbox`.
 
 **Budget rule** [Decided]: use **free assets and tools as much as possible**, plus our own creations; only consider paid assets when nothing free works.
 

@@ -32,7 +32,6 @@ bool UBallMeleeComponent::TryPunch()
 
 	// Turn to face where we're punching (matters in third-person, where the ball faces its movement)
 	Ball->SetActorRotation(FRotator(0.f, Ball->GetBaseAimRotation().Yaw, 0.f));
-	Ball->OnPunchStarted(PunchHand);
 	return true;
 }
 
@@ -121,8 +120,15 @@ float UBallMeleeComponent::ModifyIncomingDamage(float Damage, const AActor* Dama
 
 EBallHitZone UBallMeleeComponent::ZoneForPoint(const ABallCharacter* Target, const FVector& WorldPoint)
 {
-	// The target knows its own shape (countryball or ball head on a body)
-	return static_cast<EBallHitZone>(Target->GetHitZoneAtHeight(WorldPoint.Z));
+	// Height of the hit relative to the ball's center, in ball radii. The face (eyes) sits just above
+	// the center, so everything from there up counts as the head.
+	const float CenterZ = Target->GetActorLocation().Z + Target->GetBallCenterZ();
+	const float Height = (WorldPoint.Z - CenterZ) / FMath::Max(Target->GetBallRadius(), 1.f);
+	if (Height > 0.05f)
+	{
+		return EBallHitZone::Head;
+	}
+	return Height < -0.45f ? EBallHitZone::Lower : EBallHitZone::Chest;
 }
 
 float UBallMeleeComponent::MultiplierFor(EBallHitZone Zone) const

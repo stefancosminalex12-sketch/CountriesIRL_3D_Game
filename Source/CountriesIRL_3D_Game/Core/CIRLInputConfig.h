@@ -34,9 +34,6 @@ public:
 	UPROPERTY() TObjectPtr<UInputAction> Attack;
 	UPROPERTY() TObjectPtr<UInputAction> Guard;
 
-	/** Prototype: switch between the countryball and the ball-head-on-a-body */
-	UPROPERTY() TObjectPtr<UInputAction> ToggleBody;
-
 	/** Debug: cycles through the ball's eye emotions */
 	UPROPERTY() TObjectPtr<UInputAction> CycleEmotion;
 };

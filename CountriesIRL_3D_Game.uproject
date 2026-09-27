@@ -24,10 +24,6 @@
 			]
 		},
 		{
-			"Name": "IKRig",
-			"Enabled": true
-		},
-		{
 			"Name": "StateTree",
 			"Enabled": true
 		},
