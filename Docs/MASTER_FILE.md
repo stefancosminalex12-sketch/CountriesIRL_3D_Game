@@ -123,6 +123,7 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
 ## 8. Characters & Art (Countryballs)
 
 - **All humans are countryballs**: coat of arms/livery on the ball, **white eyes, no mouth** [Decided]
+  - **Confirmed by community vote (2026-09-27):** the user polled their community on the body question: after ~20 minutes, **48 votes for pure countryballs**, 7 for a simplified body, 7 for a complex body (~77% countryballs). Pure countryballs stay the game's look; the humanoid body prototype is parked (see Open Questions) [Decided]
 - **Expressive eyes** (normal, happy, sad, angry, scared, tired, suspicious, dead ×_×…); reference: u/tengam15 "Big Chart o' Expressions" (inspiration only, draw our own set) [Decided]
 - **Rayman-style floating hands AND feet** (hands hold weapons/tools; feet wear boots/sabatons and make walking/riding read clearly) [Decided]
   - **Hands have fingers** [Decided, user]: a palm with **four cylinder-shaped fingers and a thumb** (rounded tips), needed for holding swords/tools and punching. Poses: relaxed, **fist** (punching, guard), later **grip** for weapons [Built as simple shapes; art pass can replace with Blender meshes]
@@ -309,7 +310,7 @@ Yorkshire & the North, spring 1455:
 
 ## 12. Open Questions
 
-- **Character body: pure countryball vs. countryball head on a small cartoon body** (user idea, 2026-09-27, reference: a chibi skeleton with a big head and small body). Keep the ball head with the flag and eyes either way.
+- ~~**Character body: pure countryball vs. countryball head on a small cartoon body**~~ **Resolved 2026-09-27: pure countryballs** (community vote 48 / 7 simplified / 7 complex; see section 8). History kept below. (user idea, 2026-09-27, reference: a chibi skeleton with a big head and small body). Keep the ball head with the flag and eyes either way.
   - Research (Sept 2026): countryballs are still big across ages: ~16.6M TikTok posts (#countryballs), ~10M for countryball animations, r/polandball ~690k members, several well-reviewed countryball games in 2025 (e.g. Countryballs at War 94%, Countryballs Conquest 88%), growing "kidult" plush market (adults >20% of plush buyers). Almost all countryball games are 2D strategy/map games; a 3D open-world countryball game is an open niche
   - For a body: the planned KCD-style layered clothing/armor, belts, back-carried bows and tabards need a body; clearer melee and riding; free CC0 humanoid animations exist (Quaternius Universal Animation Library 1+2, 250+ animations incl. melee and farming) and can be retargeted in Unreal
   - For pure balls: instantly recognizable brand; the traditional countryball rules say no arms/legs; procedural animation already works with no rig; cheaper
@@ -324,6 +325,9 @@ Yorkshire & the North, spring 1455:
     - Data-driven: an outfit is a **CharacterOutfit** data asset (list of mesh parts + retargeter + neck bone), e.g. `DA_Outfit_MalePeasant`. Villager/soldier/DLC outfits = new data assets
     - User's call: with these more realistic bodies the head should be **smaller** (the first idea was more animated/anatomically incorrect). Lineup tests at 38/44/50/56/72 cm → **new default: 52 cm head** (bigger than a real head, smaller than the pure countryball), **body 0.85 wide × 0.75 tall** (a bit stocky), head sitting on top of the neck instead of sunk into the shoulders
     - Still open: which body style to keep overall; next candidates are the Female Peasant/Rangers outfits for variety and skin/flag colors on the arms
+  - **User feedback on the Quaternius body (2026-09-27): too detailed.** Wanted: low poly but much more simplified, not a full human body; "a shape or two", cartoonish and simple, with its own style. Quaternius outfit is parked (kept in the project, not the direction)
+    - Animations clarified: we did not make our own body animations. The body uses Unreal's free template animations; the Quaternius rig only needed the retargeter to translate them. Any simple shape body pinned to the (invisible) mannequin skeleton gets the same free animations
+    - Options shown to the user: A) bean tunic with tube arms and stubby legs, B) tunic/bell body with floating hands and boots (Rayman-like, closest to the current countryball), C) blocky toy (trapezoid torso, block arms and legs). The tunic front can carry the flag/heraldry
 
 
 - Capture system details (ransom, escape, consequences)
