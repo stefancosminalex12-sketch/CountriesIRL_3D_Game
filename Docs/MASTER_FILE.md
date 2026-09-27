@@ -141,6 +141,9 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
 - **Hair and beards** with different hair colors [Decided]
 - **Aging is visible:** graying hair, growing beards, scars from battles, weathered colors [Proposed]
 - **Animals:** very simple and stylized (horses and sheep most important). Possible source: Quaternius (free, commercial OK) [Decided]
+  - **Art style for all animals (user, 2026-09-27): faceted low-poly** (flat-shaded facets, simple natural colours), like **"Stylized lowpoly HORSE" by LucySail** on Fab (free, Standard License: https://www.fab.com/listings/f59ac535-4432-4a38-802e-d951d3806456) [Decided]
+    - That horse is a static model (no skeleton, no animations), and LucySail only makes a horse and a wolf
+    - Matching animated source: **Quaternius Ultimate Animated Animal Pack** (CC0, free; 12 animals: horse, donkey, cow, bull, deer, stag, alpaca, fox, wolf, husky, shiba; 12+ animations each incl. walk, gallop, jump, attack, death) has the same faceted look. Sheep, pigs and chickens still needed (another free pack or our own in Blender, same style) [Proposed]
 - **Real historical figures** have their real heraldry and source-based personalities [Proposed]
 
 ---
