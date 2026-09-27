@@ -324,6 +324,13 @@ Start with the **commoner origin**; build what's designed so far and add feature
 
 **Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · **Left click punch** · **hold right click guard** · V first/third-person · **E get on/off a horse** · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing), `DevDamage 25`, `DevHeal 25`, `DevTime 21.5` (jump to a time), `DevTimeSpeed 60` (fast-forward; 1 = normal), `DevClock` (show date/time), `DevAdvance 24` (skip hours), `DevHitNearest 20` (damage nearest ball; 1000 kills), `DevPunch`, `DevGuard` (toggle guard), `DevDate 25 12` (jump to a day of the year, shows the clock), `DevYear 1461`, `DevInteract` (press E), `DevJump`, `DevHitHorse 35` (damage your/the nearest horse), `DevWeather Rain` (Clear/Fair/Cloudy/Overcast/Showers/Rain/HeavyRain/Storm/Snow/Fog/Auto). Dev test level: `L_DevSandbox`.
 
+**Test builds (sharing the game)** [Built, 2026-09-27]:
+- `powershell -ExecutionPolicy Bypass -File Tools\package_game.ps1` (editor closed) builds a Windows **Shipping** copy into `C:\Dev\CountriesIRL_Builds\Windows` and zips it (`CountriesIRL_v0.1.0_test.zip`, **~430 MB**, ~730 MB unzipped; about 4 minutes, longer the first time because of shaders). `Docs/HOW TO PLAY.txt` (controls, Windows "More info > Run anyway", requirements) goes next to the .exe
+- Only our map is included (template demo levels left out); everything under `/Game/CountriesIRL` is always included because some of it is loaded by code
+- Sharing: the user will send it himself (WeTransfer etc.); later itch.io (free, private pages) and Steam ($100, Playtest) [Proposed]
+- In release builds the Dev console commands are off, and there is **no menu yet** (Alt+F4 to quit): next UI step is a main menu, pause menu (Esc), settings (graphics, resolution, mouse, FOV), controls screen, version label, credits [Proposed]
+- Project display name "CountriesIRL" (working title, the real title is still open), version 0.1.0
+
 **Budget rule** [Decided]: use **free assets and tools as much as possible**, plus our own creations; only consider paid assets when nothing free works.
 
 **Asset workflow** [Decided]: Claude searches Fab for free assets that fit, **shows them to the user and asks for approval**; the user claims them with their Epic account and adds them to the project; then Claude integrates them.

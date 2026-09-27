@@ -1,0 +1,34 @@
+﻿CountriesIRL - v0.1.0 pre-alpha test build
+==========================================
+
+Wars of the Roses, England, 1455. Everyone is a countryball.
+This is an early test: a small practice area, not the real game world yet.
+
+HOW TO START
+1. Unzip this folder anywhere (e.g. your Desktop).
+2. Double-click  CountriesIRL_3D_Game.exe
+3. Windows may say "Windows protected your PC" (the game is not signed yet).
+   Click "More info", then "Run anyway". This is normal for small indie test builds.
+4. If Windows asks to install "Microsoft Visual C++ Redistributable" or DirectX, allow it.
+
+CONTROLS
+  W A S D        move (on a horse: steer where you look)
+  Mouse          look around
+  Shift (hold)   run / gallop on a horse (uses stamina)
+  Space          jump (the horse jumps too)
+  Left click     punch
+  Right click    hold to raise your guard
+  E              get on / off a horse (stand close to it)
+  V              switch first-person / third-person view
+  T              change your eyes' emotion (just for fun)
+  Alt+F4         quit (no menu yet)
+
+WHAT TO TRY
+- Walk up to the two horses (white and brown), press E, hold Shift to gallop.
+- Punch the other countryballs. Defeated ones stay, slowly decay, and end as bones.
+- The day passes in 48 minutes, with a real medieval calendar, seasons and English weather.
+
+NEEDS
+Windows 10 or 11 (64-bit) and a reasonably modern graphics card (DirectX 12).
+
+Please send feedback: what felt good, what felt wrong, any crashes (and what you were doing).
