@@ -327,7 +327,7 @@ Start with the **commoner origin**; build what's designed so far and add feature
 **Test builds (sharing the game)** [Built, 2026-09-27]:
 - `powershell -ExecutionPolicy Bypass -File Tools\package_game.ps1` (editor closed) builds a Windows **Shipping** copy into `C:\Dev\CountriesIRL_Builds\Windows` and zips it (`CountriesIRL_v0.1.0_test.zip`, **~430 MB**, ~730 MB unzipped; about 4 minutes, longer the first time because of shaders). `Docs/HOW TO PLAY.txt` (controls, Windows "More info > Run anyway", requirements) goes next to the .exe
 - Only our map is included (template demo levels left out); everything under `/Game/CountriesIRL` is always included because some of it is loaded by code
-- Sharing: the user will send it himself (WeTransfer etc.); later itch.io (free, private pages) and Steam ($100, Playtest) [Proposed]
+- Sharing: the user shares it (WeTransfer etc.); later itch.io (free, private pages) and Steam ($100, Playtest) [Proposed]
 - In release builds the Dev console commands are off, and there is **no menu yet** (Alt+F4 to quit): next UI step is a main menu, pause menu (Esc), settings (graphics, resolution, mouse, FOV), controls screen, version label, credits [Proposed]
 - Project display name "CountriesIRL" (working title, the real title is still open), version 0.1.0
 
