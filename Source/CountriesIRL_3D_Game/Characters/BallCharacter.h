@@ -14,6 +14,7 @@ class UHealthComponent;
 class UCorpseComponent;
 class UBallSkeletonComponent;
 class UBallMeleeComponent;
+class AHorse;
 
 /**
  *  Base class for every person in the game: a countryball with eyes, floating hands and feet.
@@ -49,6 +50,18 @@ public:
 
 	UFUNCTION(BlueprintPure, Category="Ball")
 	bool IsDead() const;
+
+	/** Gets on a free horse. Returns true if now riding it. */
+	bool Mount(AHorse* Horse);
+
+	/** Gets off the horse, landing beside it */
+	void Dismount();
+
+	AHorse* GetMount() const { return MountedHorse; }
+	bool IsMounted() const { return MountedHorse != nullptr; }
+
+	/** Wants to go fast: runs on foot, gallops on horseback */
+	bool WantsToRun() const { return bWantsToRun; }
 
 	/** All damage goes through here (combat, falls, fire...) */
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
@@ -172,6 +185,12 @@ protected:
 
 	/** Run key held */
 	bool bWantsToRun = false;
+
+	UPROPERTY(Transient)
+	TObjectPtr<AHorse> MountedHorse;
+
+	/** Keeps the ball sitting in the saddle as the horse's back moves */
+	void UpdateSeat();
 
 	/** Actually running this frame (wants to, has stamina, moving on the ground) */
 	bool bRunning = false;

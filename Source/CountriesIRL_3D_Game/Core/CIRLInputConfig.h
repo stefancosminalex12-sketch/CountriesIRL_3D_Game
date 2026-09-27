@@ -34,6 +34,9 @@ public:
 	UPROPERTY() TObjectPtr<UInputAction> Attack;
 	UPROPERTY() TObjectPtr<UInputAction> Guard;
 
+	/** Use what's in front of you: get on/off a horse (later doors, talking, looting) */
+	UPROPERTY() TObjectPtr<UInputAction> Interact;
+
 	/** Debug: cycles through the ball's eye emotions */
 	UPROPERTY() TObjectPtr<UInputAction> CycleEmotion;
 };

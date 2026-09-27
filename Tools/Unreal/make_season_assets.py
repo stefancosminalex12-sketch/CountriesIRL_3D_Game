@@ -169,9 +169,9 @@ for index, (x, y, size) in enumerate(trees):
     name = "Garden_Tree%d_" % (index + 1)
     place(name + "Trunk", cylinder, bark, unreal.Vector(x, y, 130 * size), unreal.Vector(0.32 * size, 0.32 * size, 2.6 * size))
     # Bare branches, visible once the leaves have fallen
-    place(name + "BranchL", cylinder, bark, unreal.Vector(x, y - 45 * size, 300 * size), unreal.Vector(0.12 * size, 0.12 * size, 1.3 * size), unreal.Rotator(0, 0, -35))
-    place(name + "BranchR", cylinder, bark, unreal.Vector(x + 10, y + 45 * size, 310 * size), unreal.Vector(0.12 * size, 0.12 * size, 1.2 * size), unreal.Rotator(0, 0, 35))
-    place(name + "BranchB", cylinder, bark, unreal.Vector(x - 40 * size, y, 320 * size), unreal.Vector(0.1 * size, 0.1 * size, 1.1 * size), unreal.Rotator(-30, 0, 0))
+    place(name + "BranchL", cylinder, bark, unreal.Vector(x, y - 45 * size, 300 * size), unreal.Vector(0.12 * size, 0.12 * size, 1.3 * size), unreal.Rotator(roll=-35, pitch=0, yaw=0))
+    place(name + "BranchR", cylinder, bark, unreal.Vector(x + 10, y + 45 * size, 310 * size), unreal.Vector(0.12 * size, 0.12 * size, 1.2 * size), unreal.Rotator(roll=35, pitch=0, yaw=0))
+    place(name + "BranchB", cylinder, bark, unreal.Vector(x - 40 * size, y, 320 * size), unreal.Vector(0.1 * size, 0.1 * size, 1.1 * size), unreal.Rotator(roll=0, pitch=-30, yaw=0))
     # Canopy: three overlapping leaf balls
     place(name + "Canopy", sphere, leaves, unreal.Vector(x, y, 360 * size), unreal.Vector(2.6 * size, 2.6 * size, 2.2 * size))
     place(name + "CanopyL", sphere, leaves, unreal.Vector(x + 20, y - 85 * size, 320 * size), unreal.Vector(1.8 * size, 1.8 * size, 1.6 * size))

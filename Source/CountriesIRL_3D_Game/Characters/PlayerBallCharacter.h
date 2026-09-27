@@ -28,6 +28,9 @@ public:
 	UFUNCTION(BlueprintPure, Category="Camera")
 	bool IsFirstPerson() const { return bFirstPerson; }
 
+	/** What pressing Interact would do right now, e.g. "E  Get on the horse" (empty = nothing) */
+	FString GetInteractPrompt() const;
+
 	/** Console: Emotion Angry (or any EBallEmotion name) */
 	UFUNCTION(Exec)
 	void Emotion(const FString& Name);
@@ -51,6 +54,14 @@ public:
 	/** Console (testing): throw a punch (same as left click) */
 	UFUNCTION(Exec)
 	void DevPunch() { Attack(); }
+
+	/** Console (testing): press the interact key (get on/off a horse) */
+	UFUNCTION(Exec)
+	void DevInteract() { Interact(); }
+
+	/** Console (testing): press jump (on foot or on horseback) */
+	UFUNCTION(Exec)
+	void DevJump() { JumpPressed(); }
 
 	/** Console (testing): toggle the guard (same as holding right click) */
 	UFUNCTION(Exec)
@@ -79,6 +90,14 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Camera")
 	float PunchCameraNudge = 6.f;
 
+	/** How close a horse must be to get on it (cm, center to center) */
+	UPROPERTY(EditAnywhere, Category="Riding")
+	float MountRange = 260.f;
+
+	/** Third-person camera distance on foot and in the saddle (further back to see the horse) */
+	UPROPERTY(EditAnywhere, Category="Camera")
+	FVector2D CameraDistance = FVector2D(380.f, 600.f);
+
 	/** In first-person, sideways (A/D) movement is slower than forward, like a real side-step */
 	UPROPERTY(EditAnywhere, Category="Ball|Movement", meta=(ClampMin=0.1, ClampMax=1.0))
 	float StrafeSpeedScale = 0.7f;
@@ -86,6 +105,13 @@ protected:
 private:
 
 	void Move(const FInputActionValue& Value);
+	void StopMove(const FInputActionValue& Value);
+	void JumpPressed();
+	void JumpReleased();
+	void Interact();
+
+	/** Nearest free horse close enough to get on */
+	class AHorse* FindHorseToMount() const;
 	void Look(const FInputActionValue& Value);
 	void StartSprint() { SetSprinting(true); }
 	void StopSprint() { SetSprinting(false); }

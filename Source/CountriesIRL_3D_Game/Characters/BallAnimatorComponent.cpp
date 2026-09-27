@@ -338,10 +338,13 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	// Dead balls stop stepping and topple over onto their back
 	const bool bDead = Ball->IsDead();
 	DeadBlend = FMath::FInterpTo(DeadBlend, bDead ? 1.f : 0.f, DeltaTime, 4.f);
-	if (!bDead)
+	// Riding: the feet leave the ground and hang in the stirrups
+	RideBlend = FMath::FInterpTo(RideBlend, bRiding && !bDead ? 1.f : 0.f, DeltaTime, 8.f);
+	if (!bDead && !bRiding)
 	{
 		UpdateFeet(DeltaTime, SpeedAlpha, bFalling);
 	}
+	const float BallBottomZ = CenterZ - Ball->GetBallHalfHeight();
 
 	// Feet: planted/stepping positions, blended toward a tucked pose while in the air
 	float FootOffsetX[2] = { 0.f, 0.f };
@@ -363,6 +366,9 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		}
 
 		FootOffsetX[Index] = Local.X - 2.f;
+
+		const FVector RidingFoot(2.f, Side(Index) * (RidingHalfWidth + FootSize.Y * 0.5f + 3.f), BallBottomZ - 26.f);
+		Local = FMath::Lerp(Local, RidingFoot, RideBlend);
 
 		// Bones stage: the boots lie past the pelvis, at the opposite end from the skull
 		const FVector DeadFoot = bSkeletonPose
@@ -393,6 +399,9 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		Hand.X += FMath::Clamp(FootOffsetX[1 - Index] * SwingScale, -28.f, 28.f);
 		Hand.Z += FMath::Sin(IdleTime * 2.2f + Side(Index)) * 1.5f;
 		Hand += FVector(0.f, Side(Index) * 8.f, 22.f) * AirBlend;
+		// Riding: both fists low in front, holding the reins
+		const FVector Reins = FMath::Lerp(FVector(Radius + 14.f, 14.f, CenterZ - 22.f), FVector(Radius * 0.55f + 62.f, 22.f, CenterZ - 42.f), FirstPersonBlend);
+		Hand = FMath::Lerp(Hand, FVector(Reins.X, Side(Index) * Reins.Y, Reins.Z), RideBlend);
 		Hand = FMath::Lerp(Hand, FVector(GuardRest.X, Side(Index) * GuardRest.Y, GuardRest.Z), GuardBlend);
 
 		// Which way the hand faces (hand X = along the fingers, Z = back of the hand)
@@ -404,6 +413,11 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 			? FRotationMatrix::MakeFromXZ(FVector(0.9f, 0.f, 0.45f), FVector(0.f, Side(Index) * 0.8f, 0.6f)).ToQuat()
 			: RelaxedRotation;
 		bool bFist = GuardBlend > 0.5f;
+		if (RideBlend > 0.5f && GuardBlend < 0.5f)
+		{
+			TargetRotation = FRotationMatrix::MakeFromXZ(FVector(1.f, 0.f, -0.3f), FVector(0.f, Side(Index), 0.2f)).ToQuat();
+			bFist = true;
+		}
 
 		// The other fist comes up to protect the face while punching
 		const FVector GuardSpot(GuardRest.X, Side(Index) * GuardRest.Y, GuardRest.Z);
@@ -511,4 +525,12 @@ FVector UBallAnimatorComponent::KeepHandOutOfWalls(int32 Index, const FVector& L
 	// Pull in instantly so hands never poke through; ease back out once the way is clear
 	HandReach[Index] = Reach < HandReach[Index] ? Reach : FMath::FInterpTo(HandReach[Index], Reach, DeltaTime, 10.f);
 	return FMath::Lerp(LocalStart, LocalTarget, HandReach[Index]);
+}
+
+void UBallAnimatorComponent::SetRiding(bool bEnable, float MountHalfWidth)
+{
+	bRiding = bEnable;
+	RidingHalfWidth = MountHalfWidth;
+	// Back on the ground, the feet find new footing instead of stepping back to where they were
+	bFeetPlanted = false;
 }

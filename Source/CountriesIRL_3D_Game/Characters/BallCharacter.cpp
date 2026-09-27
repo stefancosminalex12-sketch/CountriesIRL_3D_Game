@@ -8,6 +8,7 @@
 #include "Characters/CorpseComponent.h"
 #include "Characters/BallSkeletonComponent.h"
 #include "Characters/BallMeleeComponent.h"
+#include "Animals/Horse.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -114,6 +115,9 @@ void ABallCharacter::RefreshColors()
 
 void ABallCharacter::HandleDeath(UHealthComponent* DepletedHealth)
 {
+	// Killed in the saddle: fall off first
+	Dismount();
+
 	SetEmotion(EBallEmotion::Dead);
 	SetSprinting(false);
 	GetCharacterMovement()->DisableMovement();
@@ -180,6 +184,14 @@ void ABallCharacter::Tick(float DeltaTime)
 		return;
 	}
 
+	if (MountedHorse)
+	{
+		// The horse does the running; we just sit in the saddle
+		UpdateSeat();
+		bRunning = false;
+		return;
+	}
+
 	// Only drain stamina while actually running on the ground, not while holding the key standing still
 	const bool bMovingOnGround = GetVelocity().Size2D() > 10.f && GetCharacterMovement()->IsMovingOnGround();
 	// No running with the guard up, and moving is slower
@@ -202,4 +214,74 @@ void ABallCharacter::OnJumped_Implementation()
 {
 	Super::OnJumped_Implementation();
 	Stamina->TryConsume(JumpStaminaCost);
+}
+
+bool ABallCharacter::Mount(AHorse* Horse)
+{
+	if (!Horse || !Horse->CanBeMounted() || MountedHorse || IsDead())
+	{
+		return false;
+	}
+
+	MountedHorse = Horse;
+	Horse->SetRider(this);
+
+	// Our own legs stop moving us; we ride along attached to the horse
+	UCharacterMovementComponent* Movement = GetCharacterMovement();
+	Movement->StopMovementImmediately();
+	Movement->DisableMovement();
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+	GetCapsuleComponent()->IgnoreActorWhenMoving(Horse, true);
+
+	AttachToActor(Horse, FAttachmentTransformRules::KeepWorldTransform);
+	UpdateSeat();
+	Animator->SetRiding(true, Horse->GetBodyHalfWidth());
+	return true;
+}
+
+void ABallCharacter::Dismount()
+{
+	AHorse* Horse = MountedHorse;
+	if (!Horse)
+	{
+		return;
+	}
+	MountedHorse = nullptr;
+	Horse->SetRider(nullptr);
+
+	DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	Animator->SetRiding(false);
+	GetCapsuleComponent()->IgnoreActorWhenMoving(Horse, false);
+	if (!IsDead())
+	{
+		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+	}
+
+	// Land beside the horse: the left side like a real rider, the right side if that's blocked
+	const float HalfHeight = GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+	const float HorseHalfHeight = Horse->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+	const float SideDistance = Horse->GetBodyHalfWidth() + GetCapsuleComponent()->GetScaledCapsuleRadius() + 25.f;
+	const FRotator Facing(0.f, Horse->GetActorRotation().Yaw, 0.f);
+	for (const float Side : { -1.f, 1.f })
+	{
+		FVector Spot = Horse->GetActorLocation() + Horse->GetActorRightVector() * Side * SideDistance;
+		Spot.Z = Horse->GetActorLocation().Z - HorseHalfHeight + HalfHeight + 5.f;
+		if (TeleportTo(Spot, Facing))
+		{
+			break;
+		}
+	}
+
+	if (!IsDead())
+	{
+		GetCharacterMovement()->SetMovementMode(MOVE_Falling);
+	}
+}
+
+void ABallCharacter::UpdateSeat()
+{
+	// The bottom of the ball rests on the saddle
+	const float BallBottomZ = GetBallCenterZ() - GetBallHalfHeight();
+	SetActorRelativeLocation(MountedHorse->GetSaddleOffset() - FVector(0.f, 0.f, BallBottomZ));
+	SetActorRelativeRotation(FRotator::ZeroRotator);
 }

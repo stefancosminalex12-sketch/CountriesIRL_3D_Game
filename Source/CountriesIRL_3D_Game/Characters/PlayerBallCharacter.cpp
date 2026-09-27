@@ -4,6 +4,8 @@
 #include "Characters/BallAnimatorComponent.h"
 #include "Characters/HealthComponent.h"
 #include "Characters/BallMeleeComponent.h"
+#include "Animals/Horse.h"
+#include "EngineUtils.h"
 #include "Engine/DamageEvents.h"
 #include "Core/CIRLInputConfig.h"
 #include "Core/CIRLPlayerController.h"
@@ -28,7 +30,7 @@ APlayerBallCharacter::APlayerBallCharacter()
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(GetCapsuleComponent());
 	CameraBoom->SetRelativeLocation(FVector(0.f, 0.f, GetBallCenterZ()));
-	CameraBoom->TargetArmLength = 380.f;
+	CameraBoom->TargetArmLength = CameraDistance.X;
 	CameraBoom->TargetOffset = FVector(0.f, 0.f, 50.f);
 	CameraBoom->bUsePawnControlRotation = true;
 	CameraBoom->bEnableCameraLag = true;
@@ -74,8 +76,10 @@ void APlayerBallCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 	EIC->BindAction(Input->Move, ETriggerEvent::Triggered, this, &APlayerBallCharacter::Move);
 	EIC->BindAction(Input->Look, ETriggerEvent::Triggered, this, &APlayerBallCharacter::Look);
-	EIC->BindAction(Input->Jump, ETriggerEvent::Started, this, &ACharacter::Jump);
-	EIC->BindAction(Input->Jump, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+	EIC->BindAction(Input->Move, ETriggerEvent::Completed, this, &APlayerBallCharacter::StopMove);
+	EIC->BindAction(Input->Jump, ETriggerEvent::Started, this, &APlayerBallCharacter::JumpPressed);
+	EIC->BindAction(Input->Jump, ETriggerEvent::Completed, this, &APlayerBallCharacter::JumpReleased);
+	EIC->BindAction(Input->Interact, ETriggerEvent::Started, this, &APlayerBallCharacter::Interact);
 	EIC->BindAction(Input->Sprint, ETriggerEvent::Started, this, &APlayerBallCharacter::StartSprint);
 	EIC->BindAction(Input->Sprint, ETriggerEvent::Completed, this, &APlayerBallCharacter::StopSprint);
 	EIC->BindAction(Input->ToggleView, ETriggerEvent::Started, this, &APlayerBallCharacter::ToggleView);
@@ -93,16 +97,90 @@ void APlayerBallCharacter::Move(const FInputActionValue& Value)
 		return;
 	}
 
+	const FRotator YawRotation(0.f, Controller->GetControlRotation().Yaw, 0.f);
+	const FRotationMatrix Matrix(YawRotation);
+
+	// In the saddle the keys steer the horse, relative to where we look; Shift gallops
+	if (AHorse* Horse = GetMount())
+	{
+		const FVector Direction = Matrix.GetUnitAxis(EAxis::X) * Input.Y + Matrix.GetUnitAxis(EAxis::Y) * Input.X;
+		Horse->SetRiderInput(Direction, WantsToRun());
+		return;
+	}
+
 	// Side-steps are slower. Only in first-person: in third-person the ball turns to face where it walks.
 	if (bFirstPerson)
 	{
 		Input.X *= StrafeSpeedScale;
 	}
 
-	const FRotator YawRotation(0.f, Controller->GetControlRotation().Yaw, 0.f);
-	const FRotationMatrix Matrix(YawRotation);
 	AddMovementInput(Matrix.GetUnitAxis(EAxis::X), Input.Y);
 	AddMovementInput(Matrix.GetUnitAxis(EAxis::Y), Input.X);
+}
+
+void APlayerBallCharacter::StopMove(const FInputActionValue& Value)
+{
+	if (AHorse* Horse = GetMount())
+	{
+		Horse->SetRiderInput(FVector::ZeroVector, false);
+	}
+}
+
+void APlayerBallCharacter::JumpPressed()
+{
+	if (AHorse* Horse = GetMount())
+	{
+		Horse->RiderJump();
+		return;
+	}
+	Jump();
+}
+
+void APlayerBallCharacter::JumpReleased()
+{
+	StopJumping();
+}
+
+void APlayerBallCharacter::Interact()
+{
+	if (IsMounted())
+	{
+		Dismount();
+	}
+	else if (AHorse* Horse = FindHorseToMount())
+	{
+		Mount(Horse);
+	}
+	UpdateRotationMode();
+}
+
+AHorse* APlayerBallCharacter::FindHorseToMount() const
+{
+	if (IsDead())
+	{
+		return nullptr;
+	}
+	AHorse* Best = nullptr;
+	float BestDistance = MountRange;
+	for (TActorIterator<AHorse> It(GetWorld()); It; ++It)
+	{
+		const float Distance = FVector::Dist2D(It->GetActorLocation(), GetActorLocation());
+		if (It->CanBeMounted() && Distance < BestDistance)
+		{
+			Best = *It;
+			BestDistance = Distance;
+		}
+	}
+	return Best;
+}
+
+FString APlayerBallCharacter::GetInteractPrompt() const
+{
+	if (IsMounted())
+	{
+		return TEXT("E  Get off");
+	}
+	return FindHorseToMount() ? TEXT("E  Get on the horse") : FString();
 }
 
 void APlayerBallCharacter::Look(const FInputActionValue& Value)
@@ -137,6 +215,9 @@ void APlayerBallCharacter::Tick(float DeltaTime)
 	int32 PunchHand = 0;
 	const float PunchDrive = Melee->IsPunching() ? FMath::Max(Melee->GetPunchExtension(PunchHand), 0.f) : 0.f;
 	FirstPersonCamera->SetRelativeLocation(FirstPersonCameraOffset + FVector(PunchCameraNudge * PunchDrive, 0.f, -0.3f * PunchCameraNudge * PunchDrive));
+
+	// Third-person: pull the camera back in the saddle so the whole horse is in view
+	CameraBoom->TargetArmLength = FMath::FInterpTo(CameraBoom->TargetArmLength, IsMounted() ? CameraDistance.Y : CameraDistance.X, DeltaTime, 3.f);
 
 	if (DevMoveTimeLeft > 0.f)
 	{
@@ -182,6 +263,14 @@ void APlayerBallCharacter::UpdateRotationMode()
 {
 	// Face the view in first-person, and in third-person while guarding (fighting stance);
 	// otherwise turn toward where we walk
+	// In the saddle we face where the horse faces (the camera still looks around freely)
+	if (IsMounted())
+	{
+		bUseControllerRotationYaw = false;
+		GetCharacterMovement()->bOrientRotationToMovement = false;
+		return;
+	}
+
 	const bool bFaceView = bFirstPerson || Melee->WantsGuard();
 	bUseControllerRotationYaw = bFaceView;
 	GetCharacterMovement()->bOrientRotationToMovement = !bFaceView;

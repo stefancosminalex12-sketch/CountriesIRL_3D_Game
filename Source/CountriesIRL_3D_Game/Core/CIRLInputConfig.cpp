@@ -33,6 +33,7 @@ void UCIRLInputConfig::Build()
 	Attack = MakeAction(this, TEXT("IA_Attack"), EInputActionValueType::Boolean);
 	Guard = MakeAction(this, TEXT("IA_Guard"), EInputActionValueType::Boolean);
 	CycleEmotion = MakeAction(this, TEXT("IA_CycleEmotion"), EInputActionValueType::Boolean);
+	Interact = MakeAction(this, TEXT("IA_Interact"), EInputActionValueType::Boolean);
 
 	UInputMappingContext* C = NewObject<UInputMappingContext>(this, TEXT("IMC_Default"));
 	DefaultContext = C;
@@ -78,6 +79,9 @@ void UCIRLInputConfig::Build()
 
 	C->MapKey(Guard, EKeys::RightMouseButton);
 	C->MapKey(Guard, EKeys::Gamepad_LeftTrigger);
+
+	C->MapKey(Interact, EKeys::E);
+	C->MapKey(Interact, EKeys::Gamepad_FaceButton_Left);
 
 	C->MapKey(CycleEmotion, EKeys::T);
 }

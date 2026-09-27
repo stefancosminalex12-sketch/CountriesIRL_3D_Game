@@ -79,6 +79,9 @@ public:
 	/** Only bones remain: hands and boots lie beside the skeleton instead of the body */
 	void SetSkeletonPose(bool bEnable) { bSkeletonPose = bEnable; }
 
+	/** In the saddle: boots hang at the mount's sides (MountHalfWidth = half its body width), hands hold the reins */
+	void SetRiding(bool bEnable, float MountHalfWidth = 0.f);
+
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 protected:
@@ -200,6 +203,10 @@ private:
 	bool bFeetPlanted = false;
 
 	bool bFirstPersonHands = false;
+
+	bool bRiding = false;
+	float RidingHalfWidth = 0.f;
+	float RideBlend = 0.f;
 	bool bSkeletonPose = false;
 
 	/** 0 = grounded, 1 = in the air (smoothed) */

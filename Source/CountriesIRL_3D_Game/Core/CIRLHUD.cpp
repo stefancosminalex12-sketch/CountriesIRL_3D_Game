@@ -4,6 +4,8 @@
 #include "Characters/BallCharacter.h"
 #include "Characters/HealthComponent.h"
 #include "Characters/StaminaComponent.h"
+#include "Characters/PlayerBallCharacter.h"
+#include "Animals/Horse.h"
 #include "World/WorldClockSubsystem.h"
 #include "World/SeasonSubsystem.h"
 #include "World/MedievalCalendar.h"
@@ -46,6 +48,32 @@ void ACIRLHUD::DrawHUD()
 		// Parchment-ish fill; turns reddish while exhausted
 		const FLinearColor Fill = Stamina->IsExhausted() ? FLinearColor(0.75f, 0.2f, 0.12f) : FLinearColor(0.92f, 0.82f, 0.55f);
 		DrawBar(X, StaminaY, Width, StaminaBarHeight * Scale, Percent, Fill, StaminaBarAlpha);
+	}
+
+	// In the saddle: the horse's stamina above our health bar (brown), always shown
+	if (const AHorse* Horse = Ball->GetMount())
+	{
+		const UStaminaComponent* HorseStamina = Horse->GetStamina();
+		const float HorseY = HealthY - (BarSpacing + StaminaBarHeight) * Scale;
+		const FLinearColor Fill = HorseStamina->IsExhausted() ? FLinearColor(0.75f, 0.2f, 0.12f) : FLinearColor(0.55f, 0.33f, 0.14f);
+		DrawBar(X, HorseY, Width, StaminaBarHeight * Scale, HorseStamina->GetStaminaPercent(), Fill, 1.f);
+	}
+
+	// What the interact key would do (e.g. "E  Get on the horse"), bottom center
+	if (const APlayerBallCharacter* Player = Cast<APlayerBallCharacter>(Ball))
+	{
+		const FString Prompt = Player->GetInteractPrompt();
+		if (!Prompt.IsEmpty())
+		{
+			float TextWidth = 0.f;
+			float TextHeight = 0.f;
+			const float TextScale = Scale * 1.3f;
+			GetTextSize(Prompt, TextWidth, TextHeight, GEngine->GetMediumFont(), TextScale);
+			const float PromptX = (Canvas->ClipX - TextWidth) * 0.5f;
+			const float PromptY = Canvas->ClipY - 150.f * Scale;
+			DrawRect(FLinearColor(0.f, 0.f, 0.f, 0.45f), PromptX - 12.f * Scale, PromptY - 6.f * Scale, TextWidth + 24.f * Scale, TextHeight + 12.f * Scale);
+			DrawText(Prompt, FLinearColor(0.95f, 0.9f, 0.75f), PromptX, PromptY, GEngine->GetMediumFont(), TextScale);
+		}
 	}
 
 	if (bShowClock)

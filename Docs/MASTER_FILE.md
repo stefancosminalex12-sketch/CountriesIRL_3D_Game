@@ -291,11 +291,17 @@ Start with the **commoner origin**; build what's designed so far and add feature
      - [ ] Weather: clear/cloudy/overcast/rain (and snow in cold months), driven by the climate profile and the seasonal temperature; snow cover, wet ground
 3. [ ] Yorkshire test landscape
 4. [ ] Village (free Fab assets, approved by the user first)
-5. [ ] Rideable horse
+5. [x] Rideable horse (first version, 2026-09-27; user asked for it before weather)
+   - **E** near a horse gets on (prompt "E  Get on the horse" appears when close), **E** again gets off (you land beside it, left side like a real rider, the right if blocked). E is the general interact key (later doors, talking, looting)
+   - **WASD steer relative to where you look**; the horse turns gradually (wide turns at a gallop, turns around at a slow walk if you ask it to go backwards), never slides sideways, and builds up / loses speed smoothly. **Shift = gallop** (~32 km/h; walk ~7 km/h), draining the **horse's own stamina** (brown bar above your health while riding). **Space = jump** (costs horse stamina, plays the gallop-jump)
+   - The ball sits in the saddle, boots hanging at the horse's sides, fists on the reins; you can still look around freely. Third-person camera pulls back to show the whole horse
+   - Horses are data (`MountDefinition`: model, animations, speeds, turn rates, stamina costs, saddle point): the design's tiers (affer, hackney, rouncey, palfrey, courser, destrier) become more data assets. `DA_Mount_Horse` (brown) and `DA_Mount_HorseWhite` stand near the start of `L_DevSandbox`
+   - Animation: idle, walk and gallop blend by speed and play faster as the horse speeds up (no hoof sliding); the Quaternius pack has no trot, so a canter uses the gallop played slower
+   - Known limits (later): getting on/off is instant (no climb animation yet); only the chest has collision (the horse stops before its head hits a wall; the rump can still clip); no saddle/bridle model yet; riderless horses just stand (grazing/wandering AI later); no combat from horseback tuning yet
 6. [ ] Hit-zone combat + bandits
 7. [ ] Compass bar
 
-**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · **Left click punch** · **hold right click guard** · V first/third-person · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing), `DevDamage 25`, `DevHeal 25`, `DevTime 21.5` (jump to a time), `DevTimeSpeed 60` (fast-forward; 1 = normal), `DevClock` (show date/time), `DevAdvance 24` (skip hours), `DevHitNearest 20` (damage nearest ball; 1000 kills), `DevPunch`, `DevGuard` (toggle guard), `DevDate 25 12` (jump to a day of the year, shows the clock), `DevYear 1461`. Dev test level: `L_DevSandbox`.
+**Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · **Left click punch** · **hold right click guard** · V first/third-person · **E get on/off a horse** · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing), `DevDamage 25`, `DevHeal 25`, `DevTime 21.5` (jump to a time), `DevTimeSpeed 60` (fast-forward; 1 = normal), `DevClock` (show date/time), `DevAdvance 24` (skip hours), `DevHitNearest 20` (damage nearest ball; 1000 kills), `DevPunch`, `DevGuard` (toggle guard), `DevDate 25 12` (jump to a day of the year, shows the clock), `DevYear 1461`, `DevInteract` (press E), `DevJump`. Dev test level: `L_DevSandbox`.
 
 **Budget rule** [Decided]: use **free assets and tools as much as possible**, plus our own creations; only consider paid assets when nothing free works.
 
