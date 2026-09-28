@@ -49,6 +49,13 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
 - **Build approach:** hand-built cities/castles/villages, procedurally generated countryside (Unreal PCG), World Partition streaming [Proposed]
 - **Far-away armies/lords** are simulated abstractly as data, and become real in-world when near the player [Proposed]
 - **Visual style:** stylized, cozy diorama look. Reference: StylArts "Stylized Fantasy Provençal" pack (saved in Fab library; Provençal architecture suits a future France DLC, while England needs timber-frame/thatch/grey-stone in the same style) [Decided]
+  - **Realistic proportions, stylized surface (user, 2026-09-28):** everything keeps **true-to-life proportions and scale** (buildings, props, weapons, trees, animals); the stylization is in simpler shapes, softer painterly textures and colour, never in exaggerated or distorted proportions (no chunky oversized doors, bent fantasy roofs, giant weapons). "Realistic, even if a bit cartoonish looking." Only the countryball characters are deliberately non-realistic [Decided]
+  - **Target look (user, 2026-09-28): painterly hand-painted stylized.** Key references, all in the Fab library: LapaModels **"Free Stylized Bridge"** hero shot (lush grass and wildflowers, chunky painterly rocks and stonework, soft sunlight, deep valley: *this is what the world should look like*), UpDraft Art "Stylized Artisan Forge Kit", LapaModels **"FREE Windmill & Village Buildings Pack"** (user: "looks amazing"), Agustin Honnun "Stylized House - 1 Material", Black Cloud9 "Scalable Stone House", Iinmost "Stylized Door Dungeon", ElectraStylized "Metal Sword", Daria Borovleva food, Forge of Fantasy "Stylized Environment Pack", StyleHex "Free Stylized Foliage Pack" [Decided]
+  - **Realistic, not photorealistic (user, 2026-09-28):** take the **shapes** from the forge kit (chunky, clean, simple forms), the **painted surfaces** from the bridge, and **realistic colour**: colourful where real life is (heraldry, banners, flowers, dyed noble clothes), muted where it isn't (stone, weathered wood, mud, peasant wool). The references are about graphics style, not specific assets to use [Decided]
+  - **Reworking assets to match the style (2026-09-28):** assets may be reworked (both CC-BY and Fab Standard License allow changes) [Decided]. Default = **recolour/restyle in Unreal** through a shared master material (tint, saturation, brightness sliders), no image editing. **AI image tools** for **tiling textures** (stone, plaster, thatch, planks), where they work well; for **unwrapped model textures** only when needed, since AI tends to shift pixels off the UV layout. **Only put a Fab asset into an AI tool if its listing says "Allows usage with AI: Yes"** [Decided]
+  - **Animals: painterly, true proportions**, at the detail of Charlie catling's **"Game ready crow"** or slightly more. **Replaces the earlier faceted low-poly decision** (section 8) [Decided]
+  - **Period check on assets:** no New World foods in 1455 England (no potatoes, peppers, pumpkins, maize, tomatoes); no modern boat rigs. Such parts of packs are dropped or swapped [Decided]
+  - **Asset pool:** the user saved ~350 free Fab items (CC-BY or Standard Personal licence) to pick from; modern and most fantasy items are ignored, some fantasy kept only for reusable parts [Noted]
 
 ---
 
@@ -150,7 +157,33 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
 ## 8. Characters & Art (Countryballs)
 
 - **All humans are countryballs**: coat of arms/livery on the ball, **white eyes, no mouth** [Decided]
-  - **Size and shape (user, 2026-09-27):** the balls looked small next to the horses, and perfect spheres read like toy balls. Now the ball is **slightly taller than wide (egg, 1.2x)**, 104 cm wide (still fits doors) and **~1.57 m tall with the feet** (was 1.25 m), closer to human scale so Fab buildings, furniture and saddles fit [Decided]. The **eyes keep their original round shape** on the egg (user: the stretch had made them taller); the eye shader undoes the shell's stretch
+  - **Size and shape (user, 2026-09-27):** the balls looked small next to the horses, and perfect spheres read like toy balls. Now the ball is **slightly taller than wide (egg, 1.2x)**, 104 cm wide (still fits doors) and **~1.57 m tall with the feet** (was 1.25 m), closer to human scale so Fab buildings, furniture and saddles fit [Superseded 2026-09-28, see below]. The **eyes keep their original round shape** on the egg (user: the stretch had made them taller); the eye shader undoes the shell's stretch
+  - **Back to a perfect sphere (community poll, 2026-09-28):** the user polled three shapes (A sphere, B near-sphere, C tall ball); **~87% chose the perfect sphere**, most of the rest the near-sphere. The body is a **perfect sphere** again, with the floating boots below it [Decided]
+  - **Height = historical English averages (user, 2026-09-28)** [Decided]. Height is measured from the top of the ball to the soles of the boots. Averages follow skeletal studies of late-medieval England (e.g. the Towton grave, 1461): **men ~1.71 m, women ~1.59 m**. Each character's height is rolled on a bell curve; the ranges are the user's first proposal (1.80 m average, 1.65–1.95, extremes 1.40–1.50 / 2.00–2.10) scaled down proportionally to these averages:
+
+    | | Men | Women |
+    |---|---|---|
+    | Average | **1.71 m** | **1.59 m** |
+    | Most people (~95%) | 1.62–1.80 m | 1.50–1.68 m |
+    | Normal range (~99%) | 1.57–1.85 m | 1.46–1.72 m |
+    | Extreme short (≤0.5%) | 1.33–1.43 m | 1.24–1.33 m |
+    | Extreme tall (≤0.5%) | 1.90–2.00 m | 1.77–1.86 m |
+
+    (Bell curve: standard deviation ~4.5 cm for both, clamped to the normal range; a separate ≤1% roll picks an extreme instead.)
+  - **Body proportions: smaller ball, bigger gap to the floating boots (user, 2026-09-28)** [Decided]. Every character is the same shape scaled uniformly (ball, hands, boots and gap all scale with height). Proportions of total height: **ball 58%, gap 29%, boots 13%**. The ball's widest point is its diameter.
+
+    | | Height | Ball width | Gap under ball | Boots |
+    |---|---|---|---|---|
+    | Average man | 1.71 m | **1.00 m** | 0.50 m | 0.22 m |
+    | Average woman | 1.59 m | 0.92 m | 0.46 m | 0.21 m |
+    | Tallest normal man | 1.85 m | 1.07 m | 0.54 m | 0.24 m |
+    | Shortest normal woman | 1.46 m | 0.85 m | 0.42 m | 0.19 m |
+    | Extreme tall man | 2.00 m | 1.16 m | 0.58 m | 0.26 m |
+    | Extreme short woman | 1.24 m | 0.72 m | 0.36 m | 0.16 m |
+
+    Hands float at ball mid-height, just outside the ball; palm-to-fingertip ~0.19 m for an average man (scales too).
+  - **Doors** [Decided, user 2026-09-28]: real medieval cottage doors were only ~0.8–0.9 m wide × ~1.8 m tall, narrower than even an average ball, so doors are the one thing not built to strict real size: **ordinary doors ~1.15 m wide × ~1.95 m tall** (fits everyone in the normal range, max ball 1.07 m); halls, churches and castle gates are big enough for anyone anyway. **Extreme-tall characters (≤1%) don't fit ordinary cottage doors**, as a fun real-life quirk (tall people ducked; a ball can't)
+  - Replaces the 2026-09-27 egg (1.04 m wide, ~1.57 m tall) and the first 1.80 m proposal. Only recorded in this file so far; the game code still uses the egg [Planned]
   - **Confirmed by community vote (2026-09-27):** the user polled their community on the body question: after ~20 minutes, **48 votes for pure countryballs**, 7 for a simplified body, 7 for a complex body (~77% countryballs). Pure countryballs stay the game's look; the humanoid body prototype (B key, Quaternius outfit, retargeter) was **removed** at the user's request; it stays in git history (commits 1f445f9–6533936) if ever needed [Decided]
 - **Expressive eyes** (normal, happy, sad, angry, scared, tired, suspicious, dead ×_×…); reference: u/tengam15 "Big Chart o' Expressions" (inspiration only, draw our own set) [Decided]
 - **Standing on each other** (user, 2026-09-27): you can land on top of another countryball and stay there (the engine used to bounce characters off each other) [Built]
@@ -161,9 +194,9 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
 - **Hair and beards** with different hair colors [Decided]
 - **Aging is visible:** graying hair, growing beards, scars from battles, weathered colors [Proposed]
 - **Animals:** very simple and stylized (horses and sheep most important). Possible source: Quaternius (free, commercial OK) [Decided]
-  - **Art style for all animals (user, 2026-09-27): faceted low-poly** (flat-shaded facets, simple natural colours), like **"Stylized lowpoly HORSE" by LucySail** on Fab (free, Standard License: https://www.fab.com/listings/f59ac535-4432-4a38-802e-d951d3806456) [Decided]
-    - That horse is only the **style reference** (the user's pick for the look), not an asset we use
-    - Matching animated source: **Quaternius Ultimate Animated Animal Pack** (CC0, free; 12 animals: horse, donkey, cow, bull, deer, stag, alpaca, fox, wolf, husky, shiba; 12+ animations each incl. walk, gallop, jump, attack, death) has the same faceted look. **Chosen as the animal source (user, 2026-09-27)** [Decided]. **Imported (2026-09-27)** into `Content/CountriesIRL/Animals`, scaled to real life (medieval breeds on the small side): horse (brown + white) and donkey 2.0/1.7 m long (horse back ~1.3 m, a small medieval horse of ~13 hands; shrunk after the user found them too big next to the balls), cattle 1.3 m tall, red deer hind and stag, wolf, fox; husky and shiba stand in as village dogs until we have period dogs; alpaca left out (not in medieval England). Each has its animations (idle, walk, gallop, jump, eating, attack, hit reactions, death); all stand in a lineup in `L_DevSandbox`. Riding comes in roadmap step 5. Sheep, pigs and chickens still needed (another free pack or our own in Blender, same style) [Proposed]
+  - **Art style for all animals (user, 2026-09-28): painterly hand-painted with true proportions**, at the detail level of Charlie catling's **"Game ready crow"** on Fab, or slightly more [Decided]. *Superseded:* faceted low-poly like LucySail's "Stylized lowpoly HORSE" (2026-09-27)
+    - **Now placeholders (2026-09-28):** the Quaternius animals below stay in the game (riding already works with them) until painterly replacements are found or made; they must be rigged and animated (walk, gallop, idle, death at minimum) [Planned]
+    - Previous animated source: **Quaternius Ultimate Animated Animal Pack** (CC0, free; 12 animals: horse, donkey, cow, bull, deer, stag, alpaca, fox, wolf, husky, shiba; 12+ animations each incl. walk, gallop, jump, attack, death) has the same faceted look. **Chosen as the animal source (user, 2026-09-27)** [Decided]. **Imported (2026-09-27)** into `Content/CountriesIRL/Animals`, scaled to real life (medieval breeds on the small side): horse (brown + white) and donkey 2.0/1.7 m long (horse back ~1.3 m, a small medieval horse of ~13 hands; shrunk after the user found them too big next to the balls), cattle 1.3 m tall, red deer hind and stag, wolf, fox; husky and shiba stand in as village dogs until we have period dogs; alpaca left out (not in medieval England). Each has its animations (idle, walk, gallop, jump, eating, attack, hit reactions, death); all stand in a lineup in `L_DevSandbox`. Riding comes in roadmap step 5. Sheep, pigs and chickens still needed (another free pack or our own in Blender, same style) [Proposed]
 - **Real historical figures** have their real heraldry and source-based personalities [Proposed]
 
 ---
@@ -274,6 +307,27 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
   - **Route drawn on the parchment map only**, not in the world [Proposed]
   - Optional: **your house pennant flutters toward the destination** [Proposed]
   - Accessibility setting: full highlighted path for players who want it [Proposed]
+- **Menu look (user mockup, 2026-09-28)** [Decided]: dark charcoal panels with a thin **worn-gold border and gold highlights**, a serif period-feel font, tabs across the top switched with **Q / E**, key hints bottom right (F Unequip, R Inspect). The **Equipment tab is a paper doll**: the character's live 3D model in the middle, slots arranged around it, and an **item card** on the right (name, type, short historical description, then stats such as Defense, Weight, Durability)
+  - **Slot layout (user, 2026-09-28, final)** [Decided]: **8 small boxes** around the character: 1 at the top, 3 on each side, 1 at the bottom. **Every box is split in half**, and each half is its own slot (16 slots). Concept image: `Docs/Concept/billman_ui_concept_v2.webp` (final layout; `billman_ui_concept.webp` is the earlier version).
+    - **Top:** [Helmet | Coif]
+    - **Left, top to bottom:** [Weapon Main | Weapon Off] · [Back | Cloak] · [Belt 1 | Belt 2]
+    - **Right, top to bottom:** [Gambeson | Tunic] · [Mail | Plate] · [Ring | Necklace]
+    - **Bottom:** [Gloves | Boots]
+    - A **two-handed weapon (bill, poleaxe, longbow in hand) occupies both weapon halves**: the Off half greys out and shows "Used by <weapon>"
+    - **Back:** shield, bow, etc. **Cloak:** warmth and rain cover (ties into the weather and temperature system) and looks (plain wool vs fur-lined)
+    - **Belt halves are general-purpose:** any belt item fits either half (dagger, torch, arrow bag, sword in scabbard, purse, lantern)
+    - **Armour is two layers, like real 15th-century soldiers:** **Mail** (inner: mail shirt/haubergeon, mail skirt) | **Plate** (outer: brigandine, jack of plates, breastplate, full harness). Either or both can be worn
+    - **Jewellery has meaning:** **Necklace = livery collar** (Lancastrian **SS collar**, Yorkist **collar of suns and roses**: shows whose side you're on, a status item for lords and retainers); **Ring = signet ring** (nobles seal letters and orders with it; may be required for sending them)
+    - **Stats line under the character:** **Weight** (carried / max) · **Protection** · **Warmth**
+    - The shirt/undergarment is included automatically (not visible on a ball); gauntlets go in Gloves, sabatons in Boots; a bevor comes as part of a helmet item ("sallet with bevor")
+    - **The horse gets its own equipment page later** (saddle, saddlebags, barding, tack) [Planned]
+  - **Controls** [Decided]: every half is its own cell on the grid, so there is **no "open the box" step**.
+    - **Mouse:** hover a half to highlight it; click opens its **item picker**; the wheel scrolls the picker list
+    - **Keyboard (WASD/arrows) and controller (d-pad/stick):** move straight from half to half (A/D steps Helmet → Coif, then on to the next box; W/S moves up and down the columns). **Enter/Space** (controller A) opens the item picker; W/S chooses an item; Enter equips; **Esc** (controller B) goes back. F unequips and R inspects the highlighted slot
+    - **Item picker:** the right-hand card turns into a list of the items you own that fit that slot, each showing its stat changes against what you're wearing (green better, red worse)
+    - **Equipped** halves have a thin gold border; the **highlighted** one has a brighter glow
+  - Tabs merge with the Esc menu's tab list (Map · Quests · Inventory/Equipment · Character · Realm/Armies · Chronicle · Settings) [Proposed]
+  - Item descriptions must be historically right (e.g. the kettle hat was common among archers and billmen; men-at-arms mostly wore a sallet with a bevor) [Decided]
 
 ---
 
@@ -319,8 +373,13 @@ Start with the **commoner origin**; build what's designed so far and add feature
    - Horses are data (`MountDefinition`: model, animations, speeds, turn rates, stamina costs, saddle point): the design's tiers (affer, hackney, rouncey, palfrey, courser, destrier) become more data assets. `DA_Mount_Horse` (brown) and `DA_Mount_HorseWhite` stand near the start of `L_DevSandbox`
    - Animation: idle, walk and gallop blend by speed and play faster as the horse speeds up (no hoof sliding); the Quaternius pack has no trot, so a canter uses the gallop played slower
    - Known limits (later): getting on/off is instant (no climb animation yet); only the chest has collision (the horse stops before its head hits a wall; the rump can still clip); no saddle/bridle model yet; riderless horses just stand (grazing/wandering AI later); no combat from horseback tuning yet
-6. [ ] Hit-zone combat + bandits
+6. [ ] Hit-zone combat + bandits (**together with the item system and filling the Equipment screen**: bill, dagger, kettle hat, jack, mail… with real damage, protection and weight)
 7. [ ] Compass bar
+
+**Inserted before step 3 (user, 2026-09-28)** [Decided]:
+- A. [ ] **Ball resize:** perfect sphere + the new height/proportion rules (Characters & Art > Height, Body proportions); the player is an average man (1.71 m) for now; NPCs roll their height when NPCs arrive
+- B. [ ] **UI style + Esc pause menu + Equipment tab shell:** the mockup's look as reusable pieces (dark panels, worn-gold border, serif font, Q/E tabs, key hints, hover glow); pause menu (Resume, Settings, Controls, Quit) so test builds have a menu; Equipment tab with the live 3D ball and the 8 split boxes, navigation working, slots empty until step 6
+- **Art from the user (ChatGPT):** list, sizes and folders in `Art/AI/README.md` (menu background, panel texture, ~45 item icons, optional model sheets). Free fonts: Cinzel (titles) + EB Garamond (text) from Google Fonts (OFL); small UI glyphs from game-icons.net (CC BY 3.0, credit needed)
 
 **Controls (v0.1):** WASD move · mouse look · Shift run · Space jump · **Left click punch** · **hold right click guard** · V first/third-person · **E get on/off a horse** · T cycle emotion (debug). Dev console: `Emotion Angry`, `ToggleCamera`, `DevWalk <forward> <right> <seconds> <run 0/1>` (fakes held movement keys for testing), `DevDamage 25`, `DevHeal 25`, `DevTime 21.5` (jump to a time), `DevTimeSpeed 60` (fast-forward; 1 = normal), `DevClock` (show date/time), `DevAdvance 24` (skip hours), `DevHitNearest 20` (damage nearest ball; 1000 kills), `DevPunch`, `DevGuard` (toggle guard), `DevDate 25 12` (jump to a day of the year, shows the clock), `DevYear 1461`, `DevInteract` (press E), `DevJump`, `DevHitHorse 35` (damage your/the nearest horse), `DevWeather Rain` (Clear/Fair/Cloudy/Overcast/Showers/Rain/HeavyRain/Storm/Snow/Fog/Auto). Dev test level: `L_DevSandbox`.
 
