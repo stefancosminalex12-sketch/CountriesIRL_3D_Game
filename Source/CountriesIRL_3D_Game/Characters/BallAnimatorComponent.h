@@ -116,6 +116,18 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
 	float MaxLean = 10.f;
 
+	/** How far below the ball's centre the hands rest, as a share of the ball's radius. They hang on the lower
+	 *  part of the ball, like arms at the sides, so they sit between the ball and the floating boots */
+	UPROPERTY(EditAnywhere, Category="Ball|Hands", meta=(ClampMin=0, ClampMax=0.9))
+	float HandRestDrop = 0.45f;
+
+	/** Gap between the ball's surface and a resting hand (cm) */
+	UPROPERTY(EditAnywhere, Category="Ball|Hands")
+	float HandRestGap = 14.f;
+
+	/** Where a resting hand floats (right hand; the left mirrors it), in limb-root space */
+	FVector HandRestLocation(float Radius, float CenterZ) const;
+
 	/** Size of hands and feet in cm (HandSize is the space a hand takes, for wall checks) */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
 	float HandSize = 20.f;

@@ -70,7 +70,7 @@ void UBallAnimatorComponent::CreateLimbMeshes(AActor* Owner, USceneComponent* Li
 		const float Side = Index == 0 ? -1.f : 1.f;
 		PoseHand(Hand, 0.f, -Side);
 		HandRotation[Index] = FRotationMatrix::MakeFromXZ(FVector(0.35f, 0.f, -1.f), FVector(0.f, Side, 0.f)).ToQuat();
-		Hand.Root->SetRelativeLocationAndRotation(FVector(8.f, Side * (BallRadius + 14.f), BallCenterZ - 4.f), HandRotation[Index]);
+		Hand.Root->SetRelativeLocationAndRotation(HandRestLocation(BallRadius, BallCenterZ) * FVector(1.f, Side, 1.f), HandRotation[Index]);
 		Boot.Root->SetRelativeLocation(FVector(2.f, Side * FootHalfSpacing, GroundZ + FootSize.Z * 0.5f));
 	}
 }
@@ -391,7 +391,7 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	const FVector AimLocal = Root.InverseTransformVectorNoScale(Ball->GetBaseAimRotation().Vector());
 
 	// Hands: swing with the opposite foot (left hand forward when the right foot is forward)
-	const FVector ThirdPersonRest(8.f, Radius + 14.f, CenterZ - 4.f);
+	const FVector ThirdPersonRest = HandRestLocation(Radius, CenterZ);
 	const FVector FirstPersonRest(Radius * 0.55f + 95.f, 45.f, CenterZ - 32.f);
 	const FVector HandRest = FMath::Lerp(ThirdPersonRest, FirstPersonRest, FirstPersonBlend);
 	const FVector GuardRest = FMath::Lerp(FVector(Radius + 20.f, 17.f, CenterZ + 14.f), FVector(Radius * 0.55f + 58.f, 19.f, CenterZ + 2.f), FirstPersonBlend);
@@ -528,6 +528,14 @@ FVector UBallAnimatorComponent::KeepHandOutOfWalls(int32 Index, const FVector& L
 	// Pull in instantly so hands never poke through; ease back out once the way is clear
 	HandReach[Index] = Reach < HandReach[Index] ? Reach : FMath::FInterpTo(HandReach[Index], Reach, DeltaTime, 10.f);
 	return FMath::Lerp(LocalStart, LocalTarget, HandReach[Index]);
+}
+
+FVector UBallAnimatorComponent::HandRestLocation(float Radius, float CenterZ) const
+{
+	// Lower on the ball the sphere is narrower, so the hand moves in to keep the same gap from its surface
+	const float Drop = Radius * HandRestDrop;
+	const float SurfaceY = FMath::Sqrt(FMath::Max(Radius * Radius - Drop * Drop, 0.f));
+	return FVector(8.f, SurfaceY + HandRestGap, CenterZ - Drop);
 }
 
 void UBallAnimatorComponent::SnapFeetToRest()
