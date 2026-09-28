@@ -20,19 +20,6 @@ using namespace CIRLUIStyle;
 
 namespace
 {
-	const FButtonStyle& PlainButtonStyle()
-	{
-		static const FButtonStyle Style = []
-		{
-			FButtonStyle S;
-			const FSlateNoResource None;
-			S.SetNormal(None).SetHovered(None).SetPressed(None).SetDisabled(None);
-			S.SetNormalPadding(FMargin(0.f)).SetPressedPadding(FMargin(0.f));
-			return S;
-		}();
-		return Style;
-	}
-
 	/** A painting that fills the whole screen, cropping the edges instead of stretching */
 	TSharedRef<SWidget> MakeFullScreenPainting(const FSlateBrush* Painting)
 	{

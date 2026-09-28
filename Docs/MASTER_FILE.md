@@ -221,6 +221,8 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
 - **Equipment & inventory** [Decided]:
   - Equipment menu with gear slots: head, body, hands, feet, weapons (sword/shield/spear/bow… whatever you want to use)
   - **Layered clothing & armor, KCD-style** [Decided]: head = arming cap/coif + helmet (+ crest); body = undergarments (shirt/doublet) + padding (gambeson/aketon) + armor (mail/brigandine/plate) + optional over-layer (tabard/surcoat/livery jacket); hands = gloves/gauntlets; feet = shoes/boots/sabatons; plus cloak
+  - **Icons vs worn models (user question, 2026-09-28)** [Decided]: **inventory icons show the real, historically accurate object** (players recognise it and learn from it; icons from the user's ChatGPT art in `Art/AI/Icons`). The **3D version worn by a ball is adapted to the sphere**: helmets become a cap over the upper part of the ball, sized to it; body armour wraps the lower half; gloves/boots fit the floating hands and feet. **The eyes and the flag always stay visible**
+  - **Visored helmets (sallet, armet)** [Proposed]: visor up while walking (face visible); snaps down in combat, with the eyes showing through the eye slit
   - **Visible carried gear** [Decided]: shield, spear or **bow** on your back, dagger/sword at your side, arrows in an arrow bag or belt, etc. Balls wear a **belt around the middle** for side-carried weapons. Accuracy note: English longbowmen often carried arrows in arrow bags or tucked in the belt, and stuck them in the ground before battle, more than in back quivers [Proposed]
   - **Longbows carried unstrung** and **strung before use** (small animation) [Decided]
   - **Horse shown on the equipment screen** standing nearby (like KCD2, without the rotate-model gimmick), with **horse equipment** (saddle, bridle, saddlebags, caparison, barding)
@@ -288,6 +290,10 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
 - Prefer **15th-century** songs for accuracy (e.g. Agincourt Carol, Ritson and Fayrfax manuscripts); 1500s pieces (e.g. *Pastime with Good Company*) used sparingly [Proposed]
 - **Rights checklist** [Proposed]: work from original manuscripts/facsimiles/public-domain editions (IMSLP), not modern copyrighted editions; never sample others' recordings; use original-language lyrics or our own translations; **written agreements with every friend who performs**; keep sources and project files to dispute YouTube Content ID false claims; lawyer check before commercial release
 - Period songs in taverns, churches and on the march; original score for exploration, battles and story moments [Proposed]
+- **Sound sources (2026-09-28)** [Decided]: free sounds from **Freesound.org** (only **CC0** or **CC-BY**, never NC), the **Sonniss GDC Game Audio Bundle** (free, commercial, no credit), **Pixabay** sound effects and free Fab audio. The user downloads (accounts are theirs) and sends each file with its source link; every file's source and licence is logged, and CC-BY authors go in the credits. WAV preferred
+- **Soundscapes should sound like England** [Decided]: evening = blackbird and song thrush, rooks/crows, wind in the trees, a stream, an occasional distant church bell or sheep; only light grasshopper sounds in summer (a loud cricket chorus sounds Mediterranean/American)
+- **Title screen ambience** [Built 2026-09-28]: a recording of the **River Frome** (England; user's pick from Pixabay), cut into a seamless 87 s loop, fading in over 2.5 s with the picture and out on New Game. Birdsong/rooks/wind layers can be added later. Sources and licences are logged in `Art/Audio/SOURCES.md`; originals kept in `Art/Audio/Source`, `Tools/make_audio_loop.py` makes seamless loops, `Tools/Unreal/import_audio.py` imports
+- **The user produces music in FL Studio** (2026-09-28): an original soundtrack may come from them later ("especially for soundtracks"); basic sound design from free libraries for now
 
 ---
 

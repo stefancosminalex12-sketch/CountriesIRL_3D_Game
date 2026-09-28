@@ -7,6 +7,7 @@
 #include "Styling/SlateBrush.h"
 
 class SWidget;
+struct FButtonStyle;
 
 /**
  *  The look shared by every menu (Master file > UI & HUD > Menu look): dark charcoal panels with a thin
@@ -68,6 +69,9 @@ namespace CIRLUIStyle
 	/** White fading to clear left-to-right / top-to-bottom; tint it to darken part of a painting */
 	const FSlateBrush* GradientLeft();
 	const FSlateBrush* GradientBottom();
+
+	/** Invisible button frame, for buttons that draw their own hover/pressed look */
+	const FButtonStyle& PlainButtonStyle();
 
 	// Widgets
 

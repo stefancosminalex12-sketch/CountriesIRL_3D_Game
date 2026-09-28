@@ -37,20 +37,6 @@ namespace
 		}
 	}
 
-	/** Invisible button frame: our widgets draw their own states */
-	const FButtonStyle& PlainButtonStyle()
-	{
-		static const FButtonStyle Style = []
-		{
-			FButtonStyle S;
-			const FSlateNoResource None;
-			S.SetNormal(None).SetHovered(None).SetPressed(None).SetDisabled(None);
-			S.SetNormalPadding(FMargin(0.f)).SetPressedPadding(FMargin(0.f));
-			return S;
-		}();
-		return Style;
-	}
-
 	/** Small gold diamond between the tabs */
 	TSharedRef<SWidget> MakeDiamond()
 	{

@@ -41,5 +41,6 @@ for task in tasks:
         address = unreal.TextureAddress.TA_WRAP if tiles else unreal.TextureAddress.TA_CLAMP
         texture.set_editor_property("address_x", address)
         texture.set_editor_property("address_y", address)
-        unreal.EditorAssetLibrary.save_loaded_asset(texture)
+        # New assets aren't always marked dirty after import: save regardless
+        unreal.EditorAssetLibrary.save_asset(object_path.split(".")[0], False)
         print("IMPORT_RESULT", task.filename, "->", object_path)

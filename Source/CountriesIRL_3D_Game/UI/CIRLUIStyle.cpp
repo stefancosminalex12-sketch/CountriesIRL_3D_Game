@@ -4,6 +4,7 @@
 #include "Engine/FontFace.h"
 #include "Fonts/CompositeFont.h"
 #include "Styling/CoreStyle.h"
+#include "Styling/SlateTypes.h"
 #include "Engine/Texture2D.h"
 #include "Widgets/Images/SImage.h"
 #include "Widgets/Layout/SBorder.h"
@@ -191,6 +192,19 @@ namespace CIRLUIStyle
 	{
 		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_gradient_bottom.T_gradient_bottom"), FVector2D(4.f, 512.f));
 		return &Brush;
+	}
+
+	const FButtonStyle& PlainButtonStyle()
+	{
+		static const FButtonStyle Style = []
+		{
+			FButtonStyle S;
+			const FSlateNoResource None;
+			S.SetNormal(None).SetHovered(None).SetPressed(None).SetDisabled(None);
+			S.SetNormalPadding(FMargin(0.f)).SetPressedPadding(FMargin(0.f));
+			return S;
+		}();
+		return Style;
 	}
 
 	TSharedRef<SWidget> MakeOrnatePanel(const TSharedRef<SWidget>& Content, const FMargin& Padding)

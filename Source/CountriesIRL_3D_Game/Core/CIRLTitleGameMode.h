@@ -8,6 +8,7 @@
 #include "CIRLTitleGameMode.generated.h"
 
 class SCIRLTitleScreen;
+class UAudioComponent;
 class FNavigationConfig;
 
 /**
@@ -42,6 +43,10 @@ private:
 
 	void StartNewGame();
 	void Quit();
+
+	/** Evening by the river: loops under the title screen, fading in with the picture */
+	UPROPERTY(Transient)
+	TObjectPtr<UAudioComponent> Ambience;
 
 	TSharedPtr<SCIRLTitleScreen> TitleScreen;
 	TSharedPtr<FNavigationConfig> PreviousNavigation;
