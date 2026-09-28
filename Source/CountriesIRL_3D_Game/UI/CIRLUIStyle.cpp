@@ -4,6 +4,11 @@
 #include "Engine/FontFace.h"
 #include "Fonts/CompositeFont.h"
 #include "Styling/CoreStyle.h"
+#include "Engine/Texture2D.h"
+#include "Widgets/Images/SImage.h"
+#include "Widgets/Layout/SBorder.h"
+#include "Widgets/Layout/SBox.h"
+#include "Widgets/SOverlay.h"
 
 namespace CIRLUIStyle
 {
@@ -24,6 +29,21 @@ namespace CIRLUIStyle
 			Brush.DrawAs = ESlateBrushDrawType::RoundedBox;
 			Brush.TintColor = Fill;
 			Brush.OutlineSettings = FSlateBrushOutlineSettings(CornerRadius, Outline, OutlineWidth);
+			return Brush;
+		}
+
+		/** Brush drawing a texture from /Game/CountriesIRL/UI/Textures (kept loaded for the whole game) */
+		FSlateBrush MakeImage(const TCHAR* TextureAsset, const FVector2D& Size, ESlateBrushTileType::Type Tiling = ESlateBrushTileType::NoTile)
+		{
+			FSlateBrush Brush;
+			Brush.DrawAs = ESlateBrushDrawType::Image;
+			Brush.ImageSize = Size;
+			Brush.Tiling = Tiling;
+			if (UTexture2D* Texture = LoadObject<UTexture2D>(nullptr, TextureAsset))
+			{
+				Texture->AddToRoot();
+				Brush.SetResourceObject(Texture);
+			}
 			return Brush;
 		}
 
@@ -122,5 +142,54 @@ namespace CIRLUIStyle
 	{
 		static const FSlateBrush Brush = MakeBox(FLinearColor(0.f, 0.f, 0.f, 0.45f), FLinearColor::Transparent, 0.f, 0.f);
 		return &Brush;
+	}
+
+	const FSlateBrush* PanelTexture()
+	{
+		// One tile covers ~420 px, so the leather grain reads without repeating visibly
+		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_panel_texture.T_panel_texture"), FVector2D(420.f), ESlateBrushTileType::Both);
+		return &Brush;
+	}
+
+	const FSlateBrush* CornerOrnament()
+	{
+		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_corner_ornament.T_corner_ornament"), FVector2D(118.f));
+		return &Brush;
+	}
+
+	TSharedRef<SWidget> MakeOrnatePanel(const TSharedRef<SWidget>& Content, const FMargin& Padding)
+	{
+		// The ornament's own gold lines run ~10% in from its edges: pulling it out by that much
+		// lays its lines over the panel's border, so the corners grow out of the frame
+		const float Size = CornerOrnament()->ImageSize.X;
+		const float Overhang = Size * 0.1f;
+		auto Corner = [Size](float ScaleX, float ScaleY)
+		{
+			return SNew(SBox)
+				.WidthOverride(Size)
+				.HeightOverride(Size)
+				[
+					SNew(SImage)
+					.Image(CornerOrnament())
+					.RenderTransform(FSlateRenderTransform(FScale2D(ScaleX, ScaleY)))
+					.RenderTransformPivot(FVector2D(0.5f, 0.5f))
+				];
+		};
+
+		static const FSlateBrush BorderOnly = MakeBox(FLinearColor::Transparent, Gold(), 1.5f, 4.f);
+
+		return SNew(SOverlay)
+			+ SOverlay::Slot()
+			[
+				SNew(SImage).Image(PanelTexture()).ColorAndOpacity(FLinearColor(0.85f, 0.85f, 0.85f, 0.97f))
+			]
+			+ SOverlay::Slot()
+			[
+				SNew(SBorder).BorderImage(&BorderOnly).Padding(Padding)[Content]
+			]
+			+ SOverlay::Slot().HAlign(HAlign_Left).VAlign(VAlign_Top).Padding(FMargin(-Overhang, -Overhang, 0.f, 0.f))[Corner(1.f, 1.f)]
+			+ SOverlay::Slot().HAlign(HAlign_Right).VAlign(VAlign_Top).Padding(FMargin(0.f, -Overhang, -Overhang, 0.f))[Corner(-1.f, 1.f)]
+			+ SOverlay::Slot().HAlign(HAlign_Left).VAlign(VAlign_Bottom).Padding(FMargin(-Overhang, 0.f, 0.f, -Overhang))[Corner(1.f, -1.f)]
+			+ SOverlay::Slot().HAlign(HAlign_Right).VAlign(VAlign_Bottom).Padding(FMargin(0.f, 0.f, -Overhang, -Overhang))[Corner(-1.f, -1.f)];
 	}
 }

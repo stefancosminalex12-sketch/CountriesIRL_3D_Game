@@ -149,10 +149,7 @@ void SCIRLGameMenu::Construct(const FArguments& InArgs)
 			.WidthOverride(1560.f)
 			.HeightOverride(880.f)
 			[
-				SNew(SBorder)
-				.BorderImage(Panel())
-				.Padding(FMargin(28.f, 16.f, 28.f, 18.f))
-				[
+				MakeOrnatePanel(
 					SNew(SVerticalBox)
 
 					+ SVerticalBox::Slot().AutoHeight()
@@ -178,8 +175,8 @@ void SCIRLGameMenu::Construct(const FArguments& InArgs)
 					+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Right).Padding(FMargin(0.f, 14.f, 0.f, 0.f))
 					[
 						SAssignNew(KeyHints, SHorizontalBox)
-					]
-				]
+					],
+					FMargin(64.f, 20.f, 64.f, 22.f))
 			]
 			]
 		]

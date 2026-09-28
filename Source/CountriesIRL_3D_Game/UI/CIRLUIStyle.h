@@ -6,6 +6,8 @@
 #include "Fonts/SlateFontInfo.h"
 #include "Styling/SlateBrush.h"
 
+class SWidget;
+
 /**
  *  The look shared by every menu (Master file > UI & HUD > Menu look): dark charcoal panels with a thin
  *  worn-gold border, Cinzel for titles and tabs, EB Garamond for text. Menus use these instead of their own
@@ -54,4 +56,13 @@ namespace CIRLUIStyle
 	const FSlateBrush* GoldFill();
 	/** Darkens the game behind an open menu */
 	const FSlateBrush* ScreenDim();
+	/** Dark leather texture that tiles across big panels (Art/AI/Menu/panel_texture) */
+	const FSlateBrush* PanelTexture();
+	/** Worn-gold filigree corner (top-left; mirrored for the other corners) */
+	const FSlateBrush* CornerOrnament();
+
+	// Widgets
+
+	/** The big menu panel: leather texture, worn-gold border and a gold ornament in each corner */
+	TSharedRef<SWidget> MakeOrnatePanel(const TSharedRef<SWidget>& Content, const FMargin& Padding);
 }
