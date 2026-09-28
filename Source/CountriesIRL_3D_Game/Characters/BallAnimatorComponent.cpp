@@ -41,6 +41,7 @@ void UBallAnimatorComponent::CreateLimbMeshes(AActor* Owner, USceneComponent* Li
 		FBallHandParts& Hand = Hands[Index];
 		Hand.Root = Owner->CreateDefaultSubobject<USceneComponent>(PartName(TEXT("Hand")));
 		Hand.Root->SetupAttachment(LimbParent);
+		Hand.Root->SetRelativeScale3D(FVector(HandScale));
 		Hand.Palm = BallParts::Create(Owner, PartName(TEXT("Palm")), Hand.Root, SphereMesh);
 		Hand.Palm->SetRelativeScale3D(PalmSize / 100.f);
 		for (int32 Finger = 0; Finger < 5; ++Finger)
@@ -55,7 +56,7 @@ void UBallAnimatorComponent::CreateLimbMeshes(AActor* Owner, USceneComponent* Li
 			Hand.Tips.Add(FingerPart(TEXT("Tip"), SphereMesh));
 		}
 
-		// Boot: a flat sole, the foot and an ankle shaft (origin at the middle of the foot); 22 cm tall in total
+		// Boot: a flat sole, the foot and an ankle shaft (origin at the middle of the foot); 30 cm tall in total
 		FBallFootParts& Boot = Boots[Index];
 		Boot.Root = Owner->CreateDefaultSubobject<USceneComponent>(PartName(TEXT("Boot")));
 		Boot.Root->SetupAttachment(LimbParent);
@@ -64,7 +65,8 @@ void UBallAnimatorComponent::CreateLimbMeshes(AActor* Owner, USceneComponent* Li
 		Boot.Upper = BallParts::Create(Owner, PartName(TEXT("BootUpper")), Boot.Root, SphereMesh);
 		Boot.Upper->SetRelativeTransform(FTransform(FRotator::ZeroRotator, FVector(1.5f, 0.f, 1.f), FVector(FootSize.X, FootSize.Y, FootSize.Z - 1.f) / 100.f));
 		Boot.Shaft = BallParts::Create(Owner, PartName(TEXT("BootShaft")), Boot.Root, CylinderMesh);
-		Boot.Shaft->SetRelativeTransform(FTransform(FRotator::ZeroRotator, FVector(-5.f, 0.f, 8.25f), FVector(12.f, 12.f, 16.5f) / 100.f));
+		Boot.Shaft->SetRelativeTransform(FTransform(FRotator::ZeroRotator, FVector(-5.f, 0.f, BootShaftTop * 0.5f), FVector(16.f, 16.f, BootShaftTop) / 100.f));
+		Boot.Leg = BallParts::Create(Owner, PartName(TEXT("Leg")), LimbParent, CylinderMesh);
 
 		// Resting pose: relaxed hands at the sides, boots under the ball
 		const float Side = Index == 0 ? -1.f : 1.f;
@@ -86,6 +88,7 @@ void UBallAnimatorComponent::ApplyColors(const FLinearColor& HandColor, const FL
 	TArray<UStaticMeshComponent*> HandParts;
 	TArray<UStaticMeshComponent*> BootParts;
 	TArray<UStaticMeshComponent*> SoleParts;
+	TArray<UStaticMeshComponent*> LegParts;
 	for (int32 Index = 0; Index < 2; ++Index)
 	{
 		const FBallHandParts& Hand = Hands[Index];
@@ -100,7 +103,9 @@ void UBallAnimatorComponent::ApplyColors(const FLinearColor& HandColor, const FL
 		BootParts.Add(Boots[Index].Upper);
 		BootParts.Add(Boots[Index].Shaft);
 		SoleParts.Add(Boots[Index].Sole);
+		LegParts.Add(Boots[Index].Leg);
 	}
+	ShareColor(LegParts, LegColor);
 
 	ShareColor(HandParts, HandColor);
 	ShareColor(BootParts, FootColor);
@@ -494,6 +499,48 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	const FQuat Rotation = FQuat::Slerp((Lean + PunchTurn).Quaternion(), FRotator(70.f, 0.f, 12.f).Quaternion(), DeadBlend);
 
 	BodyPivot->SetRelativeLocationAndRotation(FMath::Lerp(AliveLocation, DeadLocation, DeadBlend), Rotation);
+
+	UpdateLegs();
+}
+
+void UBallAnimatorComponent::UpdateLegs()
+{
+	const ABallCharacter* Ball = Cast<ABallCharacter>(GetOwner());
+	if (!Ball || !BodyPivot)
+	{
+		return;
+	}
+
+	// Hip points sit inside the lower ball, above the feet; they follow the body as it bobs, leans and falls
+	const float Radius = Ball->GetBallRadius();
+	const FTransform& Body = BodyPivot->GetComponentTransform();
+	for (int32 Index = 0; Index < 2; ++Index)
+	{
+		UStaticMeshComponent* Leg = Boots[Index].Leg;
+		if (!Leg)
+		{
+			continue;
+		}
+		// Bones stage: the legs rotted away with the rest
+		Leg->SetVisibility(!bSkeletonPose);
+		if (bSkeletonPose)
+		{
+			continue;
+		}
+
+		const FVector Hip = Body.TransformPosition(FVector(0.f, Side(Index) * FootHalfSpacing * 0.9f, -Radius * 0.72f));
+		// Into the top of the boot's shaft, so the joint never shows a gap
+		const FVector Ankle = Boots[Index].Root->GetComponentTransform().TransformPosition(FVector(-5.f, 0.f, BootShaftTop - 3.f));
+		const FVector Along = Hip - Ankle;
+		const float Length = Along.Size();
+		if (Length < KINDA_SMALL_NUMBER)
+		{
+			continue;
+		}
+		const float Thickness = LegThickness * Body.GetScale3D().Z;
+		Leg->SetWorldLocationAndRotation((Hip + Ankle) * 0.5f, FRotationMatrix::MakeFromZ(Along / Length).Rotator());
+		Leg->SetWorldScale3D(FVector(Thickness, Thickness, Length) / 100.f);
+	}
 }
 
 float UBallAnimatorComponent::GroundZAt(const FVector& WorldPoint, float ReferenceZ) const
@@ -520,7 +567,7 @@ FVector UBallAnimatorComponent::KeepHandOutOfWalls(int32 Index, const FVector& L
 	float Reach = 1.f;
 	FHitResult Hit;
 	const FCollisionQueryParams Params(SCENE_QUERY_STAT(BallHandSweep), false, GetOwner());
-	if (GetWorld()->SweepSingleByChannel(Hit, Start, End, FQuat::Identity, ECC_Visibility, FCollisionShape::MakeSphere(HandSize * 0.5f), Params))
+	if (GetWorld()->SweepSingleByChannel(Hit, Start, End, FQuat::Identity, ECC_Visibility, FCollisionShape::MakeSphere(HandSize * HandScale * 0.5f), Params))
 	{
 		Reach = Hit.bStartPenetrating ? 0.f : Hit.Time;
 	}

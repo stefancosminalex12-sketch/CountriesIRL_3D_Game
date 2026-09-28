@@ -34,7 +34,7 @@ struct FBallHandParts
 	float AppliedFist = -1.f;
 };
 
-/** A floating boot: sole, foot and a short ankle shaft. */
+/** A boot (sole, foot, ankle shaft) and the short leg that joins it to the ball. */
 USTRUCT()
 struct FBallFootParts
 {
@@ -44,6 +44,9 @@ struct FBallFootParts
 	UPROPERTY() TObjectPtr<UStaticMeshComponent> Sole;
 	UPROPERTY() TObjectPtr<UStaticMeshComponent> Upper;
 	UPROPERTY() TObjectPtr<UStaticMeshComponent> Shaft;
+
+	/** Short leg (hose) from the top of the boot up into the ball; stretches as the foot steps */
+	UPROPERTY() TObjectPtr<UStaticMeshComponent> Leg;
 };
 
 /**
@@ -119,11 +122,23 @@ protected:
 	/** How far below the ball's centre the hands rest, as a share of the ball's radius. They hang on the lower
 	 *  part of the ball, like arms at the sides, so they sit between the ball and the floating boots */
 	UPROPERTY(EditAnywhere, Category="Ball|Hands", meta=(ClampMin=0, ClampMax=0.9))
-	float HandRestDrop = 0.45f;
+	float HandRestDrop = 0.4f;
 
 	/** Gap between the ball's surface and a resting hand (cm) */
 	UPROPERTY(EditAnywhere, Category="Ball|Hands")
-	float HandRestGap = 14.f;
+	float HandRestGap = 12.f;
+
+	/** Hands are drawn this much bigger than their modelled size (big cartoon hands, like the concept art) */
+	UPROPERTY(EditAnywhere, Category="Ball|Hands")
+	float HandScale = 1.6f;
+
+	/** Leg thickness (cm) */
+	UPROPERTY(EditAnywhere, Category="Ball|Legs")
+	float LegThickness = 15.f;
+
+	/** Colour of the legs (wool hose) */
+	UPROPERTY(EditAnywhere, Category="Ball|Legs")
+	FLinearColor LegColor = FLinearColor(0.16f, 0.07f, 0.045f);
 
 	/** Where a resting hand floats (right hand; the left mirrors it), in limb-root space */
 	FVector HandRestLocation(float Radius, float CenterZ) const;
@@ -159,11 +174,14 @@ protected:
 	float PunchLunge = 6.f;
 
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
-	FVector FootSize = FVector(26.f, 15.f, 11.f);
+	FVector FootSize = FVector(34.f, 19.f, 13.f);
+
+	/** Height of the boot's ankle shaft above the middle of the foot (cm); the whole boot is ~30 cm tall */
+	static constexpr float BootShaftTop = 24.f;
 
 	/** Distance from the center line to each foot's resting spot */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
-	float FootHalfSpacing = 17.f;
+	float FootHalfSpacing = 22.f;
 
 	/** Gap kept between the feet's edges, so they never overlap */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
@@ -195,6 +213,9 @@ private:
 
 	/** Current foot position (world, bottom center) including the step arc */
 	FVector FootWorld(int32 Index) const;
+
+	/** Stretches each leg from its boot top up to its hip point inside the ball */
+	void UpdateLegs();
 
 	/** Keeps a target on the foot's own side of the body so the feet never cross or overlap */
 	FVector KeepOnOwnSide(int32 Index, const FVector& WorldTarget) const;

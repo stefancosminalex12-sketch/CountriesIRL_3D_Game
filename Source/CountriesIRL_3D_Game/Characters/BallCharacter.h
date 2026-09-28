@@ -141,21 +141,22 @@ protected:
 	virtual void HandleDeath(UHealthComponent* DepletedHealth);
 
 	/**
-	 *  Body proportions (Master file > Characters & Art): ball 58% of the height, empty gap 29%, boots 13%.
-	 *  Defaults are the average English man of 1455: 1.71 m = 1.00 m ball + 0.49 m gap + 0.22 m boots.
+	 *  Body proportions (Master file > Characters & Art), matched to the user's concept art: a big ball sitting low
+	 *  on short legs; ball 80% of the height, legs and boots 20%.
+	 *  Defaults are the average English man of 1455: 1.71 m = 0.35 m legs and boots + 1.36 m ball.
 	 */
 
 	/** Ball radius in cm, side to side */
 	UPROPERTY(VisibleAnywhere, Category="Ball")
-	float BallRadius = 50.f;
+	float BallRadius = 68.f;
 
 	/** How much taller than wide the ball is (1 = perfect sphere, the chosen look) */
 	UPROPERTY(VisibleAnywhere, Category="Ball")
 	float BallHeightScale = 1.f;
 
-	/** Distance from the ground to the bottom of the ball: the boots (22 cm) plus the empty gap above them (49 cm) */
+	/** Distance from the ground to the bottom of the ball: the boots (30 cm) and a short stretch of leg */
 	UPROPERTY(VisibleAnywhere, Category="Ball")
-	float FeetGap = 71.f;
+	float FeetGap = 35.f;
 
 	/** Placeholder color until flags/liveries are textured on the ball */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ball|Look")
