@@ -404,6 +404,7 @@ Start with the **commoner origin**; build what's designed so far and add feature
 - **Windows Smart App Control** (2026-09-28): on the dev PC it blocked a freshly built, unsigned game DLL ("Bad Image 0xc0e90002", CodeIntegrity log: Smart App Control Block). Developers normally turn it off (Windows Security > App & browser control); only the user can change that. Testers with it on may also get the packaged game blocked: long-term fix is code signing or distributing via Steam/itch.io [Noted]
 - In release builds the Dev console commands are off. **Esc menu and title screen built 2026-09-28** (Resume, Main Menu, Quit, controls list, version; title screen with New Game/Quit). Still to come: save/Continue, settings (graphics, resolution, mouse, FOV), credits [Proposed]
 - Project display name "CountriesIRL" (working title, the real title is still open), version 0.1.0
+- **Title candidates (user, 2026-09-29):** "Crowns & Commoners" (Claude's pick: short, alliterative, says the core idea of rising from commoner to kingmaker) and "Of Crowns & Commoners". No existing game, book or board game found with either name (quick web search 2026-09-29; Steam page, domain and trademark still to check before committing). Possible subtitle to keep the countryball identity: e.g. "Crowns & Commoners: A Countryball Chronicle" [Open]
 
 **Budget rule** [Decided]: use **free assets and tools as much as possible**, plus our own creations; only consider paid assets when nothing free works.
 
