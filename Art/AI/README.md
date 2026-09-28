@@ -63,3 +63,10 @@ Carried items (weapons, shields, bucklers, pavises, lanterns, torches, daggers, 
 ## 3. Model sheets (folder `ModelSheets/`) — optional, later
 
 For items we'll model in Blender: **3:2**, plain light-grey background, the item shown **front, side and top** in flat orthographic view (no perspective), with a real-size ruler in metres. Start with: `sheet_bill`, `sheet_kettle_hat`, `sheet_sallet`, `sheet_rondel_dagger`, `sheet_boots_ankle`.
+
+---
+
+## 4. Map icons
+
+- `MapIcons/` — **simple** icons for the whole-England planning map (`Tools/world/draw_plan_map.py` uses any `map_*.png` found there). Still to make: less detailed versions of the ones below.
+- `RegionalMapIcons/` — the user's **detailed** hand-painted set (2026-09-29), kept for the **regional maps** (England split into a few regions later), where icons are drawn bigger. Same `map_*` names as the planning map, so the same code can use them: `map_city` (walled city), `map_town` (market town), `map_village` (cottage), `map_castle_major`, `map_castle_minor` (tower), `map_cathedral`, `map_abbey`, `map_battle` (crossed swords), `map_landmark` (Stonehenge), `map_nature` (mountain), plus `map_title_scroll` (title banner) and `map_compass_rose`.
