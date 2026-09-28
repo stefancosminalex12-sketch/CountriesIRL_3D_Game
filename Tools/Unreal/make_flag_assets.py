@@ -1,8 +1,8 @@
 """
-Import the coats of arms (Art/Heraldry/flag_*.png) and build M_BallFlag. Run inside the editor:
+Import the coats of arms (Art/Heraldry/flag_*.png) and build M_BallArms. Run inside the editor:
     py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/make_flag_assets.py"
 
-M_BallFlag paints a coat of arms across the ball: the texture is projected flat through the ball from the front
+M_BallArms paints a coat of arms across the ball: the texture is projected flat through the ball from the front
 (object space, so it turns with the ball), like a countryball flag. Parameters:
   Flag (texture), Tint (colour) and TintAmount (0-1) for the damage flash and a rotting corpse.
 The engine sphere is 100 units wide in its own space: U = 0.5 - Y/100, V = 0.5 - Z/100.
@@ -35,18 +35,24 @@ for task in tasks:
         unreal.EditorAssetLibrary.save_asset(object_path.split(".")[0], False)
         print("FLAG_TEXTURE", object_path)
 
-full = MATERIALS + "/M_BallFlag"
-material = unreal.load_asset(full) if unreal.EditorAssetLibrary.does_asset_exist(full) else \
-    tools.create_asset("M_BallFlag", MATERIALS, unreal.Material, unreal.MaterialFactoryNew())
-lib.delete_all_material_expressions(material)
+# Only ever creates the material. Rebuilding a material the balls already have loaded crashes the editor
+# (!IsRooted assert): to change it, delete the asset with the editor closed, then run this again.
+full = MATERIALS + "/M_BallArms"
+if unreal.EditorAssetLibrary.does_asset_exist(full):
+    raise SystemExit("M_BallArms already exists: delete it with the editor closed to rebuild it")
+material = tools.create_asset("M_BallArms", MATERIALS, unreal.Material, unreal.MaterialFactoryNew())
 
 local = lib.create_material_expression(material, unreal.MaterialExpressionLocalPosition, -1300, 0)
-mask_y = lib.create_material_expression(material, unreal.MaterialExpressionComponentMask, -1100, -60)
-mask_y.set_editor_property("r", False)
-mask_y.set_editor_property("g", True)
-mask_z = lib.create_material_expression(material, unreal.MaterialExpressionComponentMask, -1100, 80)
-mask_z.set_editor_property("r", False)
-mask_z.set_editor_property("b", True)
+def component_mask(x, y, channel):
+    """Picks one channel; every channel is set explicitly (the defaults differ between engine versions)"""
+    mask = lib.create_material_expression(material, unreal.MaterialExpressionComponentMask, x, y)
+    for name in ("r", "g", "b", "a"):
+        mask.set_editor_property(name, name == channel)
+    return mask
+
+
+mask_y = component_mask(-1100, -60, "g")
+mask_z = component_mask(-1100, 80, "b")
 lib.connect_material_expressions(local, "", mask_y, "")
 lib.connect_material_expressions(local, "", mask_z, "")
 

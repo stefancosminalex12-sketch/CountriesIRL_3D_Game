@@ -53,8 +53,8 @@ ABallCharacter::ABallCharacter()
 	BodyPivot->SetRelativeLocation(FVector(0.f, 0.f, GetBallCenterZ()));
 
 	BodyMesh = BallParts::Create(this, TEXT("BodyMesh"), BodyPivot, Sphere);
-	// Coat of arms across the ball (M_BallFlag projects the texture from the front)
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> FlagMaterialAsset(TEXT("/Game/CountriesIRL/Characters/Materials/M_BallFlag.M_BallFlag"));
+	// Coat of arms across the ball (M_BallArms projects the texture from the front)
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> FlagMaterialAsset(TEXT("/Game/CountriesIRL/Characters/Materials/M_BallArms.M_BallArms"));
 	if (FlagMaterialAsset.Succeeded())
 	{
 		BodyMesh->SetMaterial(0, FlagMaterialAsset.Object);
@@ -112,7 +112,7 @@ void ABallCharacter::ApplyFlag()
 	if (!FlagMaterial)
 	{
 		UMaterialInterface* Base = BodyMesh->GetMaterial(0);
-		if (!Base || !Base->GetName().Contains(TEXT("M_BallFlag")))
+		if (!Base || !Base->GetName().Contains(TEXT("M_BallArms")))
 		{
 			return;
 		}
