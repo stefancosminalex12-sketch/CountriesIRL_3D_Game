@@ -16,14 +16,14 @@ using namespace CIRLUIStyle;
 namespace
 {
 	/** Size of one slot (half a box) in 1080p pixels */
-	constexpr float HalfSize = 84.f;
+	constexpr float SlotSize = 84.f;
 	/** Space between the boxes in a column */
-	constexpr float BoxSpacing = 40.f;
+	constexpr float SlotBoxSpacing = 40.f;
 
 	/** Empty slots show a faint, dark version of what goes there */
-	const FLinearColor SilhouetteTint(0.62f, 0.56f, 0.46f, 0.30f);
+	const FLinearColor SlotSilhouetteTint(0.62f, 0.56f, 0.46f, 0.30f);
 
-	TSharedRef<SWidget> MakeDiamond(float Size)
+	TSharedRef<SWidget> MakeStatDiamond(float Size)
 	{
 		return SNew(SBox)
 			.WidthOverride(Size)
@@ -58,7 +58,7 @@ void SCIRLEquipmentPage::Construct(const FArguments& InArgs)
 	{
 		return SNew(SVerticalBox)
 			+ SVerticalBox::Slot().AutoHeight()[MakeBox(A, A1, A2)]
-			+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, BoxSpacing))[MakeBox(B, B1, B2)]
+			+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, SlotBoxSpacing))[MakeBox(B, B1, B2)]
 			+ SVerticalBox::Slot().AutoHeight()[MakeBox(C, C1, C2)];
 	};
 
@@ -162,8 +162,8 @@ TSharedRef<SWidget> SCIRLEquipmentPage::MakeHalf(ECIRLEquipSlot Slot)
 	TWeakPtr<SCIRLButton> Weak = Button;
 	Button->SetContent(
 		SNew(SBox)
-		.WidthOverride(HalfSize)
-		.HeightOverride(HalfSize)
+		.WidthOverride(SlotSize)
+		.HeightOverride(SlotSize)
 		[
 			SNew(SBorder)
 			// Highlighted: gold glow. Described by the card but not highlighted: a thin gold outline
@@ -180,7 +180,7 @@ TSharedRef<SWidget> SCIRLEquipmentPage::MakeHalf(ECIRLEquipSlot Slot)
 			[
 				SNew(SImage)
 				.Image(ItemIcon(CIRLEquipSlot::SilhouetteIcon(Slot)))
-				.ColorAndOpacity(SilhouetteTint)
+				.ColorAndOpacity(SlotSilhouetteTint)
 				.Visibility(ItemIcon(CIRLEquipSlot::SilhouetteIcon(Slot)) ? EVisibility::HitTestInvisible : EVisibility::Hidden)
 			]
 		]);
@@ -225,7 +225,7 @@ TSharedRef<SWidget> SCIRLEquipmentPage::MakeItemCard()
 				[
 					SNew(SImage)
 					.Image_Lambda([this]() { return ItemIcon(CIRLEquipSlot::SilhouetteIcon(Selected)); })
-					.ColorAndOpacity(SilhouetteTint * FLinearColor(1.f, 1.f, 1.f, 1.4f))
+					.ColorAndOpacity(SlotSilhouetteTint * FLinearColor(1.f, 1.f, 1.f, 1.4f))
 				]
 			]
 
@@ -265,9 +265,9 @@ TSharedRef<SWidget> SCIRLEquipmentPage::MakeStatsLine() const
 
 	return SNew(SHorizontalBox)
 		+ SHorizontalBox::Slot().AutoWidth()[Stat(LOCTEXT("Weight", "Weight"), LOCTEXT("WeightValue", "0 / 30 kg"))]
-		+ SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center).Padding(FMargin(16.f, 0.f))[MakeDiamond(6.f)]
+		+ SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center).Padding(FMargin(16.f, 0.f))[MakeStatDiamond(6.f)]
 		+ SHorizontalBox::Slot().AutoWidth()[Stat(LOCTEXT("Protection", "Protection"), LOCTEXT("ProtectionValue", "0"))]
-		+ SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center).Padding(FMargin(16.f, 0.f))[MakeDiamond(6.f)]
+		+ SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center).Padding(FMargin(16.f, 0.f))[MakeStatDiamond(6.f)]
 		+ SHorizontalBox::Slot().AutoWidth()[Stat(LOCTEXT("Warmth", "Warmth"), LOCTEXT("WarmthValue", "0"))];
 }
 

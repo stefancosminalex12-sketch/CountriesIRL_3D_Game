@@ -17,6 +17,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "UI/SCIRLGameMenu.h"
 #include "UI/CIRLMenuNavigation.h"
+#include "UI/CIRLPaperDollStage.h"
 #include "World/WorldSimulationSettings.h"
 
 void ACIRLPlayerController::PostInitializeComponents()
@@ -55,6 +56,11 @@ void ACIRLPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	{
 		CloseGameMenu();
 	}
+	if (PaperDollStage)
+	{
+		PaperDollStage->Destroy();
+		PaperDollStage = nullptr;
+	}
 	Super::EndPlay(EndPlayReason);
 }
 
@@ -84,8 +90,17 @@ void ACIRLPlayerController::OpenGameMenu(ECIRLMenuTab Tab)
 		return;
 	}
 
+	if (!PaperDollStage)
+	{
+		// Out of sight, 2 km below the world
+		FActorSpawnParameters Params;
+		Params.Owner = this;
+		PaperDollStage = GetWorld()->SpawnActor<ACIRLPaperDollStage>(FVector(0.f, 0.f, -200000.f), FRotator::ZeroRotator, Params);
+	}
+
 	SAssignNew(GameMenu, SCIRLGameMenu)
 		.InitialTab(Tab)
+		.PaperDollStage(PaperDollStage)
 		.OnCloseRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::CloseGameMenu))
 		.OnMainMenuRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::ReturnToTitle))
 		.OnQuitRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::QuitGame));

@@ -8,6 +8,7 @@
 
 class UCIRLInputConfig;
 class SCIRLGameMenu;
+class ACIRLPaperDollStage;
 class FNavigationConfig;
 enum class ECIRLMenuTab : uint8;
 
@@ -88,6 +89,10 @@ private:
 	void ReturnToTitle();
 
 	TSharedPtr<SCIRLGameMenu> GameMenu;
+
+	/** The studio that films the 3D character for the Equipment tab (made the first time the menu opens) */
+	UPROPERTY(Transient)
+	TObjectPtr<ACIRLPaperDollStage> PaperDollStage;
 
 	/** Slate's navigation rules from before the menu opened (the menu adds WASD) */
 	TSharedPtr<FNavigationConfig> PreviousNavigation;

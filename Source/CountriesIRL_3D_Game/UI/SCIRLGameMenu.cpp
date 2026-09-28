@@ -4,6 +4,7 @@
 #include "UI/SCIRLButton.h"
 #include "UI/CIRLUIStyle.h"
 #include "UI/SCIRLEquipmentPage.h"
+#include "UI/SCIRLPaperDollView.h"
 #include "GeneralProjectSettings.h"
 #include "Styling/SlateTypes.h"
 #include "Widgets/Images/SImage.h"
@@ -96,7 +97,11 @@ void SCIRLGameMenu::Construct(const FArguments& InArgs)
 			break;
 		case ECIRLMenuTab::Equipment:
 		{
-			TSharedRef<SCIRLEquipmentPage> Equipment = SNew(SCIRLEquipmentPage);
+			TSharedRef<SCIRLEquipmentPage> Equipment = SNew(SCIRLEquipmentPage)
+				.CharacterView()
+				[
+					SNew(SCIRLPaperDollView).Stage(InArgs._PaperDollStage)
+				];
 			TabFocus[Index] = Equipment->GetFirstFocus();
 			Page = Equipment;
 			break;

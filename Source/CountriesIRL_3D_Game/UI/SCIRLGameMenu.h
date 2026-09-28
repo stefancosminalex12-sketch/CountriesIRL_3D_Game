@@ -6,6 +6,7 @@
 #include "Widgets/SCompoundWidget.h"
 
 class SWidgetSwitcher;
+class ACIRLPaperDollStage;
 class SHorizontalBox;
 
 /** The menu's tabs, left to right (Master file > UI & HUD) */
@@ -34,6 +35,8 @@ public:
 		: _InitialTab(ECIRLMenuTab::Game)
 	{}
 		SLATE_ARGUMENT(ECIRLMenuTab, InitialTab)
+		/** Films the 3D character shown on the Equipment tab */
+		SLATE_ARGUMENT(TWeakObjectPtr<ACIRLPaperDollStage>, PaperDollStage)
 		/** Esc, Resume: the owner removes the menu and unpauses */
 		SLATE_EVENT(FOnCloseRequested, OnCloseRequested)
 		/** Back to the title screen */
