@@ -121,6 +121,9 @@ void ACIRLPlayerController::OpenGameMenu(ECIRLMenuTab Tab)
 	// Menus can be walked with WASD as well as the arrow keys and the controller
 	PreviousNavigation = CIRLMenuNavigation::Push();
 
+	// Keys held while the menu opens would never see their release (Slate gets it), so the ball
+	// would keep walking after the menu closes: forget every held key now
+	FlushPressedKeys();
 	SetPause(true);
 	SetShowMouseCursor(true);
 	FInputModeUIOnly InputMode;
@@ -146,6 +149,7 @@ void ACIRLPlayerController::CloseGameMenu()
 
 	CIRLMenuNavigation::Pop(PreviousNavigation);
 
+	FlushPressedKeys();
 	SetPause(false);
 	SetShowMouseCursor(false);
 	SetInputMode(FInputModeGameOnly());
