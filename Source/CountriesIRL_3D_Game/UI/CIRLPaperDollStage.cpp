@@ -2,6 +2,7 @@
 
 #include "UI/CIRLPaperDollStage.h"
 #include "Characters/BallCharacter.h"
+#include "Characters/BallAnimatorComponent.h"
 #include "Components/PointLightComponent.h"
 #include "Components/SceneCaptureComponent2D.h"
 #include "Components/CapsuleComponent.h"
@@ -165,5 +166,7 @@ void ACIRLPaperDollStage::ApplyDollYaw()
 	{
 		// Yaw 0 looks straight at the camera (which stands on the +X side)
 		Doll->SetActorRotation(FRotator(0.f, RestingYaw + DollYaw, 0.f));
+		// Turned like a statue on a turntable: the feet turn with the body instead of stepping around
+		Doll->GetAnimator()->SnapFeetToRest();
 	}
 }

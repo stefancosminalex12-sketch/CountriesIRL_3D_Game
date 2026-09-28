@@ -48,6 +48,8 @@ public:
 
 	UBallMeleeComponent* GetMelee() const { return Melee; }
 
+	UBallAnimatorComponent* GetAnimator() const { return Animator; }
+
 	UFUNCTION(BlueprintPure, Category="Ball")
 	bool IsDead() const;
 

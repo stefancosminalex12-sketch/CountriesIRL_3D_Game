@@ -82,6 +82,10 @@ public:
 	/** In the saddle: boots hang at the mount's sides (MountHalfWidth = half its body width), hands hold the reins */
 	void SetRiding(bool bEnable, float MountHalfWidth = 0.f);
 
+	/** Puts both feet straight onto their resting spots under the body, with no step (e.g. when the body is turned
+	 *  like a statue on a turntable, as the Equipment screen's doll is) */
+	void SnapFeetToRest();
+
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 protected:

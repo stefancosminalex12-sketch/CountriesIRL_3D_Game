@@ -530,6 +530,16 @@ FVector UBallAnimatorComponent::KeepHandOutOfWalls(int32 Index, const FVector& L
 	return FMath::Lerp(LocalStart, LocalTarget, HandReach[Index]);
 }
 
+void UBallAnimatorComponent::SnapFeetToRest()
+{
+	for (int32 Index = 0; Index < 2; ++Index)
+	{
+		Feet[Index].Planted = FootRestWorld(Index);
+		Feet[Index].StepAlpha = -1.f;
+	}
+	bFeetPlanted = true;
+}
+
 void UBallAnimatorComponent::SetRiding(bool bEnable, float MountHalfWidth)
 {
 	bRiding = bEnable;
