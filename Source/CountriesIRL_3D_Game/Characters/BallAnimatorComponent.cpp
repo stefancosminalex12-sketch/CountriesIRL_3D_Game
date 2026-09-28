@@ -55,7 +55,7 @@ void UBallAnimatorComponent::CreateLimbMeshes(AActor* Owner, USceneComponent* Li
 			Hand.Tips.Add(FingerPart(TEXT("Tip"), SphereMesh));
 		}
 
-		// Boot: a flat sole, the foot and a short ankle shaft (origin at the middle of the foot)
+		// Boot: a flat sole, the foot and an ankle shaft (origin at the middle of the foot); 22 cm tall in total
 		FBallFootParts& Boot = Boots[Index];
 		Boot.Root = Owner->CreateDefaultSubobject<USceneComponent>(PartName(TEXT("Boot")));
 		Boot.Root->SetupAttachment(LimbParent);
@@ -64,7 +64,7 @@ void UBallAnimatorComponent::CreateLimbMeshes(AActor* Owner, USceneComponent* Li
 		Boot.Upper = BallParts::Create(Owner, PartName(TEXT("BootUpper")), Boot.Root, SphereMesh);
 		Boot.Upper->SetRelativeTransform(FTransform(FRotator::ZeroRotator, FVector(1.5f, 0.f, 1.f), FVector(FootSize.X, FootSize.Y, FootSize.Z - 1.f) / 100.f));
 		Boot.Shaft = BallParts::Create(Owner, PartName(TEXT("BootShaft")), Boot.Root, CylinderMesh);
-		Boot.Shaft->SetRelativeTransform(FTransform(FRotator::ZeroRotator, FVector(-5.f, 0.f, 6.f), FVector(12.f, 12.f, 12.f) / 100.f));
+		Boot.Shaft->SetRelativeTransform(FTransform(FRotator::ZeroRotator, FVector(-5.f, 0.f, 8.25f), FVector(12.f, 12.f, 16.5f) / 100.f));
 
 		// Resting pose: relaxed hands at the sides, boots under the ball
 		const float Side = Index == 0 ? -1.f : 1.f;

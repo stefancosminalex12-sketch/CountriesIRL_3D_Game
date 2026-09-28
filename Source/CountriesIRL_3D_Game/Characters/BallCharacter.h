@@ -68,7 +68,7 @@ public:
 
 	float GetBallRadius() const { return BallRadius; }
 
-	/** Half the ball's height (the ball is slightly taller than wide) */
+	/** Half the ball's height (equals the radius for the sphere; BallHeightScale can stretch it) */
 	float GetBallHalfHeight() const { return BallRadius * BallHeightScale; }
 
 	float GetRunSpeed() const { return RunSpeed; }
@@ -138,17 +138,22 @@ protected:
 	UFUNCTION()
 	virtual void HandleDeath(UHealthComponent* DepletedHealth);
 
+	/**
+	 *  Body proportions (Master file > Characters & Art): ball 58% of the height, empty gap 29%, boots 13%.
+	 *  Defaults are the average English man of 1455: 1.71 m = 1.00 m ball + 0.49 m gap + 0.22 m boots.
+	 */
+
 	/** Ball radius in cm, side to side */
 	UPROPERTY(VisibleAnywhere, Category="Ball")
-	float BallRadius = 52.f;
+	float BallRadius = 50.f;
 
-	/** How much taller than wide the ball is (1 = perfect sphere). A slight egg shape reads less like a toy ball. */
+	/** How much taller than wide the ball is (1 = perfect sphere, the chosen look) */
 	UPROPERTY(VisibleAnywhere, Category="Ball")
-	float BallHeightScale = 1.2f;
+	float BallHeightScale = 1.f;
 
-	/** Gap between the bottom of the ball and the ground, where the feet float */
+	/** Distance from the ground to the bottom of the ball: the boots (22 cm) plus the empty gap above them (49 cm) */
 	UPROPERTY(VisibleAnywhere, Category="Ball")
-	float FeetGap = 32.f;
+	float FeetGap = 71.f;
 
 	/** Placeholder color until flags/liveries are textured on the ball */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ball|Look")

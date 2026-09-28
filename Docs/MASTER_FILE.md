@@ -183,7 +183,7 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
 
     Hands float at ball mid-height, just outside the ball; palm-to-fingertip ~0.19 m for an average man (scales too).
   - **Doors** [Decided, user 2026-09-28]: real medieval cottage doors were only ~0.8–0.9 m wide × ~1.8 m tall, narrower than even an average ball, so doors are the one thing not built to strict real size: **ordinary doors ~1.15 m wide × ~1.95 m tall** (fits everyone in the normal range, max ball 1.07 m); halls, churches and castle gates are big enough for anyone anyway. **Extreme-tall characters (≤1%) don't fit ordinary cottage doors**, as a fun real-life quirk (tall people ducked; a ball can't)
-  - Replaces the 2026-09-27 egg (1.04 m wide, ~1.57 m tall) and the first 1.80 m proposal. Only recorded in this file so far; the game code still uses the egg [Planned]
+  - Replaces the 2026-09-27 egg (1.04 m wide, ~1.57 m tall) and the first 1.80 m proposal. Built in the game code on 2026-09-28 for the average man (see roadmap step A) [Built]
   - **Confirmed by community vote (2026-09-27):** the user polled their community on the body question: after ~20 minutes, **48 votes for pure countryballs**, 7 for a simplified body, 7 for a complex body (~77% countryballs). Pure countryballs stay the game's look; the humanoid body prototype (B key, Quaternius outfit, retargeter) was **removed** at the user's request; it stays in git history (commits 1f445f9–6533936) if ever needed [Decided]
 - **Expressive eyes** (normal, happy, sad, angry, scared, tired, suspicious, dead ×_×…); reference: u/tengam15 "Big Chart o' Expressions" (inspiration only, draw our own set) [Decided]
 - **Standing on each other** (user, 2026-09-27): you can land on top of another countryball and stay there (the engine used to bounce characters off each other) [Built]
@@ -377,7 +377,7 @@ Start with the **commoner origin**; build what's designed so far and add feature
 7. [ ] Compass bar
 
 **Inserted before step 3 (user, 2026-09-28)** [Decided]:
-- A. [ ] **Ball resize:** perfect sphere + the new height/proportion rules (Characters & Art > Height, Body proportions); the player is an average man (1.71 m) for now; NPCs roll their height when NPCs arrive
+- A. [x] **Ball resize** (2026-09-28): perfect sphere + the new height/proportion rules (Characters & Art > Height, Body proportions). Every ball is now the average man: **1.00 m sphere, 49 cm empty gap, 22 cm boots (taller ankle shaft), 1.71 m total** (was a 1.04 × 1.25 m egg with a 32 cm gap). Face shell and eye shader need no stretch any more. NPCs roll their own height (and women's sizes) when NPCs arrive [Built, waiting for the user's playtest]
 - B. [ ] **UI style + Esc pause menu + Equipment tab shell:** the mockup's look as reusable pieces (dark panels, worn-gold border, serif font, Q/E tabs, key hints, hover glow); pause menu (Resume, Settings, Controls, Quit) so test builds have a menu; Equipment tab with the live 3D ball and the 8 split boxes, navigation working, slots empty until step 6
 - **Art from the user (ChatGPT):** list, sizes and folders in `Art/AI/README.md` (menu background, panel texture, ~45 item icons, optional model sheets). Free fonts: Cinzel (titles) + EB Garamond (text) from Google Fonts (OFL); small UI glyphs from game-icons.net (CC BY 3.0, credit needed)
 
