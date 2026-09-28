@@ -23,7 +23,7 @@ namespace CIRLEquipSlot
 				{ LOCTEXT("Coif", "Coif"), LOCTEXT("CoifHolds", "Linen coif, padded arming cap or a wool hood, worn under the helmet."), TEXT("icon_coif_linen") },
 				{ LOCTEXT("WeaponMain", "Main Hand"), LOCTEXT("WeaponMainHolds", "Bill, poleaxe, sword, bow, crossbow, spear, axe or mace."), TEXT("icon_weapon_bill") },
 				{ LOCTEXT("WeaponOff", "Off Hand"), LOCTEXT("WeaponOffHolds", "Buckler, dagger, torch or lantern. Two-handed weapons need both hands."), TEXT("icon_offhand_buckler") },
-				{ LOCTEXT("Back", "Back"), LOCTEXT("BackHolds", "A shield, pavise or bow carried on the back."), TEXT("icon_back_heater_shield") },
+				{ LOCTEXT("Back", "Back"), LOCTEXT("BackHolds", "A shield, pavise or bow carried on the back."), TEXT("icon_back_pavise_york") },
 				{ LOCTEXT("Cloak", "Cloak"), LOCTEXT("CloakHolds", "Wool cloak against wind, rain and cold."), TEXT("icon_cloak_wool") },
 				{ LOCTEXT("Belt1", "Belt"), LOCTEXT("Belt1Holds", "Dagger, knife, sword, arrow bag, purse or torch."), TEXT("icon_belt_rondel_dagger") },
 				{ LOCTEXT("Belt2", "Belt"), LOCTEXT("Belt2Holds", "Dagger, knife, sword, arrow bag, purse or torch."), TEXT("icon_belt_torch") },

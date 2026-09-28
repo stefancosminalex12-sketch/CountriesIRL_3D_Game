@@ -393,6 +393,7 @@ Start with the **commoner origin**; build what's designed so far and add feature
 - `powershell -ExecutionPolicy Bypass -File Tools\package_game.ps1` (editor closed) builds a Windows **Shipping** copy into `C:\Dev\CountriesIRL_Builds\Windows` and zips it (`CountriesIRL_v0.1.0_test.zip`, **~430 MB**, ~730 MB unzipped; about 4 minutes, longer the first time because of shaders). `Docs/HOW TO PLAY.txt` (controls, Windows "More info > Run anyway", requirements) goes next to the .exe
 - Only our map is included (template demo levels left out); everything under `/Game/CountriesIRL` is always included because some of it is loaded by code
 - Sharing: the user shares it (WeTransfer etc.); later itch.io (free, private pages) and Steam ($100, Playtest) [Proposed]
+- **Windows Smart App Control** (2026-09-28): on the dev PC it blocked a freshly built, unsigned game DLL ("Bad Image 0xc0e90002", CodeIntegrity log: Smart App Control Block). Developers normally turn it off (Windows Security > App & browser control); only the user can change that. Testers with it on may also get the packaged game blocked: long-term fix is code signing or distributing via Steam/itch.io [Noted]
 - In release builds the Dev console commands are off. **Esc menu and title screen built 2026-09-28** (Resume, Main Menu, Quit, controls list, version; title screen with New Game/Quit). Still to come: save/Continue, settings (graphics, resolution, mouse, FOV), credits [Proposed]
 - Project display name "CountriesIRL" (working title, the real title is still open), version 0.1.0
 
