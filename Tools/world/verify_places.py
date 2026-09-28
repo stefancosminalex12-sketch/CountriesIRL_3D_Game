@@ -76,8 +76,11 @@ def dist_km(a, b):
     return math.hypot((a[0] - b[0]) * 110.57, (a[1] - b[1]) * 111.32 * math.cos(math.radians(a[0])))
 
 
-rows = list(csv.DictReader(open(PATH, encoding="utf-8")))
-fields = list(rows[0].keys())
+all_rows = list(csv.DictReader(open(PATH, encoding="utf-8")))
+fields = list(all_rows[0].keys())
+# Places from Wikidata (rh_, c_) already carry authoritative coordinates
+# Region labels (Area) are placed by hand at the middle of the region, not at Wikipedia's pin
+rows = [r for r in all_rows if not r["Id"].startswith(("rh_", "c_")) and r["Type"] != "Area"]
 titles = [title_for(r) for r in rows]
 found = {}
 for i in range(0, len(titles), 45):
@@ -98,7 +101,7 @@ for row, t in zip(rows, titles):
 
 w = csv.DictWriter(open(PATH, "w", encoding="utf-8", newline=""), fieldnames=fields)
 w.writeheader()
-w.writerows(rows)
+w.writerows(all_rows)
 print(f"{len(rows)} places, {len(fixed)} corrected, {len(missing)} not found on Wikipedia")
 print("\n".join(fixed))
 print("not found:", ", ".join(missing))

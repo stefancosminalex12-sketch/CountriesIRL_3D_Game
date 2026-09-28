@@ -1,0 +1,168 @@
+# Extra places for Places_England1455.csv, merged by Tools/world/merge_places.py
+# Id|Name|Type|Lat|Lon|Importance|Note|Wikipedia title
+# Cathedrals and great churches
+old_st_pauls|Old St Paul's Cathedral|Cathedral|51.5138|-0.0984|3|Tallest spire in England|Old St Paul's Cathedral
+york_minster|York Minster|Cathedral|53.9623|-1.0819|3|Seat of the Archbishop of York|York Minster
+lincoln_cathedral|Lincoln Cathedral|Cathedral|53.2344|-0.5361|3|Tallest building in the world since 1311|Lincoln Cathedral
+salisbury_cathedral|Salisbury Cathedral|Cathedral|51.0650|-1.7975|2|Great spire|Salisbury Cathedral
+canterbury_cathedral|Canterbury Cathedral|Cathedral|51.2798|1.0828|3|Becket's shrine; the great pilgrimage|Canterbury Cathedral
+durham_cathedral|Durham Cathedral|Cathedral|54.7735|-1.5763|2|St Cuthbert's shrine|Durham Cathedral
+wells_cathedral|Wells Cathedral|Cathedral|51.2104|-2.6434|1||Wells Cathedral
+ely_cathedral|Ely Cathedral|Cathedral|52.3986|0.2638|2|The ship of the Fens|Ely Cathedral
+winchester_cathedral|Winchester Cathedral|Cathedral|51.0606|-1.3131|1||Winchester Cathedral
+beverley_minster|Beverley Minster|Cathedral|53.8394|-0.4247|1||Beverley Minster
+gloucester_abbey|Gloucester Abbey|Cathedral|51.8675|-2.2466|1|Edward II's tomb|Gloucester Cathedral
+exeter_cathedral|Exeter Cathedral|Cathedral|50.7226|-3.5297|1||Exeter Cathedral
+worcester_cathedral|Worcester Cathedral|Cathedral|52.1889|-2.2209|1||Worcester Cathedral
+norwich_cathedral|Norwich Cathedral|Cathedral|52.6320|1.3007|1||Norwich Cathedral
+lichfield_cathedral|Lichfield Cathedral|Cathedral|52.6856|-1.8305|1||Lichfield Cathedral
+# Ancient and man-made landmarks
+stonehenge|Stonehenge|Landmark|51.1789|-1.8262|3|Already ancient in 1455; said to be Merlin's work|Stonehenge
+avebury|Avebury|Landmark|51.4286|-1.8544|2|Great stone circle|Avebury
+silbury_hill|Silbury Hill|Landmark|51.4156|-1.8575|1||Silbury Hill
+uffington_horse|Uffington White Horse|Landmark|51.5775|-1.5669|2|Chalk horse on the downs|Uffington White Horse
+hadrians_wall|Hadrian's Wall|Landmark|55.0131|-2.3308|3|The old Roman wall|Housesteads Roman Fort
+old_sarum|Old Sarum|Landmark|51.0932|-1.8046|1|Abandoned old town above Salisbury|Old Sarum
+glastonbury_tor|Glastonbury Tor|Landmark|51.1444|-2.6989|2|Isle of Avalon|Glastonbury Tor
+maiden_castle|Maiden Castle|Landmark|50.6944|-2.4686|1|Ancient hillfort|Maiden Castle, Dorset
+castlerigg|Castlerigg Stone Circle|Landmark|54.6027|-3.0986|1||Castlerigg stone circle
+rollright|Rollright Stones|Landmark|51.9753|-1.5703|1||Rollright Stones
+waylands_smithy|Wayland's Smithy|Landmark|51.5667|-1.5958|1||Wayland's Smithy
+london_bridge|London Bridge|Landmark|51.5079|-0.0877|3|The only bridge over the Thames in London; houses on it|London Bridge
+tintagel|Tintagel Castle|Castle|50.6680|-4.7590|2|King Arthur's legend; in ruins|Tintagel Castle
+st_michaels_mount|St Michael's Mount|Landmark|50.1166|-5.4777|2|Priory on a tidal island|St Michael's Mount
+lindisfarne|Lindisfarne Priory|Abbey|55.6689|-1.8009|2|Holy Island|Lindisfarne Priory
+# Natural landmarks
+scafell_pike|Scafell Pike|Nature|54.4542|-3.2115|2|Highest mountain in England|Scafell Pike
+helvellyn|Helvellyn|Nature|54.5270|-3.0167|1||Helvellyn
+skiddaw|Skiddaw|Nature|54.6510|-3.1478|1||Skiddaw
+windermere|Windermere|Nature|54.3639|-2.9388|2|Largest lake in England|Windermere
+ullswater|Ullswater|Nature|54.5890|-2.8920|1||Ullswater
+malham_cove|Malham Cove|Nature|54.0720|-2.1580|1||Malham Cove
+ingleborough|Ingleborough|Nature|54.1660|-2.3980|1||Ingleborough
+pen_y_ghent|Pen-y-ghent|Nature|54.1560|-2.2490|1||Pen-y-ghent
+high_force|High Force|Nature|54.6500|-2.1860|1|Waterfall on the Tees|High Force
+cheddar_gorge|Cheddar Gorge|Nature|51.2830|-2.7640|1||Cheddar Gorge
+white_cliffs|White Cliffs of Dover|Nature|51.1320|1.3450|2||White Cliffs of Dover
+beachy_head|Beachy Head|Nature|50.7340|0.2410|1||Beachy Head
+lands_end|Land's End|Nature|50.0660|-5.7140|2|End of England|Land's End
+lizard_point|Lizard Point|Nature|49.9580|-5.2070|1|Southernmost point|Lizard Point, Cornwall
+flamborough|Flamborough Head|Nature|54.1160|-0.0770|1||Flamborough Head
+spurn|Spurn Head|Nature|53.5790|0.1100|1|Mouth of the Humber|Spurn
+kinder_scout|Kinder Scout|Nature|53.3840|-1.8740|1||Kinder Scout
+mam_tor|Mam Tor|Nature|53.3490|-1.8100|1|The shivering mountain|Mam Tor
+peak_cavern|Peak Cavern|Nature|53.3410|-1.7790|1|The Devil's Arse cave|Peak Cavern
+wookey_hole|Wookey Hole Caves|Nature|51.2280|-2.6710|1||Wookey Hole Caves
+roseberry|Roseberry Topping|Nature|54.5060|-1.1070|1||Roseberry Topping
+the_needles|The Needles|Nature|50.6620|-1.5920|1||The Needles
+durdle_door|Durdle Door|Nature|50.6214|-2.2766|1||Durdle Door
+# Regions (drawn as area names)
+dartmoor|Dartmoor|Area|50.5700|-3.9200|2||Dartmoor
+exmoor|Exmoor|Area|51.1500|-3.6500|1||Exmoor
+bodmin_moor|Bodmin Moor|Area|50.5700|-4.6000|1||Bodmin Moor
+salisbury_plain|Salisbury Plain|Area|51.2400|-1.8600|1||Salisbury Plain
+cotswolds|Cotswolds|Area|51.8300|-1.8300|2||Cotswolds
+chilterns|Chiltern Hills|Area|51.7000|-0.8000|1||Chiltern Hills
+north_downs|North Downs|Area|51.2500|0.2000|1||North Downs
+south_downs|South Downs|Area|50.9300|-0.6000|1||South Downs
+weald|The Weald|Area|51.0500|0.3500|1||Weald
+new_forest|New Forest|Area|50.8700|-1.6000|2|Royal hunting forest|New Forest
+forest_of_dean|Forest of Dean|Area|51.7900|-2.5500|1|Royal forest; iron|Forest of Dean
+sherwood|Sherwood Forest|Area|53.2000|-1.0700|2|Robin Hood's forest|Sherwood Forest
+arden|Forest of Arden|Area|52.3300|-1.7500|1||Forest of Arden
+peak|The Peak|Area|53.3500|-1.8000|2||Peak District
+pennines|Pennines|Area|54.3000|-2.2500|3|The backbone of England|Pennines
+yorkshire_dales|Yorkshire Dales|Area|54.2500|-2.0500|2||Yorkshire Dales
+north_york_moors|North York Moors|Area|54.3900|-0.9000|2||North York Moors
+lake_district|The Lakes|Area|54.4500|-3.0900|2||Lake District
+cheviots|Cheviot Hills|Area|55.4200|-2.2000|1||Cheviot Hills
+fens|The Fens|Area|52.5500|0.0500|2|Undrained marsh and meres|The Fens
+broads|The Broads|Area|52.6800|1.5500|1||The Broads
+romney_marsh|Romney Marsh|Area|51.0200|0.9000|1||Romney Marsh
+somerset_levels|Somerset Levels|Area|51.1300|-2.8000|1|Marsh around the Isle of Avalon|Somerset Levels
+vale_of_york|Vale of York|Area|53.9000|-1.3000|1||Vale of York
+isle_of_wight|Isle of Wight|Area|50.6800|-1.3000|1||Isle of Wight
+# More medieval towns
+reading|Reading|Town|51.4543|-0.9781|1|Great abbey|Reading, Berkshire
+abingdon|Abingdon|Town|51.6708|-1.2830|1||Abingdon-on-Thames
+banbury|Banbury|Town|52.0629|-1.3398|1||Banbury
+bedford|Bedford|Town|52.1360|-0.4667|1||Bedford
+dunstable|Dunstable|Town|51.8860|-0.5210|1|Watling Street|Dunstable
+hertford|Hertford|Town|51.7959|-0.0781|1||Hertford
+guildford|Guildford|Town|51.2362|-0.5704|1||Guildford
+kingston|Kingston upon Thames|Town|51.4123|-0.3007|1||Kingston upon Thames
+maidstone|Maidstone|Town|51.2720|0.5290|1||Maidstone
+rochester|Rochester|Town|51.3880|0.5070|1|Castle and cathedral on the Medway|Rochester, Kent
+chichester|Chichester|City|50.8376|-0.7749|1||Chichester
+lewes|Lewes|Town|50.8740|0.0090|1||Lewes
+rye|Rye|Town|50.9500|0.7330|1|Cinque port|Rye, East Sussex
+hastings|Hastings|Town|50.8543|0.5735|1|Cinque port|Hastings
+arundel|Arundel|Town|50.8540|-0.5550|1||Arundel
+portsmouth|Portsmouth|Town|50.8198|-1.0880|1||Portsmouth
+poole|Poole|Town|50.7150|-1.9870|1||Poole
+dorchester|Dorchester|Town|50.7154|-2.4367|1||Dorchester, Dorset
+wells|Wells|City|51.2090|-2.6470|1||Wells, Somerset
+taunton|Taunton|Town|51.0150|-3.1030|1||Taunton
+bridgwater|Bridgwater|Town|51.1280|-3.0030|1||Bridgwater
+barnstaple|Barnstaple|Town|51.0800|-4.0600|1||Barnstaple
+bodmin|Bodmin|Town|50.4700|-4.7200|1||Bodmin
+truro|Truro|Town|50.2630|-5.0510|1||Truro
+launceston|Launceston|Town|50.6370|-4.3600|1||Launceston, Cornwall
+dartmouth|Dartmouth|Town|50.3510|-3.5790|1|Port|Dartmouth, Devon
+marlborough|Marlborough|Town|51.4200|-1.7300|1||Marlborough, Wiltshire
+devizes|Devizes|Town|51.3500|-1.9940|1||Devizes
+cirencester|Cirencester|Town|51.7190|-1.9680|1|Wool|Cirencester
+evesham|Evesham|Town|52.0920|-1.9470|1||Evesham
+stratford|Stratford-upon-Avon|Town|52.1917|-1.7083|1||Stratford-upon-Avon
+lichfield|Lichfield|City|52.6818|-1.8278|1||Lichfield
+tamworth|Tamworth|Town|52.6330|-1.6950|1||Tamworth, Staffordshire
+burton|Burton upon Trent|Town|52.8020|-1.6290|1|Abbey|Burton upon Trent
+manchester|Manchester|Town|53.4808|-2.2426|1|Small market town|Manchester
+preston|Preston|Town|53.7632|-2.7031|1||Preston, Lancashire
+liverpool|Liverpool|Town|53.4084|-2.9916|1|Small port|Liverpool
+halifax|Halifax|Town|53.7210|-1.8600|1|Cloth|Halifax, West Yorkshire
+leeds|Leeds|Town|53.7997|-1.5492|1|Small cloth town|Leeds
+sheffield|Sheffield|Town|53.3811|-1.4701|1|Cutlers|Sheffield
+selby|Selby|Town|53.7840|-1.0670|1|Abbey|Selby
+thirsk|Thirsk|Town|54.2330|-1.3430|1||Thirsk
+northallerton|Northallerton|Town|54.3390|-1.4340|1|Great North Road|Northallerton
+knaresborough|Knaresborough|Town|54.0090|-1.4670|1|Castle|Knaresborough
+malton|Malton|Town|54.1360|-0.7970|1||Malton, North Yorkshire
+pickering|Pickering|Town|54.2460|-0.7760|1|Castle|Pickering, North Yorkshire
+hexham|Hexham|Town|54.9719|-2.1011|1|Abbey|Hexham
+morpeth|Morpeth|Town|55.1680|-1.6880|1||Morpeth, Northumberland
+appleby|Appleby|Town|54.5780|-2.4890|1||Appleby-in-Westmorland
+penrith|Penrith|Town|54.6640|-2.7520|1||Penrith, Cumbria
+darlington|Darlington|Town|54.5230|-1.5520|1||Darlington
+hartlepool|Hartlepool|Town|54.6900|-1.2100|1|Port|Hartlepool
+barnard_castle|Barnard Castle|Town|54.5440|-1.9230|1|Castle town|Barnard Castle
+grimsby|Grimsby|Town|53.5670|-0.0800|1|Port|Grimsby
+louth|Louth|Town|53.3670|-0.0060|1||Louth, Lincolnshire
+gainsborough|Gainsborough|Town|53.4000|-0.7750|1||Gainsborough, Lincolnshire
+peterborough|Peterborough|Town|52.5720|-0.2430|1|Abbey|Peterborough
+ely|Ely|Town|52.3990|0.2620|1|Isle of Ely|Ely, Cambridgeshire
+thetford|Thetford|Town|52.4130|0.7490|1||Thetford
+yarmouth|Great Yarmouth|Town|52.6080|1.7300|1|Herring port|Great Yarmouth
+sudbury|Sudbury|Town|52.0380|0.7310|1|Cloth|Sudbury, Suffolk
+lavenham|Lavenham|Town|52.1090|0.7970|1|Rich wool town|Lavenham
+chelmsford|Chelmsford|Town|51.7356|0.4685|1||Chelmsford
+boston_town|Boston|Town|52.9780|-0.0260|2|Great wool port|Boston, Lincolnshire
+# Villages in the key areas
+aysgarth|Aysgarth|Village|54.2920|-1.9980|1|Wensleydale; waterfalls|Aysgarth
+askrigg|Askrigg|Village|54.3140|-2.0770|1|Wensleydale|Askrigg
+bainbridge|Bainbridge|Village|54.3100|-2.1030|1|Wensleydale; forest village|Bainbridge, North Yorkshire
+redmire|Redmire|Village|54.3160|-1.9270|1|Wensleydale|Redmire
+carperby|Carperby|Village|54.3050|-1.9920|1|Wensleydale|Carperby
+west_witton|West Witton|Village|54.2940|-1.9110|1|Wensleydale|West Witton
+east_witton|East Witton|Village|54.2640|-1.7830|1|Near Jervaulx|East Witton
+spennithorne|Spennithorne|Village|54.2950|-1.7860|1|Wensleydale|Spennithorne
+bellerby|Bellerby|Village|54.3290|-1.8350|1|Near Middleham|Bellerby
+constable_burton|Constable Burton|Village|54.3190|-1.7470|1|Wensleydale|Constable Burton
+castle_bolton|Castle Bolton|Village|54.3220|-1.9530|1|Under Bolton Castle|Castle Bolton
+sherburn|Sherburn in Elmet|Village|53.7970|-1.2330|1|Near Towton|Sherburn in Elmet
+stutton|Stutton|Village|53.8710|-1.2830|1|Near Towton|Stutton, North Yorkshire
+redbourn|Redbourn|Village|51.7980|-0.3920|1|Near St Albans|Redbourn
+wheathampstead|Wheathampstead|Village|51.8140|-0.2930|1|Near St Albans|Wheathampstead
+london_colney|London Colney|Village|51.7260|-0.3000|1|Near St Albans|London Colney
+sandal_magna|Sandal Magna|Village|53.6630|-1.4870|1|Under Sandal Castle|Sandal Magna
+fotheringhay_village|Fotheringhay|Village|52.5270|-0.4380|1||Fotheringhay
