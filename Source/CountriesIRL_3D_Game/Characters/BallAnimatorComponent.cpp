@@ -560,6 +560,13 @@ void UBallAnimatorComponent::UpdateLegs()
 			Part->SetWorldLocationAndRotation((From + To) * 0.5f, FRotationMatrix::MakeFromZ(Along / Length).Rotator());
 			Part->SetWorldScale3D(FVector(Thickness, Thickness, Length) / 100.f);
 		};
+		// Out of reach (big stride, jump, saddle): the boot is pulled in to the end of the leg instead of the leg coming apart
+		const FVector Pull = Ankle - AnkleTarget;
+		if (Pull.SizeSquared() > 0.01f)
+		{
+			Boot.Root->AddWorldOffset(Pull);
+		}
+
 		PlaceSegment(Boot.Thigh, Hip, KneePoint);
 		PlaceSegment(Boot.Shin, KneePoint, Ankle);
 		Boot.Knee->SetWorldLocation(KneePoint);
