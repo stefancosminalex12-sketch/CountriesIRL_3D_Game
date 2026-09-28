@@ -21,8 +21,8 @@ COMPRESSION = float(sys.argv[1]) if len(sys.argv) > 1 else 12.0
 LAT0, LON0 = 53.0, -1.9
 KX = 111.32 * math.cos(math.radians(LAT0))
 KY = 110.57
-BOX = (-5.9, 49.8, 2.0, 55.95)       # lon/lat window drawn
-PX_PER_KM = 4.0                      # image scale (real km)
+BOX = (-5.8, 49.85, 1.85, 55.85)     # lon/lat window drawn: just England (and Wales)
+PX_PER_KM = 4.4                      # image scale (real km)
 MARGIN = 170
 
 PARCH = (236, 222, 188)
@@ -92,7 +92,8 @@ def main():
     england_area = 0.0
     for f in units["features"]:
         name = f["properties"].get("NAME")
-        if f["properties"].get("ADMIN") not in ("United Kingdom", "France", "Ireland", "Isle of Man"):
+        # Only England, with Wales faded (future DLC); Scotland, Ireland and France are left out
+        if name not in ("England", "Wales"):
             continue
         fill = PARCH if name == "England" else FADED
         for poly in polygons(f["geometry"]):
@@ -115,6 +116,9 @@ def main():
         for f in rivers["features"]:
             for line in lines(f["geometry"]):
                 if not any(in_box(lon, lat) for lon, lat in line):
+                    continue
+                # Skip French rivers poking into the corner
+                if all(lat < 51.0 and lon > 0.5 for lon, lat in line):
                     continue
                 d.line([px(lon, lat) for lon, lat in line], fill=RIVER, width=4, joint="curve")
 
