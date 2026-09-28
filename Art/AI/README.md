@@ -51,6 +51,11 @@ The greyed "empty slot" silhouettes are made in code from these, so no separate 
 | Gloves | `gloves_leather`, `gloves_gauntlets` (plate) |
 | Boots | `boots_ankle` (flat leather sole, no heel, side-laced), `boots_riding` (tall), `boots_sabatons` (plate) |
 
+**Worn gear is drawn for a countryball** (helmets, hats, coifs, hoods, cloaks, gambesons, tunics, mail, plate, collars, gloves, boots). Paste this before the icon style block:
+> Made to be worn by a countryball character: a perfect sphere about 1.35 m wide with two big white eyes on its upper front. Show the item on its own, empty, no ball and no person, but shaped for that sphere: helmets are wide, round domes that sit on top of the sphere like a cap and leave the eyes free; body clothing and armour are a rounded band that wraps the lower half of the sphere (no sleeves, no neck hole, no shoulders); cloaks drape over the back of the sphere; gloves fit big cartoon hands with four fingers and a thumb; boots are short and chunky.
+
+Carried items (weapons, shields, bucklers, pavises, lanterns, torches, daggers, knives, purses, arrow bags, rings) stay drawn as the real object.
+
 **Avoid** (wrong for 1455 England): halberds, horned/winged helmets, mail coifs as everyday wear, heels or tread on shoes, anything fantasy-glowing.
 
 ---
