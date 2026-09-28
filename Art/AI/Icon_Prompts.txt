@@ -1,0 +1,60 @@
+ICON PROMPTS - one per image, square 1:1. Send each back with its [file name].
+
+HELMET
+[helmet_kettle_hat] Generate an image of a game inventory icon: 15th-century English kettle hat. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[helmet_sallet] Generate an image of a game inventory icon: 15th-century English sallet with raised visor. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[helmet_sallet_bevor] Generate an image of a game inventory icon: 15th-century English sallet with bevor. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[helmet_armet] Generate an image of a game inventory icon: 15th-century Italian armet. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[hat_straw] Generate an image of a game inventory icon: 15th-century English peasant straw hat. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[hat_felt] Generate an image of a game inventory icon: 15th-century English brown felt hat. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+
+COIF
+[coif_linen] Generate an image of a game inventory icon: 15th-century English linen coif. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[coif_arming_cap] Generate an image of a game inventory icon: 15th-century padded arming cap. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[hood_wool] Generate an image of a game inventory icon: 15th-century English wool hood with liripipe. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+
+CLOAK
+[cloak_wool] Generate an image of a game inventory icon: 15th-century English brown wool cloak. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[cloak_hooded] Generate an image of a game inventory icon: 15th-century English hooded wool cloak. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[cloak_fur_lined] Generate an image of a game inventory icon: 15th-century English noble's fur-lined red cloak. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+
+GAMBESON
+[gambeson_padded_jack] Generate an image of a game inventory icon: 15th-century English padded jack. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[gambeson_arming_doublet] Generate an image of a game inventory icon: 15th-century arming doublet. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+
+TUNIC
+[tunic_plain_wool] Generate an image of a game inventory icon: 15th-century English undyed brown wool tunic. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[tunic_livery_neville] Generate an image of a game inventory icon: 15th-century Neville livery tunic, red with a white saltire. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[tunic_tabard] Generate an image of a game inventory icon: 15th-century English heraldic tabard. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[tunic_noble_gown] Generate an image of a game inventory icon: 15th-century English noble's red velvet gown with ermine trim. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+
+MAIL
+[mail_shirt] Generate an image of a game inventory icon: 15th-century riveted mail shirt. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[mail_skirt] Generate an image of a game inventory icon: 15th-century riveted mail skirt. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+
+PLATE
+[plate_brigandine] Generate an image of a game inventory icon: 15th-century English brigandine. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[plate_jack_of_plates] Generate an image of a game inventory icon: 15th-century English jack of plates. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[plate_breastplate] Generate an image of a game inventory icon: 15th-century steel breastplate. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[plate_full_harness] Generate an image of a game inventory icon: 15th-century Milanese full plate harness. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+
+NECKLACE
+[necklace_ss_collar] Generate an image of a game inventory icon: 15th-century Lancastrian SS livery collar. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[necklace_suns_roses] Generate an image of a game inventory icon: 15th-century Yorkist collar of suns and roses. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[necklace_pendant_cross] Generate an image of a game inventory icon: 15th-century English silver pendant cross necklace. Made for a countryball, a sphere 1.36 m in diameter. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+
+RING
+[ring_signet] Generate an image of a game inventory icon: 15th-century English gold signet ring. Made for a countryball's big cartoon hand, about 30 cm long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[ring_gold] Generate an image of a game inventory icon: 15th-century English gold ring with a red stone. Made for a countryball's big cartoon hand, about 30 cm long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+
+GLOVES
+[gloves_leather] Generate an image of a game inventory icon: pair of 15th-century leather gloves. Made for a countryball's big cartoon hands, about 30 cm long, four fingers and a thumb. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[gloves_gauntlets] Generate an image of a game inventory icon: pair of 15th-century steel plate gauntlets. Made for a countryball's big cartoon hands, about 30 cm long, four fingers and a thumb. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+
+BOOTS
+[boots_ankle] Generate an image of a game inventory icon: pair of 15th-century English leather ankle boots, flat soles. Made for a countryball, boots about 30 cm tall. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[boots_riding] Generate an image of a game inventory icon: pair of 15th-century English riding boots. Made for a countryball, boots about 40 cm tall. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[boots_sabatons] Generate an image of a game inventory icon: pair of 15th-century steel sabatons. Made for a countryball, boots about 30 cm tall. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+
+BELT
+[belt_torch] Generate an image of a game inventory icon: 15th-century burning torch. Carried by a countryball, about 60 cm long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
