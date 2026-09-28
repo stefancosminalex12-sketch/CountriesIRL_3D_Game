@@ -22,7 +22,7 @@ def main():
     call("Observe", {"ref": "", "maxDepth": 30})
     snapshot = call("Snapshot", {"ref": "", "maxDepth": 40, "bIncludeSourceLocations": False})
     # The console textbox is the first textbox after the "Cmd" label in the status bar
-    match = re.search(r'text "Cmd".*?textbox \[[^\]]*\] \[ref=(tb\d+)\]', snapshot, re.S)
+    match = re.search(r'text "Cmd".*?textbox(?: \[[^\]]*\])*? \[ref=(tb\d+)\]', snapshot, re.S)
     if not match:
         sys.exit("Console box not found (is the editor minimized?)")
     call("Type", {"ref": match.group(1), "text": command, "submit": True})

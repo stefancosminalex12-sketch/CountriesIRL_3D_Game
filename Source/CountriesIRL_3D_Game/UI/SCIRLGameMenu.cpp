@@ -3,6 +3,7 @@
 #include "UI/SCIRLGameMenu.h"
 #include "UI/SCIRLButton.h"
 #include "UI/CIRLUIStyle.h"
+#include "UI/SCIRLEquipmentPage.h"
 #include "GeneralProjectSettings.h"
 #include "Styling/SlateTypes.h"
 #include "Widgets/Images/SImage.h"
@@ -94,9 +95,12 @@ void SCIRLGameMenu::Construct(const FArguments& InArgs)
 				LOCTEXT("QuestsSoonNote", "The local lord has not sent for you... yet."));
 			break;
 		case ECIRLMenuTab::Equipment:
-			Page = MakeComingSoon(LOCTEXT("EquipmentSoonTitle", "Equipment"),
-				LOCTEXT("EquipmentSoonNote", "The equipment screen is being built next."));
+		{
+			TSharedRef<SCIRLEquipmentPage> Equipment = SNew(SCIRLEquipmentPage);
+			TabFocus[Index] = Equipment->GetFirstFocus();
+			Page = Equipment;
 			break;
+		}
 		case ECIRLMenuTab::Character:
 			Page = MakeComingSoon(LOCTEXT("CharacterSoonTitle", "Character"),
 				LOCTEXT("CharacterSoonNote", "Your name, house, skills and reputation will live here."));
@@ -449,6 +453,12 @@ void SCIRLGameMenu::RebuildKeyHints()
 	if (CurrentTab == ECIRLMenuTab::Game)
 	{
 		KeyHints->AddSlot().AutoWidth()[MakeKeyHint(LOCTEXT("HintEnter", "Enter"), LOCTEXT("HintSelect", "Select"))];
+	}
+	else if (CurrentTab == ECIRLMenuTab::Equipment)
+	{
+		KeyHints->AddSlot().AutoWidth()[MakeKeyHint(LOCTEXT("HintEnterSlot", "Enter"), LOCTEXT("HintChoose", "Choose Item"))];
+		KeyHints->AddSlot().AutoWidth()[MakeKeyHint(LOCTEXT("HintF", "F"), LOCTEXT("HintUnequip", "Unequip"))];
+		KeyHints->AddSlot().AutoWidth()[MakeKeyHint(LOCTEXT("HintR", "R"), LOCTEXT("HintInspect", "Inspect"))];
 	}
 	KeyHints->AddSlot().AutoWidth()[MakeKeyHint(LOCTEXT("HintEsc", "Esc"), LOCTEXT("HintResume", "Resume"))];
 }

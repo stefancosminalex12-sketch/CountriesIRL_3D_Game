@@ -127,6 +127,12 @@ namespace CIRLUIStyle
 		return &Brush;
 	}
 
+	const FSlateBrush* SlotSelected()
+	{
+		static const FSlateBrush Brush = MakeBox(SRGB(28, 25, 21, 0.9f), SRGB(227, 194, 127, 0.7f), 1.f);
+		return &Brush;
+	}
+
 	const FSlateBrush* KeyCap()
 	{
 		static const FSlateBrush Brush = MakeBox(SRGB(14, 13, 11, 0.95f), Text(), 1.f, 2.f);
@@ -192,6 +198,29 @@ namespace CIRLUIStyle
 	{
 		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_gradient_bottom.T_gradient_bottom"), FVector2D(4.f, 512.f));
 		return &Brush;
+	}
+
+	const FSlateBrush* ItemIcon(FName Name)
+	{
+		// Loaded on first use; icons that don't exist yet are remembered as missing (no repeated lookups)
+		static TMap<FName, TUniquePtr<FSlateBrush>> Icons;
+		if (const TUniquePtr<FSlateBrush>* Found = Icons.Find(Name))
+		{
+			return Found->Get();
+		}
+
+		const FString Path = FString::Printf(TEXT("/Game/CountriesIRL/UI/Icons/T_%s.T_%s"), *Name.ToString(), *Name.ToString());
+		UTexture2D* Texture = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *Path, nullptr, LOAD_NoWarn | LOAD_Quiet));
+		TUniquePtr<FSlateBrush> Brush;
+		if (Texture)
+		{
+			Texture->AddToRoot();
+			Brush = MakeUnique<FSlateBrush>();
+			Brush->DrawAs = ESlateBrushDrawType::Image;
+			Brush->ImageSize = FVector2D(512.f);
+			Brush->SetResourceObject(Texture);
+		}
+		return Icons.Add(Name, MoveTemp(Brush)).Get();
 	}
 
 	const FButtonStyle& PlainButtonStyle()

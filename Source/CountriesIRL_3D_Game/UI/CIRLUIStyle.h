@@ -51,6 +51,8 @@ namespace CIRLUIStyle
 	const FSlateBrush* ButtonNormal();
 	const FSlateBrush* ButtonHovered();
 	const FSlateBrush* ButtonPressed();
+	/** A slot that isn't highlighted but is the one the item card describes: thin bright-gold outline */
+	const FSlateBrush* SlotSelected();
 	/** Small key cap for key hints (Q, E, F, R...) */
 	const FSlateBrush* KeyCap();
 	/** Solid gold, for dividers, underlines and the little diamonds between tabs */
@@ -69,6 +71,9 @@ namespace CIRLUIStyle
 	/** White fading to clear left-to-right / top-to-bottom; tint it to darken part of a painting */
 	const FSlateBrush* GradientLeft();
 	const FSlateBrush* GradientBottom();
+
+	/** Item icon from /Game/CountriesIRL/UI/Icons (T_<Name>), or nullptr if that icon hasn't been made yet */
+	const FSlateBrush* ItemIcon(FName Name);
 
 	/** Invisible button frame, for buttons that draw their own hover/pressed look */
 	const FButtonStyle& PlainButtonStyle();

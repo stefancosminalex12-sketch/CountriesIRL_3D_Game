@@ -1,7 +1,7 @@
 """
 Import the menu art (Art/AI/Menu/*.png, plus our own Art/UI/*.png such as gradients) as UI textures. Run inside the editor:
     py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/import_ui_textures.py" [part of a file name, e.g. gradient]
-Textures are named T_<file name> in /Game/CountriesIRL/UI/Textures, set up for UI:
+Textures are named T_<file name> in /Game/CountriesIRL/UI/Textures (icons in /Game/CountriesIRL/UI/Icons), set up for UI:
 no mipmaps, never streamed (stays sharp), UI texture group and compression.
 """
 import glob
@@ -9,16 +9,20 @@ import sys
 import os
 import unreal
 
-SOURCES = ["C:/Dev/CountriesIRL_3D_Game/Art/AI/Menu", "C:/Dev/CountriesIRL_3D_Game/Art/UI"]
-DESTINATION = "/Game/CountriesIRL/UI/Textures"
+# Source folder -> content folder. Item icons come from Tools/prepare_icons.py
+SOURCES = {
+    "C:/Dev/CountriesIRL_3D_Game/Art/AI/Menu": "/Game/CountriesIRL/UI/Textures",
+    "C:/Dev/CountriesIRL_3D_Game/Art/UI": "/Game/CountriesIRL/UI/Textures",
+    "C:/Dev/CountriesIRL_3D_Game/Art/UI/Icons": "/Game/CountriesIRL/UI/Icons",
+}
 
 tasks = []
 only = sys.argv[1] if len(sys.argv) > 1 else ""   # optional: import just the files whose name contains this
-paths = [p for source in SOURCES for p in sorted(glob.glob(os.path.join(source, "*.png"))) if only in os.path.basename(p)]
-for path in paths:
+paths = [(p, dest) for source, dest in SOURCES.items() for p in sorted(glob.glob(os.path.join(source, "*.png"))) if only in os.path.basename(p)]
+for path, destination in paths:
     task = unreal.AssetImportTask()
     task.filename = path.replace("\\", "/")
-    task.destination_path = DESTINATION
+    task.destination_path = destination
     task.destination_name = "T_" + os.path.splitext(os.path.basename(path))[0]
     task.automated = True
     task.replace_existing = True
