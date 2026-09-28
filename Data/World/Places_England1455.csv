@@ -1,0 +1,114 @@
+Id,Name,Type,Lat,Lon,Importance,Note
+london,London,City,51.513,-0.092,3,Capital; ~50000 people; walled city
+westminster,Westminster,Town,51.4995,-0.127,3,Palace of Westminster and the Abbey; seat of king and Parliament
+tower_london,Tower of London,Castle,51.508,-0.076,3,Royal fortress and prison
+york,York,City,53.959,-1.081,3,Second city of England; walled; Minster; Richard of York's title
+bristol,Bristol,City,51.454,-2.587,3,Great port; trade with Gascony and Ireland
+norwich,Norwich,City,52.630,1.297,2,Wool and cloth; walled
+coventry,Coventry,City,52.408,-1.510,2,Lancastrian court was often here (Queen Margaret)
+lincoln,Lincoln,City,53.234,-0.538,2,Cathedral and castle on the hill
+salisbury,Salisbury,City,51.069,-1.795,2,Cathedral city; Earl of Salisbury's title
+winchester,Winchester,City,51.063,-1.308,2,Old royal city; cathedral
+southampton,Southampton,Town,50.904,-1.404,2,Port; Italian galleys
+exeter,Exeter,City,50.726,-3.527,2,Courtenay heartland (Earls of Devon)
+gloucester,Gloucester,City,51.864,-2.244,2,Crossing of the Severn
+worcester,Worcester,City,52.192,-2.220,1,Cathedral city on the Severn
+hereford,Hereford,City,52.056,-2.716,1,Welsh March
+leicester,Leicester,Town,52.636,-1.133,2,Lancastrian (Duchy of Lancaster) town
+northampton,Northampton,Town,52.237,-0.897,2,Battle of Northampton 1460
+nottingham,Nottingham,Town,52.954,-1.150,2,Royal castle
+oxford,Oxford,Town,51.752,-1.258,2,University
+cambridge,Cambridge,Town,52.205,0.119,1,University
+canterbury,Canterbury,City,51.280,1.080,2,Pilgrims; Becket's shrine
+newcastle,Newcastle upon Tyne,Town,54.970,-1.614,2,Coal and the Scottish border road
+durham,Durham,City,54.776,-1.576,2,Prince-bishop's city; cathedral and castle
+carlisle,Carlisle,City,54.892,-2.934,2,Western border fortress city
+chester,Chester,City,53.191,-2.892,2,Walled; the Welsh road
+shrewsbury,Shrewsbury,Town,52.707,-2.754,1,Welsh March wool town
+hull,Kingston upon Hull,Town,53.744,-0.332,2,North Sea port
+beverley,Beverley,Town,53.842,-0.426,1,Minster; cloth
+kings_lynn,King's Lynn,Town,52.754,0.398,1,Hanse port
+ipswich,Ipswich,Town,52.059,1.155,1,Port
+colchester,Colchester,Town,51.889,0.901,1,Cloth
+sandwich,Sandwich,Town,51.275,1.339,2,Cinque port; ships for Calais
+dover,Dover,Town,51.126,1.313,2,Castle and crossing to Calais
+plymouth,Plymouth,Town,50.371,-4.143,1,Port
+bath,Bath,Town,51.381,-2.359,1,Abbey; cloth
+ludlow,Ludlow,Town,52.367,-2.718,2,York's Welsh March stronghold
+st_albans,St Albans,Town,51.752,-0.339,3,First battle of the war (22 May 1455); great abbey
+wakefield,Wakefield,Town,53.683,-1.497,2,Near Sandal Castle
+pontefract,Pontefract,Town,53.691,-1.312,2,Great Lancastrian castle
+doncaster,Doncaster,Town,53.523,-1.133,1,Great North Road
+tadcaster,Tadcaster,Town,53.884,-1.262,1,Great North Road; near Towton
+ripon,Ripon,Town,54.138,-1.524,1,Minster
+richmond,Richmond,Town,54.403,-1.737,1,Castle town in Swaledale
+middleham,Middleham,Town,54.285,-1.807,3,Seat of the Nevilles (Salisbury); Wensleydale
+skipton,Skipton,Town,53.962,-2.017,1,Clifford castle town
+tewkesbury,Tewkesbury,Town,51.993,-2.160,1,Abbey; battle 1471
+barnet,Barnet,Town,51.653,-0.200,1,Battle 1471
+stamford,Stamford,Town,52.652,-0.480,1,Great North Road
+newark,Newark,Town,53.076,-0.809,1,Trent crossing
+grantham,Grantham,Town,52.912,-0.642,1,Great North Road
+huntingdon,Huntingdon,Town,52.331,-0.183,1,Great North Road
+ware,Ware,Town,51.811,-0.028,1,Great North Road
+lancaster,Lancaster,Town,54.047,-2.801,1,Duchy of Lancaster; castle
+kendal,Kendal,Town,54.328,-2.746,1,Wool
+berwick,Berwick-upon-Tweed,Town,55.771,-2.005,2,English border fortress (handed to Scotland 1461)
+scarborough,Scarborough,Town,54.283,-0.400,1,Castle and port
+whitby,Whitby,Town,54.486,-0.615,1,Abbey and port
+warwick,Warwick,Town,52.282,-1.585,2,Earl of Warwick's castle town
+stafford,Stafford,Town,52.806,-2.117,1,Stafford family
+derby,Derby,Town,52.922,-1.477,1,
+windsor,Windsor Castle,Castle,51.484,-0.604,3,Royal castle; Henry VI's birthplace
+middleham_castle,Middleham Castle,Castle,54.284,-1.806,3,Neville stronghold
+sandal,Sandal Castle,Castle,53.664,-1.492,2,York's Yorkshire castle
+pontefract_castle,Pontefract Castle,Castle,53.694,-1.305,2,Duchy of Lancaster
+sheriff_hutton,Sheriff Hutton,Castle,54.089,-1.004,2,Neville castle
+warwick_castle,Warwick Castle,Castle,52.279,-1.585,2,Earl of Warwick
+kenilworth,Kenilworth Castle,Castle,52.348,-1.591,2,Lancastrian royal castle
+ludlow_castle,Ludlow Castle,Castle,52.367,-2.723,2,Duke of York
+raby,Raby Castle,Castle,54.591,-1.800,2,Neville (Westmorland branch)
+alnwick,Alnwick Castle,Castle,55.416,-1.706,2,Percy (Earl of Northumberland)
+warkworth,Warkworth Castle,Castle,55.345,-1.611,1,Percy
+bamburgh,Bamburgh Castle,Castle,55.609,-1.710,2,Besieged with cannon 1464
+dunstanburgh,Dunstanburgh Castle,Castle,55.489,-1.595,1,Lancastrian coast castle
+skipton_castle,Skipton Castle,Castle,53.963,-2.018,1,Clifford
+bolton_castle,Bolton Castle,Castle,54.322,-1.955,1,Scrope of Bolton
+fotheringhay,Fotheringhay Castle,Castle,52.525,-0.439,2,York family seat
+tattershall,Tattershall Castle,Castle,53.100,-0.193,1,Brick tower of Lord Cromwell
+wressle,Wressle Castle,Castle,53.773,-0.927,1,Percy
+spofforth,Spofforth Castle,Castle,53.955,-1.450,1,Percy
+nottingham_castle,Nottingham Castle,Castle,52.950,-1.154,1,Royal
+carlisle_castle,Carlisle Castle,Castle,54.897,-2.941,1,West March
+westminster_abbey,Westminster Abbey,Abbey,51.499,-0.128,2,Coronations
+st_albans_abbey,St Albans Abbey,Abbey,51.750,-0.342,2,Richest abbey in England
+fountains,Fountains Abbey,Abbey,54.109,-1.581,2,Cistercian; sheep and wool
+rievaulx,Rievaulx Abbey,Abbey,54.257,-1.117,1,Cistercian
+jervaulx,Jervaulx Abbey,Abbey,54.268,-1.738,1,Cistercian; near Middleham
+bolton_priory,Bolton Priory,Abbey,54.000,-1.887,1,Wharfedale
+glastonbury,Glastonbury Abbey,Abbey,51.146,-2.715,1,
+bury,Bury St Edmunds,Abbey,52.244,0.717,1,Great abbey town
+walsingham,Walsingham,Abbey,52.893,0.875,1,Pilgrim shrine of Our Lady
+battle_st_albans_1455,First Battle of St Albans (1455),Battle,51.752,-0.339,3,22 May 1455; start of the war
+battle_blore_heath,Blore Heath (1459),Battle,52.915,-2.410,1,
+battle_ludford,Ludford Bridge (1459),Battle,52.362,-2.717,1,
+battle_northampton,Northampton (1460),Battle,52.221,-0.889,2,
+battle_wakefield,Wakefield (1460),Battle,53.664,-1.492,2,Duke of York killed
+battle_mortimers_cross,Mortimer's Cross (1461),Battle,52.270,-2.859,1,
+battle_st_albans_1461,Second Battle of St Albans (1461),Battle,51.767,-0.337,1,
+battle_ferrybridge,Ferrybridge (1461),Battle,53.712,-1.269,1,
+battle_towton,Towton (1461),Battle,53.838,-1.270,3,Largest battle ever fought on English soil
+battle_hedgeley_moor,Hedgeley Moor (1464),Battle,55.458,-1.918,1,
+battle_hexham,Hexham (1464),Battle,54.955,-2.080,1,
+battle_edgecote,Edgecote (1469),Battle,52.126,-1.261,1,
+battle_losecote,Losecote Field (1470),Battle,52.721,-0.573,1,
+battle_barnet,Barnet (1471),Battle,51.668,-0.201,2,
+battle_tewkesbury,Tewkesbury (1471),Battle,51.983,-2.163,2,
+battle_bosworth,Bosworth (1485),Battle,52.575,-1.453,3,
+battle_stoke,Stoke Field (1487),Battle,53.055,-0.853,1,
+towton,Towton,Village,53.845,-1.266,1,
+saxton,Saxton,Village,53.826,-1.287,1,Towton dead buried here
+coverham,Coverham,Village,54.271,-1.842,1,Abbey village near Middleham
+wensley,Wensley,Village,54.302,-1.860,1,Market village in Wensleydale
+masham,Masham,Village,54.223,-1.656,1,
+leyburn,Leyburn,Village,54.310,-1.828,1,
