@@ -66,10 +66,10 @@ void UBallAnimatorComponent::CreateLimbMeshes(AActor* Owner, USceneComponent* Li
 		Boot.Upper->SetRelativeTransform(FTransform(FRotator::ZeroRotator, FVector(1.5f, 0.f, 1.f), FVector(FootSize.X, FootSize.Y, FootSize.Z - 1.f) / 100.f));
 		Boot.Shaft = BallParts::Create(Owner, PartName(TEXT("BootShaft")), Boot.Root, CylinderMesh);
 		Boot.Shaft->SetRelativeTransform(FTransform(FRotator::ZeroRotator, FVector(-5.f, 0.f, BootShaftTop * 0.5f), FVector(18.f, 18.f, BootShaftTop) / 100.f));
-		// Leg: one straight piece standing in the boot shaft, rising into the ball
-		Boot.Leg = BallParts::Create(Owner, PartName(TEXT("Leg")), Boot.Root, CylinderMesh);
-		Boot.Leg->SetRelativeTransform(FTransform(FRotator::ZeroRotator, FVector(-5.f, 0.f, BootShaftTop - 4.f + LegLength * 0.5f),
-			FVector(LegThickness, LegThickness, LegLength) / 100.f));
+		// Leg: thigh, knee and shin, placed every frame between the hip and the boot (see UpdateLegs)
+		Boot.Thigh = BallParts::Create(Owner, PartName(TEXT("Thigh")), LimbParent, CylinderMesh);
+		Boot.Knee = BallParts::Create(Owner, PartName(TEXT("Knee")), LimbParent, SphereMesh);
+		Boot.Shin = BallParts::Create(Owner, PartName(TEXT("Shin")), LimbParent, CylinderMesh);
 
 		// Resting pose: relaxed hands at the sides, boots under the ball
 		const float Side = Index == 0 ? -1.f : 1.f;
@@ -106,7 +106,7 @@ void UBallAnimatorComponent::ApplyColors(const FLinearColor& HandColor, const FL
 		BootParts.Add(Boots[Index].Upper);
 		BootParts.Add(Boots[Index].Shaft);
 		SoleParts.Add(Boots[Index].Sole);
-		LegParts.Add(Boots[Index].Leg);
+		LegParts.Append({ Boots[Index].Thigh, Boots[Index].Knee, Boots[Index].Shin });
 	}
 	ShareColor(LegParts, LegColor);
 
@@ -508,14 +508,62 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 void UBallAnimatorComponent::UpdateLegs()
 {
-	// A body lying on the ground (or rotted to bones) would have the straight legs sticking up out of it
+	const ABallCharacter* Ball = Cast<ABallCharacter>(GetOwner());
+	if (!Ball || !BodyPivot || !LimbRoot)
+	{
+		return;
+	}
+
+	// A body lying on the ground (or rotted to bones) keeps no legs sticking out of it
 	const bool bShow = DeadBlend < 0.3f && !bSkeletonPose;
+	const FTransform& Body = BodyPivot->GetComponentTransform();
+	const float Scale = Body.GetScale3D().Z;
+	const float Thigh = ThighLength * Scale;
+	const float Shin = ShinLength * Scale;
+	const float Thickness = LegThickness * Scale;
+	// Knees bend toward where the body faces
+	const FVector Forward = LimbRoot->GetForwardVector();
+
 	for (int32 Index = 0; Index < 2; ++Index)
 	{
-		if (UStaticMeshComponent* Leg = Boots[Index].Leg)
+		FBallFootParts& Boot = Boots[Index];
+		if (!Boot.Thigh || !Boot.Knee || !Boot.Shin)
 		{
-			Leg->SetVisibility(bShow);
+			continue;
 		}
+		for (UStaticMeshComponent* Part : { Boot.Thigh, Boot.Knee, Boot.Shin })
+		{
+			Part->SetVisibility(bShow);
+		}
+		if (!bShow)
+		{
+			continue;
+		}
+
+		const FVector Hip = Body.TransformPosition(FVector(0.f, Side(Index) * FootHalfSpacing, -Ball->GetBallRadius() * HipDrop));
+		// Into the top of the boot's shaft, so the joint never shows a gap
+		const FVector AnkleTarget = Boot.Root->GetComponentTransform().TransformPosition(FVector(-5.f, 0.f, BootShaftTop - 3.f));
+
+		// Two-bone IK: fixed thigh and shin lengths; the knee bends forward in the plane of the leg
+		FVector ToAnkle = AnkleTarget - Hip;
+		const float Reach = FMath::Clamp(ToAnkle.Size(), FMath::Abs(Thigh - Shin) + 0.5f, Thigh + Shin - 0.01f);
+		const FVector Down = ToAnkle.GetSafeNormal(KINDA_SMALL_NUMBER, FVector::DownVector);
+		const float CosHip = FMath::Clamp((Thigh * Thigh + Reach * Reach - Shin * Shin) / (2.f * Thigh * Reach), -1.f, 1.f);
+		const FVector Bend = (Forward - Down * FVector::DotProduct(Forward, Down)).GetSafeNormal(KINDA_SMALL_NUMBER, Forward);
+		const FVector KneePoint = Hip + Down * (Thigh * CosHip) + Bend * (Thigh * FMath::Sqrt(1.f - CosHip * CosHip));
+		const FVector Ankle = Hip + Down * Reach;
+
+		auto PlaceSegment = [Thickness](UStaticMeshComponent* Part, const FVector& From, const FVector& To)
+		{
+			const FVector Along = To - From;
+			const float Length = FMath::Max(Along.Size(), 0.1f);
+			Part->SetWorldLocationAndRotation((From + To) * 0.5f, FRotationMatrix::MakeFromZ(Along / Length).Rotator());
+			Part->SetWorldScale3D(FVector(Thickness, Thickness, Length) / 100.f);
+		};
+		PlaceSegment(Boot.Thigh, Hip, KneePoint);
+		PlaceSegment(Boot.Shin, KneePoint, Ankle);
+		Boot.Knee->SetWorldLocation(KneePoint);
+		Boot.Knee->SetWorldScale3D(FVector(Thickness * 1.05f) / 100.f);
 	}
 }
 

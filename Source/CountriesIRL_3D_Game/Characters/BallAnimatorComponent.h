@@ -45,8 +45,11 @@ struct FBallFootParts
 	UPROPERTY() TObjectPtr<UStaticMeshComponent> Upper;
 	UPROPERTY() TObjectPtr<UStaticMeshComponent> Shaft;
 
-	/** Straight leg (hose) standing on the boot and reaching up into the ball; moves with the foot, fixed length */
-	UPROPERTY() TObjectPtr<UStaticMeshComponent> Leg;
+	/** Leg (wool hose) from a hip point inside the ball down to the boot: thigh, knee and shin with fixed lengths.
+	 *  Placed every frame by two-bone IK, so the knee bends forward when the foot comes up and nothing stretches */
+	UPROPERTY() TObjectPtr<UStaticMeshComponent> Thigh;
+	UPROPERTY() TObjectPtr<UStaticMeshComponent> Knee;
+	UPROPERTY() TObjectPtr<UStaticMeshComponent> Shin;
 };
 
 /**
@@ -122,24 +125,31 @@ protected:
 	/** How far below the ball's centre the hands rest, as a share of the ball's radius. They hang on the lower
 	 *  part of the ball, like arms at the sides, so they sit between the ball and the floating boots */
 	UPROPERTY(EditAnywhere, Category="Ball|Hands", meta=(ClampMin=0, ClampMax=0.9))
-	float HandRestDrop = 0.62f;
+	float HandRestDrop = 0.52f;
 
 	/** Gap between the ball's surface and a resting hand (cm) */
 	UPROPERTY(EditAnywhere, Category="Ball|Hands")
-	float HandRestGap = 7.f;
+	float HandRestGap = 20.f;
 
 	/** Hands are drawn this much bigger than their modelled size (big cartoon hands, like the concept art) */
 	UPROPERTY(EditAnywhere, Category="Ball|Hands")
 	float HandScale = 1.6f;
 
-	/** Leg thickness (cm); the boot shaft around its bottom is a little thicker */
+	/** Leg thickness (cm); the boot shaft around the ankle is a little thicker */
 	UPROPERTY(EditAnywhere, Category="Ball|Legs")
 	float LegThickness = 14.f;
 
-	/** Leg length (cm), from inside the boot shaft up into the ball. Long enough that its top stays hidden
-	 *  inside the ball while the feet step, bob and lean */
+	/** Thigh (hip to knee) and shin (knee to ankle) lengths in cm. The hip sits inside the ball, so only part
+	 *  of the thigh shows. Standing, the leg is almost straight; as a foot lifts the knee bends forward */
 	UPROPERTY(EditAnywhere, Category="Ball|Legs")
-	float LegLength = 46.f;
+	float ThighLength = 13.f;
+
+	UPROPERTY(EditAnywhere, Category="Ball|Legs")
+	float ShinLength = 11.5f;
+
+	/** How far below the ball's centre the hips are, as a share of the ball's radius */
+	UPROPERTY(EditAnywhere, Category="Ball|Legs")
+	float HipDrop = 0.78f;
 
 	/** Colour of the legs (wool hose) */
 	UPROPERTY(EditAnywhere, Category="Ball|Legs")
@@ -219,7 +229,7 @@ private:
 	/** Current foot position (world, bottom center) including the step arc */
 	FVector FootWorld(int32 Index) const;
 
-	/** Hides the legs where they would poke out of a body lying on the ground (dead, bones) */
+	/** Places thigh, knee and shin between each hip and ankle (two-bone IK); hides them on a body lying dead */
 	void UpdateLegs();
 
 	/** Keeps a target on the foot's own side of the body so the feet never cross or overlap */
