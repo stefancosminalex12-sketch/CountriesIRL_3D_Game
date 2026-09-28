@@ -133,7 +133,7 @@ void SCIRLGameMenu::Construct(const FArguments& InArgs)
 			]
 		]
 
-		// The panel keeps one size on every tab (1560 x 880 at 1080p) and shrinks to fit smaller or narrower screens
+		// The panel keeps one size on every tab (1320 x 840 at 1080p) and shrinks to fit smaller or narrower screens
 		+ SOverlay::Slot()
 		.Padding(FMargin(60.f, 50.f))
 		[
@@ -142,8 +142,8 @@ void SCIRLGameMenu::Construct(const FArguments& InArgs)
 			.StretchDirection(EStretchDirection::DownOnly)
 			[
 			SNew(SBox)
-			.WidthOverride(1560.f)
-			.HeightOverride(880.f)
+			.WidthOverride(1320.f)
+			.HeightOverride(840.f)
 			[
 				MakeOrnatePanel(
 					SNew(SVerticalBox)
@@ -172,7 +172,7 @@ void SCIRLGameMenu::Construct(const FArguments& InArgs)
 					[
 						SAssignNew(KeyHints, SHorizontalBox)
 					],
-					FMargin(64.f, 20.f, 64.f, 22.f))
+					FMargin(46.f, 18.f, 46.f, 20.f))
 			]
 			]
 		]
@@ -219,14 +219,15 @@ TSharedRef<SWidget> SCIRLGameMenu::MakeTabButton(ECIRLMenuTab Tab)
 
 	// Open tab: bright gold with an underline; hovered: parchment; others: faded
 	TWeakPtr<SCIRLButton> Weak = Button;
+	// Open tab: bright gold text in a framed box; hovered: parchment; others: faded
 	Button->SetContent(
-		SNew(SVerticalBox)
-
-		+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(FMargin(12.f, 6.f, 12.f, 4.f))
+		SNew(SBorder)
+		.BorderImage_Lambda([this, Tab]() { return CurrentTab == Tab ? TabActive() : NoBrush(); })
+		.Padding(FMargin(20.f, 6.f))
 		[
 			SNew(STextBlock)
 			.Text(TabName(Tab))
-			.Font(Font(EFont::Title, 22.f))
+			.Font(Font(EFont::Title, 21.f))
 			.ColorAndOpacity_Lambda([this, Tab, Weak]()
 			{
 				if (CurrentTab == Tab)
@@ -236,19 +237,6 @@ TSharedRef<SWidget> SCIRLGameMenu::MakeTabButton(ECIRLMenuTab Tab)
 				const TSharedPtr<SCIRLButton> Pinned = Weak.Pin();
 				return FSlateColor(Pinned.IsValid() && Pinned->IsHovered() ? Text() : TextMuted());
 			})
-		]
-
-		+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Fill).Padding(FMargin(12.f, 0.f))
-		[
-			SNew(SBox).HeightOverride(2.f)
-			[
-				SNew(SImage)
-				.Image(GoldFill())
-				.ColorAndOpacity_Lambda([this, Tab]()
-				{
-					return FLinearColor(1.f, 1.f, 1.f, CurrentTab == Tab ? 1.f : 0.f);
-				})
-			]
 		]);
 
 	return Button.ToSharedRef();

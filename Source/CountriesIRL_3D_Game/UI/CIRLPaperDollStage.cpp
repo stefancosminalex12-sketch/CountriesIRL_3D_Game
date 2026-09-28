@@ -45,7 +45,7 @@ ACIRLPaperDollStage::ACIRLPaperDollStage()
 	Capture = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("Capture"));
 	Capture->SetupAttachment(GetRootComponent());
 	Capture->SetRelativeLocationAndRotation(CameraOffset, FRotator(0.f, 180.f, 0.f));
-	Capture->FOVAngle = 28.f;
+	Capture->FOVAngle = 24.f;
 	Capture->CaptureSource = ESceneCaptureSource::SCS_FinalColorLDR;
 	Capture->PrimitiveRenderMode = ESceneCapturePrimitiveRenderMode::PRM_UseShowOnlyList;
 	Capture->bCaptureEveryFrame = false;

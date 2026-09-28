@@ -133,6 +133,30 @@ namespace CIRLUIStyle
 		return &Brush;
 	}
 
+	const FSlateBrush* TabActive()
+	{
+		static const FSlateBrush Brush = MakeBox(SRGB(52, 43, 28, 0.85f), SRGB(150, 122, 74, 0.8f), 1.f, 2.f);
+		return &Brush;
+	}
+
+	const FSlateBrush* NoBrush()
+	{
+		static const FSlateNoResource Brush;
+		return &Brush;
+	}
+
+	const FSlateBrush* DollRing()
+	{
+		// White ring image (Art/UI/doll_ring.png, a double gold line), tinted worn gold
+		static const FSlateBrush Brush = []
+		{
+			FSlateBrush B = MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_doll_ring.T_doll_ring"), FVector2D(512.f));
+			B.TintColor = SRGB(150, 122, 74, 0.55f);
+			return B;
+		}();
+		return &Brush;
+	}
+
 	const FSlateBrush* KeyCap()
 	{
 		static const FSlateBrush Brush = MakeBox(SRGB(14, 13, 11, 0.95f), Text(), 1.f, 2.f);

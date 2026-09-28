@@ -53,6 +53,12 @@ namespace CIRLUIStyle
 	const FSlateBrush* ButtonPressed();
 	/** A slot that isn't highlighted but is the one the item card describes: thin bright-gold outline */
 	const FSlateBrush* SlotSelected();
+	/** The open tab in the tab bar: slightly lighter box with a gold frame */
+	const FSlateBrush* TabActive();
+	/** Draws nothing */
+	const FSlateBrush* NoBrush();
+	/** Faint gold circle behind the character on the Equipment tab */
+	const FSlateBrush* DollRing();
 	/** Small key cap for key hints (Q, E, F, R...) */
 	const FSlateBrush* KeyCap();
 	/** Solid gold, for dividers, underlines and the little diamonds between tabs */
