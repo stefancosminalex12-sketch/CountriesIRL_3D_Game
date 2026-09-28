@@ -366,7 +366,10 @@ def main():
         if not chosen:
             if not must:
                 continue            # no room: a minor label is left out rather than drawn over another
-            sx, sy = spots[0]
+            def covered(s):         # how much of other labels/symbols this spot would cover
+                rx0, ry0, rx1, ry1 = s[0] - pad, s[1] - pad, s[0] + tw + pad, s[1] + th + pad
+                return sum(max(0, min(rx1, o[2]) - max(rx0, o[0])) * max(0, min(ry1, o[3]) - max(ry0, o[1])) for o in obstacles)
+            sx, sy = min(spots, key=covered)
             chosen = (sx, sy, (sx - pad, sy - pad, sx + tw + pad, sy + th + pad))
         sx, sy, rect = chosen
         obstacles.append(rect)
