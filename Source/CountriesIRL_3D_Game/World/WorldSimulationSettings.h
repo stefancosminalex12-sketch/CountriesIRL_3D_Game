@@ -20,6 +20,14 @@ class UWorldSimulationSettings : public UDeveloperSettings
 
 public:
 
+	/** Level shown when the game starts: the title screen */
+	UPROPERTY(config, EditAnywhere, Category="Maps", meta=(AllowedClasses="/Script/Engine.World"))
+	FSoftObjectPath TitleMap = FSoftObjectPath(TEXT("/Game/CountriesIRL/Maps/L_MainMenu.L_MainMenu"));
+
+	/** Level that New Game opens (the world; for now the test sandbox) */
+	UPROPERTY(config, EditAnywhere, Category="Maps", meta=(AllowedClasses="/Script/Engine.World"))
+	FSoftObjectPath NewGameMap = FSoftObjectPath(TEXT("/Game/CountriesIRL/Maps/L_DevSandbox.L_DevSandbox"));
+
 	/** In-game date and time when a new game starts. Dates are in the Julian calendar, as used in England until 1752. */
 	UPROPERTY(config, EditAnywhere, Category="Time")
 	FDateTime StartDateTime = FDateTime(1455, 5, 1, 7, 0, 0);

@@ -36,6 +36,8 @@ public:
 		SLATE_ARGUMENT(ECIRLMenuTab, InitialTab)
 		/** Esc, Resume: the owner removes the menu and unpauses */
 		SLATE_EVENT(FOnCloseRequested, OnCloseRequested)
+		/** Back to the title screen */
+		SLATE_EVENT(FOnCloseRequested, OnMainMenuRequested)
 		/** Quit to desktop */
 		SLATE_EVENT(FOnCloseRequested, OnQuitRequested)
 	SLATE_END_ARGS()
@@ -73,9 +75,7 @@ private:
 	/** First thing to focus on each tab (for keyboard/controller) */
 	TSharedPtr<SWidget> TabFocus[static_cast<int32>(ECIRLMenuTab::Count)];
 
-	/** Game tab: the controls list shows next to the buttons when asked for */
-	bool bShowControls = false;
-
 	FOnCloseRequested OnCloseRequested;
+	FOnCloseRequested OnMainMenuRequested;
 	FOnCloseRequested OnQuitRequested;
 };

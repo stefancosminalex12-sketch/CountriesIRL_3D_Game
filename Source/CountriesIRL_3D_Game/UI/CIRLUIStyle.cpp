@@ -157,6 +157,42 @@ namespace CIRLUIStyle
 		return &Brush;
 	}
 
+	const FSlateBrush* TitleBackground()
+	{
+		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_menu_background.T_menu_background"), FVector2D(1536.f, 1024.f));
+		return &Brush;
+	}
+
+	int32 LoadingPaintingCount()
+	{
+		return 4;
+	}
+
+	const FSlateBrush* LoadingPainting(int32 Index)
+	{
+		static const FSlateBrush Brushes[] =
+		{
+			MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_loading_01.T_loading_01"), FVector2D(1536.f, 1024.f)),
+			MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_loading_02.T_loading_02"), FVector2D(1536.f, 1024.f)),
+			MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_loading_03.T_loading_03"), FVector2D(1536.f, 1024.f)),
+			MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_loading_04.T_loading_04"), FVector2D(1536.f, 1024.f)),
+		};
+		static_assert(UE_ARRAY_COUNT(Brushes) == 4, "Keep LoadingPaintingCount() in step");
+		return &Brushes[FMath::Clamp(Index, 0, 3)];
+	}
+
+	const FSlateBrush* GradientLeft()
+	{
+		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_gradient_left.T_gradient_left"), FVector2D(512.f, 4.f));
+		return &Brush;
+	}
+
+	const FSlateBrush* GradientBottom()
+	{
+		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_gradient_bottom.T_gradient_bottom"), FVector2D(4.f, 512.f));
+		return &Brush;
+	}
+
 	TSharedRef<SWidget> MakeOrnatePanel(const TSharedRef<SWidget>& Content, const FMargin& Padding)
 	{
 		// The ornament's own gold lines run ~10% in from its edges: pulling it out by that much

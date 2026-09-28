@@ -85,6 +85,7 @@ private:
 	void OnGameMenuPressed();
 	void OnEquipmentPressed();
 	void QuitGame();
+	void ReturnToTitle();
 
 	TSharedPtr<SCIRLGameMenu> GameMenu;
 

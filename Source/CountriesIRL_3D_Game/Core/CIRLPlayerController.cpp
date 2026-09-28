@@ -13,10 +13,11 @@
 #include "EnhancedInputComponent.h"
 #include "Engine/LocalPlayer.h"
 #include "Engine/GameViewportClient.h"
-#include "Framework/Application/NavigationConfig.h"
-#include "Framework/Application/SlateApplication.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "UI/SCIRLGameMenu.h"
+#include "UI/CIRLMenuNavigation.h"
+#include "World/WorldSimulationSettings.h"
 
 void ACIRLPlayerController::PostInitializeComponents()
 {
@@ -86,18 +87,12 @@ void ACIRLPlayerController::OpenGameMenu(ECIRLMenuTab Tab)
 	SAssignNew(GameMenu, SCIRLGameMenu)
 		.InitialTab(Tab)
 		.OnCloseRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::CloseGameMenu))
+		.OnMainMenuRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::ReturnToTitle))
 		.OnQuitRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::QuitGame));
 	Viewport->AddViewportWidgetForPlayer(LocalPlayer, GameMenu.ToSharedRef(), 50);
 
 	// Menus can be walked with WASD as well as the arrow keys and the controller
-	FSlateApplication& Slate = FSlateApplication::Get();
-	PreviousNavigation = Slate.GetNavigationConfig();
-	TSharedRef<FNavigationConfig> Navigation = MakeShared<FNavigationConfig>();
-	Navigation->KeyEventRules.Emplace(EKeys::W, EUINavigation::Up);
-	Navigation->KeyEventRules.Emplace(EKeys::S, EUINavigation::Down);
-	Navigation->KeyEventRules.Emplace(EKeys::A, EUINavigation::Left);
-	Navigation->KeyEventRules.Emplace(EKeys::D, EUINavigation::Right);
-	Slate.SetNavigationConfig(Navigation);
+	PreviousNavigation = CIRLMenuNavigation::Push();
 
 	SetPause(true);
 	SetShowMouseCursor(true);
@@ -122,11 +117,7 @@ void ACIRLPlayerController::CloseGameMenu()
 	}
 	GameMenu.Reset();
 
-	if (PreviousNavigation.IsValid() && FSlateApplication::IsInitialized())
-	{
-		FSlateApplication::Get().SetNavigationConfig(PreviousNavigation.ToSharedRef());
-		PreviousNavigation.Reset();
-	}
+	CIRLMenuNavigation::Pop(PreviousNavigation);
 
 	SetPause(false);
 	SetShowMouseCursor(false);
@@ -145,6 +136,12 @@ void ACIRLPlayerController::DevMenu(const FString& Tab)
 		}
 	}
 	CloseGameMenu();
+}
+
+void ACIRLPlayerController::ReturnToTitle()
+{
+	CloseGameMenu();
+	UGameplayStatics::OpenLevel(this, FName(*GetDefault<UWorldSimulationSettings>()->TitleMap.GetLongPackageName()));
 }
 
 void ACIRLPlayerController::QuitGame()

@@ -60,6 +60,14 @@ namespace CIRLUIStyle
 	const FSlateBrush* PanelTexture();
 	/** Worn-gold filigree corner (top-left; mirrored for the other corners) */
 	const FSlateBrush* CornerOrnament();
+	/** Title screen painting (the village at golden hour) */
+	const FSlateBrush* TitleBackground();
+	/** Loading screen paintings (market, soldiers, castle, army camp) */
+	int32 LoadingPaintingCount();
+	const FSlateBrush* LoadingPainting(int32 Index);
+	/** White fading to clear left-to-right / top-to-bottom; tint it to darken part of a painting */
+	const FSlateBrush* GradientLeft();
+	const FSlateBrush* GradientBottom();
 
 	// Widgets
 

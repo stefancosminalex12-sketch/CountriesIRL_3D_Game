@@ -6,7 +6,7 @@ This is an early test: a small practice area, not the real game world yet.
 
 HOW TO START
 1. Unzip this folder anywhere (e.g. your Desktop).
-2. Double-click  CountriesIRL_3D_Game.exe
+2. Double-click  CountriesIRL_3D_Game.exe, then choose New Game on the title screen
 3. Windows may say "Windows protected your PC" (the game is not signed yet).
    Click "More info", then "Run anyway". This is normal for small indie test builds.
 4. If Windows asks to install "Microsoft Visual C++ Redistributable" or DirectX, allow it.
@@ -22,7 +22,7 @@ CONTROLS
   V              switch first-person / third-person view
   T              change your eyes' emotion (just for fun)
   Tab / I        equipment (being built)
-  Esc            menu: resume, controls, quit
+  Esc            menu: resume, controls, main menu, quit
 
 WHAT TO TRY
 - Walk up to the two horses (white and brown), press E, hold Shift to gallop.

@@ -90,6 +90,7 @@ namespace
 void SCIRLGameMenu::Construct(const FArguments& InArgs)
 {
 	OnCloseRequested = InArgs._OnCloseRequested;
+	OnMainMenuRequested = InArgs._OnMainMenuRequested;
 	OnQuitRequested = InArgs._OnQuitRequested;
 
 	SAssignNew(Pages, SWidgetSwitcher);
@@ -364,6 +365,11 @@ TSharedRef<SWidget> SCIRLGameMenu::MakeGameTab()
 			[
 				MakeMenuButton(LOCTEXT("Resume", "Resume"),
 					FOnClicked::CreateLambda([this]() { OnCloseRequested.ExecuteIfBound(); return FReply::Handled(); }), &ResumeButton)
+			]
+			+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 0.f, 0.f, 12.f))
+			[
+				MakeMenuButton(LOCTEXT("MainMenu", "Main Menu"),
+					FOnClicked::CreateLambda([this]() { OnMainMenuRequested.ExecuteIfBound(); return FReply::Handled(); }))
 			]
 			+ SVerticalBox::Slot().AutoHeight()
 			[

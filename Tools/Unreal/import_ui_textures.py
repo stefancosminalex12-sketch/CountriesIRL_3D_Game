@@ -1,18 +1,21 @@
 """
-Import the menu art (Art/AI/Menu/*.png) as UI textures. Run inside the editor:
-    py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/import_ui_textures.py"
+Import the menu art (Art/AI/Menu/*.png, plus our own Art/UI/*.png such as gradients) as UI textures. Run inside the editor:
+    py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/import_ui_textures.py" [part of a file name, e.g. gradient]
 Textures are named T_<file name> in /Game/CountriesIRL/UI/Textures, set up for UI:
 no mipmaps, never streamed (stays sharp), UI texture group and compression.
 """
 import glob
+import sys
 import os
 import unreal
 
-SOURCE = "C:/Dev/CountriesIRL_3D_Game/Art/AI/Menu"
+SOURCES = ["C:/Dev/CountriesIRL_3D_Game/Art/AI/Menu", "C:/Dev/CountriesIRL_3D_Game/Art/UI"]
 DESTINATION = "/Game/CountriesIRL/UI/Textures"
 
 tasks = []
-for path in sorted(glob.glob(os.path.join(SOURCE, "*.png"))):
+only = sys.argv[1] if len(sys.argv) > 1 else ""   # optional: import just the files whose name contains this
+paths = [p for source in SOURCES for p in sorted(glob.glob(os.path.join(source, "*.png"))) if only in os.path.basename(p)]
+for path in paths:
     task = unreal.AssetImportTask()
     task.filename = path.replace("\\", "/")
     task.destination_path = DESTINATION
