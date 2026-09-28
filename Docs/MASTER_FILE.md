@@ -1,4 +1,6 @@
-# CountriesIRL 3D Game: Master File
+# Crowns & Commoners: Master File
+
+> Game title: **Crowns & Commoners** (decided 2026-09-29). The Unreal project and code keep the old working name CountriesIRL.
 
 > Working design document. Living file: updated as ideas are discussed and the game is built.
 > Status legend: **[Decided]** agreed · **[Proposed]** suggested, not confirmed · **[Open]** needs a decision
@@ -206,7 +208,7 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
 
 - Travel the world as your character; horses [Decided]
 - **Stamina** [Decided]: you can't run or jump indefinitely. Running drains stamina, each jump costs a chunk; it refills after a short rest. Running it to zero leaves you **exhausted** (can't run/jump) until it recovers partway. A small bar shows at the bottom of the screen only while stamina is not full (clean screen). Same component will serve NPCs, horses and later combat actions
-- **Health (HP)** [Decided]: **100 HP base**. Damage lowers it; at 0 the ball dies (x_x eyes, stops). For the player this leads to the reload flow in §7 (Death & saving) once saving exists. Whether HP regenerates on its own or only through rest/food/treatment: [Open]
+- **Health (HP)** [Decided]: **100 HP base**. Damage lowers it; at 0 the ball dies (x_x eyes, stops). For the player this leads to the reload flow in §7 (Death & saving) once saving exists. Whether HP regenerates on its own or only through rest/food/treatment: [Decided: "Crowns & Commoners" without "Of" and without a subtitle for now]
 - **Unarmed punch damage** [Decided, user asked; Claude's recommendation]: random **5–8** base × hit zone: **head/face ×1.5** (8–12), **chest ×1** (5–8), **lower ×0.7** (4–6). ~9 head punches or ~15 body punches to beat 100 HP; weapons hit much harder later. All values tunable [Built: left click jabs, alternating hands; hits what you aim at within arm's reach; the face and everything above counts as head; costs 8 stamina, 0.45 s cooldown, small knockback; walls block punches; a dev message shows zone and damage]
 - **Guard** [Decided, user]: **hold right mouse button** to raise the guard (fists up in front of the face, boxer-style); you can punch straight out of it. While guarding you move slower (65%) and can't run, the guard **slowly drains stamina (1.5/s, user asked ~1/s)** and stamina doesn't refill; hits from the front are **blocked (35% of the damage gets through)** at 6 stamina per blocked hit; with no stamina left the guard drops. In third-person the ball faces where you look while guarding (fighting stance) [Built]
 - **Damage flash** [Decided]: a ball flashes **red** for a moment while taking damage (Minecraft-mob style) [Built]
@@ -263,7 +265,7 @@ Charming to look at, serious and deep underneath: a real, breathing world withou
 - **Camera** [Decided]: **first-person by default**, switchable to third-person
 - **Personal combat is simple, with hit zones** [Decided]: strikes to the **head/face** do the most damage, **chest** is high, lower areas do less. Hit zones to be defined
 - **Commanding troops** [Decided]: **fight alongside your troops or just watch**. Commands similar to Bannerlord but simpler and smaller scale: **formations, fall back, attack, split, encircle**, etc.
-- **Progression** [Decided]: **levels and stats** (Skyrim/KCD-like). Gain **XP** from fighting, trading, communicating and period skills; **level up and assign skill points**. Less complex than KCD2/Skyrim; exact skill list [Open]
+- **Progression** [Decided]: **levels and stats** (Skyrim/KCD-like). Gain **XP** from fighting, trading, communicating and period skills; **level up and assign skill points**. Less complex than KCD2/Skyrim; exact skill list [Decided: "Crowns & Commoners" without "Of" and without a subtitle for now]
 - **Economy** [Decided]:
   - A **limited list of relevant commodities**, plus **building materials** (stone, timber) for rebuilding, plus **food** (what armies, villages and everything run on), plus **money** (what you do everything with)
   - **Every village produces a couple of things** (mining, fishing, timber…), and all can have multiple outputs including food
@@ -403,8 +405,8 @@ Start with the **commoner origin**; build what's designed so far and add feature
 - Sharing: the user shares it (WeTransfer etc.); later itch.io (free, private pages) and Steam ($100, Playtest) [Proposed]
 - **Windows Smart App Control** (2026-09-28): on the dev PC it blocked a freshly built, unsigned game DLL ("Bad Image 0xc0e90002", CodeIntegrity log: Smart App Control Block). Developers normally turn it off (Windows Security > App & browser control); only the user can change that. Testers with it on may also get the packaged game blocked: long-term fix is code signing or distributing via Steam/itch.io [Noted]
 - In release builds the Dev console commands are off. **Esc menu and title screen built 2026-09-28** (Resume, Main Menu, Quit, controls list, version; title screen with New Game/Quit). Still to come: save/Continue, settings (graphics, resolution, mouse, FOV), credits [Proposed]
-- Project display name "CountriesIRL" (working title, the real title is still open), version 0.1.0
-- **Title candidates (user, 2026-09-29):** "Crowns & Commoners" (Claude's pick: short, alliterative, says the core idea of rising from commoner to kingmaker) and "Of Crowns & Commoners". No existing game, book or board game found with either name (quick web search 2026-09-29; Steam page, domain and trademark still to check before committing). Possible subtitle to keep the countryball identity: e.g. "Crowns & Commoners: A Countryball Chronicle" [Open]
+- **Title: "Crowns & Commoners"** (user, 2026-09-29) [Decided]: shown in the window title, title screen and menu; the test-build zip is CrownsAndCommoners_v<version>_test.zip. The Unreal project, code module and folders keep the working name CountriesIRL (renaming those is risky and players never see them). Version 0.1.0
+- **Title candidates (user, 2026-09-29):** "Crowns & Commoners" (Claude's pick: short, alliterative, says the core idea of rising from commoner to kingmaker) and "Of Crowns & Commoners". No existing game, book or board game found with either name (quick web search 2026-09-29; Steam page, domain and trademark still to check before committing). Possible subtitle to keep the countryball identity: e.g. "Crowns & Commoners: A Countryball Chronicle" [Decided: "Crowns & Commoners" without "Of" and without a subtitle for now]
 
 **Budget rule** [Decided]: use **free assets and tools as much as possible**, plus our own creations; only consider paid assets when nothing free works.
 

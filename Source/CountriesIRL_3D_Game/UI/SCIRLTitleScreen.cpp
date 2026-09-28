@@ -75,7 +75,7 @@ void SCIRLTitleScreen::Construct(const FArguments& InArgs)
 			[
 				SNew(STextBlock)
 				.Text(FText::FromString(Project->ProjectName))
-				.Font(Font(EFont::TitleSemiBold, 104.f))
+				.Font(Font(EFont::TitleSemiBold, 84.f))
 				.ColorAndOpacity(GoldBright())
 				.ShadowOffset(FVector2D(3.f, 3.f))
 				.ShadowColorAndOpacity(FLinearColor(0.f, 0.f, 0.f, 0.75f))

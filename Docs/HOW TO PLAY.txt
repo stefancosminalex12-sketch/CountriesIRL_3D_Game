@@ -1,4 +1,4 @@
-﻿CountriesIRL - v0.1.0 pre-alpha test build
+﻿Crowns & Commoners - v0.1.0 pre-alpha test build
 ==========================================
 
 Wars of the Roses, England, 1455. Everyone is a countryball.
