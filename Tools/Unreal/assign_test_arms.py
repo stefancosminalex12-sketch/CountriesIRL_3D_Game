@@ -4,7 +4,7 @@ Give the test balls in the open level different coats of arms (so the heraldry c
 """
 import unreal
 
-ARMS = ["neville", "york", "lancaster", "stafford", "clifford", "courtenay", "bonville", "scrope", "vere"]
+ARMS = ["neville", "percy", "mowbray", "york", "talbot", "lancaster", "stafford", "courtenay", "clifford"]
 actors = unreal.get_editor_subsystem(unreal.EditorActorSubsystem).get_all_level_actors()
 balls = sorted([a for a in actors if a.get_class().get_name() == "BallCharacter"], key=lambda a: a.get_actor_location().y)
 for index, ball in enumerate(balls):

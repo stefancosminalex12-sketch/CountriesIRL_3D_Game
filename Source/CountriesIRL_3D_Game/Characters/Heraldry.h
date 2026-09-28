@@ -7,7 +7,8 @@
 class UTexture2D;
 
 /**
- *  Coats of arms a ball can wear (the textures come from Tools/make_flags.py, in /Game/CountriesIRL/Characters/Flags).
+ *  Coats of arms a ball can wear (textures in /Game/CountriesIRL/Characters/Flags: Wikimedia Commons arms made square by
+ *  Tools/fetch_wikimedia_arms.py, credits in Art/Heraldry/SOURCES.md; York and Lancaster liveries from Tools/make_flags.py).
  *  For now a fixed list so the arms can be tried out in the menu; they move into the houses' data when the
  *  house system is built, so DLC regions can bring their own.
  */
