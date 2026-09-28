@@ -30,13 +30,19 @@ class SCIRLGameMenu : public SCompoundWidget
 public:
 
 	DECLARE_DELEGATE(FOnCloseRequested);
+	DECLARE_DELEGATE_OneParam(FOnArmsChosen, int32);
 
 	SLATE_BEGIN_ARGS(SCIRLGameMenu)
 		: _InitialTab(ECIRLMenuTab::Game)
+		, _CurrentArms(0)
 	{}
 		SLATE_ARGUMENT(ECIRLMenuTab, InitialTab)
 		/** Films the 3D character shown on the Equipment tab */
 		SLATE_ARGUMENT(TWeakObjectPtr<ACIRLPaperDollStage>, PaperDollStage)
+		/** Coat of arms the player wears now (index into CIRLHeraldry::All()) */
+		SLATE_ARGUMENT(int32, CurrentArms)
+		/** The player picked a coat of arms on the Character tab */
+		SLATE_EVENT(FOnArmsChosen, OnArmsChosen)
 		/** Esc, Resume: the owner removes the menu and unpauses */
 		SLATE_EVENT(FOnCloseRequested, OnCloseRequested)
 		/** Back to the title screen */

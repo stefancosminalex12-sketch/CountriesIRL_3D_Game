@@ -15,6 +15,8 @@ class UCorpseComponent;
 class UBallSkeletonComponent;
 class UBallMeleeComponent;
 class AHorse;
+class UTexture2D;
+class UMaterialInstanceDynamic;
 
 /**
  *  Base class for every person in the game: a countryball with eyes, floating hands and feet.
@@ -50,6 +52,12 @@ public:
 
 	UBallAnimatorComponent* GetAnimator() const { return Animator; }
 
+	/** Coat of arms painted across the ball (a texture from /Game/CountriesIRL/Characters/Flags) */
+	UFUNCTION(BlueprintCallable, Category="Ball|Look")
+	void SetFlag(UTexture2D* NewFlag);
+
+	UTexture2D* GetFlag() const { return Flag; }
+
 	UFUNCTION(BlueprintPure, Category="Ball")
 	bool IsDead() const;
 
@@ -84,6 +92,7 @@ public:
 protected:
 
 	virtual void BeginPlay() override;
+	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void Tick(float DeltaTime) override;
 	virtual bool CanJumpInternal_Implementation() const override;
 	virtual void OnJumped_Implementation() override;
@@ -158,7 +167,18 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category="Ball")
 	float FeetGap = 35.f;
 
-	/** Placeholder color until flags/liveries are textured on the ball */
+	/** Coat of arms painted across the ball. Empty = England's St George */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ball|Look")
+	TObjectPtr<UTexture2D> Flag;
+
+	/** The ball's material with the coat of arms (made on first use) */
+	UPROPERTY(Transient)
+	TObjectPtr<UMaterialInstanceDynamic> FlagMaterial;
+
+	/** Makes sure the ball wears its coat of arms (creates the material the first time) */
+	void ApplyFlag();
+
+	/** Only used where no coat of arms material is available */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ball|Look")
 	FLinearColor BodyColor = FLinearColor(0.55f, 0.43f, 0.30f);
 

@@ -18,6 +18,7 @@
 #include "UI/SCIRLGameMenu.h"
 #include "UI/CIRLMenuNavigation.h"
 #include "UI/CIRLPaperDollStage.h"
+#include "Characters/Heraldry.h"
 #include "World/WorldSimulationSettings.h"
 
 void ACIRLPlayerController::PostInitializeComponents()
@@ -98,9 +99,20 @@ void ACIRLPlayerController::OpenGameMenu(ECIRLMenuTab Tab)
 		PaperDollStage = GetWorld()->SpawnActor<ACIRLPaperDollStage>(FVector(0.f, 0.f, -200000.f), FRotator::ZeroRotator, Params);
 	}
 
+	// The doll wears the player's arms
+	const ABallCharacter* Ball = Cast<ABallCharacter>(GetPawn());
+	UTexture2D* PlayerArms = Ball ? Ball->GetFlag() : nullptr;
+	const int32 ArmsIndex = CIRLHeraldry::IndexOf(PlayerArms);
+	if (PaperDollStage)
+	{
+		PaperDollStage->SetDollFlag(PlayerArms);
+	}
+
 	SAssignNew(GameMenu, SCIRLGameMenu)
 		.InitialTab(Tab)
 		.PaperDollStage(PaperDollStage)
+		.CurrentArms(ArmsIndex == INDEX_NONE ? 0 : ArmsIndex)
+		.OnArmsChosen(SCIRLGameMenu::FOnArmsChosen::CreateUObject(this, &ACIRLPlayerController::WearArms))
 		.OnCloseRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::CloseGameMenu))
 		.OnMainMenuRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::ReturnToTitle))
 		.OnQuitRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::QuitGame));
@@ -157,6 +169,23 @@ void ACIRLPlayerController::ReturnToTitle()
 {
 	CloseGameMenu();
 	UGameplayStatics::OpenLevel(this, FName(*GetDefault<UWorldSimulationSettings>()->TitleMap.GetLongPackageName()));
+}
+
+void ACIRLPlayerController::WearArms(int32 Index)
+{
+	if (!CIRLHeraldry::All().IsValidIndex(Index))
+	{
+		return;
+	}
+	UTexture2D* Arms = CIRLHeraldry::LoadTexture(CIRLHeraldry::All()[Index]);
+	if (ABallCharacter* Ball = Cast<ABallCharacter>(GetPawn()))
+	{
+		Ball->SetFlag(Arms);
+	}
+	if (PaperDollStage)
+	{
+		PaperDollStage->SetDollFlag(Arms);
+	}
 }
 
 void ACIRLPlayerController::QuitGame()

@@ -8,6 +8,10 @@
 #include "Characters/CorpseComponent.h"
 #include "Characters/BallSkeletonComponent.h"
 #include "Characters/BallMeleeComponent.h"
+#include "Characters/Heraldry.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Engine/Texture2D.h"
+#include "Materials/MaterialInstanceDynamic.h"
 #include "Animals/Horse.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/BoxComponent.h"
@@ -49,6 +53,12 @@ ABallCharacter::ABallCharacter()
 	BodyPivot->SetRelativeLocation(FVector(0.f, 0.f, GetBallCenterZ()));
 
 	BodyMesh = BallParts::Create(this, TEXT("BodyMesh"), BodyPivot, Sphere);
+	// Coat of arms across the ball (M_BallFlag projects the texture from the front)
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> FlagMaterialAsset(TEXT("/Game/CountriesIRL/Characters/Materials/M_BallFlag.M_BallFlag"));
+	if (FlagMaterialAsset.Succeeded())
+	{
+		BodyMesh->SetMaterial(0, FlagMaterialAsset.Object);
+	}
 	BodyMesh->SetRelativeScale3D(FVector(BallRadius, BallRadius, GetBallHalfHeight()) / 50.f);
 
 	Face = CreateDefaultSubobject<UBallFaceComponent>(TEXT("Face"));
@@ -83,9 +93,46 @@ ABallCharacter::ABallCharacter()
 	BaseEyeHeight = GetBallCenterZ() + 10.f;
 }
 
+void ABallCharacter::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+	// Shows the arms in the editor too
+	ApplyFlag();
+	RefreshColors();
+}
+
+void ABallCharacter::SetFlag(UTexture2D* NewFlag)
+{
+	Flag = NewFlag;
+	ApplyFlag();
+}
+
+void ABallCharacter::ApplyFlag()
+{
+	if (!FlagMaterial)
+	{
+		UMaterialInterface* Base = BodyMesh->GetMaterial(0);
+		if (!Base || !Base->GetName().Contains(TEXT("M_BallFlag")))
+		{
+			return;
+		}
+		FlagMaterial = BodyMesh->CreateDynamicMaterialInstance(0, Base);
+	}
+	UTexture2D* Arms = Flag;
+	if (!Arms && CIRLHeraldry::All().Num() > 0)
+	{
+		Arms = CIRLHeraldry::LoadTexture(CIRLHeraldry::All()[0]);
+	}
+	if (FlagMaterial && Arms)
+	{
+		FlagMaterial->SetTextureParameterValue(TEXT("Flag"), Arms);
+	}
+}
+
 void ABallCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	ApplyFlag();
 
 	RefreshColors();
 
@@ -126,8 +173,25 @@ void ABallCharacter::RefreshColors()
 		return FMath::Lerp(Color, DamageFlashColor, Flash * DamageFlashStrength);
 	};
 
+	// The ball wears its coat of arms: rotting and the damage flash tint it
+	if (FlagMaterial)
+	{
+		FLinearColor Tint = DamageFlashColor;
+		float Amount = Flash * DamageFlashStrength;
+		if (Corpse->IsDecaying())
+		{
+			const float Decay = Corpse->GetTintStrength();
+			Tint = FMath::Lerp(Corpse->GetTint(), DamageFlashColor, Amount);
+			Amount = Decay + (1.f - Decay) * Amount;
+		}
+		FlagMaterial->SetVectorParameterValue(TEXT("Tint"), Tint);
+		FlagMaterial->SetScalarParameterValue(TEXT("TintAmount"), Amount);
+	}
+	else
+	{
+		BallParts::SetColor(BodyMesh, Shade(BodyColor, true));
+	}
 	// Feet are boots: they don't rot
-	BallParts::SetColor(BodyMesh, Shade(BodyColor, true));
 	Animator->ApplyColors(Shade(HandColor, true), Shade(FootColor, false));
 }
 

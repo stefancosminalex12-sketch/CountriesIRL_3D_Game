@@ -88,6 +88,9 @@ private:
 	void QuitGame();
 	void ReturnToTitle();
 
+	/** The player picked a coat of arms (index into CIRLHeraldry::All()): the ball and the menu's doll wear it */
+	void WearArms(int32 Index);
+
 	TSharedPtr<SCIRLGameMenu> GameMenu;
 
 	/** The studio that films the 3D character for the Equipment tab (made the first time the menu opens) */

@@ -141,6 +141,14 @@ void ACIRLPaperDollStage::ResetDollYaw()
 	ApplyDollYaw();
 }
 
+void ACIRLPaperDollStage::SetDollFlag(UTexture2D* Flag)
+{
+	if (Doll)
+	{
+		Doll->SetFlag(Flag);
+	}
+}
+
 void ACIRLPaperDollStage::SetCapturing(bool bCapture)
 {
 	bCapturing = bCapture;

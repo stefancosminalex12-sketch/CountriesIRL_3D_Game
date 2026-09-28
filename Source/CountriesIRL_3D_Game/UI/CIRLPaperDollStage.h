@@ -11,6 +11,7 @@ class USceneCaptureComponent2D;
 class UPointLightComponent;
 class UTextureRenderTarget2D;
 class UMaterialInstanceDynamic;
+class UTexture2D;
 
 /**
  *  A small photo studio far below the world for the Equipment screen: a copy of the player's ball ("doll"),
@@ -39,6 +40,9 @@ public:
 
 	/** Faces the camera again */
 	void ResetDollYaw();
+
+	/** Puts a coat of arms on the doll (the player's own, or one being tried on) */
+	void SetDollFlag(UTexture2D* Flag);
 
 	/** Films only while the Equipment screen shows the picture */
 	void SetCapturing(bool bCapture);

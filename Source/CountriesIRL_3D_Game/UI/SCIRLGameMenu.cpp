@@ -4,6 +4,7 @@
 #include "UI/SCIRLButton.h"
 #include "UI/CIRLUIStyle.h"
 #include "UI/SCIRLEquipmentPage.h"
+#include "UI/SCIRLCharacterPage.h"
 #include "UI/SCIRLPaperDollView.h"
 #include "GeneralProjectSettings.h"
 #include "Styling/SlateTypes.h"
@@ -107,9 +108,18 @@ void SCIRLGameMenu::Construct(const FArguments& InArgs)
 			break;
 		}
 		case ECIRLMenuTab::Character:
-			Page = MakeComingSoon(LOCTEXT("CharacterSoonTitle", "Character"),
-				LOCTEXT("CharacterSoonNote", "Your name, house, skills and reputation will live here."));
+		{
+			TSharedRef<SCIRLCharacterPage> Character = SNew(SCIRLCharacterPage)
+				.Stage(InArgs._PaperDollStage)
+				.InitialArms(InArgs._CurrentArms)
+				.OnArmsChosen(SCIRLCharacterPage::FOnArmsChosen::CreateLambda([Chosen = InArgs._OnArmsChosen](int32 ArmsIndex)
+				{
+					Chosen.ExecuteIfBound(ArmsIndex);
+				}));
+			TabFocus[Index] = Character->GetFirstFocus();
+			Page = Character;
 			break;
+		}
 		case ECIRLMenuTab::Game:
 			Page = MakeGameTab();
 			break;
