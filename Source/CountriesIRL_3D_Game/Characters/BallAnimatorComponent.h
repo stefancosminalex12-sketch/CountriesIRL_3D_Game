@@ -45,7 +45,7 @@ struct FBallFootParts
 	UPROPERTY() TObjectPtr<UStaticMeshComponent> Upper;
 	UPROPERTY() TObjectPtr<UStaticMeshComponent> Shaft;
 
-	/** Short leg (hose) from the top of the boot up into the ball; stretches as the foot steps */
+	/** Straight leg (hose) standing on the boot and reaching up into the ball; moves with the foot, fixed length */
 	UPROPERTY() TObjectPtr<UStaticMeshComponent> Leg;
 };
 
@@ -122,19 +122,24 @@ protected:
 	/** How far below the ball's centre the hands rest, as a share of the ball's radius. They hang on the lower
 	 *  part of the ball, like arms at the sides, so they sit between the ball and the floating boots */
 	UPROPERTY(EditAnywhere, Category="Ball|Hands", meta=(ClampMin=0, ClampMax=0.9))
-	float HandRestDrop = 0.4f;
+	float HandRestDrop = 0.62f;
 
 	/** Gap between the ball's surface and a resting hand (cm) */
 	UPROPERTY(EditAnywhere, Category="Ball|Hands")
-	float HandRestGap = 12.f;
+	float HandRestGap = 7.f;
 
 	/** Hands are drawn this much bigger than their modelled size (big cartoon hands, like the concept art) */
 	UPROPERTY(EditAnywhere, Category="Ball|Hands")
 	float HandScale = 1.6f;
 
-	/** Leg thickness (cm) */
+	/** Leg thickness (cm); the boot shaft around its bottom is a little thicker */
 	UPROPERTY(EditAnywhere, Category="Ball|Legs")
-	float LegThickness = 15.f;
+	float LegThickness = 14.f;
+
+	/** Leg length (cm), from inside the boot shaft up into the ball. Long enough that its top stays hidden
+	 *  inside the ball while the feet step, bob and lean */
+	UPROPERTY(EditAnywhere, Category="Ball|Legs")
+	float LegLength = 46.f;
 
 	/** Colour of the legs (wool hose) */
 	UPROPERTY(EditAnywhere, Category="Ball|Legs")
@@ -214,7 +219,7 @@ private:
 	/** Current foot position (world, bottom center) including the step arc */
 	FVector FootWorld(int32 Index) const;
 
-	/** Stretches each leg from its boot top up to its hip point inside the ball */
+	/** Hides the legs where they would poke out of a body lying on the ground (dead, bones) */
 	void UpdateLegs();
 
 	/** Keeps a target on the foot's own side of the body so the feet never cross or overlap */

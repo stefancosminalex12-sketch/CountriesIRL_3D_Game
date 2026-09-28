@@ -65,8 +65,11 @@ void UBallAnimatorComponent::CreateLimbMeshes(AActor* Owner, USceneComponent* Li
 		Boot.Upper = BallParts::Create(Owner, PartName(TEXT("BootUpper")), Boot.Root, SphereMesh);
 		Boot.Upper->SetRelativeTransform(FTransform(FRotator::ZeroRotator, FVector(1.5f, 0.f, 1.f), FVector(FootSize.X, FootSize.Y, FootSize.Z - 1.f) / 100.f));
 		Boot.Shaft = BallParts::Create(Owner, PartName(TEXT("BootShaft")), Boot.Root, CylinderMesh);
-		Boot.Shaft->SetRelativeTransform(FTransform(FRotator::ZeroRotator, FVector(-5.f, 0.f, BootShaftTop * 0.5f), FVector(16.f, 16.f, BootShaftTop) / 100.f));
-		Boot.Leg = BallParts::Create(Owner, PartName(TEXT("Leg")), LimbParent, CylinderMesh);
+		Boot.Shaft->SetRelativeTransform(FTransform(FRotator::ZeroRotator, FVector(-5.f, 0.f, BootShaftTop * 0.5f), FVector(18.f, 18.f, BootShaftTop) / 100.f));
+		// Leg: one straight piece standing in the boot shaft, rising into the ball
+		Boot.Leg = BallParts::Create(Owner, PartName(TEXT("Leg")), Boot.Root, CylinderMesh);
+		Boot.Leg->SetRelativeTransform(FTransform(FRotator::ZeroRotator, FVector(-5.f, 0.f, BootShaftTop - 4.f + LegLength * 0.5f),
+			FVector(LegThickness, LegThickness, LegLength) / 100.f));
 
 		// Resting pose: relaxed hands at the sides, boots under the ball
 		const float Side = Index == 0 ? -1.f : 1.f;
@@ -505,41 +508,14 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 void UBallAnimatorComponent::UpdateLegs()
 {
-	const ABallCharacter* Ball = Cast<ABallCharacter>(GetOwner());
-	if (!Ball || !BodyPivot)
-	{
-		return;
-	}
-
-	// Hip points sit inside the lower ball, above the feet; they follow the body as it bobs, leans and falls
-	const float Radius = Ball->GetBallRadius();
-	const FTransform& Body = BodyPivot->GetComponentTransform();
+	// A body lying on the ground (or rotted to bones) would have the straight legs sticking up out of it
+	const bool bShow = DeadBlend < 0.3f && !bSkeletonPose;
 	for (int32 Index = 0; Index < 2; ++Index)
 	{
-		UStaticMeshComponent* Leg = Boots[Index].Leg;
-		if (!Leg)
+		if (UStaticMeshComponent* Leg = Boots[Index].Leg)
 		{
-			continue;
+			Leg->SetVisibility(bShow);
 		}
-		// Bones stage: the legs rotted away with the rest
-		Leg->SetVisibility(!bSkeletonPose);
-		if (bSkeletonPose)
-		{
-			continue;
-		}
-
-		const FVector Hip = Body.TransformPosition(FVector(0.f, Side(Index) * FootHalfSpacing * 0.9f, -Radius * 0.72f));
-		// Into the top of the boot's shaft, so the joint never shows a gap
-		const FVector Ankle = Boots[Index].Root->GetComponentTransform().TransformPosition(FVector(-5.f, 0.f, BootShaftTop - 3.f));
-		const FVector Along = Hip - Ankle;
-		const float Length = Along.Size();
-		if (Length < KINDA_SMALL_NUMBER)
-		{
-			continue;
-		}
-		const float Thickness = LegThickness * Body.GetScale3D().Z;
-		Leg->SetWorldLocationAndRotation((Hip + Ankle) * 0.5f, FRotationMatrix::MakeFromZ(Along / Length).Rotator());
-		Leg->SetWorldScale3D(FVector(Thickness, Thickness, Length) / 100.f);
 	}
 }
 
