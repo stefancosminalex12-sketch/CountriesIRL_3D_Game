@@ -10,7 +10,13 @@
 #include "Engine/DamageEvents.h"
 #include "EngineUtils.h"
 #include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
 #include "Engine/LocalPlayer.h"
+#include "Engine/GameViewportClient.h"
+#include "Framework/Application/NavigationConfig.h"
+#include "Framework/Application/SlateApplication.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "UI/SCIRLGameMenu.h"
 
 void ACIRLPlayerController::PostInitializeComponents()
 {
@@ -33,6 +39,117 @@ void ACIRLPlayerController::SetupInputComponent()
 	{
 		Subsystem->AddMappingContext(InputConfig->DefaultContext, 0);
 	}
+
+	if (UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(InputComponent))
+	{
+		EIC->BindAction(InputConfig->GameMenu, ETriggerEvent::Started, this, &ACIRLPlayerController::OnGameMenuPressed);
+		EIC->BindAction(InputConfig->Equipment, ETriggerEvent::Started, this, &ACIRLPlayerController::OnEquipmentPressed);
+	}
+}
+
+void ACIRLPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	// Leaving the game with the menu open (e.g. stopping Play in the editor): put Slate back the way it was
+	if (GameMenu.IsValid())
+	{
+		CloseGameMenu();
+	}
+	Super::EndPlay(EndPlayReason);
+}
+
+void ACIRLPlayerController::OnGameMenuPressed()
+{
+	OpenGameMenu(ECIRLMenuTab::Game);
+}
+
+void ACIRLPlayerController::OnEquipmentPressed()
+{
+	OpenGameMenu(ECIRLMenuTab::Equipment);
+}
+
+void ACIRLPlayerController::OpenGameMenu(ECIRLMenuTab Tab)
+{
+	if (GameMenu.IsValid())
+	{
+		GameMenu->SetTab(Tab);
+		GameMenu->FocusCurrentTab();
+		return;
+	}
+
+	UGameViewportClient* Viewport = GetWorld()->GetGameViewport();
+	ULocalPlayer* LocalPlayer = GetLocalPlayer();
+	if (!Viewport || !LocalPlayer)
+	{
+		return;
+	}
+
+	SAssignNew(GameMenu, SCIRLGameMenu)
+		.InitialTab(Tab)
+		.OnCloseRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::CloseGameMenu))
+		.OnQuitRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::QuitGame));
+	Viewport->AddViewportWidgetForPlayer(LocalPlayer, GameMenu.ToSharedRef(), 50);
+
+	// Menus can be walked with WASD as well as the arrow keys and the controller
+	FSlateApplication& Slate = FSlateApplication::Get();
+	PreviousNavigation = Slate.GetNavigationConfig();
+	TSharedRef<FNavigationConfig> Navigation = MakeShared<FNavigationConfig>();
+	Navigation->KeyEventRules.Emplace(EKeys::W, EUINavigation::Up);
+	Navigation->KeyEventRules.Emplace(EKeys::S, EUINavigation::Down);
+	Navigation->KeyEventRules.Emplace(EKeys::A, EUINavigation::Left);
+	Navigation->KeyEventRules.Emplace(EKeys::D, EUINavigation::Right);
+	Slate.SetNavigationConfig(Navigation);
+
+	SetPause(true);
+	SetShowMouseCursor(true);
+	FInputModeUIOnly InputMode;
+	InputMode.SetWidgetToFocus(GameMenu);
+	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	SetInputMode(InputMode);
+	GameMenu->FocusCurrentTab();
+}
+
+void ACIRLPlayerController::CloseGameMenu()
+{
+	if (!GameMenu.IsValid())
+	{
+		return;
+	}
+
+	UGameViewportClient* Viewport = GetWorld() ? GetWorld()->GetGameViewport() : nullptr;
+	if (Viewport && GetLocalPlayer())
+	{
+		Viewport->RemoveViewportWidgetForPlayer(GetLocalPlayer(), GameMenu.ToSharedRef());
+	}
+	GameMenu.Reset();
+
+	if (PreviousNavigation.IsValid() && FSlateApplication::IsInitialized())
+	{
+		FSlateApplication::Get().SetNavigationConfig(PreviousNavigation.ToSharedRef());
+		PreviousNavigation.Reset();
+	}
+
+	SetPause(false);
+	SetShowMouseCursor(false);
+	SetInputMode(FInputModeGameOnly());
+}
+
+void ACIRLPlayerController::DevMenu(const FString& Tab)
+{
+	static const TCHAR* Names[] = { TEXT("Map"), TEXT("Quests"), TEXT("Equipment"), TEXT("Character"), TEXT("Game") };
+	for (int32 Index = 0; Index < UE_ARRAY_COUNT(Names); ++Index)
+	{
+		if (Tab.Equals(Names[Index], ESearchCase::IgnoreCase))
+		{
+			OpenGameMenu(static_cast<ECIRLMenuTab>(Index));
+			return;
+		}
+	}
+	CloseGameMenu();
+}
+
+void ACIRLPlayerController::QuitGame()
+{
+	UKismetSystemLibrary::QuitGame(this, this, EQuitPreference::Quit, false);
 }
 
 void ACIRLPlayerController::DevTime(float Hours)

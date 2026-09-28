@@ -1,0 +1,501 @@
+// CountriesIRL 3D Game
+
+#include "UI/SCIRLGameMenu.h"
+#include "UI/SCIRLButton.h"
+#include "UI/CIRLUIStyle.h"
+#include "GeneralProjectSettings.h"
+#include "Styling/SlateTypes.h"
+#include "Widgets/Images/SImage.h"
+#include "Widgets/Layout/SBackgroundBlur.h"
+#include "Widgets/Layout/SBorder.h"
+#include "Widgets/Layout/SBox.h"
+#include "Widgets/Layout/SGridPanel.h"
+#include "Widgets/Layout/SScaleBox.h"
+#include "Widgets/Layout/SWidgetSwitcher.h"
+#include "Widgets/SBoxPanel.h"
+#include "Widgets/SOverlay.h"
+#include "Widgets/Text/STextBlock.h"
+
+#define LOCTEXT_NAMESPACE "CIRLGameMenu"
+
+using namespace CIRLUIStyle;
+
+namespace
+{
+	constexpr int32 TabCount = static_cast<int32>(ECIRLMenuTab::Count);
+
+	FText TabName(ECIRLMenuTab Tab)
+	{
+		switch (Tab)
+		{
+		case ECIRLMenuTab::Map:			return LOCTEXT("TabMap", "Map");
+		case ECIRLMenuTab::Quests:		return LOCTEXT("TabQuests", "Quests");
+		case ECIRLMenuTab::Equipment:	return LOCTEXT("TabEquipment", "Equipment");
+		case ECIRLMenuTab::Character:	return LOCTEXT("TabCharacter", "Character");
+		case ECIRLMenuTab::Game:		return LOCTEXT("TabGame", "Game");
+		default:						return FText::GetEmpty();
+		}
+	}
+
+	/** Invisible button frame: our widgets draw their own states */
+	const FButtonStyle& PlainButtonStyle()
+	{
+		static const FButtonStyle Style = []
+		{
+			FButtonStyle S;
+			const FSlateNoResource None;
+			S.SetNormal(None).SetHovered(None).SetPressed(None).SetDisabled(None);
+			S.SetNormalPadding(FMargin(0.f)).SetPressedPadding(FMargin(0.f));
+			return S;
+		}();
+		return Style;
+	}
+
+	/** Small gold diamond between the tabs */
+	TSharedRef<SWidget> MakeDiamond()
+	{
+		return SNew(SBox)
+			.WidthOverride(7.f)
+			.HeightOverride(7.f)
+			.VAlign(VAlign_Center)
+			[
+				SNew(SImage)
+				.Image(GoldFill())
+				.RenderTransform(FSlateRenderTransform(FQuat2D(FMath::DegreesToRadians(45.f))))
+				.RenderTransformPivot(FVector2D(0.5f, 0.5f))
+			];
+	}
+
+	TSharedRef<SWidget> MakeKeyCap(const FText& Key)
+	{
+		return SNew(SBorder)
+			.BorderImage(KeyCap())
+			.Padding(FMargin(8.f, 1.f))
+			.HAlign(HAlign_Center)
+			.VAlign(VAlign_Center)
+			[
+				SNew(SBox)
+				.MinDesiredWidth(14.f)
+				.HAlign(HAlign_Center)
+				[
+					SNew(STextBlock)
+					.Text(Key)
+					.Font(Font(EFont::Title, 15.f))
+					.ColorAndOpacity(Text())
+				]
+			];
+	}
+}
+
+void SCIRLGameMenu::Construct(const FArguments& InArgs)
+{
+	OnCloseRequested = InArgs._OnCloseRequested;
+	OnQuitRequested = InArgs._OnQuitRequested;
+
+	SAssignNew(Pages, SWidgetSwitcher);
+	for (int32 Index = 0; Index < TabCount; ++Index)
+	{
+		TSharedRef<SWidget> Page = SNullWidget::NullWidget;
+		switch (static_cast<ECIRLMenuTab>(Index))
+		{
+		case ECIRLMenuTab::Map:
+			Page = MakeComingSoon(LOCTEXT("MapSoonTitle", "The map is still being drawn"),
+				LOCTEXT("MapSoonNote", "A map of England in the style of the Gough Map comes in a later version."));
+			break;
+		case ECIRLMenuTab::Quests:
+			Page = MakeComingSoon(LOCTEXT("QuestsSoonTitle", "No quests yet"),
+				LOCTEXT("QuestsSoonNote", "The local lord has not sent for you... yet."));
+			break;
+		case ECIRLMenuTab::Equipment:
+			Page = MakeComingSoon(LOCTEXT("EquipmentSoonTitle", "Equipment"),
+				LOCTEXT("EquipmentSoonNote", "The equipment screen is being built next."));
+			break;
+		case ECIRLMenuTab::Character:
+			Page = MakeComingSoon(LOCTEXT("CharacterSoonTitle", "Character"),
+				LOCTEXT("CharacterSoonNote", "Your name, house, skills and reputation will live here."));
+			break;
+		case ECIRLMenuTab::Game:
+			Page = MakeGameTab();
+			break;
+		default:
+			break;
+		}
+		Pages->AddSlot()[Page];
+	}
+
+	ChildSlot
+	[
+		SNew(SOverlay)
+
+		// The paused game behind the menu: blurred and darkened
+		+ SOverlay::Slot()
+		[
+			SNew(SBackgroundBlur)
+			.BlurStrength(6.f)
+			[
+				SNew(SBorder).BorderImage(ScreenDim())
+			]
+		]
+
+		// The panel keeps one size on every tab (1560 x 880 at 1080p) and shrinks to fit smaller or narrower screens
+		+ SOverlay::Slot()
+		.Padding(FMargin(60.f, 50.f))
+		[
+			SNew(SScaleBox)
+			.Stretch(EStretch::ScaleToFit)
+			.StretchDirection(EStretchDirection::DownOnly)
+			[
+			SNew(SBox)
+			.WidthOverride(1560.f)
+			.HeightOverride(880.f)
+			[
+				SNew(SBorder)
+				.BorderImage(Panel())
+				.Padding(FMargin(28.f, 16.f, 28.f, 18.f))
+				[
+					SNew(SVerticalBox)
+
+					+ SVerticalBox::Slot().AutoHeight()
+					[
+						MakeTabBar()
+					]
+
+					// Thin gold line under the tabs
+					+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 8.f, 0.f, 18.f))
+					[
+						SNew(SBox).HeightOverride(1.f)
+						[
+							SNew(SImage).Image(GoldFill()).ColorAndOpacity(FLinearColor(1.f, 1.f, 1.f, 0.5f))
+						]
+					]
+
+					+ SVerticalBox::Slot().FillHeight(1.f)
+					[
+						Pages.ToSharedRef()
+					]
+
+					// Key hints, bottom right
+					+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Right).Padding(FMargin(0.f, 14.f, 0.f, 0.f))
+					[
+						SAssignNew(KeyHints, SHorizontalBox)
+					]
+				]
+			]
+			]
+		]
+	];
+
+	SetTab(InArgs._InitialTab);
+
+	// Focus the first button once the menu is on screen (focus can't move into widgets that aren't laid out yet)
+	RegisterActiveTimer(0.f, FWidgetActiveTimerDelegate::CreateLambda([this](double, float)
+	{
+		FocusCurrentTab();
+		return EActiveTimerReturnType::Stop;
+	}));
+}
+
+TSharedRef<SWidget> SCIRLGameMenu::MakeTabBar()
+{
+	TSharedRef<SHorizontalBox> Bar = SNew(SHorizontalBox);
+
+	// Q at the far left, E at the far right, the tabs centred between them at their natural width
+	Bar->AddSlot().AutoWidth().VAlign(VAlign_Center)[MakeKeyCap(LOCTEXT("KeyQ", "Q"))];
+	Bar->AddSlot().FillWidth(1.f);
+	for (int32 Index = 0; Index < TabCount; ++Index)
+	{
+		if (Index > 0)
+		{
+			Bar->AddSlot().AutoWidth().VAlign(VAlign_Center).Padding(FMargin(14.f, 0.f))[MakeDiamond()];
+		}
+		Bar->AddSlot().AutoWidth().VAlign(VAlign_Center)[MakeTabButton(static_cast<ECIRLMenuTab>(Index))];
+	}
+	Bar->AddSlot().FillWidth(1.f);
+	Bar->AddSlot().AutoWidth().VAlign(VAlign_Center)[MakeKeyCap(LOCTEXT("KeyE", "E"))];
+
+	return Bar;
+}
+
+TSharedRef<SWidget> SCIRLGameMenu::MakeTabButton(ECIRLMenuTab Tab)
+{
+	TSharedPtr<SCIRLButton> Button;
+	SAssignNew(Button, SCIRLButton)
+	.ButtonStyle(&PlainButtonStyle())
+	.IsFocusable(false)
+	.OnClicked_Lambda([this, Tab]() { SetTab(Tab); FocusCurrentTab(); return FReply::Handled(); });
+
+	// Open tab: bright gold with an underline; hovered: parchment; others: faded
+	TWeakPtr<SCIRLButton> Weak = Button;
+	Button->SetContent(
+		SNew(SVerticalBox)
+
+		+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(FMargin(12.f, 6.f, 12.f, 4.f))
+		[
+			SNew(STextBlock)
+			.Text(TabName(Tab))
+			.Font(Font(EFont::Title, 22.f))
+			.ColorAndOpacity_Lambda([this, Tab, Weak]()
+			{
+				if (CurrentTab == Tab)
+				{
+					return FSlateColor(GoldBright());
+				}
+				const TSharedPtr<SCIRLButton> Pinned = Weak.Pin();
+				return FSlateColor(Pinned.IsValid() && Pinned->IsHovered() ? Text() : TextMuted());
+			})
+		]
+
+		+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Fill).Padding(FMargin(12.f, 0.f))
+		[
+			SNew(SBox).HeightOverride(2.f)
+			[
+				SNew(SImage)
+				.Image(GoldFill())
+				.ColorAndOpacity_Lambda([this, Tab]()
+				{
+					return FLinearColor(1.f, 1.f, 1.f, CurrentTab == Tab ? 1.f : 0.f);
+				})
+			]
+		]);
+
+	return Button.ToSharedRef();
+}
+
+TSharedRef<SWidget> SCIRLGameMenu::MakeKeyHint(const FText& Key, const FText& Label) const
+{
+	return SNew(SHorizontalBox)
+		+ SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center)[MakeKeyCap(Key)]
+		+ SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center).Padding(FMargin(8.f, 0.f, 26.f, 0.f))
+		[
+			SNew(STextBlock)
+			.Text(Label)
+			.Font(Font(EFont::Body, 18.f))
+			.ColorAndOpacity(Text())
+		];
+}
+
+TSharedRef<SWidget> SCIRLGameMenu::MakeComingSoon(const FText& Title, const FText& Note) const
+{
+	return SNew(SBox)
+		.HAlign(HAlign_Center)
+		.VAlign(VAlign_Center)
+		[
+			SNew(SVerticalBox)
+			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center)
+			[
+				SNew(STextBlock)
+				.Text(Title)
+				.Font(Font(EFont::Title, 30.f))
+				.ColorAndOpacity(GoldBright())
+			]
+			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(FMargin(0.f, 12.f, 0.f, 0.f))
+			[
+				SNew(STextBlock)
+				.Text(Note)
+				.Font(Font(EFont::BodyItalic, 21.f))
+				.ColorAndOpacity(TextMuted())
+			]
+		];
+}
+
+TSharedRef<SWidget> SCIRLGameMenu::MakeMenuButton(const FText& Label, FOnClicked OnClicked, TSharedPtr<SButton>* OutButton)
+{
+	TSharedPtr<SCIRLButton> Button;
+	SAssignNew(Button, SCIRLButton)
+	.ButtonStyle(&PlainButtonStyle())
+	.OnClicked(OnClicked);
+
+	TWeakPtr<SCIRLButton> Weak = Button;
+	Button->SetContent(
+		SNew(SBorder)
+		.BorderImage_Lambda([Weak]()
+		{
+			const TSharedPtr<SCIRLButton> Pinned = Weak.Pin();
+			if (!Pinned.IsValid() || !Pinned->IsHighlighted())
+			{
+				return ButtonNormal();
+			}
+			return Pinned->IsPressed() ? ButtonPressed() : ButtonHovered();
+		})
+		.Padding(FMargin(24.f, 10.f))
+		[
+			SNew(STextBlock)
+			.Text(Label)
+			.Font(Font(EFont::Title, 21.f))
+			.ColorAndOpacity_Lambda([Weak]()
+			{
+				const TSharedPtr<SCIRLButton> Pinned = Weak.Pin();
+				return FSlateColor(Pinned.IsValid() && Pinned->IsHighlighted() ? GoldBright() : Text());
+			})
+		]);
+
+	if (OutButton)
+	{
+		*OutButton = Button;
+	}
+	return SNew(SBox).WidthOverride(360.f)[Button.ToSharedRef()];
+}
+
+TSharedRef<SWidget> SCIRLGameMenu::MakeGameTab()
+{
+	const UGeneralProjectSettings* Project = GetDefault<UGeneralProjectSettings>();
+	const FText Version = FText::Format(LOCTEXT("Version", "Version {0}  ·  pre-alpha test build"), FText::FromString(Project->ProjectVersion));
+
+	TSharedPtr<SButton> ResumeButton;
+	TSharedRef<SWidget> Page =
+		SNew(SHorizontalBox)
+
+		// Left: title and the main buttons
+		+ SHorizontalBox::Slot().AutoWidth().Padding(FMargin(20.f, 10.f, 60.f, 0.f))
+		[
+			SNew(SVerticalBox)
+			+ SVerticalBox::Slot().AutoHeight()
+			[
+				SNew(STextBlock)
+				.Text(FText::FromString(Project->ProjectName))
+				.Font(Font(EFont::TitleSemiBold, 44.f))
+				.ColorAndOpacity(GoldBright())
+			]
+			+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 2.f, 0.f, 30.f))
+			[
+				SNew(STextBlock)
+				.Text(Version)
+				.Font(Font(EFont::BodyItalic, 18.f))
+				.ColorAndOpacity(TextMuted())
+			]
+			+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 0.f, 0.f, 12.f))
+			[
+				MakeMenuButton(LOCTEXT("Resume", "Resume"),
+					FOnClicked::CreateLambda([this]() { OnCloseRequested.ExecuteIfBound(); return FReply::Handled(); }), &ResumeButton)
+			]
+			+ SVerticalBox::Slot().AutoHeight()
+			[
+				MakeMenuButton(LOCTEXT("Quit", "Quit to Desktop"),
+					FOnClicked::CreateLambda([this]() { OnQuitRequested.ExecuteIfBound(); return FReply::Handled(); }))
+			]
+		]
+
+		// Right: the controls
+		+ SHorizontalBox::Slot().FillWidth(1.f).Padding(FMargin(0.f, 10.f, 20.f, 0.f))
+		[
+			SNew(SBorder)
+			.BorderImage(Card())
+			.Padding(FMargin(28.f, 18.f))
+			[
+				SNew(SVerticalBox)
+				+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 0.f, 0.f, 14.f))
+				[
+					SNew(STextBlock)
+					.Text(LOCTEXT("ControlsTitle", "Controls"))
+					.Font(Font(EFont::Title, 26.f))
+					.ColorAndOpacity(GoldBright())
+				]
+				+ SVerticalBox::Slot().AutoHeight()
+				[
+					MakeControlsList()
+				]
+			]
+		];
+
+	TabFocus[static_cast<int32>(ECIRLMenuTab::Game)] = ResumeButton;
+	return Page;
+}
+
+TSharedRef<SWidget> SCIRLGameMenu::MakeControlsList() const
+{
+	struct FControl { const TCHAR* Key; FText Action; };
+	const FControl Controls[] =
+	{
+		{ TEXT("W A S D"),		LOCTEXT("CtrlMove", "Move (on a horse: steer where you look)") },
+		{ TEXT("Mouse"),		LOCTEXT("CtrlLook", "Look around") },
+		{ TEXT("Shift"),		LOCTEXT("CtrlRun", "Run, or gallop on a horse (uses stamina)") },
+		{ TEXT("Space"),		LOCTEXT("CtrlJump", "Jump (the horse jumps too)") },
+		{ TEXT("Left click"),	LOCTEXT("CtrlPunch", "Punch") },
+		{ TEXT("Right click"),	LOCTEXT("CtrlGuard", "Hold to raise your guard") },
+		{ TEXT("E"),			LOCTEXT("CtrlInteract", "Get on / off a horse") },
+		{ TEXT("V"),			LOCTEXT("CtrlView", "First-person / third-person view") },
+		{ TEXT("T"),			LOCTEXT("CtrlEmotion", "Change your eyes' emotion") },
+		{ TEXT("Tab  /  I"),	LOCTEXT("CtrlEquipment", "Equipment") },
+		{ TEXT("Esc"),			LOCTEXT("CtrlMenu", "This menu") },
+	};
+
+	TSharedRef<SGridPanel> Grid = SNew(SGridPanel).FillColumn(1, 1.f);
+	for (int32 Row = 0; Row < UE_ARRAY_COUNT(Controls); ++Row)
+	{
+		Grid->AddSlot(0, Row).Padding(FMargin(0.f, 4.f, 30.f, 4.f))
+		[
+			SNew(STextBlock)
+			.Text(FText::FromString(Controls[Row].Key))
+			.Font(Font(EFont::Title, 18.f))
+			.ColorAndOpacity(GoldBright())
+		];
+		Grid->AddSlot(1, Row).Padding(FMargin(0.f, 4.f))
+		[
+			SNew(STextBlock)
+			.Text(Controls[Row].Action)
+			.Font(Font(EFont::Body, 20.f))
+			.ColorAndOpacity(Text())
+		];
+	}
+	return Grid;
+}
+
+void SCIRLGameMenu::SetTab(ECIRLMenuTab NewTab)
+{
+	CurrentTab = NewTab;
+	Pages->SetActiveWidgetIndex(static_cast<int32>(NewTab));
+	RebuildKeyHints();
+}
+
+void SCIRLGameMenu::FocusCurrentTab()
+{
+	const TSharedPtr<SWidget>& Target = TabFocus[static_cast<int32>(CurrentTab)];
+	FSlateApplication::Get().SetAllUserFocus(Target.IsValid() ? Target : SharedThis(this), EFocusCause::SetDirectly);
+}
+
+void SCIRLGameMenu::RebuildKeyHints()
+{
+	KeyHints->ClearChildren();
+	KeyHints->AddSlot().AutoWidth()[MakeKeyHint(LOCTEXT("HintQE", "Q / E"), LOCTEXT("HintTabs", "Switch Tab"))];
+	if (CurrentTab == ECIRLMenuTab::Game)
+	{
+		KeyHints->AddSlot().AutoWidth()[MakeKeyHint(LOCTEXT("HintEnter", "Enter"), LOCTEXT("HintSelect", "Select"))];
+	}
+	KeyHints->AddSlot().AutoWidth()[MakeKeyHint(LOCTEXT("HintEsc", "Esc"), LOCTEXT("HintResume", "Resume"))];
+}
+
+FReply SCIRLGameMenu::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent)
+{
+	const FKey Key = InKeyEvent.GetKey();
+	const int32 Tab = static_cast<int32>(CurrentTab);
+
+	if (Key == EKeys::Q || Key == EKeys::Gamepad_LeftShoulder)
+	{
+		SetTab(static_cast<ECIRLMenuTab>((Tab + TabCount - 1) % TabCount));
+		FocusCurrentTab();
+		return FReply::Handled();
+	}
+	if (Key == EKeys::E || Key == EKeys::Gamepad_RightShoulder)
+	{
+		SetTab(static_cast<ECIRLMenuTab>((Tab + 1) % TabCount));
+		FocusCurrentTab();
+		return FReply::Handled();
+	}
+	// Esc, controller B/Start, or the Equipment key again while on Equipment: back to the game
+	const bool bEquipmentKey = Key == EKeys::Tab || Key == EKeys::I || Key == EKeys::Gamepad_Special_Left;
+	if (Key == EKeys::Escape || Key == EKeys::Gamepad_Special_Right || Key == EKeys::Gamepad_FaceButton_Right
+		|| (bEquipmentKey && CurrentTab == ECIRLMenuTab::Equipment))
+	{
+		OnCloseRequested.ExecuteIfBound();
+		return FReply::Handled();
+	}
+	if (bEquipmentKey)
+	{
+		SetTab(ECIRLMenuTab::Equipment);
+		FocusCurrentTab();
+		return FReply::Handled();
+	}
+	return SCompoundWidget::OnKeyDown(MyGeometry, InKeyEvent);
+}
+
+#undef LOCTEXT_NAMESPACE

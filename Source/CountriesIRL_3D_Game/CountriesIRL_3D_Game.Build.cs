@@ -22,7 +22,7 @@ public class CountriesIRL_3D_Game : ModuleRules
 			"DeveloperSettings"
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] { });
+		PrivateDependencyModuleNames.AddRange(new string[] { "SlateCore", "EngineSettings" });
 
 		PublicIncludePaths.AddRange(new string[] {
 			"CountriesIRL_3D_Game",

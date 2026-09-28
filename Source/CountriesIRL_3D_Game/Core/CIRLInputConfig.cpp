@@ -34,6 +34,8 @@ void UCIRLInputConfig::Build()
 	Guard = MakeAction(this, TEXT("IA_Guard"), EInputActionValueType::Boolean);
 	CycleEmotion = MakeAction(this, TEXT("IA_CycleEmotion"), EInputActionValueType::Boolean);
 	Interact = MakeAction(this, TEXT("IA_Interact"), EInputActionValueType::Boolean);
+	GameMenu = MakeAction(this, TEXT("IA_GameMenu"), EInputActionValueType::Boolean);
+	Equipment = MakeAction(this, TEXT("IA_Equipment"), EInputActionValueType::Boolean);
 
 	UInputMappingContext* C = NewObject<UInputMappingContext>(this, TEXT("IMC_Default"));
 	DefaultContext = C;
@@ -82,6 +84,13 @@ void UCIRLInputConfig::Build()
 
 	C->MapKey(Interact, EKeys::E);
 	C->MapKey(Interact, EKeys::Gamepad_FaceButton_Left);
+
+	// Menus. In the editor's Play mode Esc stops the game, so Tab/I is the way to test the menu there
+	C->MapKey(GameMenu, EKeys::Escape);
+	C->MapKey(GameMenu, EKeys::Gamepad_Special_Right);
+	C->MapKey(Equipment, EKeys::Tab);
+	C->MapKey(Equipment, EKeys::I);
+	C->MapKey(Equipment, EKeys::Gamepad_Special_Left);
 
 	C->MapKey(CycleEmotion, EKeys::T);
 }

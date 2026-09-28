@@ -7,6 +7,9 @@
 #include "CIRLPlayerController.generated.h"
 
 class UCIRLInputConfig;
+class SCIRLGameMenu;
+class FNavigationConfig;
+enum class ECIRLMenuTab : uint8;
 
 /**
  *  The game's player controller. Owns the input configuration and registers it with Enhanced Input.
@@ -19,6 +22,14 @@ class ACIRLPlayerController : public APlayerController
 public:
 
 	const UCIRLInputConfig* GetInputConfig() const { return InputConfig; }
+
+	/** Opens the game menu on a tab (or switches tab if it's already open); pauses the game */
+	void OpenGameMenu(ECIRLMenuTab Tab);
+
+	/** Closes the menu and goes back to the game */
+	void CloseGameMenu();
+
+	bool IsGameMenuOpen() const { return GameMenu.IsValid(); }
 
 	/** Console (testing): jump to a time of day. DevTime 21.5 = 21:30 */
 	UFUNCTION(Exec)
@@ -52,6 +63,10 @@ public:
 	UFUNCTION(Exec)
 	void DevHitHorse(float Amount);
 
+	/** Console (testing): open the menu on a tab (Map, Quests, Equipment, Character, Game), or close it with no tab */
+	UFUNCTION(Exec)
+	void DevMenu(const FString& Tab);
+
 	/** Console (testing): damage the nearest other ball. DevHitNearest 1000 kills it */
 	UFUNCTION(Exec)
 	void DevHitNearest(float Amount);
@@ -60,9 +75,19 @@ protected:
 
 	virtual void PostInitializeComponents() override;
 	virtual void SetupInputComponent() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
 
 	UPROPERTY(Transient)
 	TObjectPtr<UCIRLInputConfig> InputConfig;
+
+	void OnGameMenuPressed();
+	void OnEquipmentPressed();
+	void QuitGame();
+
+	TSharedPtr<SCIRLGameMenu> GameMenu;
+
+	/** Slate's navigation rules from before the menu opened (the menu adds WASD) */
+	TSharedPtr<FNavigationConfig> PreviousNavigation;
 };

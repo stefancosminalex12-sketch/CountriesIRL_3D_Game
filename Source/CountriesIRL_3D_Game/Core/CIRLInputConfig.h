@@ -37,6 +37,12 @@ public:
 	/** Use what's in front of you: get on/off a horse (later doors, talking, looting) */
 	UPROPERTY() TObjectPtr<UInputAction> Interact;
 
+	/** Opens the game menu (Esc; Start on a controller) */
+	UPROPERTY() TObjectPtr<UInputAction> GameMenu;
+
+	/** Opens the menu on the Equipment tab (Tab or I; Back/View on a controller) */
+	UPROPERTY() TObjectPtr<UInputAction> Equipment;
+
 	/** Debug: cycles through the ball's eye emotions */
 	UPROPERTY() TObjectPtr<UInputAction> CycleEmotion;
 };

@@ -21,7 +21,8 @@ CONTROLS
   E              get on / off a horse (stand close to it)
   V              switch first-person / third-person view
   T              change your eyes' emotion (just for fun)
-  Alt+F4         quit (no menu yet)
+  Tab / I        equipment (being built)
+  Esc            menu: resume, controls, quit
 
 WHAT TO TRY
 - Walk up to the two horses (white and brown), press E, hold Shift to gallop.
