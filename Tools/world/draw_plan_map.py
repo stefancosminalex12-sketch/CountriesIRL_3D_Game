@@ -130,6 +130,75 @@ def hillshade(elev):
     return shade.filter(ImageFilter.GaussianBlur(1))
 
 
+ICONS_DIR = f"{ROOT}/Art/AI/MapIcons"
+# Which icon each type uses (the user's hand-painted icons in Art/AI/MapIcons/map_*.png)
+ICON_FOR = {"City": "map_city", "Town": "map_town", "Village": "map_village", "Cathedral": "map_cathedral",
+            "Abbey": "map_abbey", "Battle": "map_battle", "Landmark": "map_landmark", "Nature": "map_nature"}
+# Icon size (map pixels at 4 px/km, times S) per type and importance
+ICON_SIZE = {("City", 3): 44, ("City", 2): 34, ("City", 1): 30, ("Town", 3): 40, ("Town", 2): 26, ("Town", 1): 17,
+             ("Village", 1): 7, ("Castle", 3): 22, ("Castle", 2): 18, ("Castle", 1): 10, ("Cathedral", 3): 24,
+             ("Cathedral", 2): 20, ("Cathedral", 1): 16, ("Abbey", 3): 16, ("Abbey", 2): 13, ("Abbey", 1): 8,
+             ("Battle", 3): 22, ("Battle", 2): 16, ("Battle", 1): 14, ("Landmark", 3): 22, ("Landmark", 2): 18,
+             ("Landmark", 1): 14, ("Nature", 3): 18, ("Nature", 2): 16, ("Nature", 1): 13}
+
+
+def icon_name(kind, imp):
+    if kind == "Castle":
+        return "map_castle_major" if imp >= 2 else "map_castle_minor"
+    if kind == "Town" and imp >= 3:
+        return "map_city"
+    return ICON_FOR.get(kind, "")
+
+
+def load_icons():
+    """Hand-painted map icons (Art/AI/MapIcons/map_*.png), trimmed; missing ones fall back to drawn symbols."""
+    icons = {}
+    if os.path.isdir(ICONS_DIR):
+        for f in os.listdir(ICONS_DIR):
+            if f.startswith("map_") and f.endswith(".png"):
+                im = Image.open(os.path.join(ICONS_DIR, f)).convert("RGBA")
+                bbox = im.getchannel("A").point(lambda a: 255 if a > 8 else 0).getbbox()
+                icons[f[:-4]] = im.crop(bbox) if bbox else im
+    return icons
+
+
+def draw_symbol(img, d, icons, kind, imp, X, Y):
+    """Draws a place's symbol and returns its radius (for label placement)."""
+    size = ICON_SIZE.get((kind, imp), 12) * S
+    icon = icons.get(icon_name(kind, imp))
+    if icon is not None:
+        scale = size / max(icon.size)
+        ic = icon.resize((max(1, int(icon.width * scale)), max(1, int(icon.height * scale))), Image.LANCZOS)
+        img.paste(ic, (int(X - ic.width / 2), int(Y - ic.height / 2)), ic)
+        return size / 2
+    s = size / 2
+    if kind in ("City", "Town"):
+        d.rectangle([X - s, Y - s * 0.4, X + s, Y + s * 0.9], fill=(240, 232, 214), outline=INK, width=2)
+        d.polygon([(X - s * 1.15, Y - s * 0.4), (X, Y - s * 1.4), (X + s * 1.15, Y - s * 0.4)], fill=ROOF, outline=INK)
+        if kind == "City":
+            d.rectangle([X + s * 0.35, Y - s * 1.9, X + s * 0.8, Y - s * 0.4], fill=(240, 232, 214), outline=INK, width=2)
+    elif kind == "Castle":
+        d.rectangle([X - s, Y - s, X + s, Y + s], fill=(118, 108, 98), outline=INK, width=max(1, int(S)))
+        if imp >= 2:
+            for k in (-1, 0, 1):
+                d.rectangle([X + k * s * 0.7 - s * 0.25, Y - s * 1.45, X + k * s * 0.7 + s * 0.25, Y - s], fill=(118, 108, 98), outline=INK)
+    elif kind in ("Abbey", "Cathedral"):
+        col = INK if kind == "Cathedral" or imp >= 2 else (95, 75, 60)
+        d.line([(X, Y - s), (X, Y + s)], fill=col, width=max(2, int(s / 3)))
+        d.line([(X - s * 0.7, Y - s * 0.35), (X + s * 0.7, Y - s * 0.35)], fill=col, width=max(2, int(s / 3)))
+    elif kind == "Landmark":
+        for k in (-1, 0, 1):
+            d.rectangle([X + k * s * 0.8 - s * 0.25, Y - s * 0.9, X + k * s * 0.8 + s * 0.25, Y + s * 0.5], fill=(150, 140, 125), outline=INK)
+    elif kind == "Nature":
+        d.polygon([(X - s, Y + s * 0.6), (X, Y - s * 0.9), (X + s, Y + s * 0.6)], fill=(120, 150, 100), outline=INK)
+    elif kind == "Battle":
+        d.line([(X - s, Y - s), (X + s, Y + s)], fill=(150, 20, 20), width=max(2, int(1.6 * S)))
+        d.line([(X - s, Y + s), (X + s, Y - s)], fill=(150, 20, 20), width=max(2, int(1.6 * S)))
+    elif kind == "Village":
+        d.ellipse([X - s, Y - s, X + s, Y + s], fill=INK)
+    return s
+
+
 def main():
     rnd = random.Random(3)
 
@@ -235,70 +304,73 @@ def main():
         d.line([(MARGIN, Y), (W - MARGIN, Y)], fill=(90, 70, 50), width=1)
         y += step_real
 
-    # Region names first (under everything else)
-    f_area = font("EBGaramond-Italic", 30)
-    f_area_big = font("EBGaramond-Italic", 40)
-    for row in places.values():
-        if row["Type"] == "Area":
-            X, Y = px(float(row["Lon"]), float(row["Lat"]))
-            fnt = f_area_big if int(row["Importance"]) >= 2 else f_area
-            text = row["Name"].upper() if int(row["Importance"]) >= 2 else row["Name"]
-            w_ = d.textlength(text, font=fnt)
-            d.text((X - w_ / 2, Y), text, font=fnt, fill=(110, 84, 58))
-
-    # Places
+    # ---- Places: symbols first, then labels placed so they do not overlap ----
     f_city = font("Cinzel-Bold", 30)
     f_town = font("Cinzel-SemiBold", 21)
     f_minor = font("EBGaramond-SemiBold", 17)
     f_small = font("EBGaramond-Italic", 15)
     f_battle = font("EBGaramond-Italic", 17)
+    f_area = font("EBGaramond-Italic", 30)
+    f_area_big = font("EBGaramond-Italic", 40)
+
+    icons = load_icons()
+    obstacles = []          # boxes labels must not cover: symbols and labels already placed
+    labels = []             # (priority, text, font, colour, X, Y, radius, must_show, centred)
+
     order = {"Village": 0, "Abbey": 1, "Nature": 2, "Landmark": 3, "Castle": 4, "Cathedral": 5, "Battle": 6, "Town": 7, "City": 8}
     for row in sorted(places.values(), key=lambda r: (order.get(r["Type"], 0), int(r["Importance"]))):
         kind, imp = row["Type"], int(row["Importance"])
-        if kind == "Area":
-            continue
         X, Y = px(float(row["Lon"]), float(row["Lat"]))
         name = row["Name"]
+        if kind == "Area":
+            big = imp >= 2
+            labels.append((1 + imp, name.upper() if big else name, f_area_big if big else f_area, (110, 84, 58), X, Y, 0, False, True))
+            continue
+        r = draw_symbol(img, d, icons, kind, imp, X, Y)
+        if kind in ("City", "Town", "Cathedral", "Battle") or (kind == "Castle" and imp >= 2) or imp >= 2:
+            obstacles.append((X - r, Y - r, X + r, Y + r))
         if kind in ("City", "Town"):
-            s = {3: 13, 2: 10, 1: 6.5}[imp] * (1.25 if kind == "City" else 1) * S
-            d.rectangle([X - s, Y - s * 0.4, X + s, Y + s * 0.9], fill=(240, 232, 214), outline=INK, width=2)
-            d.polygon([(X - s * 1.15, Y - s * 0.4), (X, Y - s * 1.4), (X + s * 1.15, Y - s * 0.4)], fill=ROOF, outline=INK)
-            if kind == "City":
-                d.rectangle([X + s * 0.35, Y - s * 1.9, X + s * 0.8, Y - s * 0.4], fill=(240, 232, 214), outline=INK, width=2)
             fnt = f_city if imp == 3 else (f_town if imp == 2 else f_minor)
-            d.text((X + s + 4 * S, Y - s), name, font=fnt, fill=INK)
-        elif kind == "Castle":
-            s = {3: 7, 2: 5.5, 1: 3.5}[imp] * S
-            d.rectangle([X - s, Y - s, X + s, Y + s], fill=(118, 108, 98), outline=INK, width=max(1, int(S)))
-            if imp >= 2:
-                for k in (-1, 0, 1):
-                    d.rectangle([X + k * s * 0.7 - s * 0.25, Y - s * 1.45, X + k * s * 0.7 + s * 0.25, Y - s], fill=(118, 108, 98), outline=INK)
-                d.text((X + s + 3 * S, Y), name.replace(" Castle", ""), font=f_minor, fill=(70, 60, 55))
-        elif kind in ("Abbey", "Cathedral"):
-            s = (8 if kind == "Cathedral" else (5 if imp >= 2 else 3.2)) * S
-            col = INK if kind == "Cathedral" or imp >= 2 else (95, 75, 60)
-            d.line([(X, Y - s), (X, Y + s)], fill=col, width=max(2, int(s / 3)))
-            d.line([(X - s * 0.7, Y - s * 0.35), (X + s * 0.7, Y - s * 0.35)], fill=col, width=max(2, int(s / 3)))
-            if imp >= 2:
-                d.text((X + s + 2 * S, Y - s), name, font=f_small, fill=(70, 60, 55))
+            labels.append(({3: 100, 2: 80, 1: 50}[imp] + (5 if kind == "City" else 0), name, fnt, INK, X, Y, r, imp >= 2, False))
+        elif kind == "Castle" and imp >= 2:
+            labels.append((40 + imp, name.replace(" Castle", ""), f_minor, (70, 60, 55), X, Y, r, False, False))
+        elif kind == "Cathedral" and imp >= 2:
+            labels.append((45 + imp, name, f_small, (70, 60, 55), X, Y, r, False, False))
+        elif kind == "Abbey" and imp >= 2:
+            labels.append((30, name, f_small, (70, 60, 55), X, Y, r, False, False))
         elif kind == "Landmark":
-            s = 6 * S
-            for k in (-1, 0, 1):   # three standing stones
-                d.rectangle([X + k * s * 0.8 - s * 0.25, Y - s * 0.9, X + k * s * 0.8 + s * 0.25, Y + s * 0.5], fill=(150, 140, 125), outline=INK)
-            d.text((X + s * 1.4, Y - s), name, font=f_battle if imp >= 2 else f_small, fill=(60, 50, 90))
+            labels.append((60 + imp, name, f_battle if imp >= 2 else f_small, (60, 50, 90), X, Y, r, imp >= 3, False))
         elif kind == "Nature":
-            s = 6 * S
-            d.polygon([(X - s, Y + s * 0.6), (X, Y - s * 0.9), (X + s, Y + s * 0.6)], fill=(120, 150, 100), outline=INK)
-            d.text((X + s + 2 * S, Y - s * 0.6), name, font=f_small, fill=(40, 80, 50))
+            labels.append((35 + imp, name, f_small, (40, 80, 50), X, Y, r, False, False))
         elif kind == "Battle":
-            r = (6 if imp < 3 else 9) * S
-            d.line([(X - r, Y - r), (X + r, Y + r)], fill=(150, 20, 20), width=max(2, int(1.6 * S)))
-            d.line([(X - r, Y + r), (X + r, Y - r)], fill=(150, 20, 20), width=max(2, int(1.6 * S)))
-            d.text((X - 8 * S, Y + r + 1 * S), name, font=f_battle, fill=(130, 20, 20))
+            labels.append((70 + imp * 5, name, f_battle, (130, 20, 20), X, Y, r, imp >= 2, False))
         elif kind == "Village":
-            r = 2.2 * S
-            d.ellipse([X - r, Y - r, X + r, Y + r], fill=INK)
-            d.text((X + r + 2 * S, Y - r * 2), name, font=f_small, fill=(80, 64, 48))
+            labels.append((20, name, f_small, (80, 64, 48), X, Y, r, False, False))
+
+    pad = 2 * S
+    for prio, text, fnt, colour, X, Y, r, must, centred in sorted(labels, key=lambda l: -l[0]):
+        box = d.textbbox((0, 0), text, font=fnt)
+        tw, th = box[2] - box[0], box[3] - box[1]
+        g = r + 3 * S
+        if centred:
+            spots = [(X - tw / 2, Y - th / 2 + k * th * 0.9) for k in (0, 1, -1, 2, -2)]
+        else:
+            spots = [(X + g, Y - th / 2), (X - g - tw, Y - th / 2), (X - tw / 2, Y - g - th), (X - tw / 2, Y + g),
+                     (X + g, Y - g - th * 0.6), (X + g, Y + g * 0.4), (X - g - tw, Y + g * 0.4), (X - g - tw, Y - g - th * 0.6)]
+        chosen = None
+        for sx, sy in spots:
+            rect = (sx - pad, sy - pad, sx + tw + pad, sy + th + pad)
+            if not any(rect[0] < o[2] and rect[2] > o[0] and rect[1] < o[3] and rect[3] > o[1] for o in obstacles):
+                chosen = (sx, sy, rect)
+                break
+        if not chosen:
+            if not must:
+                continue            # no room: a minor label is left out rather than drawn over another
+            sx, sy = spots[0]
+            chosen = (sx, sy, (sx - pad, sy - pad, sx + tw + pad, sy + th + pad))
+        sx, sy, rect = chosen
+        obstacles.append(rect)
+        d.text((sx - box[0], sy - box[1]), text, font=fnt, fill=colour, stroke_width=max(1, int(1.2 * S)), stroke_fill=PARCH)
 
     # Title, scale, legend
     area_game = england_area / COMPRESSION ** 2
