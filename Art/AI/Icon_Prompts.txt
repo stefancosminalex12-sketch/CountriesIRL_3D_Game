@@ -58,3 +58,39 @@ BOOTS
 
 BELT
 [belt_torch] Generate an image of a game inventory icon: 15th-century burning torch. Carried by a countryball, about 60 cm long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+
+----------------------------------------------------------------
+REDO IN THE NEW STYLE (weapons, shields and carried items)
+----------------------------------------------------------------
+
+WEAPON (MAIN)
+[weapon_bill] Generate an image of a game inventory icon: 15th-century English bill, billhook blade, not a halberd. Carried by a countryball, about 2 m long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[weapon_poleaxe] Generate an image of a game inventory icon: 15th-century poleaxe. Carried by a countryball, about 1.8 m long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[weapon_longsword] Generate an image of a game inventory icon: 15th-century longsword. Carried by a countryball, about 1.2 m long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[weapon_arming_sword] Generate an image of a game inventory icon: 15th-century arming sword. Carried by a countryball, about 95 cm long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[weapon_falchion] Generate an image of a game inventory icon: 15th-century falchion. Carried by a countryball, about 85 cm long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[weapon_war_hammer] Generate an image of a game inventory icon: 15th-century horseman's war hammer. Carried by a countryball, about 70 cm long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[weapon_mace] Generate an image of a game inventory icon: 15th-century flanged mace. Carried by a countryball, about 65 cm long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[weapon_spear] Generate an image of a game inventory icon: 15th-century infantry spear. Carried by a countryball, about 2.2 m long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[weapon_longbow] Generate an image of a game inventory icon: English yew war longbow. Carried by a countryball, about 1.8 m long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[weapon_crossbow] Generate an image of a game inventory icon: 15th-century steel crossbow. Carried by a countryball, about 90 cm long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[weapon_wood_axe] Generate an image of a game inventory icon: 15th-century woodsman's axe. Carried by a countryball, about 80 cm long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[weapon_cudgel] Generate an image of a game inventory icon: 15th-century peasant's oak cudgel. Carried by a countryball, about 70 cm long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[weapon_quarterstaff] Generate an image of a game inventory icon: 15th-century English quarterstaff. Carried by a countryball, about 2 m long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+
+WEAPON (OFF)
+[offhand_buckler] Generate an image of a game inventory icon: 15th-century steel buckler. Carried by a countryball, about 35 cm wide. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[offhand_lantern] Generate an image of a game inventory icon: 15th-century horn lantern with a candle inside. Carried by a countryball, about 30 cm tall. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+
+BACK
+[back_pavise_york] Generate an image of a game inventory icon: 15th-century pavise, blue with the white rose of York. Carried by a countryball, about 1.3 m tall. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[back_pavise_lancaster] Generate an image of a game inventory icon: 15th-century pavise, red with the red rose of Lancaster. Carried by a countryball, about 1.3 m tall. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[back_heater_shield_york] Generate an image of a game inventory icon: 15th-century heater shield, blue with the white rose of York. Carried by a countryball, about 75 cm tall. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[back_heater_shield_lancaster] Generate an image of a game inventory icon: 15th-century heater shield, red with the red rose of Lancaster. Carried by a countryball, about 75 cm tall. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+
+BELT
+[belt_rondel_dagger] Generate an image of a game inventory icon: 15th-century rondel dagger. Carried by a countryball, about 45 cm long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[belt_ballock_dagger] Generate an image of a game inventory icon: 15th-century English ballock dagger. Carried by a countryball, about 40 cm long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[belt_knife] Generate an image of a game inventory icon: plain 15th-century belt knife. Carried by a countryball, about 25 cm long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[belt_arrow_bag] Generate an image of a game inventory icon: 15th-century English linen arrow bag with a leather spacer disc. Carried by a countryball, about 80 cm long. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[belt_purse] Generate an image of a game inventory icon: 15th-century framed leather purse. Carried by a countryball, about 20 cm wide. Hand-painted, slightly stylized, not photorealistic. Transparent background.
