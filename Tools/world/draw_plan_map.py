@@ -416,8 +416,20 @@ def draw_dashed(d, pts, colour, width, dash, gap):
                 on, left = not on, (gap if on else dash)
 
 
-def draw_crossing(d, kind, X, Y):
-    """Stone bridge: solid dark bar; timber bridge: open bar; ferry: blue diamond; ford: pale ring."""
+CROSSING_ICON = {"stone bridge": "map_bridge_stone", "timber bridge": "map_bridge_timber", "ferry": "map_ferry", "ford": "map_ford"}
+CROSSING_SIZE = 16      # map pixels; the 32 documented medieval bridges are drawn a bit bigger
+
+
+def draw_crossing(img, d, icons, kind, X, Y, documented=False):
+    """The user's crossing icons when they exist (Art/AI/MapIcons/map_bridge_stone.png etc.), else drawn shapes:
+    stone bridge: solid dark bar; timber bridge: open bar; ferry: blue diamond; ford: pale ring."""
+    icon = icons.get(CROSSING_ICON.get(kind, ""))
+    if icon is not None:
+        size = CROSSING_SIZE * (1.4 if documented else 1.0)
+        scale = size / max(icon.size)
+        ic = icon.resize((max(1, int(icon.width * scale)), max(1, int(icon.height * scale))), Image.LANCZOS)
+        img.paste(ic, (int(X - ic.width / 2), int(Y - ic.height / 2)), ic)
+        return
     r = 8
     if kind == "stone bridge":
         d.rectangle([X - r, Y - r * 0.55, X + r, Y + r * 0.55], fill=INK, outline=PARCH, width=2)
@@ -570,8 +582,9 @@ def main():
     # River crossings (Tools/world/build_crossings.py): small symbols on the river
     crossings_path = f"{ROOT}/Data/World/Crossings_England1455.json"
     crossings = json.load(open(crossings_path, encoding="utf-8"))["crossings"] if os.path.exists(crossings_path) else []
+    icons = load_icons()
     for c in crossings:
-        draw_crossing(d, c["kind"], *px(c["lon"], c["lat"]))
+        draw_crossing(img, d, icons, c["kind"], *px(c["lon"], c["lat"]), documented=c.get("documented", False))
 
     # Grid in GAME kilometres, measured from England's west and south edges (the rulers' zero)
     step_game = GRID_KM
@@ -597,7 +610,6 @@ def main():
     f_area = font("EBGaramond-Italic", 30)
     f_area_big = font("EBGaramond-Italic", 40)
 
-    icons = load_icons()
     obstacles = []          # boxes labels must not cover: symbols and labels already placed
     labels = []             # (priority, text, font, colour, X, Y, radius, must_show, centred)
 

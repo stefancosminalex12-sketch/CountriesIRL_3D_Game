@@ -184,8 +184,8 @@ void APlayerBallCharacter::StartSprint()
 	SetSprinting(true);
 
 	// In the saddle, a press right after a tap is a double press (gallop while held); so is every
-	// press in a quick burst (tap, tap, hold). It takes back the first tap's walk/trot switch, so
-	// double-pressing never changes the travelling gait
+	// press in a quick burst (tap, tap, hold), and a quick re-press after letting go of a canter.
+	// It takes back the first tap's walk/trot switch, so double-pressing never changes the travelling gait
 	const float Now = GetWorld()->GetRealTimeSeconds();
 	bShiftDoublePress = IsMounted() && Now - LastShiftTapTime <= ShiftDoublePressSeconds;
 	if (bShiftDoublePress)
@@ -197,18 +197,29 @@ void APlayerBallCharacter::StartSprint()
 
 void APlayerBallCharacter::StopSprint()
 {
+	const EHorseGait GaitBefore = GetRideGait();
 	SetSprinting(false);
-
-	// A quick tap switches between walk and trot (only the first tap of a burst does)
 	const float Now = GetWorld()->GetRealTimeSeconds();
-	if (IsMounted() && Now - ShiftPressTime <= ShiftTapSeconds)
+	if (IsMounted())
 	{
-		if (!bShiftDoublePress)
+		// A quick tap switches between walk and trot (only the first tap of a burst does).
+		// Letting go of a long hold changes nothing, but a quick press after it still counts as a double press
+		if (Now - ShiftPressTime <= ShiftTapSeconds && !bShiftDoublePress)
 		{
 			bTrotBeforeTap = bRideAtTrot;
 			bRideAtTrot = !bRideAtTrot;
 		}
+		else if (!bShiftDoublePress)
+		{
+			bTrotBeforeTap = bRideAtTrot;
+		}
 		LastShiftTapTime = Now;
+
+		if (GaitBefore == EHorseGait::Canter || GaitBefore == EHorseGait::Gallop)
+		{
+			HeldGait = GaitBefore;
+			HeldGaitUntil = Now + ShiftDoublePressSeconds;
+		}
 	}
 	bShiftDoublePress = false;
 }
@@ -226,6 +237,11 @@ EHorseGait APlayerBallCharacter::GetRideGait() const
 		{
 			return EHorseGait::Canter;
 		}
+	}
+	// Just let go of a canter or gallop (or pressed again and it isn't a hold yet): keep the pace a moment
+	if (GetWorld()->GetRealTimeSeconds() < HeldGaitUntil)
+	{
+		return HeldGait;
 	}
 	return bRideAtTrot ? EHorseGait::Trot : EHorseGait::Walk;
 }

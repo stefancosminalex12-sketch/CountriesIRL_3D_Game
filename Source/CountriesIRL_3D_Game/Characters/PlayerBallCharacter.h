@@ -149,6 +149,11 @@ private:
 	bool bTrotBeforeTap = false;
 	bool bShiftDoublePress = false;
 
+	/** Letting go of Shift at a canter or gallop keeps that pace for a moment, so pressing again
+	 *  quickly (to go up to a gallop) doesn't make the horse slow down in between */
+	EHorseGait HeldGait{};
+	float HeldGaitUntil = -100.f;
+
 	/** Resting place of the first-person camera */
 	FVector FirstPersonCameraOffset = FVector::ZeroVector;
 
