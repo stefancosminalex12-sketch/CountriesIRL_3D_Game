@@ -41,6 +41,8 @@ RIVER_TEXT = (44, 88, 76)
 RIVER_NAV = (38, 88, 96)         # reach boats could use in 1455
 CONTOUR = (150, 118, 80)
 ROAD = (92, 58, 32)              # dark brown ink
+LANE = (150, 112, 74)            # local lanes: lighter brown
+TRACK = (150, 112, 74)           # tracks: dashed
 INK = (58, 40, 26)
 ROOF = (176, 52, 40)
 
@@ -396,6 +398,24 @@ def is_cut(lon, lat):
     return any(in_poly(lon, lat, a["polygon"]) for a in CUT)
 
 
+def draw_dashed(d, pts, colour, width, dash, gap):
+    """A dashed line along a polyline (tracks)."""
+    on, left = True, dash
+    for a, b in zip(pts, pts[1:]):
+        seg = math.hypot(b[0] - a[0], b[1] - a[1])
+        pos = 0.0
+        while pos < seg:
+            step = min(left, seg - pos)
+            if on:
+                p0 = (a[0] + (b[0] - a[0]) * pos / seg, a[1] + (b[1] - a[1]) * pos / seg)
+                p1 = (a[0] + (b[0] - a[0]) * (pos + step) / seg, a[1] + (b[1] - a[1]) * (pos + step) / seg)
+                d.line([p0, p1], fill=colour, width=width)
+            pos += step
+            left -= step
+            if left <= 0:
+                on, left = not on, (gap if on else dash)
+
+
 def road_in_release(line):
     """The part of a road before it enters a cut area, ending exactly at the edge."""
     out = [line[0]]
@@ -520,6 +540,16 @@ def main():
     # real width in the game; at 1:20 one pixel is ~3.8 m).
     roads = json.load(open(f"{ROOT}/Data/World/Roads_England1455.json", encoding="utf-8"))["roads"]
     px_per_game_m = PX_PER_KM * COMPRESSION / 1000
+    # Local roads first (Tools/world/build_local_roads.py): lanes (4 m) as thin lighter lines, tracks (2.5 m) dashed
+    local_path = f"{ROOT}/Data/World/LocalRoads_England1455.json"
+    local = json.load(open(local_path, encoding="utf-8"))["roads"] if os.path.exists(local_path) else []
+    for road in local:
+        pts = [px(*p) for p in road["line"]]
+        w = max(2, round(road["width_m"] * 2 * px_per_game_m))
+        if road["class"] == "lane":
+            d.line(pts, fill=LANE, width=w, joint="curve")
+        else:
+            draw_dashed(d, pts, TRACK, w, 10, 8)
     for road in roads:
         w = max(2, round(road["width_m"] * 2 * px_per_game_m))
         d.line([px(*p) for p in road_in_release(road["line"])], fill=ROAD, width=w, joint="curve")
@@ -632,7 +662,7 @@ def main():
     legend = (f"Towns & cities {counts.get('Town', 0) + counts.get('City', 0)}  /  villages {counts.get('Village', 0)}  /  castles {counts.get('Castle', 0)}  /  "
               f"abbeys & priories {counts.get('Abbey', 0)}  /  cathedrals {counts.get('Cathedral', 0)}  /  battles {counts.get('Battle', 0)}  /  "
               f"landmarks {counts.get('Landmark', 0)}  /  nature {counts.get('Nature', 0)}\n"
-              f"Icons at their true size in the game.  Brown: the {len(roads)} main roads.\n"
+              f"Icons at their true size in the game.  Dark brown: the {len(roads)} main roads (6-8 m).  Light brown: {sum(1 for r in local if r["class"] == "lane")} lanes (4 m), dashed: {sum(1 for r in local if r["class"] == "track")} tracks (2.5 m).\n"
               f"Rivers: the {len(rivers)} main rivers, 1.5x their game width, darker where boats went in 1455\n"
               f"Terrain: the game's own heights (contours every 50 m).  Not shown: Devon & Cornwall (later update), Wales and Scotland (DLC)\n"
               f"Data: Natural Earth, OpenStreetMap contributors, Wikidata, AWS Terrain Tiles")
