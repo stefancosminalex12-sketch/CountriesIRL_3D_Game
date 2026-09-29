@@ -30,13 +30,13 @@ S = 2.25                             # size factor for symbols and text (designe
 MARGIN = int(110 * S)
 TOP = int(150 * S)
 
-PARCH = (236, 222, 188)
-PARCH_DARK = (214, 194, 150)
+PARCH = (247, 239, 212)          # light yellowish paper
+PARCH_DARK = (236, 224, 190)
 SEA = (150, 178, 150)
 RIVER = (78, 122, 106)
 RIVER_TEXT = (44, 88, 76)
 BOAT_ROUTE = (214, 228, 206)
-ROAD = (168, 46, 32)
+ROAD = (92, 58, 32)              # dark brown ink
 INK = (58, 40, 26)
 ROOF = (176, 52, 40)
 
@@ -127,7 +127,7 @@ def hillshade(elev):
             dzdx = (e[i + 1, j] - e[i - 1, j]) / (2 * cell_m)
             dzdy = (e[i, j + 1] - e[i, j - 1]) / (2 * cell_m)
             light = (-dzdx - dzdy) / math.sqrt(2)          # light from the top-left
-            s[i, j] = int(max(150, min(255, 225 + light * 220)))
+            s[i, j] = int(max(178, min(255, 232 + light * 200)))
     return shade.filter(ImageFilter.GaussianBlur(1))
 
 
@@ -299,6 +299,24 @@ def is_cut(lon, lat):
     return any(in_poly(lon, lat, a["polygon"]) for a in CUT)
 
 
+def road_in_release(line):
+    """The part of a road before it enters a cut area, ending exactly at the edge."""
+    out = [line[0]]
+    for a, b in zip(line, line[1:]):
+        if is_cut(*b):
+            lo, hi = 0.0, 1.0
+            for _ in range(20):                                # find where the road crosses the edge
+                mid = (lo + hi) / 2
+                if is_cut(a[0] + (b[0] - a[0]) * mid, a[1] + (b[1] - a[1]) * mid):
+                    hi = mid
+                else:
+                    lo = mid
+            out.append([a[0] + (b[0] - a[0]) * lo, a[1] + (b[1] - a[1]) * lo])
+            break
+        out.append(b)
+    return out
+
+
 def main():
     rnd = random.Random(3)
 
@@ -344,7 +362,7 @@ def main():
     if elev is not None:
         shade = hillshade(elev).resize((W, H), Image.BICUBIC)
         high = elev.point(lambda v: v * (255 / 600.0)).convert("L").resize((W, H), Image.BICUBIC).filter(ImageFilter.GaussianBlur(3))
-        img = Image.composite(Image.new("RGB", (W, H), (190, 160, 118)), img, ImageChops.multiply(high.point(lambda v: v * 0.55), land))
+        img = Image.composite(Image.new("RGB", (W, H), (214, 196, 152)), img, ImageChops.multiply(high.point(lambda v: v * 0.45), land))
         shaded = ImageChops.multiply(img, Image.merge("RGB", (shade, shade, shade)))
         img = Image.composite(shaded, img, land)
 
@@ -379,35 +397,13 @@ def main():
     places = {i: r for i, r in all_places.items() if shown(r)}
     P = lambda i: px(float(all_places[i]["Lon"]), float(all_places[i]["Lat"]))
 
-    # Main roads of the period (after the Gough Map's red routes)
-    roads = [
-        ["london", "ware", "huntingdon", "stamford", "grantham", "newark", "doncaster", "pontefract", "tadcaster", "york"],
-        ["york", "ripon", "northallerton", "darlington", "durham", "newcastle", "morpeth", "alnwick", "berwick"],
-        ["ripon", "middleham", "richmond", "barnard_castle", "appleby", "penrith", "carlisle"],
-        ["london", "st_albans", "dunstable", "northampton", "coventry", "lichfield", "stafford", "chester"],
-        ["london", "reading", "abingdon", "oxford", "cirencester", "gloucester", "hereford", "ludlow", "shrewsbury", "chester"],
-        ["london", "kingston", "guildford", "winchester", "southampton"],
-        ["winchester", "salisbury", "dorchester", "exeter", "plymouth"],
-        ["exeter", "launceston", "bodmin", "truro"],
-        ["reading", "marlborough", "bath", "bristol", "gloucester", "worcester", "shrewsbury"],
-        ["london", "rochester", "canterbury", "dover"], ["canterbury", "sandwich"],
-        ["london", "chelmsford", "colchester", "ipswich", "norwich", "yarmouth"],
-        ["london", "cambridge", "ely", "kings_lynn", "norwich"],
-        ["york", "beverley", "hull"], ["york", "malton", "scarborough"],
-        ["coventry", "leicester", "nottingham", "doncaster"],
-        ["newark", "lincoln", "louth", "grimsby"],
-        ["york", "knaresborough", "skipton", "kendal", "penrith"],
-        ["kendal", "lancaster", "preston", "chester"],
-        ["coventry", "warwick", "banbury", "oxford"],
-        ["newcastle", "hexham", "carlisle"],
-        ["bristol", "bridgwater", "taunton", "exeter"],
-        ["london", "lewes"], ["guildford", "arundel", "chichester", "portsmouth"],
-    ]
+    # Main roads of 1455 (Tools/world/build_roads.py). Drawn 3x their real width so they show: at this scale
+    # 1 px is ~6.4 m in the game (roads keep their real width), so a true 8 m road would be barely one pixel.
+    roads = json.load(open(f"{ROOT}/Data/World/Roads_England1455.json", encoding="utf-8"))["roads"]
+    px_per_game_m = PX_PER_KM * COMPRESSION / 1000
     for road in roads:
-        road = [i for i in road if i in all_places]
-        for a, b in zip(road, road[1:]):                         # roads into a cut area are left out with it
-            if a in places and b in places:
-                d.line([P(a), P(b)], fill=ROAD, width=max(2, int(1.8 * S)))
+        w = max(2, round(road["width_m"] * 3 * px_per_game_m))
+        d.line([px(*p) for p in road_in_release(road["line"])], fill=ROAD, width=w, joint="curve")
 
     # Grid in GAME kilometres
     step_game = 5
@@ -511,7 +507,7 @@ def main():
               f"abbeys, priories & friaries {counts.get('Abbey', 0)}  /  cathedrals {counts.get('Cathedral', 0)}  /  "
               f"landmarks {counts.get('Landmark', 0)}  /  nature {counts.get('Nature', 0)}  /  battles {counts.get('Battle', 0)}  /  "
               f"villages {counts.get('Village', 0)}.\n"
-              f"Red lines: roads. Rivers: the {len(rivers)} main rivers, dashed where boats went in 1455. Not shown: Devon & Cornwall (later update), Wales and Scotland (DLC). "
+              f"Brown lines: the {len(roads)} main roads (thicker: the great Roman-built roads). Rivers: the {len(rivers)} main rivers, dashed where boats went in 1455. Not shown: Devon & Cornwall (later update), Wales and Scotland (DLC). "
               f"Data: Natural Earth, OpenStreetMap contributors, Wikidata, AWS Terrain Tiles.")
     d.rectangle([0, H - MARGIN + 1, W, H], fill=SEA)            # clean strip under the map frame for the legend
     d.multiline_text((MARGIN, H - MARGIN + int(4 * S)), legend, font=font("EBGaramond-Italic", 18), fill=INK, spacing=int(4 * S))

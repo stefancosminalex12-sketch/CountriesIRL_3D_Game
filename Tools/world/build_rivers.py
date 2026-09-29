@@ -2,7 +2,7 @@
 Build the game's simplified, connected river network from OpenStreetMap river pieces.
     python Tools/world/build_rivers.py
 Reads the hand-picked list Data/World/Rivers_England1455.csv (which rivers, a point on each, what it flows into,
-how far boats could go in 1455, Border=1 if it forms a land border) and Art/MapData/osm_rivers_england.geojson (fetch_map_data.py).
+how far boats could go in 1455, Border=1 if it forms a land border, StartNear=a place Id to begin the river there) and Art/MapData/osm_rivers_england.geojson (fetch_map_data.py).
 Writes Data/World/Rivers_England1455.json: for every river one smooth centreline from source to mouth (lon/lat),
 ending exactly on the river it flows into, plus how much of it is navigable.
 """
@@ -177,6 +177,10 @@ def main():
             if parent != "sea":                                # end exactly on the river it joins
                 stem.append(nearest_on_line(stem[-1], built[parent]["km"])[1])
             smooth = chaikin(douglas_peucker(stem, SIMPLIFY_KM))
+            if r.get("StartNear"):                             # drawn only from this place down (Severn: not from Wales)
+                pl = places[r["StartNear"]]
+                start = km(float(pl["Lon"]), float(pl["Lat"]))
+                smooth = smooth[min(range(len(smooth)), key=lambda k: dist(smooth[k], start)):]
             length = sum(dist(a, b) for a, b in zip(smooth, smooth[1:]))
             nav_from = None                                    # fraction along the line (source=0, mouth=1)
             if r["NavigableTo"]:

@@ -1,0 +1,24 @@
+Id,Name,Class,Route,Note
+great_north_road,Great North Road,great,"london;Highgate;barnet;Hatfield, Hertfordshire;Stevenage;Baldock;Biggleswade;Eaton Socon;Buckden, Cambridgeshire;Alconbury;Stilton;stamford;grantham;newark;Tuxford;Retford;Bawtry;doncaster;Wentbridge;Ferrybridge;sherburn;tadcaster;york;Easingwold;thirsk;northallerton;darlington;durham;Chester-le-Street;newcastle;morpeth;alnwick;Belford, Northumberland;berwick",London to York and on to Berwick and Scotland; the road of kings and armies (Towton and Barnet lie on it)
+chester_road,Watling Street and the Chester road,great,"london;Edgware;st_albans;dunstable;Stony Stratford;Towcester;Daventry;coventry;Coleshill, Warwickshire;lichfield;Stone, Staffordshire;Newcastle-under-Lyme;Nantwich;chester",Roman Watling Street to Towcester then the medieval road by Coventry to Chester
+carlisle_road,The road to Carlisle,main,Newcastle-under-Lyme;Holmes Chapel;Warrington;Wigan;preston;Garstang;lancaster;kendal;Shap;penrith;carlisle,The west road north (drawn on the Gough Map)
+dover_road,Watling Street (Dover road),great,london;Dartford;rochester;Sittingbourne;Faversham;canterbury;dover,Pilgrims to Canterbury and the crossing to Calais
+sandwich_road,Sandwich road,main,canterbury;sandwich,To the port of Sandwich
+bristol_road,The Bristol road,main,"london;Brentford;Hounslow;Colnbrook;Maidenhead;reading;Newbury, Berkshire;Hungerford;marlborough;Calne;Chippenham;bath;Keynsham;bristol",London to the second port of England
+gloucester_road,The Oxford and Gloucester road,main,"london;Uxbridge;High Wycombe;Stokenchurch;Tetsworth;Wheatley, Oxfordshire;oxford;Witney;Burford;Northleach;Andoversford;gloucester",Through the Cotswold wool country
+march_road,The March road,main,"gloucester;Ross-on-Wye;hereford;Leominster;ludlow;Church Stretton;shrewsbury;Whitchurch, Shropshire;chester",Along the Welsh March: Hereford; Ludlow (Duke of York); Shrewsbury; Chester
+winchester_road,The Winchester road,main,"london;kingston;guildford;Farnham;Alton, Hampshire;winchester;southampton",To Winchester and the port of Southampton
+western_road,The western road,main,"london;Staines-upon-Thames;Bagshot;Basingstoke;Andover, Hampshire;salisbury;Shaftesbury;Sherborne;Crewkerne;Chard, Somerset;Honiton;exeter",London to Salisbury and the West Country (Devon part not in the first release)
+salisbury_road,Winchester to Salisbury,main,"winchester;Stockbridge, Hampshire;salisbury",
+dorset_road,The Dorchester road,main,salisbury;Blandford Forum;dorchester,
+norwich_road,The Norwich road,main,"london;Romford;Brentwood, Essex;chelmsford;colchester;ipswich;Scole;norwich;yarmouth",London to Norwich and the herring port of Yarmouth
+lynn_road,The Cambridge and Lynn road,main,"london;Waltham Cross;ware;Royston, Hertfordshire;cambridge;ely;Downham Market;kings_lynn",Roman Ermine Street to Royston; then Cambridge; Ely and Lynn
+fosse_way,The Fosse Way,great,"Ilchester;bath;cirencester;Stow-on-the-Wold;Moreton-in-Marsh;Brinklow;leicester;Widmerpool;East Stoke, Nottinghamshire;newark;lincoln",The Roman road from the south-west to Lincoln
+severn_road,The Severn road,main,bristol;gloucester;tewkesbury;worcester;Kidderminster;Bridgnorth;shrewsbury,Up the Severn valley
+hull_road,The Hull road,main,york;Market Weighton;beverley;hull,
+scarborough_road,The Scarborough road,main,york;malton;scarborough,
+tyne_gap_road,The Tyne Gap road,main,newcastle;hexham;Haltwhistle;carlisle,Across the north along Hadrian's Wall
+stainmore_road,The Stainmore road,main,"york;Boroughbridge;Catterick, North Yorkshire;Bowes;Brough, Cumbria;appleby;penrith",Roman road over Stainmore to the west; passes near Middleham
+nottingham_road,The Nottingham road,main,Towcester;northampton;Market Harborough;leicester;Loughborough;nottingham;Mansfield;Worksop;Tickhill;doncaster,Through the East Midlands
+aire_gap_road,The Aire Gap road,main,"doncaster;wakefield;leeds;Bradford;Keighley;skipton;Settle, North Yorkshire;Kirkby Lonsdale;kendal",Across the Pennines through the Aire gap
+lincolnshire_road,The Louth road,main,lincoln;Market Rasen;louth;grimsby,
