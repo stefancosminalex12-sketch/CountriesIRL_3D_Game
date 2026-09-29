@@ -44,6 +44,10 @@ public:
 	UFUNCTION(Exec)
 	void DevWalk(float Forward, float Right, float Seconds, bool bRun = false);
 
+	/** Console (testing): point the camera. DevLook -5 90 = nearly level, facing east (for watching the legs) */
+	UFUNCTION(Exec)
+	void DevLook(float Pitch, float Yaw);
+
 	/** Console (testing): DevDamage 25 */
 	UFUNCTION(Exec)
 	void DevDamage(float Amount);
