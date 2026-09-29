@@ -878,3 +878,82 @@ c_newcastle_upon_tyne_castle,Newcastle upon Tyne Castle,Castle,54.9688,-1.6104,1
 c_caister_castle,Caister Castle,Castle,52.6505,1.7011,1,Built 1432 (Wikidata),
 c_orford_castle,Orford Castle,Castle,52.0942,1.5307,1,Built 1165 (Wikidata),
 c_hadleigh_castle,Hadleigh Castle,Castle,51.5444,0.6090,1,Built 1230 (Wikidata),
+v_bamburgh,Bamburgh,Village,55.6040,-1.7220,1,Village under the royal castle; besieged 1464,Bamburgh
+v_warkworth,Warkworth,Village,55.3450,-1.6110,1,Percy castle village on the Coquet,"Warkworth, Northumberland"
+v_norham,Norham,Village,55.7180,-2.1580,1,Border castle on the Tweed (Prince-Bishop),Norham
+v_alnwick,Alnwick,Village,55.4134,-1.7069,1,Percy seat: the market below Alnwick Castle,Alnwick
+v_chester_le_street,Chester-le-Street,Village,54.8594,-1.5699,1,Great North Road stop; old home of St Cuthbert,Chester-le-Street
+v_whickham,Whickham,Village,54.9460,-1.6761,1,Coal pits on the Tyne (work: mining),Whickham
+v_brough,Brough,Village,54.5256,-2.3188,1,Castle on the Stainmore road,"Brough, Cumbria"
+v_shap,Shap,Village,54.5290,-2.6760,1,Abbey and the high pass on the Carlisle road,Shap
+v_cockermouth,Cockermouth,Village,54.6613,-3.3620,1,Percy castle village,Cockermouth
+v_keswick,Keswick,Village,54.6008,-3.1375,1,Lakes village under Skiddaw,"Keswick, Cumbria"
+v_brampton,Brampton,Village,54.9409,-2.7329,1,Village below Naworth (the Dacres),"Brampton, Carlisle"
+v_bowness_on_windermere,Bowness-on-Windermere,Village,54.3644,-2.9181,1,Ferry and fishing on Windermere,Bowness-on-Windermere
+v_catterick,Catterick,Village,54.3770,-1.6300,1,Swale crossing on the Stainmore road,"Catterick, North Yorkshire"
+v_helmsley,Helmsley,Village,54.2472,-1.0586,1,Castle village by Rievaulx Abbey,Helmsley
+v_reeth,Reeth,Village,54.3892,-1.9422,1,Swaledale lead mining (work: mining),Reeth
+v_ferrybridge,Ferrybridge,Village,53.7140,-1.2810,1,Aire crossing; battle 1461,Ferrybridge
+v_conisbrough,Conisbrough,Village,53.4790,-1.2270,1,The Duke of York's castle,Conisbrough
+v_settle,Settle,Village,54.0681,-2.2778,1,Aire Gap road; Pennine sheep market,"Settle, North Yorkshire"
+v_warrington,Warrington,Village,53.3900,-2.5900,1,The Mersey bridge on the Carlisle road,Warrington
+v_wigan,Wigan,Village,53.5448,-2.6318,1,Carlisle road stop,Wigan
+v_clitheroe,Clitheroe,Village,53.8711,-2.3916,1,Duchy of Lancaster castle,Clitheroe
+v_lathom,Lathom,Village,53.5900,-2.8200,1,Seat of the Stanleys,Lathom
+v_nantwich,Nantwich,Village,53.0667,-2.5219,1,Salt works (work: salt),Nantwich
+v_kingsland,Kingsland,Village,52.2482,-2.8103,1,Battle of Mortimer's Cross 1461,"Kingsland, Herefordshire"
+v_wigmore,Wigmore,Village,52.3164,-2.8612,1,Mortimer castle (York's inheritance),"Wigmore, Herefordshire"
+v_leominster,Leominster,Village,52.2282,-2.7385,1,Priory and wool; March road,Leominster
+v_ross_on_wye,Ross-on-Wye,Village,51.9140,-2.5870,1,Wye crossing on the March road,Ross-on-Wye
+v_bridgnorth,Bridgnorth,Village,52.5350,-2.4195,1,Castle and Severn crossing,Bridgnorth
+v_market_drayton,Market Drayton,Village,52.9044,-2.4848,1,Near Blore Heath 1459,Market Drayton
+v_whitchurch,Whitchurch,Village,52.9690,-2.6820,1,March road stop; Talbot manor,"Whitchurch, Shropshire"
+v_kenilworth,Kenilworth,Village,52.3410,-1.5660,1,Duchy castle; the Queen's court nearby,Kenilworth
+v_coleshill,Coleshill,Village,52.4990,-1.7080,1,Chester road stop,"Coleshill, Warwickshire"
+v_droitwich,Droitwich,Village,52.2670,-2.1530,1,Salt works (work: salt),Droitwich Spa
+v_newcastle_under_lyme,Newcastle-under-Lyme,Village,53.0109,-2.2278,1,Road junction: Chester and Carlisle roads,Newcastle-under-Lyme
+v_tutbury,Tutbury,Village,52.8540,-1.6860,1,Duchy of Lancaster castle,Tutbury
+v_birmingham,Birmingham,Village,52.4800,-1.9025,1,Small market and metalworkers (a known name),Birmingham
+v_market_bosworth,Market Bosworth,Village,52.6239,-1.4017,1,Battle of Bosworth 1485,Market Bosworth
+v_east_stoke,East Stoke,Village,53.0390,-0.8780,1,Battle of Stoke Field 1487,"East Stoke, Nottinghamshire"
+v_edgcote,Edgcote,Village,52.1260,-1.2650,1,Battle of Edgecote 1469,Edgcote
+v_towcester,Towcester,Village,52.1300,-0.9900,1,Watling Street stop,Towcester
+v_mansfield,Mansfield,Village,53.1444,-1.1964,1,Sherwood Forest village; the Nottingham road,Mansfield
+v_castleton,Castleton,Village,53.3440,-1.7750,1,Peveril Castle; Peak lead mining (work: mining),"Castleton, Derbyshire"
+v_market_harborough,Market Harborough,Village,52.4775,-0.9206,1,Nottingham road stop,Market Harborough
+v_tattershall,Tattershall,Village,53.1040,-0.1906,1,Lord Cromwell's brick castle,Tattershall
+v_crowland,Crowland,Village,52.6758,-0.1683,1,Fen abbey; eel-catchers (work: fens),Crowland
+v_st_ives,St Ives,Village,52.3344,-0.0761,1,Great fair on the Great Ouse,"St Ives, Cambridgeshire"
+v_empingham,Empingham,Village,52.6664,-0.5964,1,Battle of Losecote Field 1470,Empingham
+v_caister_on_sea,Caister-on-Sea,Village,52.6510,1.7330,1,Fastolf's castle; the siege of 1469,Caister-on-Sea
+v_paston,Paston,Village,52.8578,1.4499,1,Home of the Pastons (the Paston letters),"Paston, Norfolk"
+v_little_walsingham,Little Walsingham,Village,52.8940,0.8740,1,England's great pilgrimage shrine,Little Walsingham
+v_framlingham,Framlingham,Village,52.2221,1.3434,1,Mowbray (Duke of Norfolk) castle,Framlingham
+v_dunwich,Dunwich,Village,52.2775,1.6311,1,Great port being eaten by the sea,Dunwich
+v_clare,Clare,Village,52.0800,0.5800,1,The Duke of York's honour of Clare,"Clare, Suffolk"
+v_waltham_abbey,Waltham Abbey,Village,51.6846,0.0004,1,Great abbey; road north,Waltham Abbey
+v_castle_hedingham,Castle Hedingham,Village,51.9910,0.6040,1,De Vere (Earl of Oxford) castle,Castle Hedingham
+v_eton,Eton,Village,51.4881,-0.6092,1,Henry VI's new college (1440),"Eton, Berkshire"
+v_ewelme,Ewelme,Village,51.6210,-1.0710,1,"Alice Chaucer, Duchess of Suffolk",Ewelme
+v_wallingford,Wallingford,Village,51.5990,-1.1250,1,Castle and Thames crossing,"Wallingford, Oxfordshire"
+v_woodstock,Woodstock,Village,51.8478,-1.3542,1,Royal palace and park,"Woodstock, Oxfordshire"
+v_henley_on_thames,Henley-on-Thames,Village,51.5357,-0.9030,1,Thames river port,Henley-on-Thames
+v_newbury,Newbury,Village,51.4010,-1.3230,1,Cloth; Bristol road stop,"Newbury, Berkshire"
+v_dartford,Dartford,Village,51.4444,0.2172,1,Dover road; York's rising of 1452,Dartford
+v_faversham,Faversham,Village,51.3177,0.8928,1,Abbey and port on the Dover road,Faversham
+v_tonbridge,Tonbridge,Village,51.1987,0.2764,1,Buckingham's castle,Tonbridge
+v_battle,Battle,Village,50.9200,0.4800,1,Battle Abbey (1066),"Battle, East Sussex"
+v_winchelsea,Winchelsea,Village,50.9251,0.7088,1,Cinque port raided by the French,Winchelsea
+v_herstmonceux,Herstmonceux,Village,50.8900,0.3200,1,New brick castle (1441),Herstmonceux
+v_beaulieu,Beaulieu,Village,50.8183,-1.4519,1,"Abbey sanctuary (Queen Margaret, 1471)","Beaulieu, Hampshire"
+v_weymouth,Weymouth,Village,50.6097,-2.4547,1,Where Queen Margaret landed in 1471,"Weymouth, Dorset"
+v_corfe_castle,Corfe Castle,Village,50.6385,-2.0573,1,Beaufort castle,Corfe Castle (village)
+v_shaftesbury,Shaftesbury,Village,51.0059,-2.1969,1,Great nunnery; western road,Shaftesbury
+v_sherborne,Sherborne,Village,50.9469,-2.5171,1,Abbey and castle; western road,Sherborne
+v_chipping_campden,Chipping Campden,Village,52.0520,-1.7790,1,Cotswold wool merchants,Chipping Campden
+v_northleach,Northleach,Village,51.8290,-1.8374,1,Cotswold wool; Gloucester road,Northleach
+v_stow_on_the_wold,Stow-on-the-Wold,Village,51.9300,-1.7225,1,Fosse Way sheep fair,Stow-on-the-Wold
+v_berkeley,Berkeley,Village,51.6910,-2.4590,1,Berkeley Castle (the Berkeley feud),"Berkeley, Gloucestershire"
+v_winchcombe,Winchcombe,Village,51.9550,-1.9650,1,Abbey; Sudeley Castle,Winchcombe
+v_glastonbury,Glastonbury,Village,51.1475,-2.7175,1,Village of the great abbey,Glastonbury
+v_dunster,Dunster,Village,51.1825,-3.4459,1,Luttrell castle and port,Dunster
