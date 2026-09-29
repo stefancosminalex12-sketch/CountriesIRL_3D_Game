@@ -30,6 +30,9 @@ public:
 	UPROPERTY() TObjectPtr<UInputAction> Look;
 	UPROPERTY() TObjectPtr<UInputAction> Jump;
 	UPROPERTY() TObjectPtr<UInputAction> Sprint;
+
+	/** In the saddle: switch between the travelling trot and a walk (Ctrl; D-pad down) */
+	UPROPERTY() TObjectPtr<UInputAction> WalkToggle;
 	UPROPERTY() TObjectPtr<UInputAction> ToggleView;
 	UPROPERTY() TObjectPtr<UInputAction> Attack;
 	UPROPERTY() TObjectPtr<UInputAction> Guard;

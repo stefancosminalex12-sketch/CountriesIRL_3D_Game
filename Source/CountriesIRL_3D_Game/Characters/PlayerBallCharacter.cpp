@@ -82,6 +82,7 @@ void APlayerBallCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	EIC->BindAction(Input->Interact, ETriggerEvent::Started, this, &APlayerBallCharacter::Interact);
 	EIC->BindAction(Input->Sprint, ETriggerEvent::Started, this, &APlayerBallCharacter::StartSprint);
 	EIC->BindAction(Input->Sprint, ETriggerEvent::Completed, this, &APlayerBallCharacter::StopSprint);
+	EIC->BindAction(Input->WalkToggle, ETriggerEvent::Started, this, &APlayerBallCharacter::ToggleRideAtWalk);
 	EIC->BindAction(Input->ToggleView, ETriggerEvent::Started, this, &APlayerBallCharacter::ToggleView);
 	EIC->BindAction(Input->CycleEmotion, ETriggerEvent::Started, this, &APlayerBallCharacter::CycleEmotion);
 	EIC->BindAction(Input->Attack, ETriggerEvent::Started, this, &APlayerBallCharacter::Attack);
@@ -100,11 +101,13 @@ void APlayerBallCharacter::Move(const FInputActionValue& Value)
 	const FRotator YawRotation(0.f, Controller->GetControlRotation().Yaw, 0.f);
 	const FRotationMatrix Matrix(YawRotation);
 
-	// In the saddle the keys steer the horse, relative to where we look; Shift gallops
+	// In the saddle the keys steer the horse, relative to where we look. It trots (the travelling
+	// pace), Shift gallops, Ctrl switches to a walk
 	if (AHorse* Horse = GetMount())
 	{
 		const FVector Direction = Matrix.GetUnitAxis(EAxis::X) * Input.Y + Matrix.GetUnitAxis(EAxis::Y) * Input.X;
-		Horse->SetRiderInput(Direction, WantsToRun());
+		const EHorseGait Gait = WantsToRun() ? EHorseGait::Gallop : (bRideAtWalk ? EHorseGait::Walk : EHorseGait::Trot);
+		Horse->SetRiderInput(Direction, Gait);
 		return;
 	}
 
@@ -122,7 +125,7 @@ void APlayerBallCharacter::StopMove(const FInputActionValue& Value)
 {
 	if (AHorse* Horse = GetMount())
 	{
-		Horse->SetRiderInput(FVector::ZeroVector, false);
+		Horse->SetRiderInput(FVector::ZeroVector, EHorseGait::Trot);
 	}
 }
 
@@ -149,9 +152,18 @@ void APlayerBallCharacter::Interact()
 	}
 	else if (AHorse* Horse = FindHorseToMount())
 	{
+		bRideAtWalk = false;
 		Mount(Horse);
 	}
 	UpdateRotationMode();
+}
+
+void APlayerBallCharacter::ToggleRideAtWalk()
+{
+	if (IsMounted())
+	{
+		bRideAtWalk = !bRideAtWalk;
+	}
 }
 
 AHorse* APlayerBallCharacter::FindHorseToMount() const

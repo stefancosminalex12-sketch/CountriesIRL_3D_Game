@@ -2,7 +2,6 @@
 
 #include "Animals/Horse.h"
 #include "Animals/HorseAnimInstance.h"
-#include "Animals/MountDefinition.h"
 #include "Characters/BallCharacter.h"
 #include "Characters/StaminaComponent.h"
 #include "Characters/HealthComponent.h"
@@ -99,7 +98,7 @@ void AHorse::HandleDeath(UHealthComponent* DepletedHealth)
 		Rider->Dismount();
 	}
 	DesiredDirection = FVector::ZeroVector;
-	bGalloping = false;
+	Gait = EHorseGait::Walk;
 	GetCharacterMovement()->StopMovementImmediately();
 	GetCharacterMovement()->DisableMovement();
 	if (UHorseAnimInstance* Anim = Cast<UHorseAnimInstance>(GetMesh()->GetAnimInstance()))
@@ -116,7 +115,7 @@ void AHorse::SetRider(ABallCharacter* NewRider)
 	}
 	Rider = NewRider;
 	DesiredDirection = FVector::ZeroVector;
-	bWantsGallop = false;
+	RequestedGait = EHorseGait::Trot;
 	if (Rider)
 	{
 		// The rider sits on top of us: don't let our own movement bump into them
@@ -124,11 +123,11 @@ void AHorse::SetRider(ABallCharacter* NewRider)
 	}
 }
 
-void AHorse::SetRiderInput(const FVector& Direction, bool bGallop)
+void AHorse::SetRiderInput(const FVector& Direction, EHorseGait NewGait)
 {
 	DesiredDirection = Direction.GetClampedToMaxSize(1.f);
 	DesiredDirection.Z = 0.f;
-	bWantsGallop = bGallop;
+	RequestedGait = NewGait;
 }
 
 void AHorse::RiderJump()
@@ -175,8 +174,9 @@ void AHorse::Tick(float DeltaTime)
 	if (Throttle > 0.05f)
 	{
 		// Turn toward where the rider wants to go, slower the faster we run (wide turns at a gallop)
-		const float SpeedAlpha = FMath::GetMappedRangeValueClamped(FVector2D(Definition->WalkSpeed, Definition->GallopSpeed), FVector2D(0.f, 1.f), Speed);
-		const float TurnRate = FMath::Lerp(Definition->WalkTurnRate, Definition->GallopTurnRate, SpeedAlpha);
+		const float TurnRate = Speed <= Definition->TrotSpeed
+			? FMath::GetMappedRangeValueClamped(FVector2D(Definition->WalkSpeed, Definition->TrotSpeed), FVector2D(Definition->WalkTurnRate, Definition->TrotTurnRate), Speed)
+			: FMath::GetMappedRangeValueClamped(FVector2D(Definition->TrotSpeed, Definition->GallopSpeed), FVector2D(Definition->TrotTurnRate, Definition->GallopTurnRate), Speed);
 		const float NewYaw = FMath::FixedTurn(GetActorRotation().Yaw, DesiredDirection.Rotation().Yaw, TurnRate * DeltaTime);
 		SetActorRotation(FRotator(0.f, NewYaw, 0.f));
 
@@ -195,14 +195,22 @@ void AHorse::Tick(float DeltaTime)
 		Movement->StopMovementImmediately();
 	}
 
-	// Gallop while asked, moving forward on the ground, and neither the horse nor its rider is out of breath
-	const bool bRiderFresh = !Rider || Rider->GetStamina()->HasStamina();
-	bGalloping = bWantsGallop && Throttle > 0.5f && Movement->IsMovingOnGround() && Stamina->HasStamina() && bRiderFresh;
-	if (bGalloping)
+	// Walk and trot cost nothing. Gallop while asked, moving forward on the ground, and neither the
+	// horse nor its rider is out of breath; otherwise it drops back to the travelling trot
+	Gait = RequestedGait;
+	if (Gait == EHorseGait::Gallop)
+	{
+		const bool bRiderFresh = !Rider || Rider->GetStamina()->HasStamina();
+		if (!(Throttle > 0.5f && Movement->IsMovingOnGround() && Stamina->HasStamina() && bRiderFresh))
+		{
+			Gait = EHorseGait::Trot;
+		}
+	}
+	if (Gait == EHorseGait::Gallop)
 	{
 		Stamina->Drain(Definition->GallopStaminaPerSecond, DeltaTime);
 	}
-	Movement->MaxWalkSpeed = bGalloping ? Definition->GallopSpeed : Definition->WalkSpeed;
+	Movement->MaxWalkSpeed = Definition->GetGaitSpeed(Gait);
 }
 
 FVector AHorse::GetSaddleOffset() const

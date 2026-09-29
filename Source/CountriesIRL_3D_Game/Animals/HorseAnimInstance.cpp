@@ -67,10 +67,13 @@ void UHorseAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	SmoothedSpeed = FMath::FInterpTo(SmoothedSpeed, Speed, DeltaSeconds, 8.f);
 
 	// Clips play faster the faster the horse moves (never slower than half speed, so it doesn't look frozen)
+	// (the gallop goes down to half speed because it also stands in for the trot on horses without a trot clip)
 	const float WalkRate = FMath::Clamp(SmoothedSpeed / FMath::Max(Definition->WalkAnimSpeed, 1.f), 0.5f, 1.6f);
-	const float GallopRate = FMath::Clamp(SmoothedSpeed / FMath::Max(Definition->GallopAnimSpeed, 1.f), 0.6f, 1.4f);
+	const float TrotRate = FMath::Clamp(SmoothedSpeed / FMath::Max(Definition->TrotAnimSpeed, 1.f), 0.6f, 1.5f);
+	const float GallopRate = FMath::Clamp(SmoothedSpeed / FMath::Max(Definition->GallopAnimSpeed, 1.f), 0.5f, 1.4f);
 	IdleTime += DeltaSeconds;
 	WalkTime += DeltaSeconds * WalkRate;
+	TrotTime += DeltaSeconds * TrotRate;
 	GallopTime += DeltaSeconds * GallopRate;
 
 	if (OneShotTime >= 0.f)
@@ -101,25 +104,30 @@ void FHorseAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 		return;
 	}
 
-	// Standing still -> walk -> gallop: blend the two clips around the current speed
+	// Standing still -> walk -> trot -> gallop: blend the two clips on either side of the current speed.
+	// Without a trot clip the trot uses the gallop clip, played slower (it looks like a canter)
+	const bool bHasTrot = Definition->TrotAnim != nullptr;
+	const float Speeds[] = { 0.f, Definition->WalkSpeed, Definition->TrotSpeed, Definition->GallopSpeed };
+	const UAnimSequence* Clips[] = { Definition->IdleAnim, Definition->WalkAnim, bHasTrot ? Definition->TrotAnim.Get() : Definition->GallopAnim.Get(), Definition->GallopAnim };
+	const float Times[] = { Horse->IdleTime, Horse->WalkTime, bHasTrot ? Horse->TrotTime : Horse->GallopTime, Horse->GallopTime };
+
 	const float Speed = Horse->SmoothedSpeed;
-	const float Walk = FMath::Max(Definition->WalkSpeed, 1.f);
-	if (Speed <= Walk)
+	int32 Gait = 0;
+	while (Gait < 2 && Speed > Speeds[Gait + 1])
 	{
-		ClipA = Definition->IdleAnim;
-		ClipB = Definition->WalkAnim;
-		TimeA = Wrap(Horse->IdleTime, ClipA);
-		TimeB = Wrap(Horse->WalkTime, ClipB);
-		BlendAlpha = FMath::SmoothStep(0.f, Walk * 0.6f, Speed);
+		++Gait;
 	}
-	else
+	const float From = Speeds[Gait];
+	const float Span = FMath::Max(Speeds[Gait + 1] - From, 1.f);
+	ClipA = Clips[Gait];
+	ClipB = Clips[Gait + 1];
+	TimeA = Wrap(Times[Gait], ClipA);
+	TimeB = Wrap(Times[Gait + 1], ClipB);
+	// The faster gait takes over well before its full speed
+	BlendAlpha = FMath::SmoothStep(From + Span * 0.1f, From + Span * 0.7f, Speed);
+	if (ClipB == ClipA)
 	{
-		ClipA = Definition->WalkAnim;
-		ClipB = Definition->GallopAnim;
-		TimeA = Wrap(Horse->WalkTime, ClipA);
-		TimeB = Wrap(Horse->GallopTime, ClipB);
-		// The gallop takes over well before full speed (a canter uses the gallop clip, played slower)
-		BlendAlpha = FMath::SmoothStep(Walk * 1.2f, Walk * 2.2f, Speed);
+		BlendAlpha = 0.f;
 	}
 
 	OneShot = Horse->OneShotTime >= 0.f ? Horse->OneShotClip.Get() : nullptr;

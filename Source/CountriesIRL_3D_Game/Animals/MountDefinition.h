@@ -9,6 +9,15 @@
 class USkeletalMesh;
 class UAnimSequence;
 
+/** How fast a horse is going: a walk, the trot people travelled at, or a gallop for chases and charges */
+UENUM(BlueprintType)
+enum class EHorseGait : uint8
+{
+	Walk,
+	Trot,
+	Gallop
+};
+
 /**
  *  Everything that makes one kind of riding animal: its model, animations and how it moves.
  *  Horse tiers from the design (affer, hackney, rouncey, palfrey, courser, destrier) are separate
@@ -34,6 +43,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Animation")
 	TObjectPtr<UAnimSequence> WalkAnim;
 
+	/** Optional: without a trot clip the horse trots with the gallop clip played slower (looks like a canter) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Animation")
+	TObjectPtr<UAnimSequence> TrotAnim;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Animation")
 	TObjectPtr<UAnimSequence> GallopAnim;
 
@@ -43,16 +56,23 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Animation")
 	TObjectPtr<UAnimSequence> DeathAnim;
 
-	/** Ground speed (cm/s) at which the walk and gallop animations look right at normal play rate */
+	/** Ground speed (cm/s) at which the walk, trot and gallop animations look right at normal play rate */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Animation")
 	float WalkAnimSpeed = 170.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Animation")
+	float TrotAnimSpeed = 390.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Animation")
 	float GallopAnimSpeed = 750.f;
 
-	/** Speeds in cm/s. A horse walks at ~6-7 km/h; a small medieval horse gallops at ~30-35 km/h. */
+	/** Speeds in cm/s. The walk (~9 km/h) is a bit quicker than a person walking; the trot (~14 km/h)
+	 *  is the travelling pace and costs no stamina; a small medieval horse gallops at ~30-35 km/h. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement")
-	float WalkSpeed = 190.f;
+	float WalkSpeed = 250.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement")
+	float TrotSpeed = 390.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement")
 	float GallopSpeed = 900.f;
@@ -62,7 +82,15 @@ public:
 	float WalkTurnRate = 110.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement")
+	float TrotTurnRate = 90.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement")
 	float GallopTurnRate = 65.f;
+
+	float GetGaitSpeed(EHorseGait Gait) const
+	{
+		return Gait == EHorseGait::Walk ? WalkSpeed : (Gait == EHorseGait::Trot ? TrotSpeed : GallopSpeed);
+	}
 
 	/** How quickly it picks up and loses speed (cm/s²): horses build up and slow down gradually */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement")
@@ -78,7 +106,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Stamina")
 	float MaxStamina = 400.f;
 
-	/** Horse stamina spent per second of galloping, and per jump */
+	/** Horse stamina spent per second of galloping, and per jump (walking and trotting cost nothing) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Stamina")
 	float GallopStaminaPerSecond = 6.f;
 

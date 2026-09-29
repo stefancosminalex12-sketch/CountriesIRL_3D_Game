@@ -115,6 +115,7 @@ private:
 	void Look(const FInputActionValue& Value);
 	void StartSprint() { SetSprinting(true); }
 	void StopSprint() { SetSprinting(false); }
+	void ToggleRideAtWalk();
 	void ToggleView() { SetFirstPerson(!bFirstPerson); }
 	void CycleEmotion();
 	void Attack();
@@ -123,6 +124,9 @@ private:
 	void UpdateRotationMode();
 
 	bool bFirstPerson = false;
+
+	/** In the saddle: walk instead of the usual trot (Ctrl toggles; every ride starts at a trot) */
+	bool bRideAtWalk = false;
 
 	/** Resting place of the first-person camera */
 	FVector FirstPersonCameraOffset = FVector::ZeroVector;

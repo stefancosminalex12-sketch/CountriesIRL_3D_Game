@@ -29,6 +29,7 @@ void UCIRLInputConfig::Build()
 	Look = MakeAction(this, TEXT("IA_Look"), EInputActionValueType::Axis2D);
 	Jump = MakeAction(this, TEXT("IA_Jump"), EInputActionValueType::Boolean);
 	Sprint = MakeAction(this, TEXT("IA_Sprint"), EInputActionValueType::Boolean);
+	WalkToggle = MakeAction(this, TEXT("IA_WalkToggle"), EInputActionValueType::Boolean);
 	ToggleView = MakeAction(this, TEXT("IA_ToggleView"), EInputActionValueType::Boolean);
 	Attack = MakeAction(this, TEXT("IA_Attack"), EInputActionValueType::Boolean);
 	Guard = MakeAction(this, TEXT("IA_Guard"), EInputActionValueType::Boolean);
@@ -72,6 +73,9 @@ void UCIRLInputConfig::Build()
 
 	C->MapKey(Sprint, EKeys::LeftShift);
 	C->MapKey(Sprint, EKeys::Gamepad_LeftThumbstick);
+
+	C->MapKey(WalkToggle, EKeys::LeftControl);
+	C->MapKey(WalkToggle, EKeys::Gamepad_DPad_Down);
 
 	C->MapKey(ToggleView, EKeys::V);
 	C->MapKey(ToggleView, EKeys::Gamepad_DPad_Up);

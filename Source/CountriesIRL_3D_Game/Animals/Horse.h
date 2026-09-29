@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Animals/MountDefinition.h"
 #include "Horse.generated.h"
 
-class UMountDefinition;
 class UStaminaComponent;
 class UHealthComponent;
 class ABallCharacter;
 
 /**
  *  A rideable horse. Moves like a horse: it turns gradually (never slides sideways), builds up and
- *  loses speed smoothly, walks or gallops, and gallops on its own stamina.
+ *  loses speed smoothly, walks, trots (the travelling pace, free) or gallops on its own stamina.
  *  Without a rider it just stands (an AI controller is attached for grazing/wandering later).
  *  What kind of horse it is comes from its UMountDefinition.
  */
@@ -43,8 +43,8 @@ public:
 	/** Called by the rider when getting on (pass nullptr when getting off) */
 	void SetRider(ABallCharacter* NewRider);
 
-	/** Rider's reins: where to go (world direction, length 0..1) and whether to gallop */
-	void SetRiderInput(const FVector& Direction, bool bGallop);
+	/** Rider's reins: where to go (world direction, length 0..1) and at which gait */
+	void SetRiderInput(const FVector& Direction, EHorseGait Gait);
 
 	/** Rider asks for a jump */
 	void RiderJump();
@@ -54,7 +54,9 @@ public:
 
 	float GetBodyHalfWidth() const;
 
-	bool IsGalloping() const { return bGalloping; }
+	/** The gait the horse is actually in (a gallop drops to a trot when out of breath) */
+	EHorseGait GetGait() const { return Gait; }
+	bool IsGalloping() const { return Gait == EHorseGait::Gallop; }
 
 protected:
 
@@ -86,6 +88,6 @@ private:
 	TObjectPtr<ABallCharacter> Rider;
 
 	FVector DesiredDirection = FVector::ZeroVector;
-	bool bWantsGallop = false;
-	bool bGalloping = false;
+	EHorseGait RequestedGait = EHorseGait::Trot;
+	EHorseGait Gait = EHorseGait::Trot;
 };

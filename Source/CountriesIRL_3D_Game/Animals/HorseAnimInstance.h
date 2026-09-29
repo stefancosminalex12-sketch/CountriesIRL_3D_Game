@@ -35,7 +35,7 @@ struct FHorseAnimInstanceProxy : public FAnimInstanceProxy
 };
 
 /**
- *  Horse animation without an Animation Blueprint: blends idle, walk and gallop by ground speed
+ *  Horse animation without an Animation Blueprint: blends idle, walk, trot and gallop by ground speed
  *  (playing faster as the horse speeds up, so hooves don't slide), and plays one-shots like a jump.
  *  Clips and reference speeds come from the horse's UMountDefinition.
  */
@@ -69,6 +69,7 @@ private:
 
 	float IdleTime = 0.f;
 	float WalkTime = 0.f;
+	float TrotTime = 0.f;
 	float GallopTime = 0.f;
 	float SmoothedSpeed = 0.f;
 	float OneShotTime = -1.f;
