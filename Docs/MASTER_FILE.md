@@ -423,7 +423,7 @@ Start with the **commoner origin**; build what's designed so far and add feature
 - **v0.3 "Going to war"**: recruitment letter from the local lord; small skirmish with your troops, simple commands, side markers; XP and leveling
 
 **v0.1 progress** (build order; one tested, committed step at a time):
-1. [x] Player ball: C++ `ABallCharacter` (base for every person) + `APlayerBallCharacter`; procedural floating hands/feet (walk cycle, bob, lean, jump tuck); 8 eye emotions (Neutral, Happy, Sad, Angry, Scared, Tired, Suspicious, Dead) drawn by the `M_BallEyes` shader with blinking; walk/run; first-person default, third-person toggle. Placeholder shapes until the Blender art pass
+1. [x] Player ball: C++ `ABallCharacter` (base for every person) + `APlayerBallCharacter`; procedural floating hands/feet (walk cycle, bob, lean, jump tuck); 8 eye emotions (Neutral, Happy, Sad, Angry, Scared, Tired, Suspicious, Dead) drawn by the `M_BallEyes` shader with blinking; **eyes no longer glow** (user, 2026-09-30: in dark places and next to walls they lit up, looked reflective and lit the wall; emissive set to 0 and the surface made matte, `Tools/Unreal/fix_eye_glow.py`); walk/run; first-person default, third-person toggle. Placeholder shapes until the Blender art pass
    - Playtest tuning (user): walk 300→220, run 600→400, jump 450→340 ("a bit better now", fine for now)
    - Stamina for running/jumping (see Gameplay Systems)
    - Fixed: feet crossing each other when strafing (A/D) → side-steps now; hands/feet going through objects → hands stop at walls, feet plant on the real ground (slopes/steps)
