@@ -247,3 +247,18 @@ v_berkeley|Berkeley|Village|51.6910|-2.4590|1|Berkeley Castle (the Berkeley feud
 v_winchcombe|Winchcombe|Village|51.9550|-1.9650|1|Abbey; Sudeley Castle|Winchcombe
 v_glastonbury|Glastonbury|Village|51.1475|-2.7175|1|Village of the great abbey|Glastonbury
 v_dunster|Dunster|Village|51.1825|-3.4459|1|Luttrell castle and port|Dunster
+# Castles added for the first release (2026-09-29)
+c_bristol_castle|Bristol Castle|Castle|51.4559|-2.5882|1||Bristol Castle
+c_framlingham_castle|Framlingham Castle|Castle|52.2240|1.3469|1||Framlingham Castle
+c_scarborough_castle|Scarborough Castle|Castle|54.2870|-0.3880|1||Scarborough Castle
+c_pickering_castle|Pickering Castle|Castle|54.2500|-0.7756|1||Pickering Castle
+c_tutbury_castle|Tutbury Castle|Castle|52.8595|-1.6906|1||Tutbury Castle
+c_naworth_castle|Naworth Castle|Castle|54.9556|-2.6889|1||Naworth Castle
+c_cockermouth_castle|Cockermouth Castle|Castle|54.6655|-3.3612|1||Cockermouth Castle
+c_brancepeth_castle|Brancepeth Castle|Castle|54.7333|-1.6500|1||Brancepeth Castle
+c_barnard_castle_castle|Barnard Castle|Castle|54.5433|-1.9267|1||Barnard Castle (castle)
+c_wigmore_castle|Wigmore Castle|Castle|52.3177|-2.8714|1||Wigmore Castle
+c_stafford_castle|Stafford Castle|Castle|52.7973|-2.1468|1||Stafford Castle
+c_tonbridge_castle|Tonbridge Castle|Castle|51.1971|0.2721|1||Tonbridge Castle
+c_hedingham_castle|Hedingham Castle|Castle|51.9925|0.6011|1||Hedingham Castle
+c_dunster_castle|Dunster Castle|Castle|51.1809|-3.4449|1||Dunster Castle

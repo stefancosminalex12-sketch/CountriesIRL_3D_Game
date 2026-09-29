@@ -317,6 +317,35 @@ def release_decisions():
     return {r["Id"]: r["Decision"] for r in csv.DictReader(open(path, encoding="utf-8"))}
 
 
+CASTLE_IMPORTANCE = {"large": "3", "medium": "2", "small": "1"}
+
+
+def release_places(all_places, units):
+    """The places of the first release: inside playable England, with Places_Release1.csv applied (cut / village /
+    part_of) and only the castles of Castles_Release1.csv, their size as Importance and their type as CastleType."""
+    wales = [poly[0] for f in units["features"] if f["properties"].get("NAME") == "Wales" for poly in geo_polys(f["geometry"])]
+    inside = lambda r: not is_cut(float(r["Lon"]), float(r["Lat"])) and not any(in_poly(float(r["Lon"]), float(r["Lat"]), w) for w in wales)
+    places = {i: r for i, r in all_places.items() if inside(r)}
+    for pid, decision in release_decisions().items():
+        if pid not in places:
+            continue
+        if decision == "village":
+            places[pid] = dict(places[pid], Type="Village", Importance="1")
+        else:                                                  # "cut", or "part_of:<site>" (drawn with that site)
+            del places[pid]
+    castles_path = f"{ROOT}/Data/World/Castles_Release1.csv"
+    if os.path.exists(castles_path):
+        castles = {r["Id"]: r for r in csv.DictReader(open(castles_path, encoding="utf-8"))}
+        for pid in [i for i, r in places.items() if r["Type"] == "Castle"]:
+            c = castles.get(pid)
+            if c is None:
+                del places[pid]
+            else:
+                places[pid] = dict(places[pid], Importance=CASTLE_IMPORTANCE[c["Size"]], CastleType=c["Type"],
+                                   Note=f"{c['Size']} {c['Type']} castle; {c['Holder1455']}; {c['Why']}")
+    return places
+
+
 def in_poly(lon, lat, poly):
     inside = False
     for (x1, y1), (x2, y2) in zip(poly, poly[1:] + poly[:1]):
@@ -444,16 +473,7 @@ def main():
     d = ImageDraw.Draw(img)
 
     all_places = {row["Id"]: row for row in csv.DictReader(open(f"{ROOT}/Data/World/Places_England1455.csv", encoding="utf-8"))}
-    wales = [poly[0] for f in units["features"] if f["properties"].get("NAME") == "Wales" for poly in geo_polys(f["geometry"])]
-    shown = lambda r: not is_cut(float(r["Lon"]), float(r["Lat"])) and not any(in_poly(float(r["Lon"]), float(r["Lat"]), w) for w in wales)
-    places = {i: r for i, r in all_places.items() if shown(r)}
-    for pid, decision in release_decisions().items():         # the first release's selection of places
-        if pid not in places:
-            continue
-        if decision == "village":
-            places[pid] = dict(places[pid], Type="Village", Importance="1")
-        else:                                                  # "cut", or "part_of:<site>" (drawn with that site)
-            del places[pid]
+    places = {i: r for i, r in release_places(all_places, units).items() if r.get("CastleType") != "town"}  # town castles: part of the town
     P = lambda i: px(float(all_places[i]["Lon"]), float(all_places[i]["Lat"]))
 
     # Main roads of 1455 (Tools/world/build_roads.py). Drawn 3x their real width so they show: at this scale
