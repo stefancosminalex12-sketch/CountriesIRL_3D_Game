@@ -348,6 +348,35 @@ def road_in_release(line):
     return out
 
 
+def draw_rulers(d, box, game_km_px):
+    """Rulers in game km along the bottom and the left of the map: a tick every km, a number every 5 km,
+    zero at England's west and south edges, the full length at the far end."""
+    x0, y0, x1, y1 = box
+    f, fb = font("EBGaramond-Regular", 20), font("EBGaramond-SemiBold", 24)
+    width_km, height_km = (x1 - x0) / game_km_px, (y1 - y0) / game_km_px
+    yb = H - MARGIN + int(8 * S)                               # bottom ruler, under the map frame
+    d.line([(x0, yb), (x1, yb)], fill=INK, width=3)
+    for k in range(int(width_km) + 1):
+        X = x0 + k * game_km_px
+        big = k % 5 == 0
+        d.line([(X, yb), (X, yb + (22 if big else 11))], fill=INK, width=3 if big else 2)
+        if big:
+            d.text((X, yb + 26), f"{k}", font=f, fill=INK, anchor="mt")
+    d.line([(x1, yb - 8), (x1, yb + 22)], fill=INK, width=4)
+    d.text((x1 + 10, yb + 2), f"{width_km:.1f} km", font=fb, fill=INK, anchor="lt")
+    xl = MARGIN - int(8 * S)                                   # left ruler, beside the map frame
+    d.line([(xl, y0), (xl, y1)], fill=INK, width=3)
+    for k in range(int(height_km) + 1):
+        Y = y1 - k * game_km_px
+        big = k % 5 == 0
+        d.line([(xl, Y), (xl - (22 if big else 11), Y)], fill=INK, width=3 if big else 2)
+        if big:
+            d.text((xl - 28, Y), f"{k}", font=f, fill=INK, anchor="rm")
+    d.line([(xl - 22, y0), (xl + 8, y0)], fill=INK, width=4)
+    d.text((xl - 28, y0), f"{height_km:.1f} km", font=fb, fill=INK, anchor="rm")
+    d.text((x0, yb + 52), "game kilometres (1 game km = 12 real km)", font=font("EBGaramond-Italic", 20), fill=INK, anchor="lt")
+
+
 def main():
     rnd = random.Random(3)
 
@@ -435,19 +464,20 @@ def main():
         w = max(2, round(road["width_m"] * 3 * px_per_game_m))
         d.line([px(*p) for p in road_in_release(road["line"])], fill=ROAD, width=w, joint="curve")
 
-    # Grid in GAME kilometres
+    # Grid in GAME kilometres, measured from England's west and south edges (the rulers' zero)
     step_game = 5
     step_real = step_game * COMPRESSION
-    x = math.floor(x_min / step_real) * step_real
-    while x <= x_max:
-        X = MARGIN + (x - x_min) * PX_PER_KM
-        d.line([(X, TOP), (X, H - MARGIN)], fill=(90, 70, 50), width=1)
-        x += step_real
-    y = math.floor(y_min / step_real) * step_real
-    while y <= y_max:
-        Y = TOP + (y_max - y) * PX_PER_KM
-        d.line([(MARGIN, Y), (W - MARGIN, Y)], fill=(90, 70, 50), width=1)
-        y += step_real
+    game_km_px = PX_PER_KM * COMPRESSION
+    land_box = land.getbbox()                                  # playable England, in map pixels
+    ox, oy = land_box[0], land_box[3]
+    for k in range(-5, 40):
+        X = ox + k * step_game * game_km_px
+        if MARGIN <= X <= W - MARGIN:
+            d.line([(X, TOP), (X, H - MARGIN)], fill=(90, 70, 50), width=1)
+        Y = oy - k * step_game * game_km_px
+        if TOP <= Y <= H - MARGIN:
+            d.line([(MARGIN, Y), (W - MARGIN, Y)], fill=(90, 70, 50), width=1)
+    size_game = ((land_box[2] - land_box[0]) / game_km_px, (land_box[3] - land_box[1]) / game_km_px)
 
     # ---- Places: symbols first, then labels placed so they do not overlap ----
     f_city = font("Cinzel-Bold", 30)
@@ -529,18 +559,21 @@ def main():
     for r in places.values():
         counts[r["Type"]] = counts.get(r["Type"], 0) + 1
     d.text((MARGIN, int(30 * S)), "Crowns & Commoners - England, 1455", font=font("Cinzel-Bold", 56), fill=INK)
-    d.text((MARGIN, int(95 * S)), f"Planning map. Compression 1:{COMPRESSION:g} ({COMPRESSION:g} real km = 1 game km). "
-                                  f"Playable England {england_area:,.0f} km2 real -> about {area_game:,.0f} km2 in game. "
-                                  f"Grid squares = {step_game} game km ({step_real:g} real km).",
-           font=font("EBGaramond-Regular", 24), fill=INK)
+    d.multiline_text((MARGIN, int(92 * S)), f"Planning map. Compression 1:{COMPRESSION:g} ({COMPRESSION:g} real km = 1 game km). "
+                                  f"Playable England {england_area:,.0f} km2 real -> about {area_game:,.0f} km2 in game.\n"
+                                  f"Playable England is {size_game[0]:.0f} km wide and {size_game[1]:.0f} km tall in the game (rulers at the edges). "
+                                  f"Grid squares = {step_game} x {step_game} game km ({step_real:g} real km), from England's west and south edges.",
+           font=font("EBGaramond-Regular", 24), fill=INK, spacing=int(3 * S))
     legend = (f"Towns & cities {counts.get('Town', 0) + counts.get('City', 0)}  /  castles {counts.get('Castle', 0)}  /  "
               f"abbeys, priories & friaries {counts.get('Abbey', 0)}  /  cathedrals {counts.get('Cathedral', 0)}  /  "
               f"landmarks {counts.get('Landmark', 0)}  /  nature {counts.get('Nature', 0)}  /  battles {counts.get('Battle', 0)}  /  "
               f"villages {counts.get('Village', 0)}.\n"
-              f"Brown lines: the {len(roads)} main roads (thicker: the great Roman-built roads). Rivers: the {len(rivers)} main rivers at their game width, darker where boats went in 1455. Not shown: Devon & Cornwall (later update), Wales and Scotland (DLC). Terrain: the game's own heights (tints: lowland, hills, uplands, mountains; contours every 50 m of game height). "
+              f"Brown lines: the {len(roads)} main roads (thicker: the great Roman-built roads). Rivers: the {len(rivers)} main rivers at their game width, darker where boats went in 1455.\n"
+              f"Not shown: Devon & Cornwall (later update), Wales and Scotland (DLC). Terrain: the game's own heights (tints: lowland, hills, uplands, mountains; contours every 50 m of game height). "
               f"Data: Natural Earth, OpenStreetMap contributors, Wikidata, AWS Terrain Tiles.")
     d.rectangle([0, H - MARGIN + 1, W, H], fill=SEA)            # clean strip under the map frame for the legend
-    d.multiline_text((MARGIN, H - MARGIN + int(4 * S)), legend, font=font("EBGaramond-Italic", 18), fill=INK, spacing=int(4 * S))
+    d.multiline_text((MARGIN, H - MARGIN + int(56 * S)), legend, font=font("EBGaramond-Italic", 18), fill=INK, spacing=int(4 * S))
+    draw_rulers(d, land_box, game_km_px)
 
     os.makedirs(f"{ROOT}/Docs/World", exist_ok=True)
     out = f"{ROOT}/Docs/World/plan_map_england_1455.png"
