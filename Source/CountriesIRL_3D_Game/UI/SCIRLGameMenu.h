@@ -49,6 +49,8 @@ public:
 		SLATE_EVENT(FOnCloseRequested, OnMainMenuRequested)
 		/** Quit to desktop */
 		SLATE_EVENT(FOnCloseRequested, OnQuitRequested)
+		/** Volumes shown and changed on the Game tab */
+		SLATE_ARGUMENT(TWeakObjectPtr<class UCIRLAudioSubsystem>, Audio)
 	SLATE_END_ARGS()
 
 	void Construct(const FArguments& InArgs);
@@ -87,4 +89,6 @@ private:
 	FOnCloseRequested OnCloseRequested;
 	FOnCloseRequested OnMainMenuRequested;
 	FOnCloseRequested OnQuitRequested;
+
+	TWeakObjectPtr<class UCIRLAudioSubsystem> Audio;
 };

@@ -8,6 +8,7 @@
 
 class SWidget;
 struct FButtonStyle;
+struct FSliderStyle;
 
 /**
  *  The look shared by every menu (Master file > UI & HUD > Menu look): dark charcoal panels with a thin
@@ -83,6 +84,9 @@ namespace CIRLUIStyle
 
 	/** Invisible button frame, for buttons that draw their own hover/pressed look */
 	const FButtonStyle& PlainButtonStyle();
+
+	/** Volume and settings sliders: a dark bar with a worn-gold handle that brightens when highlighted */
+	const FSliderStyle& SliderStyle();
 
 	// Widgets
 

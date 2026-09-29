@@ -6,6 +6,8 @@
 #include "UI/SCIRLEquipmentPage.h"
 #include "UI/SCIRLCharacterPage.h"
 #include "UI/SCIRLPaperDollView.h"
+#include "UI/SCIRLSoundSettings.h"
+#include "Audio/CIRLAudioSubsystem.h"
 #include "GeneralProjectSettings.h"
 #include "Styling/SlateTypes.h"
 #include "Widgets/Images/SImage.h"
@@ -80,6 +82,7 @@ void SCIRLGameMenu::Construct(const FArguments& InArgs)
 {
 	OnCloseRequested = InArgs._OnCloseRequested;
 	OnMainMenuRequested = InArgs._OnMainMenuRequested;
+	Audio = InArgs._Audio;
 	OnQuitRequested = InArgs._OnQuitRequested;
 
 	SAssignNew(Pages, SWidgetSwitcher);
@@ -368,6 +371,23 @@ TSharedRef<SWidget> SCIRLGameMenu::MakeGameTab()
 			[
 				MakeMenuButton(LOCTEXT("Quit", "Quit to Desktop"),
 					FOnClicked::CreateLambda([this]() { OnQuitRequested.ExecuteIfBound(); return FReply::Handled(); }))
+			]
+
+			// Volumes, the same sliders as the title screen's Settings
+			+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 34.f, 0.f, 8.f))
+			[
+				SNew(STextBlock)
+				.Text(LOCTEXT("SoundTitle", "Sound"))
+				.Font(Font(EFont::Title, 26.f))
+				.ColorAndOpacity(GoldBright())
+			]
+			+ SVerticalBox::Slot().AutoHeight()
+			[
+				SNew(SCIRLSoundSettings)
+				.Audio(Audio)
+				.LabelWidth(150.f)
+				.SliderWidth(170.f)
+				.FontSize(19.f)
 			]
 		]
 

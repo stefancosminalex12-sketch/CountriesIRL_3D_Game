@@ -2,7 +2,11 @@
 
 #include "UI/SCIRLTitleScreen.h"
 #include "UI/SCIRLButton.h"
+#include "UI/SCIRLSoundSettings.h"
 #include "UI/CIRLUIStyle.h"
+#include "Audio/CIRLAudioSubsystem.h"
+#include "Framework/Application/SlateApplication.h"
+#include "InputCoreTypes.h"
 #include "GeneralProjectSettings.h"
 #include "Styling/SlateTypes.h"
 #include "Widgets/Images/SImage.h"
@@ -50,6 +54,7 @@ void SCIRLTitleScreen::Construct(const FArguments& InArgs)
 {
 	OnNewGame = InArgs._OnNewGame;
 	OnQuit = InArgs._OnQuit;
+	Audio = InArgs._Audio;
 
 	const UGeneralProjectSettings* Project = GetDefault<UGeneralProjectSettings>();
 
@@ -100,21 +105,37 @@ void SCIRLTitleScreen::Construct(const FArguments& InArgs)
 				]
 			]
 
+			// The buttons, or the settings panel in their place
 			+ SVerticalBox::Slot().AutoHeight()
 			[
-				MakeTitleButton(LOCTEXT("NewGame", "New Game"), FText::GetEmpty(), true, [this]() { StartNewGame(); }, &NewGameButton)
-			]
-			+ SVerticalBox::Slot().AutoHeight()
-			[
-				MakeTitleButton(LOCTEXT("Continue", "Continue"), LOCTEXT("NoSave", "no saved game yet"), false, []() {})
-			]
-			+ SVerticalBox::Slot().AutoHeight()
-			[
-				MakeTitleButton(LOCTEXT("Settings", "Settings"), LOCTEXT("SettingsSoon", "coming soon"), false, []() {})
-			]
-			+ SVerticalBox::Slot().AutoHeight()
-			[
-				MakeTitleButton(LOCTEXT("Quit", "Quit"), FText::GetEmpty(), true, [this]() { OnQuit.ExecuteIfBound(); })
+				SNew(SWidgetSwitcher)
+				.WidgetIndex_Lambda([this]() { return bSettingsOpen ? 1 : 0; })
+
+				+ SWidgetSwitcher::Slot()
+				[
+					SNew(SVerticalBox)
+					+ SVerticalBox::Slot().AutoHeight()
+					[
+						MakeTitleButton(LOCTEXT("NewGame", "New Game"), FText::GetEmpty(), true, [this]() { StartNewGame(); }, &NewGameButton)
+					]
+					+ SVerticalBox::Slot().AutoHeight()
+					[
+						MakeTitleButton(LOCTEXT("Continue", "Continue"), LOCTEXT("NoSave", "no saved game yet"), false, []() {})
+					]
+					+ SVerticalBox::Slot().AutoHeight()
+					[
+						MakeTitleButton(LOCTEXT("Settings", "Settings"), FText::GetEmpty(), true, [this]() { OpenSettings(); }, &SettingsButton)
+					]
+					+ SVerticalBox::Slot().AutoHeight()
+					[
+						MakeTitleButton(LOCTEXT("Quit", "Quit"), FText::GetEmpty(), true, [this]() { OnQuit.ExecuteIfBound(); })
+					]
+				]
+
+				+ SWidgetSwitcher::Slot()
+				[
+					MakeSettingsPanel()
+				]
 			]
 		]
 
@@ -297,6 +318,79 @@ void SCIRLTitleScreen::FocusFirstButton()
 	{
 		FSlateApplication::Get().SetAllUserFocus(NewGameButton, EFocusCause::SetDirectly);
 	}
+}
+
+TSharedRef<SWidget> SCIRLTitleScreen::MakeSettingsPanel()
+{
+	return SNew(SBorder)
+		.BorderImage(Card())
+		.Padding(FMargin(36.f, 26.f, 36.f, 22.f))
+		[
+			SNew(SVerticalBox)
+
+			+ SVerticalBox::Slot().AutoHeight()
+			[
+				SNew(STextBlock)
+				.Text(LOCTEXT("SettingsTitle", "Settings"))
+				.Font(Font(EFont::TitleSemiBold, 40.f))
+				.ColorAndOpacity(GoldBright())
+			]
+
+			+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 18.f, 0.f, 8.f))
+			[
+				SNew(STextBlock)
+				.Text(LOCTEXT("SoundHeading", "Sound"))
+				.Font(Font(EFont::BodyItalic, 24.f))
+				.ColorAndOpacity(TextMuted())
+			]
+
+			+ SVerticalBox::Slot().AutoHeight()
+			[
+				SAssignNew(SoundSettings, SCIRLSoundSettings).Audio(Audio)
+			]
+
+			+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 22.f, 0.f, 0.f))
+			[
+				MakeTitleButton(LOCTEXT("Back", "Back"), FText::GetEmpty(), true, [this]() { CloseSettings(); })
+			]
+		];
+}
+
+void SCIRLTitleScreen::OpenSettings()
+{
+	bSettingsOpen = true;
+	if (SoundSettings.IsValid() && SoundSettings->GetFirstFocus().IsValid())
+	{
+		FSlateApplication::Get().SetAllUserFocus(SoundSettings->GetFirstFocus(), EFocusCause::SetDirectly);
+	}
+}
+
+void SCIRLTitleScreen::CloseSettings()
+{
+	if (!bSettingsOpen)
+	{
+		return;
+	}
+	bSettingsOpen = false;
+	if (Audio.IsValid())
+	{
+		Audio->SaveVolumes();
+	}
+	if (SettingsButton.IsValid())
+	{
+		FSlateApplication::Get().SetAllUserFocus(SettingsButton, EFocusCause::SetDirectly);
+	}
+}
+
+FReply SCIRLTitleScreen::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent)
+{
+	// Esc / controller B leaves the settings panel
+	if (bSettingsOpen && (InKeyEvent.GetKey() == EKeys::Escape || InKeyEvent.GetKey() == EKeys::Gamepad_FaceButton_Right))
+	{
+		CloseSettings();
+		return FReply::Handled();
+	}
+	return SCompoundWidget::OnKeyDown(MyGeometry, InKeyEvent);
 }
 
 #undef LOCTEXT_NAMESPACE

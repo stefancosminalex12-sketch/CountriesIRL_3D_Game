@@ -17,6 +17,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "UI/SCIRLGameMenu.h"
 #include "UI/CIRLMenuNavigation.h"
+#include "Audio/CIRLAudioSubsystem.h"
 #include "UI/CIRLPaperDollStage.h"
 #include "Characters/Heraldry.h"
 #include "World/WorldSimulationSettings.h"
@@ -27,6 +28,17 @@ void ACIRLPlayerController::PostInitializeComponents()
 
 	InputConfig = NewObject<UCIRLInputConfig>(this, TEXT("InputConfig"));
 	InputConfig->Build();
+}
+
+void ACIRLPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// The player's volumes (Settings) apply from the first frame of the world
+	if (UCIRLAudioSubsystem* Audio = UCIRLAudioSubsystem::Get(this))
+	{
+		Audio->ApplyVolumes(GetWorld());
+	}
 }
 
 void ACIRLPlayerController::SetupInputComponent()
@@ -115,7 +127,8 @@ void ACIRLPlayerController::OpenGameMenu(ECIRLMenuTab Tab)
 		.OnArmsChosen(SCIRLGameMenu::FOnArmsChosen::CreateUObject(this, &ACIRLPlayerController::WearArms))
 		.OnCloseRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::CloseGameMenu))
 		.OnMainMenuRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::ReturnToTitle))
-		.OnQuitRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::QuitGame));
+		.OnQuitRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::QuitGame))
+		.Audio(UCIRLAudioSubsystem::Get(this));
 	Viewport->AddViewportWidgetForPlayer(LocalPlayer, GameMenu.ToSharedRef(), 50);
 
 	// Menus can be walked with WASD as well as the arrow keys and the controller

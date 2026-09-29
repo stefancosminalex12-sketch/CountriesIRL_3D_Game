@@ -260,6 +260,29 @@ namespace CIRLUIStyle
 		return Style;
 	}
 
+	const FSliderStyle& SliderStyle()
+	{
+		static const FSliderStyle Style = []
+		{
+			auto Handle = [](const FLinearColor& Fill)
+			{
+				FSlateBrush Brush = MakeBox(Fill, SRGB(20, 18, 15), 1.f, 3.f);
+				Brush.ImageSize = FVector2D(14.f, 26.f);
+				return Brush;
+			};
+			FSliderStyle S;
+			S.SetNormalBarImage(MakeBox(SRGB(46, 41, 33), SRGB(150, 122, 74, 0.5f), 1.f, 2.f))
+				.SetHoveredBarImage(MakeBox(SRGB(58, 50, 38), SRGB(227, 194, 127, 0.8f), 1.f, 2.f))
+				.SetDisabledBarImage(MakeBox(SRGB(36, 33, 28), SRGB(150, 122, 74, 0.3f), 1.f, 2.f))
+				.SetNormalThumbImage(Handle(Gold()))
+				.SetHoveredThumbImage(Handle(GoldBright()))
+				.SetDisabledThumbImage(Handle(TextMuted()))
+				.SetBarThickness(6.f);
+			return S;
+		}();
+		return Style;
+	}
+
 	TSharedRef<SWidget> MakeOrnatePanel(const TSharedRef<SWidget>& Content, const FMargin& Padding)
 	{
 		// The ornament's own gold lines run ~10% in from its edges: pulling it out by that much
