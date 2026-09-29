@@ -7,7 +7,7 @@
 #include "UI/SCIRLCharacterPage.h"
 #include "UI/SCIRLMapPage.h"
 #include "UI/SCIRLPaperDollView.h"
-#include "UI/SCIRLSoundSettings.h"
+#include "UI/SCIRLSettingsPanel.h"
 #include "Audio/CIRLAudioSubsystem.h"
 #include "GeneralProjectSettings.h"
 #include "Styling/SlateTypes.h"
@@ -368,6 +368,11 @@ TSharedRef<SWidget> SCIRLGameMenu::MakeGameTab()
 			]
 			+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 0.f, 0.f, 12.f))
 			[
+				MakeMenuButton(LOCTEXT("Settings", "Settings"),
+					FOnClicked::CreateLambda([this]() { OpenSettings(); return FReply::Handled(); }), &SettingsButton)
+			]
+			+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 0.f, 0.f, 12.f))
+			[
 				MakeMenuButton(LOCTEXT("MainMenu", "Main Menu"),
 					FOnClicked::CreateLambda([this]() { OnMainMenuRequested.ExecuteIfBound(); return FReply::Handled(); }))
 			]
@@ -377,22 +382,6 @@ TSharedRef<SWidget> SCIRLGameMenu::MakeGameTab()
 					FOnClicked::CreateLambda([this]() { OnQuitRequested.ExecuteIfBound(); return FReply::Handled(); }))
 			]
 
-			// Volumes, the same sliders as the title screen's Settings
-			+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 34.f, 0.f, 8.f))
-			[
-				SNew(STextBlock)
-				.Text(LOCTEXT("SoundTitle", "Sound"))
-				.Font(Font(EFont::Title, 26.f))
-				.ColorAndOpacity(GoldBright())
-			]
-			+ SVerticalBox::Slot().AutoHeight()
-			[
-				SNew(SCIRLSoundSettings)
-				.Audio(Audio)
-				.LabelWidth(150.f)
-				.SliderWidth(170.f)
-				.FontSize(19.f)
-			]
 		]
 
 		// Right: the controls
@@ -418,7 +407,54 @@ TSharedRef<SWidget> SCIRLGameMenu::MakeGameTab()
 		];
 
 	TabFocus[static_cast<int32>(ECIRLMenuTab::Game)] = ResumeButton;
-	return Page;
+
+	// The buttons, or the settings in their place
+	return SNew(SWidgetSwitcher)
+		.WidgetIndex_Lambda([this]() { return bSettingsOpen ? 1 : 0; })
+		+ SWidgetSwitcher::Slot()[Page]
+		+ SWidgetSwitcher::Slot()[MakeSettingsPage()];
+}
+
+TSharedRef<SWidget> SCIRLGameMenu::MakeSettingsPage()
+{
+	return SNew(SVerticalBox)
+		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(20.f, 10.f, 0.f, 26.f))
+		[
+			SNew(STextBlock)
+			.Text(LOCTEXT("SettingsTitle", "Settings"))
+			.Font(Font(EFont::TitleSemiBold, 44.f))
+			.ColorAndOpacity(GoldBright())
+		]
+		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(20.f, 0.f, 0.f, 0.f))
+		[
+			SAssignNew(SettingsPanel, SCIRLSettingsPanel)
+			.Audio(Audio)
+			.FontSize(22.f)
+			.SliderWidth(300.f)
+			.LabelWidth(200.f)
+		]
+		+ SVerticalBox::Slot().FillHeight(1.f)
+		+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Left).Padding(FMargin(20.f, 0.f, 0.f, 10.f))
+		[
+			MakeMenuButton(LOCTEXT("Back", "Back"), FOnClicked::CreateLambda([this]() { CloseSettings(); return FReply::Handled(); }))
+		];
+}
+
+void SCIRLGameMenu::OpenSettings()
+{
+	bSettingsOpen = true;
+	RebuildKeyHints();
+	FocusCurrentTab();
+}
+
+void SCIRLGameMenu::CloseSettings()
+{
+	bSettingsOpen = false;
+	RebuildKeyHints();
+	if (SettingsButton.IsValid())
+	{
+		FSlateApplication::Get().SetAllUserFocus(SettingsButton, EFocusCause::SetDirectly);
+	}
 }
 
 TSharedRef<SWidget> SCIRLGameMenu::MakeControlsList() const
@@ -437,6 +473,7 @@ TSharedRef<SWidget> SCIRLGameMenu::MakeControlsList() const
 		{ TEXT("V"),			LOCTEXT("CtrlView", "First-person / third-person view") },
 		{ TEXT("T"),			LOCTEXT("CtrlEmotion", "Change your eyes' emotion") },
 		{ TEXT("M"),			LOCTEXT("CtrlMap", "Map") },
+		{ TEXT("N"),			LOCTEXT("CtrlNextSong", "Next song") },
 		{ TEXT("Tab  /  I"),	LOCTEXT("CtrlEquipment", "Equipment") },
 		{ TEXT("Esc"),			LOCTEXT("CtrlMenu", "This menu") },
 	};
@@ -464,6 +501,11 @@ TSharedRef<SWidget> SCIRLGameMenu::MakeControlsList() const
 
 void SCIRLGameMenu::SetTab(ECIRLMenuTab NewTab)
 {
+	// Leaving the Game tab closes its settings, so it opens on its buttons next time
+	if (NewTab != CurrentTab)
+	{
+		bSettingsOpen = false;
+	}
 	CurrentTab = NewTab;
 	Pages->SetActiveWidgetIndex(static_cast<int32>(NewTab));
 	RebuildKeyHints();
@@ -471,7 +513,11 @@ void SCIRLGameMenu::SetTab(ECIRLMenuTab NewTab)
 
 void SCIRLGameMenu::FocusCurrentTab()
 {
-	const TSharedPtr<SWidget>& Target = TabFocus[static_cast<int32>(CurrentTab)];
+	TSharedPtr<SWidget> Target = TabFocus[static_cast<int32>(CurrentTab)];
+	if (CurrentTab == ECIRLMenuTab::Game && bSettingsOpen && SettingsPanel.IsValid())
+	{
+		Target = SettingsPanel->GetFirstFocus();
+	}
 	FSlateApplication::Get().SetAllUserFocus(Target.IsValid() ? Target : SharedThis(this), EFocusCause::SetDirectly);
 }
 
@@ -495,7 +541,8 @@ void SCIRLGameMenu::RebuildKeyHints()
 		KeyHints->AddSlot().AutoWidth()[MakeKeyHint(LOCTEXT("HintF", "F"), LOCTEXT("HintUnequip", "Unequip"))];
 		KeyHints->AddSlot().AutoWidth()[MakeKeyHint(LOCTEXT("HintR", "R"), LOCTEXT("HintInspect", "Inspect"))];
 	}
-	KeyHints->AddSlot().AutoWidth()[MakeKeyHint(LOCTEXT("HintEsc", "Esc"), LOCTEXT("HintResume", "Resume"))];
+	const bool bBack = CurrentTab == ECIRLMenuTab::Game && bSettingsOpen;
+	KeyHints->AddSlot().AutoWidth()[MakeKeyHint(LOCTEXT("HintEsc", "Esc"), bBack ? LOCTEXT("HintBack", "Back") : LOCTEXT("HintResume", "Resume"))];
 }
 
 FReply SCIRLGameMenu::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent)
@@ -513,6 +560,12 @@ FReply SCIRLGameMenu::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& In
 	{
 		SetTab(static_cast<ECIRLMenuTab>((Tab + 1) % TabCount));
 		FocusCurrentTab();
+		return FReply::Handled();
+	}
+	// Esc or controller B in the settings: back to the Game tab's buttons
+	if (bSettingsOpen && CurrentTab == ECIRLMenuTab::Game && (Key == EKeys::Escape || Key == EKeys::Gamepad_FaceButton_Right))
+	{
+		CloseSettings();
 		return FReply::Handled();
 	}
 	// Esc, controller B/Start, or a tab's own key again while on that tab (Tab/I Equipment, M Map): back to the game

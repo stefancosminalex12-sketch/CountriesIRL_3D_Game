@@ -71,6 +71,7 @@ void ACIRLPlayerController::SetupInputComponent()
 		EIC->BindAction(InputConfig->GameMenu, ETriggerEvent::Started, this, &ACIRLPlayerController::OnGameMenuPressed);
 		EIC->BindAction(InputConfig->Equipment, ETriggerEvent::Started, this, &ACIRLPlayerController::OnEquipmentPressed);
 		EIC->BindAction(InputConfig->Map, ETriggerEvent::Started, this, &ACIRLPlayerController::OnMapPressed);
+		EIC->BindAction(InputConfig->NextSong, ETriggerEvent::Started, this, &ACIRLPlayerController::OnNextSongPressed);
 	}
 }
 
@@ -102,6 +103,14 @@ void ACIRLPlayerController::OnEquipmentPressed()
 void ACIRLPlayerController::OnMapPressed()
 {
 	OpenGameMenu(ECIRLMenuTab::Map);
+}
+
+void ACIRLPlayerController::OnNextSongPressed()
+{
+	if (GameMusic)
+	{
+		GameMusic->Next();
+	}
 }
 
 void ACIRLPlayerController::OpenGameMenu(ECIRLMenuTab Tab)

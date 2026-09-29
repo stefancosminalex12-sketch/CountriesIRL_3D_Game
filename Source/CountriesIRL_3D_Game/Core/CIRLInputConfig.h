@@ -46,6 +46,9 @@ public:
 	/** Opens the menu on the Map tab (M; D-pad right). Later M becomes the small regional travel map */
 	UPROPERTY() TObjectPtr<UInputAction> Map;
 
+	/** Skips to the next music track (N; controller Y), the same key as on the title screen */
+	UPROPERTY() TObjectPtr<UInputAction> NextSong;
+
 	/** Debug: cycles through the ball's eye emotions */
 	UPROPERTY() TObjectPtr<UInputAction> CycleEmotion;
 };

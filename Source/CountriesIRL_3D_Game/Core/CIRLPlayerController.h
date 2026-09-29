@@ -87,6 +87,7 @@ private:
 	void OnGameMenuPressed();
 	void OnEquipmentPressed();
 	void OnMapPressed();
+	void OnNextSongPressed();
 	void QuitGame();
 	void ReturnToTitle();
 

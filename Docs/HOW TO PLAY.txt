@@ -24,8 +24,9 @@ CONTROLS
   V              switch first-person / third-person view
   T              change your eyes' emotion (just for fun)
   M              map of England (drag to move, mouse wheel to zoom, Space finds you)
+  N              next song
   Tab / I        equipment (being built)
-  Esc            menu: resume, controls, main menu, quit
+  Esc            menu: resume, settings (audio), controls, main menu, quit
 
 WHAT TO TRY
 - Walk up to the two horses (white and brown), press E. Hold W to walk, tap Shift to trot,

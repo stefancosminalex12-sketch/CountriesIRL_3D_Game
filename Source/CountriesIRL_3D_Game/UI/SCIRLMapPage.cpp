@@ -5,7 +5,6 @@
 #include "World/CIRLWorldMap.h"
 #include "Brushes/SlateRoundedBoxBrush.h"
 #include "Engine/Texture2D.h"
-#include "Fonts/FontMeasure.h"
 #include "Framework/Application/SlateApplication.h"
 #include "GameFramework/Actor.h"
 #include "Rendering/DrawElements.h"
@@ -181,7 +180,6 @@ int32 SCIRLMapPage::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeo
 		const FVector2D Spot = TopLeft + UV * MapSize;
 		const float Angle = FMath::DegreesToRadians(You->GetActorRotation().Yaw);
 
-		static const FSlateRoundedBoxBrush Halo(FLinearColor(0.95f, 0.85f, 0.55f, 0.35f), 22.f);
 		static const FSlateRoundedBoxBrush Dot(FLinearColor(0.72f, 0.08f, 0.06f), 9.f, FLinearColor(0.98f, 0.93f, 0.8f), 2.5f);
 		static const FSlateRoundedBoxBrush NeedleEdge(FLinearColor(0.12f, 0.08f, 0.05f), 4.f);
 		static const FSlateRoundedBoxBrush Needle(FLinearColor(0.72f, 0.08f, 0.06f), 2.5f);
@@ -200,7 +198,6 @@ int32 SCIRLMapPage::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeo
 			FSlateDrawElement::MakeBox(OutDrawElements, Layer, Bar.ToPaintGeometry(), Brush);
 		};
 
-		Box(&Halo, FVector2D(44.0, 44.0), LayerId + 2);
 		if (MarkerTexture)
 		{
 			// The arrow turns around its middle, which sits on your spot
@@ -216,18 +213,7 @@ int32 SCIRLMapPage::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeo
 			Box(&Dot, FVector2D(18.0, 18.0), LayerId + 5);
 		}
 
-		// "You" under the marker
-		const FSlateFontInfo LabelFont = Font(EFont::Title, 17.f);
-		const FText Label = LOCTEXT("You", "You");
-		const FVector2D LabelSize = FSlateApplication::Get().GetRenderer()->GetFontMeasureService()->Measure(Label, LabelFont);
-		const FVector2D LabelPos = Spot + FVector2D(-LabelSize.X * 0.5, MarkerTexture ? MarkerArrowHeight * 0.5 + 4.0 : 16.0);
-		FSlateDrawElement::MakeText(OutDrawElements, LayerId + 5,
-			AllottedGeometry.ToPaintGeometry(FVector2f(LabelSize), FSlateLayoutTransform(FVector2f(LabelPos + FVector2D(1.5, 1.5)))),
-			Label, LabelFont, ESlateDrawEffect::None, FLinearColor(0.98f, 0.93f, 0.8f, 0.9f));
-		FSlateDrawElement::MakeText(OutDrawElements, LayerId + 6,
-			AllottedGeometry.ToPaintGeometry(FVector2f(LabelSize), FSlateLayoutTransform(FVector2f(LabelPos))),
-			Label, LabelFont, ESlateDrawEffect::None, FLinearColor(0.45f, 0.05f, 0.04f));
-		TopLayer = LayerId + 6;
+		TopLayer = LayerId + 5;
 	}
 
 	// Thin gold frame around the view

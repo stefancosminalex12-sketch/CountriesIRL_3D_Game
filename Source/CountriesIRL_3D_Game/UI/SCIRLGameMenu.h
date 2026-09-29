@@ -75,6 +75,11 @@ private:
 	TSharedRef<SWidget> MakeGameTab();
 	TSharedRef<SWidget> MakeControlsList() const;
 
+	/** The Game tab's settings page (the same settings as the title screen) with a Back button */
+	TSharedRef<SWidget> MakeSettingsPage();
+	void OpenSettings();
+	void CloseSettings();
+
 	/** A wide menu button in the panel style (Resume, Quit...) */
 	TSharedRef<SWidget> MakeMenuButton(const FText& Label, FOnClicked OnClicked, TSharedPtr<class SButton>* OutButton = nullptr);
 
@@ -84,6 +89,11 @@ private:
 
 	TSharedPtr<SWidgetSwitcher> Pages;
 	TSharedPtr<SHorizontalBox> KeyHints;
+
+	/** The Game tab shows its buttons, or the settings in their place */
+	bool bSettingsOpen = false;
+	TSharedPtr<class SCIRLSettingsPanel> SettingsPanel;
+	TSharedPtr<class SButton> SettingsButton;
 
 	/** First thing to focus on each tab (for keyboard/controller) */
 	TSharedPtr<SWidget> TabFocus[static_cast<int32>(ECIRLMenuTab::Count)];

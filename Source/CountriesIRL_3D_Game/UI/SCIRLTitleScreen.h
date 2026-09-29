@@ -6,14 +6,14 @@
 #include "Widgets/SCompoundWidget.h"
 
 class SCIRLButton;
-class SCIRLSoundSettings;
+class SCIRLSettingsPanel;
 class UCIRLAudioSubsystem;
 
 /**
  *  The title screen shown when the game starts: the village painting, the game's name and
  *  New Game / Continue / Settings / Quit. New Game swaps to a loading painting before the world loads,
  *  so the screen shows something nice during the load instead of freezing on the menu.
- *  Settings swaps the buttons for the settings panel (volume sliders for now); Back or Esc returns.
+ *  Settings swaps the buttons for the settings panel (SCIRLSettingsPanel, shared with the Esc menu); Back or Esc returns.
  */
 class SCIRLTitleScreen : public SCompoundWidget
 {
@@ -54,7 +54,7 @@ private:
 	void CloseSettings();
 
 	TWeakObjectPtr<UCIRLAudioSubsystem> Audio;
-	TSharedPtr<SCIRLSoundSettings> SoundSettings;
+	TSharedPtr<SCIRLSettingsPanel> SettingsPanel;
 	TSharedPtr<SCIRLButton> SettingsButton;
 	bool bSettingsOpen = false;
 

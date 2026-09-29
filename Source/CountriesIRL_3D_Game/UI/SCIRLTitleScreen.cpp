@@ -2,7 +2,7 @@
 
 #include "UI/SCIRLTitleScreen.h"
 #include "UI/SCIRLButton.h"
-#include "UI/SCIRLSoundSettings.h"
+#include "UI/SCIRLSettingsPanel.h"
 #include "UI/CIRLUIStyle.h"
 #include "Audio/CIRLAudioSubsystem.h"
 #include "Framework/Application/SlateApplication.h"
@@ -107,8 +107,8 @@ void SCIRLTitleScreen::Construct(const FArguments& InArgs)
 				]
 			]
 
-			// The buttons, or the settings panel in their place
-			+ SVerticalBox::Slot().AutoHeight()
+			// The buttons, or the settings panel in their place (left-aligned: each button is only as wide as its text)
+			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Left)
 			[
 				SNew(SWidgetSwitcher)
 				.WidgetIndex_Lambda([this]() { return bSettingsOpen ? 1 : 0; })
@@ -116,19 +116,19 @@ void SCIRLTitleScreen::Construct(const FArguments& InArgs)
 				+ SWidgetSwitcher::Slot()
 				[
 					SNew(SVerticalBox)
-					+ SVerticalBox::Slot().AutoHeight()
+					+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Left)
 					[
 						MakeTitleButton(LOCTEXT("NewGame", "New Game"), FText::GetEmpty(), true, [this]() { StartNewGame(); }, &NewGameButton)
 					]
-					+ SVerticalBox::Slot().AutoHeight()
+					+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Left)
 					[
 						MakeTitleButton(LOCTEXT("Continue", "Continue"), LOCTEXT("NoSave", "no saved game yet"), false, []() {})
 					]
-					+ SVerticalBox::Slot().AutoHeight()
+					+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Left)
 					[
 						MakeTitleButton(LOCTEXT("Settings", "Settings"), FText::GetEmpty(), true, [this]() { OpenSettings(); }, &SettingsButton)
 					]
-					+ SVerticalBox::Slot().AutoHeight()
+					+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Left)
 					[
 						MakeTitleButton(LOCTEXT("Quit", "Quit"), FText::GetEmpty(), true, [this]() { OnQuit.ExecuteIfBound(); })
 					]
@@ -343,20 +343,16 @@ TSharedRef<SWidget> SCIRLTitleScreen::MakeSettingsPanel()
 				.ColorAndOpacity(GoldBright())
 			]
 
-			+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 18.f, 0.f, 8.f))
-			[
-				SNew(STextBlock)
-				.Text(LOCTEXT("SoundHeading", "Sound"))
-				.Font(Font(EFont::BodyItalic, 24.f))
-				.ColorAndOpacity(TextMuted())
-			]
-
-			+ SVerticalBox::Slot().AutoHeight()
-			[
-				SAssignNew(SoundSettings, SCIRLSoundSettings).Audio(Audio)
-			]
-
 			+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 22.f, 0.f, 0.f))
+			[
+				SAssignNew(SettingsPanel, SCIRLSettingsPanel)
+				.Audio(Audio)
+				.FontSize(24.f)
+				.SliderWidth(320.f)
+				.LabelWidth(210.f)
+			]
+
+			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Left).Padding(FMargin(0.f, 22.f, 0.f, 0.f))
 			[
 				MakeTitleButton(LOCTEXT("Back", "Back"), FText::GetEmpty(), true, [this]() { CloseSettings(); })
 			]
@@ -438,9 +434,9 @@ TSharedRef<SWidget> SCIRLTitleScreen::MakeNowPlaying()
 void SCIRLTitleScreen::OpenSettings()
 {
 	bSettingsOpen = true;
-	if (SoundSettings.IsValid() && SoundSettings->GetFirstFocus().IsValid())
+	if (SettingsPanel.IsValid() && SettingsPanel->GetFirstFocus().IsValid())
 	{
-		FSlateApplication::Get().SetAllUserFocus(SoundSettings->GetFirstFocus(), EFocusCause::SetDirectly);
+		FSlateApplication::Get().SetAllUserFocus(SettingsPanel->GetFirstFocus(), EFocusCause::SetDirectly);
 	}
 }
 
