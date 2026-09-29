@@ -2,7 +2,7 @@
 Build the game's simplified, connected river network from OpenStreetMap river pieces.
     python Tools/world/build_rivers.py
 Reads the hand-picked list Data/World/Rivers_England1455.csv (which rivers, a point on each, what it flows into,
-how far boats could go in 1455) and Art/MapData/osm_rivers_england.geojson (fetch_map_data.py).
+how far boats could go in 1455, Border=1 if it forms a land border) and Art/MapData/osm_rivers_england.geojson (fetch_map_data.py).
 Writes Data/World/Rivers_England1455.json: for every river one smooth centreline from source to mouth (lon/lat),
 ending exactly on the river it flows into, plus how much of it is navigable.
 """
@@ -196,7 +196,7 @@ def main():
         out.append({"id": r["Id"], "name": r["Name"], "flows_into": r["FlowsInto"], "tier": int(r["Tier"]),
                     "navigable_to": r["NavigableTo"] or None,
                     "navigable_from": None if b["nav_from"] is None else round(b["nav_from"], 3),
-                    "length_km": round(b["length"]), "note": r["Note"],
+                    "length_km": round(b["length"]), "note": r["Note"], "border": r.get("Border") == "1",
                     "line": [[round(v, 4) for v in lonlat(*p)] for p in b["km"]]})
     json.dump({"source": "(c) OpenStreetMap contributors (ODbL), simplified", "rivers": out},
               open(f"{ROOT}/Data/World/Rivers_England1455.json", "w", encoding="utf-8"), indent=1)

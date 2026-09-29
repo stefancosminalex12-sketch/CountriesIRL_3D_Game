@@ -366,8 +366,11 @@ def main():
     rivers = [r for r in json.load(open(f"{ROOT}/Data/World/Rivers_England1455.json", encoding="utf-8"))["rivers"]
               if not is_cut(*r["line"][-1])]                   # rivers reaching the sea in a cut area are left out
     layer = img.copy()
-    draw_rivers(ImageDraw.Draw(layer), rivers)
+    draw_rivers(ImageDraw.Draw(layer), [r for r in rivers if not r.get("border")])
     img = Image.composite(layer, img, land.filter(ImageFilter.MaxFilter(7)))
+    layer = img.copy()                                         # rivers forming the border (Tweed) show on both banks
+    draw_rivers(ImageDraw.Draw(layer), [r for r in rivers if r.get("border")])
+    img = Image.composite(layer, img, land.filter(ImageFilter.MaxFilter(25)))
     d = ImageDraw.Draw(img)
 
     all_places = {row["Id"]: row for row in csv.DictReader(open(f"{ROOT}/Data/World/Places_England1455.csv", encoding="utf-8"))}
