@@ -30,6 +30,10 @@ void SCIRLSoundSettings::Construct(const FArguments& InArgs)
 		]
 		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 6.f))
 		[
+			MakeRow(LOCTEXT("GameMusic", "In-Game Music"), ECIRLVolume::GameMusic, InArgs._SliderWidth, InArgs._LabelWidth, InArgs._FontSize)
+		]
+		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 6.f))
+		[
 			MakeRow(LOCTEXT("Effects", "SFX"), ECIRLVolume::Effects, InArgs._SliderWidth, InArgs._LabelWidth, InArgs._FontSize)
 		]
 	];

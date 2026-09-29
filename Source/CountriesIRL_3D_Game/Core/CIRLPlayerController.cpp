@@ -18,6 +18,7 @@
 #include "UI/SCIRLGameMenu.h"
 #include "UI/CIRLMenuNavigation.h"
 #include "Audio/CIRLAudioSubsystem.h"
+#include "Audio/CIRLPlaylistComponent.h"
 #include "UI/CIRLPaperDollStage.h"
 #include "Characters/Heraldry.h"
 #include "World/WorldSimulationSettings.h"
@@ -35,9 +36,19 @@ void ACIRLPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	// The player's volumes (Settings) apply from the first frame of the world
-	if (UCIRLAudioSubsystem* Audio = UCIRLAudioSubsystem::Get(this))
+	UCIRLAudioSubsystem* Audio = UCIRLAudioSubsystem::Get(this);
+	if (Audio)
 	{
 		Audio->ApplyVolumes(GetWorld());
+	}
+
+	// In-game music (Project Settings > CountriesIRL Audio > Game Playlist): the first track, then random,
+	// under the In-Game Music slider
+	if (IsLocalPlayerController())
+	{
+		GameMusic = NewObject<UCIRLPlaylistComponent>(this, TEXT("GameMusic"));
+		GameMusic->RegisterComponent();
+		GameMusic->Play(GetDefault<UCIRLMusicSettings>()->GamePlaylist, Audio ? Audio->GetGameMusicClass() : nullptr);
 	}
 }
 

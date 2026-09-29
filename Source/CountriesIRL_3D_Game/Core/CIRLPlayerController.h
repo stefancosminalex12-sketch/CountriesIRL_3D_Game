@@ -99,6 +99,10 @@ private:
 	UPROPERTY(Transient)
 	TObjectPtr<ACIRLPaperDollStage> PaperDollStage;
 
+	/** Music playing in the world */
+	UPROPERTY(Transient)
+	TObjectPtr<class UCIRLPlaylistComponent> GameMusic;
+
 	/** Slate's navigation rules from before the menu opened (the menu adds WASD) */
 	TSharedPtr<FNavigationConfig> PreviousNavigation;
 };

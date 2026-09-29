@@ -13,15 +13,17 @@ class USoundMix;
 enum class ECIRLVolume : uint8
 {
 	Master,		// "Sound": everything
-	Music,
+	Music,		// all music (main menu and in the world)
+	GameMusic,	// "In-Game Music": music in the world, on top of Music
 	Effects,	// every sound that isn't music (the default sound class)
 };
 
 /**
  *  The player's volumes, kept for the whole game session and saved in GameUserSettings.ini.
- *  Sounds belong to a sound class (/Game/CountriesIRL/Audio/Classes): SC_Music for music, SC_SFX for everything
- *  else (Project Settings > Audio > Default Sound Class), both children of SC_Master. The volumes are applied with
- *  one sound mix that overrides the two classes: music plays at Master x Music, effects at Master x Effects.
+ *  Sounds belong to a sound class (/Game/CountriesIRL/Audio/Classes): SC_Music for music, SC_GameMusic for music
+ *  playing in the world (the in-game playlist sets it), SC_SFX for everything else (Project Settings > Audio >
+ *  Default Sound Class), all children of SC_Master. The volumes are applied with one sound mix that overrides the
+ *  classes: menu music plays at Master x Music, in-game music at Master x Music x In-Game Music, effects at Master x Effects.
  */
 UCLASS(config = GameUserSettings)
 class UCIRLAudioSubsystem : public UGameInstanceSubsystem
@@ -47,6 +49,9 @@ public:
 	/** Applies the volumes to a world's audio device (done for every loaded level) */
 	void ApplyVolumes(UWorld* World);
 
+	/** Sound class of music playing in the world (the In-Game Music slider) */
+	USoundClass* GetGameMusicClass() const { return GameMusicClass; }
+
 private:
 
 	void OnWorldBeginPlay(UWorld* World);
@@ -59,6 +64,10 @@ private:
 	UPROPERTY(config)
 	float MusicVolume = 0.8f;
 
+	/** Starts at half: the world's music sits under the game */
+	UPROPERTY(config)
+	float GameMusicVolume = 0.5f;
+
 	UPROPERTY(config)
 	float EffectsVolume = 1.f;
 
@@ -67,6 +76,9 @@ private:
 
 	UPROPERTY(Transient)
 	TObjectPtr<USoundClass> MusicClass;
+
+	UPROPERTY(Transient)
+	TObjectPtr<USoundClass> GameMusicClass;
 
 	UPROPERTY(Transient)
 	TObjectPtr<USoundClass> EffectsClass;

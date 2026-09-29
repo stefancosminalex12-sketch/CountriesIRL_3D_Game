@@ -13,8 +13,9 @@ namespace
 	constexpr float SkipFadeSeconds = 0.8f;
 }
 
-void UCIRLPlaylistComponent::Play(const TArray<FCIRLMusicTrack>& InTracks)
+void UCIRLPlaylistComponent::Play(const TArray<FCIRLMusicTrack>& InTracks, USoundClass* SoundClass)
 {
+	TrackClass = SoundClass;
 	Tracks = InTracks.FilterByPredicate([](const FCIRLMusicTrack& Track) { return !Track.Sound.IsNull(); });
 	Bag.Reset();
 	if (Tracks.Num() > 0)
@@ -82,6 +83,10 @@ void UCIRLPlaylistComponent::PlayTrack(int32 Index, float FadeInSeconds)
 	if (Current)
 	{
 		Current->bIsUISound = true;
+		if (TrackClass)
+		{
+			Current->SoundClassOverride = TrackClass;
+		}
 		Current->OnAudioFinished.AddDynamic(this, &UCIRLPlaylistComponent::HandleTrackFinished);
 		Current->FadeIn(FadeInSeconds);
 	}

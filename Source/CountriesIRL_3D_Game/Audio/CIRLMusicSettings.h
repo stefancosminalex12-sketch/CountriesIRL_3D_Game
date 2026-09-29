@@ -37,4 +37,8 @@ public:
 	/** Main menu music: the first track always plays first, then the rest in random order */
 	UPROPERTY(config, EditAnywhere, Category = "Music")
 	TArray<FCIRLMusicTrack> TitlePlaylist;
+
+	/** Music in the world (the In-Game Music slider): the first track when you enter the game, then the rest in random order */
+	UPROPERTY(config, EditAnywhere, Category = "Music")
+	TArray<FCIRLMusicTrack> GamePlaylist;
 };

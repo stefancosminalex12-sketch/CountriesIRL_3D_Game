@@ -1,7 +1,8 @@
 """
 Create the game's sound classes (safe to run again):
   /Game/CountriesIRL/Audio/Classes/SC_Master   the "Sound" volume
-      SC_Music                                 music
+      SC_Music                                 music (main menu; the Music slider)
+      SC_GameMusic                             music in the world (Music x In-Game Music; the in-game playlist sets it)
       SC_SFX                                   everything else (Project Settings > Audio > Default Sound Class)
 The player's volume sliders (C++ UCIRLAudioSubsystem) turn these up and down. Run inside the editor:
     py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/setup_sound_classes.py"
@@ -22,10 +23,11 @@ def sound_class(name):
 
 master = sound_class("SC_Master")
 music = sound_class("SC_Music")
+game_music = sound_class("SC_GameMusic")
 sfx = sound_class("SC_SFX")
-for child in (music, sfx):
+for child in (music, game_music, sfx):
     child.set_editor_property("parent_class", master)
-master.set_editor_property("child_classes", [music, sfx])
-for asset in (master, music, sfx):
+master.set_editor_property("child_classes", [music, game_music, sfx])
+for asset in (master, music, game_music, sfx):
     unreal.EditorAssetLibrary.save_loaded_asset(asset, False)
     print("SOUND_CLASS", asset.get_path_name())

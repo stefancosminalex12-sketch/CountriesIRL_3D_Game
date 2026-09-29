@@ -11,6 +11,7 @@
 namespace
 {
 	const TCHAR* MusicClassPath = TEXT("/Game/CountriesIRL/Audio/Classes/SC_Music.SC_Music");
+	const TCHAR* GameMusicClassPath = TEXT("/Game/CountriesIRL/Audio/Classes/SC_GameMusic.SC_GameMusic");
 	const TCHAR* EffectsClassPath = TEXT("/Game/CountriesIRL/Audio/Classes/SC_SFX.SC_SFX");
 }
 
@@ -26,6 +27,7 @@ void UCIRLAudioSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 
 	MusicClass = LoadObject<USoundClass>(nullptr, MusicClassPath);
+	GameMusicClass = LoadObject<USoundClass>(nullptr, GameMusicClassPath);
 	EffectsClass = LoadObject<USoundClass>(nullptr, EffectsClassPath);
 	VolumeMix = NewObject<USoundMix>(this, TEXT("CIRLVolumeMix"));
 
@@ -47,6 +49,7 @@ float UCIRLAudioSubsystem::GetVolume(ECIRLVolume Which) const
 	{
 	case ECIRLVolume::Master:	return MasterVolume;
 	case ECIRLVolume::Music:	return MusicVolume;
+	case ECIRLVolume::GameMusic:	return GameMusicVolume;
 	default:					return EffectsVolume;
 	}
 }
@@ -58,6 +61,7 @@ void UCIRLAudioSubsystem::SetVolume(ECIRLVolume Which, float Value)
 	{
 	case ECIRLVolume::Master:	MasterVolume = Value; break;
 	case ECIRLVolume::Music:	MusicVolume = Value; break;
+	case ECIRLVolume::GameMusic:	GameMusicVolume = Value; break;
 	default:					EffectsVolume = Value; break;
 	}
 	ApplyVolumes(CurrentWorld());
@@ -78,6 +82,10 @@ void UCIRLAudioSubsystem::ApplyVolumes(UWorld* World)
 	if (MusicClass)
 	{
 		UGameplayStatics::SetSoundMixClassOverride(World, VolumeMix, MusicClass, MasterVolume * MusicVolume, 1.f, 0.f, false);
+	}
+	if (GameMusicClass)
+	{
+		UGameplayStatics::SetSoundMixClassOverride(World, VolumeMix, GameMusicClass, MasterVolume * MusicVolume * GameMusicVolume, 1.f, 0.f, false);
 	}
 	if (EffectsClass)
 	{

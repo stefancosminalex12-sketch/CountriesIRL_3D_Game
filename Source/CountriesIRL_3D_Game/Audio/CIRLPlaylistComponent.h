@@ -8,6 +8,7 @@
 #include "CIRLPlaylistComponent.generated.h"
 
 class UAudioComponent;
+class USoundClass;
 
 /**
  *  Plays a list of music tracks one after another: the first track first, then the others in random order
@@ -21,8 +22,9 @@ class UCIRLPlaylistComponent : public UActorComponent
 
 public:
 
-	/** Starts the playlist from its first track */
-	void Play(const TArray<FCIRLMusicTrack>& InTracks);
+	/** Starts the playlist from its first track. SoundClass (optional) puts the tracks under another volume
+	 *  slider than their own class, e.g. the in-game playlist under In-Game Music */
+	void Play(const TArray<FCIRLMusicTrack>& InTracks, USoundClass* SoundClass = nullptr);
 
 	/** Skips to the next track */
 	void Next();
@@ -56,6 +58,9 @@ private:
 
 	UPROPERTY(Transient)
 	TObjectPtr<UAudioComponent> Current;
+
+	UPROPERTY(Transient)
+	TObjectPtr<USoundClass> TrackClass;
 
 	FTimerHandle GapTimer;
 };
