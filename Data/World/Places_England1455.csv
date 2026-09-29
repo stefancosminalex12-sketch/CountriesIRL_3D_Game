@@ -90,7 +90,7 @@ glastonbury,Glastonbury Abbey,Abbey,51.146,-2.715,1,,
 bury,St Edmund's Abbey,Abbey,52.244,0.717,1,Great Benedictine abbey; Parliament met at Bury in 1447,
 bury_st_edmunds,Bury St Edmunds,Town,52.2463,0.7111,2,Great abbey town; Parliament of 1447 (Duke Humphrey's arrest),Bury St Edmunds
 walsingham,Walsingham Priory,Abbey,52.893,0.875,1,Pilgrim shrine of Our Lady,
-battle_st_albans_1455,First Battle of St Albans (1455),Battle,51.752,-0.339,3,22 May 1455; start of the war,
+battle_st_albans_1455,First Battle of St Albans (1455),Battle,51.752,-0.339,3,"Battle, 22 May 1455: the start of the war",
 battle_blore_heath,Blore Heath (1459),Battle,52.9136,-2.4247,1,,
 battle_ludford,Ludford Bridge (1459),Battle,52.362,-2.717,1,,
 battle_northampton,Northampton (1460),Battle,52.221,-0.889,2,,
@@ -122,16 +122,16 @@ durham_cathedral,Durham Cathedral,Cathedral,54.7735,-1.5763,2,St Cuthbert's shri
 wells_cathedral,Wells Cathedral,Cathedral,51.2104,-2.6434,1,,Wells Cathedral
 ely_cathedral,Ely Cathedral,Cathedral,52.3986,0.2638,2,The ship of the Fens,Ely Cathedral
 winchester_cathedral,Winchester Cathedral,Cathedral,51.0606,-1.3131,1,,Winchester Cathedral
-beverley_minster,Beverley Minster,Cathedral,53.8394,-0.4247,1,,Beverley Minster
-gloucester_abbey,Gloucester Abbey,Cathedral,51.8675,-2.2466,1,Edward II's tomb,Gloucester Cathedral
+beverley_minster,Beverley Minster,Cathedral,53.8394,-0.4247,1,"Minster: a great collegiate church, not a cathedral",Beverley Minster
+gloucester_abbey,Gloucester Abbey,Abbey,51.8675,-2.2466,1,Benedictine abbey (a cathedral only from 1541); Edward II's tomb,Gloucester Cathedral
 exeter_cathedral,Exeter Cathedral,Cathedral,50.7226,-3.5297,1,,Exeter Cathedral
 worcester_cathedral,Worcester Cathedral,Cathedral,52.1889,-2.2209,1,,Worcester Cathedral
 norwich_cathedral,Norwich Cathedral,Cathedral,52.6320,1.3007,1,,Norwich Cathedral
 lichfield_cathedral,Lichfield Cathedral,Cathedral,52.6856,-1.8305,1,,Lichfield Cathedral
 stonehenge,Stonehenge,Landmark,51.1789,-1.8262,3,Already ancient in 1455; said to be Merlin's work,Stonehenge
-avebury,Avebury,Landmark,51.4286,-1.8544,2,Great stone circle,Avebury
+avebury,Avebury,Landmark,51.4286,-1.8544,2,"Great stone circle, with Silbury Hill and the avenues beside it",Avebury
 silbury_hill,Silbury Hill,Landmark,51.4156,-1.8575,1,,Silbury Hill
-uffington_horse,Uffington White Horse,Landmark,51.5775,-1.5669,2,Chalk horse on the downs,Uffington White Horse
+uffington_horse,Uffington White Horse,Landmark,51.5775,-1.5669,2,"Chalk horse on the downs, with Wayland's Smithy on the Ridgeway beside it",Uffington White Horse
 hadrians_wall,Hadrian's Wall,Landmark,55.0167,-2.2833,3,The old Roman wall,Housesteads Roman Fort
 old_sarum,Old Sarum,Landmark,51.0932,-1.8046,1,Abandoned old town above Salisbury,Old Sarum
 glastonbury_tor,Glastonbury Tor,Landmark,51.1444,-2.6989,2,Isle of Avalon,Glastonbury Tor
@@ -980,3 +980,32 @@ rh_delapre_abbey,Delapre Abbey,Abbey,52.2247,-0.8895,1,,Delapré Abbey
 rh_syon_abbey,Syon Abbey,Abbey,51.4767,-0.3119,1,,Syon Abbey
 rh_romsey_abbey,Romsey Abbey,Abbey,50.9897,-1.5014,1,,Romsey Abbey
 rh_sherborne_abbey,Sherborne Abbey,Abbey,50.9467,-2.5167,1,,Sherborne Abbey
+carlisle_cathedral,Carlisle Cathedral,Cathedral,54.8947,-2.9386,1,Cathedral of the border city,Carlisle Cathedral
+hereford_cathedral,Hereford Cathedral,Cathedral,52.0542,-2.7160,1,Its great map of the world (c. 1300),Hereford Cathedral
+chichester_cathedral,Chichester Cathedral,Cathedral,50.8363,-0.7808,1,Cathedral of Sussex,Chichester Cathedral
+rochester_cathedral,Rochester Cathedral,Cathedral,51.3890,0.5033,1,Cathedral on the Dover road,Rochester Cathedral
+coventry_cathedral,Coventry Cathedral Priory,Cathedral,52.4089,-1.5085,2,St Mary's: cathedral shared with Lichfield (demolished in the 1540s),St Mary's Priory and Cathedral
+bath_cathedral,Bath Cathedral Priory,Cathedral,51.3814,-2.3589,1,Cathedral shared with Wells,Bath Abbey
+battle_nibley_green,Nibley Green (1470),Battle,51.6600,-2.3985,1,"Skirmish: the Berkeley-Lisle feud, the last private battle in England",Battle of Nibley Green
+battle_heworth_moor,Heworth Moor (1453),Battle,53.9690,-1.0430,1,Skirmish: the Percys ambush the Nevilles' wedding party (before the game starts),Battle of Heworth Moor
+battle_stamford_bridge_1454,Stamford Bridge (1454),Battle,53.9900,-0.9120,1,Skirmish: Nevilles against Percys (before the game starts),Battle of Stamford Bridge (1454)
+devils_arrows,Devil's Arrows,Landmark,54.0929,-1.4037,2,Three huge standing stones by Boroughbridge,Devil's Arrows
+rudston_monolith,Rudston Monolith,Landmark,54.0939,-0.3226,1,"Tallest standing stone in Britain (7.6 m), in a churchyard",Rudston Monolith
+long_meg,Long Meg and Her Daughters,Landmark,54.7279,-2.6677,1,Stone circle: a witch and her coven turned to stone,Long Meg and Her Daughters
+arbor_low,Arbor Low,Landmark,53.1689,-1.7617,1,Henge on the Peak moors,Arbor Low
+stanton_drew,Stanton Drew,Landmark,51.3671,-2.5760,1,Stone circles: a wedding party turned to stone,Stanton Drew stone circles
+wroxeter,Wroxeter,Landmark,52.6742,-2.6442,1,Ruins of a Roman city; the Old Work still standing,Wroxeter Roman City
+richborough,Richborough,Landmark,51.2940,1.3320,1,Walls of a Roman fort by the Wantsum,Richborough Roman Fort
+geddington_cross,Geddington Eleanor Cross,Landmark,52.4380,-0.6870,1,Stone cross of Edward I for Queen Eleanor (1290s),Geddington
+hardingstone_cross,Hardingstone Eleanor Cross,Landmark,52.2104,-0.8795,1,Queen Eleanor's cross by the Northampton battlefield of 1460,Hardingstone
+wakefield_bridge_chapel,Wakefield Bridge Chapel,Landmark,53.6760,-1.4890,1,"Chapel on the bridge (1350s); York's son Edmund killed near it, 1460","Chantry Chapel of St Mary the Virgin, Wakefield"
+guys_cliffe,Guy's Cliffe,Landmark,52.2988,-1.5723,1,Cave of the hero Guy of Warwick; the Earl's chapel and statue (1420s),Guy's Cliffe
+aysgarth_falls,Aysgarth Falls,Nature,54.2936,-1.9822,1,Waterfalls of the Ure in Wensleydale,Aysgarth Falls
+hardraw_force,Hardraw Force,Nature,54.3210,-2.2018,1,Tallest single-drop waterfall in England,Hardraw Force
+forest_of_galtres,Forest of Galtres,Area,54.0600,-1.1200,1,Royal forest beside York,Forest of Galtres
+inglewood_forest,Inglewood Forest,Area,54.7500,-2.8700,1,Royal forest near Carlisle,Inglewood Forest
+rockingham_forest,Rockingham Forest,Area,52.5000,-0.6500,1,Royal forest of Northamptonshire,Rockingham Forest
+windsor_forest,Windsor Forest,Area,51.4200,-0.7000,1,Royal forest round Windsor,Windsor Forest
+savernake_forest,Savernake Forest,Area,51.3833,-1.6833,1,Royal forest by Marlborough,Savernake Forest
+wensleydale_area,Wensleydale,Area,54.3050,-2.1300,2,The Neville dale: the game's first region,Wensleydale
+barnsdale,Barnsdale,Area,53.6200,-1.2500,1,Robin Hood's haunt in A Gest of Robyn Hode (c. 1450),Barnsdale

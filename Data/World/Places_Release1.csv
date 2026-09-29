@@ -61,3 +61,6 @@ sherburn,cut,"Village merged into a nearby one (fewer, meaningful villages)"
 stutton,cut,"Village merged into a nearby one (fewer, meaningful villages)"
 wheathampstead,cut,"Village merged into a nearby one (fewer, meaningful villages)"
 london_colney,cut,"Village merged into a nearby one (fewer, meaningful villages)"
+silbury_hill,part_of:avebury,One site with Avebury
+waylands_smithy,part_of:uffington_horse,One site with the White Horse
+london_bridge,part_of:london,Built with the London site
