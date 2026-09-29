@@ -47,14 +47,25 @@ def wiki_coords(titles):
     return {t: found.get(names[t]) for t in titles}
 
 
-def chaikin(pts, rounds=2):
-    for _ in range(rounds):
-        out = [pts[0]]
-        for a, b in zip(pts, pts[1:]):
-            out += [(0.75 * a[0] + 0.25 * b[0], 0.75 * a[1] + 0.25 * b[1]), (0.25 * a[0] + 0.75 * b[0], 0.25 * a[1] + 0.75 * b[1])]
-        out.append(pts[-1])
-        pts = out
-    return pts
+def through_stops(pts, steps=8):
+    """A smooth curve that passes exactly through every stop (centripetal Catmull-Rom), in lat/lon."""
+    P = [km(*p) for p in pts]
+    P = [P[0]] + P + [P[-1]]
+    out = [pts[0]]
+    for i in range(1, len(P) - 2):
+        p0, p1, p2, p3 = P[i - 1], P[i], P[i + 1], P[i + 2]
+        t0 = 0.0
+        t1 = t0 + max(math.dist(p0, p1), 1e-6) ** 0.5
+        t2 = t1 + max(math.dist(p1, p2), 1e-6) ** 0.5
+        t3 = t2 + max(math.dist(p2, p3), 1e-6) ** 0.5
+        for k in range(1, steps + 1):
+            t = t1 + (t2 - t1) * k / steps
+            lerp = lambda a, b, ta, tb: tuple(a[j] * (tb - t) / (tb - ta) + b[j] * (t - ta) / (tb - ta) for j in (0, 1))
+            a1, a2, a3 = lerp(p0, p1, t0, t1), lerp(p1, p2, t1, t2), lerp(p2, p3, t2, t3)
+            b1, b2 = lerp(a1, a2, t0, t2), lerp(a2, a3, t1, t3)
+            x, y = lerp(b1, b2, t1, t2)
+            out.append((y / 110.57, x / (111.32 * math.cos(math.radians(53.0)))))
+    return out
 
 
 def main():
@@ -88,7 +99,7 @@ def main():
         for s, a, b in zip(stops[1:], pts, pts[1:]):
             if dist(a, b) > 60:                 # a wrong Wikipedia match shows up as a huge jump
                 problems.append(f"{r['Id']}: {s} is {dist(a, b):.0f} km from the previous stop")
-        line = chaikin(pts)
+        line = through_stops(pts)
         length = sum(dist(a, b) for a, b in zip(line, line[1:]))
         out.append({"id": r["Id"], "name": r["Name"], "class": r["Class"], "width_m": WIDTH_M[r["Class"]],
                     "stops": [places[s]["Name"] if s in places else s.split(",")[0] for s in stops],

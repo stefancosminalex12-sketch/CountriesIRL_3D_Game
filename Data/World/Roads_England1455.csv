@@ -1,6 +1,6 @@
 Id,Name,Class,Route,Note
 great_north_road,Great North Road,great,"london;Highgate;barnet;Hatfield, Hertfordshire;Stevenage;Baldock;Biggleswade;Eaton Socon;Buckden, Cambridgeshire;Alconbury;Stilton;stamford;grantham;newark;Tuxford;Retford;Bawtry;doncaster;Wentbridge;Ferrybridge;sherburn;tadcaster;york;Easingwold;thirsk;northallerton;darlington;durham;Chester-le-Street;newcastle;morpeth;alnwick;Belford, Northumberland;berwick",London to York and on to Berwick and Scotland; the road of kings and armies (Towton and Barnet lie on it)
-chester_road,Watling Street and the Chester road,great,"london;Edgware;st_albans;dunstable;Stony Stratford;Towcester;Daventry;coventry;Coleshill, Warwickshire;lichfield;Stone, Staffordshire;Newcastle-under-Lyme;Nantwich;chester",Roman Watling Street to Towcester then the medieval road by Coventry to Chester
+chester_road,Watling Street and the Chester road,great,"london;Edgware;st_albans;dunstable;Stony Stratford;Towcester;Daventry;coventry;Coleshill, Warwickshire;lichfield;Rugeley;stafford;Stone, Staffordshire;Newcastle-under-Lyme;Nantwich;chester",Roman Watling Street to Towcester then the medieval road by Coventry to Chester
 carlisle_road,The road to Carlisle,main,Newcastle-under-Lyme;Holmes Chapel;Warrington;Wigan;preston;Garstang;lancaster;kendal;Shap;penrith;carlisle,The west road north (drawn on the Gough Map)
 dover_road,Watling Street (Dover road),great,london;Dartford;rochester;Sittingbourne;Faversham;canterbury;dover,Pilgrims to Canterbury and the crossing to Calais
 sandwich_road,Sandwich road,main,canterbury;sandwich,To the port of Sandwich
@@ -13,7 +13,7 @@ salisbury_road,Winchester to Salisbury,main,"winchester;Stockbridge, Hampshire;s
 dorset_road,The Dorchester road,main,salisbury;Blandford Forum;dorchester,
 norwich_road,The Norwich road,main,"london;Romford;Brentwood, Essex;chelmsford;colchester;ipswich;Scole;norwich;yarmouth",London to Norwich and the herring port of Yarmouth
 lynn_road,The Cambridge and Lynn road,main,"london;Waltham Cross;ware;Royston, Hertfordshire;cambridge;ely;Downham Market;kings_lynn",Roman Ermine Street to Royston; then Cambridge; Ely and Lynn
-fosse_way,The Fosse Way,great,"Ilchester;bath;cirencester;Stow-on-the-Wold;Moreton-in-Marsh;Brinklow;leicester;Widmerpool;East Stoke, Nottinghamshire;newark;lincoln",The Roman road from the south-west to Lincoln
+fosse_way,The Fosse Way,main,"Ilchester;bath;cirencester;Stow-on-the-Wold;Moreton-in-Marsh;Brinklow;leicester;Widmerpool;East Stoke, Nottinghamshire;newark;lincoln","The Roman road from the south-west to Lincoln; by 1455 a main road, not a great highway along its whole length"
 severn_road,The Severn road,main,bristol;gloucester;tewkesbury;worcester;Kidderminster;Bridgnorth;shrewsbury,Up the Severn valley
 hull_road,The Hull road,main,york;Market Weighton;beverley;hull,
 scarborough_road,The Scarborough road,main,york;malton;scarborough,
@@ -22,3 +22,12 @@ stainmore_road,The Stainmore road,main,"york;Boroughbridge;Catterick, North York
 nottingham_road,The Nottingham road,main,Towcester;northampton;Market Harborough;leicester;Loughborough;nottingham;Mansfield;Worksop;Tickhill;doncaster,Through the East Midlands
 aire_gap_road,The Aire Gap road,main,"doncaster;wakefield;leeds;Bradford;Keighley;skipton;Settle, North Yorkshire;Kirkby Lonsdale;kendal",Across the Pennines through the Aire gap
 lincolnshire_road,The Louth road,main,lincoln;Market Rasen;louth;grimsby,
+stane_street,Stane Street,main,london;Ewell;Dorking;Pulborough;chichester,The Roman road from London to Chichester
+somerset_road,The Somerset road,main,"bristol;wells;glastonbury;bridgwater;taunton;Wellington, Somerset;exeter","Bristol to Wells, Glastonbury and Bridgwater, on to the West Country (Devon part not in the first release)"
+wensleydale_road,The Wensleydale road,main,Boroughbridge;ripon;masham;middleham;richmond,"Up to the Neville country: Ripon, Masham, Middleham and Richmond"
+bury_road,The Bury road,main,"cambridge;Newmarket, Suffolk;bury_st_edmunds;Thetford;norwich","The other road to Norwich, by Newmarket, Bury St Edmunds and Thetford"
+wool_road,The wool road,main,"bury_st_edmunds;lavenham;Sudbury, Suffolk;colchester",Through the Suffolk cloth country
+banbury_road,The Banbury road,main,oxford;banbury;warwick;coventry,"Oxford to Banbury, Warwick and Coventry"
+boston_road,The Boston road,main,lincoln;Sleaford;boston_town,Lincoln to the wool port of Boston
+whitby_road,The Whitby road,main,malton;pickering;whitby,Over the moors to Whitby
+rye_road,The Rye road,main,london;Sevenoaks;Tonbridge;Lamberhurst;rye,London to the Cinque port of Rye
