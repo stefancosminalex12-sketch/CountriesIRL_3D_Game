@@ -157,19 +157,40 @@ void APlayerBallCharacter::Interact()
 	UpdateRotationMode();
 }
 
+void APlayerBallCharacter::DevRide()
+{
+	AHorse* Best = nullptr;
+	float BestDistance = TNumericLimits<float>::Max();
+	for (TActorIterator<AHorse> It(GetWorld()); It; ++It)
+	{
+		const float Distance = FVector::Dist(It->GetActorLocation(), GetActorLocation());
+		if (It->CanBeMounted() && Distance < BestDistance)
+		{
+			Best = *It;
+			BestDistance = Distance;
+		}
+	}
+	if (Best && !IsMounted())
+	{
+		bRideAtTrot = false;
+		Mount(Best);
+		UpdateRotationMode();
+	}
+}
+
 void APlayerBallCharacter::StartSprint()
 {
 	// On foot Shift is simply held to run
 	SetSprinting(true);
 
-	// In the saddle, a second press right after a tap is a double press (gallop while held).
-	// It takes back that tap's walk/trot switch, so double-pressing never changes the travelling gait
+	// In the saddle, a press right after a tap is a double press (gallop while held); so is every
+	// press in a quick burst (tap, tap, hold). It takes back the first tap's walk/trot switch, so
+	// double-pressing never changes the travelling gait
 	const float Now = GetWorld()->GetRealTimeSeconds();
 	bShiftDoublePress = IsMounted() && Now - LastShiftTapTime <= ShiftDoublePressSeconds;
 	if (bShiftDoublePress)
 	{
 		bRideAtTrot = bTrotBeforeTap;
-		LastShiftTapTime = -100.f;
 	}
 	ShiftPressTime = Now;
 }
@@ -178,12 +199,15 @@ void APlayerBallCharacter::StopSprint()
 {
 	SetSprinting(false);
 
-	// A quick tap switches between walk and trot
+	// A quick tap switches between walk and trot (only the first tap of a burst does)
 	const float Now = GetWorld()->GetRealTimeSeconds();
-	if (IsMounted() && !bShiftDoublePress && Now - ShiftPressTime <= ShiftTapSeconds)
+	if (IsMounted() && Now - ShiftPressTime <= ShiftTapSeconds)
 	{
-		bTrotBeforeTap = bRideAtTrot;
-		bRideAtTrot = !bRideAtTrot;
+		if (!bShiftDoublePress)
+		{
+			bTrotBeforeTap = bRideAtTrot;
+			bRideAtTrot = !bRideAtTrot;
+		}
 		LastShiftTapTime = Now;
 	}
 	bShiftDoublePress = false;

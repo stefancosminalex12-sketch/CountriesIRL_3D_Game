@@ -60,6 +60,10 @@ public:
 	UFUNCTION(Exec)
 	void DevInteract() { Interact(); }
 
+	/** Console (testing): get on the nearest free horse wherever it is */
+	UFUNCTION(Exec)
+	void DevRide();
+
 	/** Console (testing): press jump (on foot or on horseback) */
 	UFUNCTION(Exec)
 	void DevJump() { JumpPressed(); }

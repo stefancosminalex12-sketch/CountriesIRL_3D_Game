@@ -216,6 +216,7 @@ void AHorse::Tick(float DeltaTime)
 		Stamina->Drain(Definition->CanterStaminaPerSecond, DeltaTime);
 	}
 	Movement->MaxWalkSpeed = Definition->GetGaitSpeed(Gait);
+
 }
 
 FVector AHorse::GetSaddleOffset() const
