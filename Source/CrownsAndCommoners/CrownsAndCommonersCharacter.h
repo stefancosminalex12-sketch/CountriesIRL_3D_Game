@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
-#include "CountriesIRL_3D_GameCharacter.generated.h"
+#include "CrownsAndCommonersCharacter.generated.h"
 
 class USpringArmComponent;
 class UCameraComponent;
@@ -19,7 +19,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
  *  Implements a controllable orbiting camera
  */
 UCLASS(abstract)
-class ACountriesIRL_3D_GameCharacter : public ACharacter
+class ACrownsAndCommonersCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -52,7 +52,7 @@ protected:
 public:
 
 	/** Constructor */
-	ACountriesIRL_3D_GameCharacter();	
+	ACrownsAndCommonersCharacter();	
 
 protected:
 

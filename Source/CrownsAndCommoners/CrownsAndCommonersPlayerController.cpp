@@ -1,15 +1,15 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "CountriesIRL_3D_GamePlayerController.h"
+#include "CrownsAndCommonersPlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
 #include "InputMappingContext.h"
 #include "Blueprint/UserWidget.h"
-#include "CountriesIRL_3D_Game.h"
+#include "CrownsAndCommoners.h"
 #include "Widgets/Input/SVirtualJoystick.h"
 
-void ACountriesIRL_3D_GamePlayerController::BeginPlay()
+void ACrownsAndCommonersPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -26,14 +26,14 @@ void ACountriesIRL_3D_GamePlayerController::BeginPlay()
 
 		} else {
 
-			UE_LOG(LogCountriesIRL_3D_Game, Error, TEXT("Could not spawn mobile controls widget."));
+			UE_LOG(LogCrownsAndCommoners, Error, TEXT("Could not spawn mobile controls widget."));
 
 		}
 
 	}
 }
 
-void ACountriesIRL_3D_GamePlayerController::SetupInputComponent()
+void ACrownsAndCommonersPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
@@ -60,7 +60,7 @@ void ACountriesIRL_3D_GamePlayerController::SetupInputComponent()
 	}
 }
 
-bool ACountriesIRL_3D_GamePlayerController::ShouldUseTouchControls() const
+bool ACrownsAndCommonersPlayerController::ShouldUseTouchControls() const
 {
 	// are we on a mobile platform? Should we force touch?
 	return SVirtualJoystick::ShouldDisplayTouchInterface() || bForceTouchControls;

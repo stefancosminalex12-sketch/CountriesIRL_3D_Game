@@ -4,20 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "CountriesIRL_3D_GameGameMode.generated.h"
+#include "CrownsAndCommonersGameMode.generated.h"
 
 /**
  *  Simple GameMode for a third person game
  */
 UCLASS(abstract)
-class ACountriesIRL_3D_GameGameMode : public AGameModeBase
+class ACrownsAndCommonersGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
 public:
 	
 	/** Constructor */
-	ACountriesIRL_3D_GameGameMode();
+	ACrownsAndCommonersGameMode();
 };
 
 

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "CountriesIRL_3D_GamePlayerController.generated.h"
+#include "CrownsAndCommonersPlayerController.generated.h"
 
 class UInputMappingContext;
 class UUserWidget;
@@ -14,7 +14,7 @@ class UUserWidget;
  *  Manages input mappings
  */
 UCLASS(abstract)
-class ACountriesIRL_3D_GamePlayerController : public APlayerController
+class ACrownsAndCommonersPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	

@@ -1,6 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "CountriesIRL_3D_GameCharacter.h"
+#include "CrownsAndCommonersCharacter.h"
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -10,9 +10,9 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
-#include "CountriesIRL_3D_Game.h"
+#include "CrownsAndCommoners.h"
 
-ACountriesIRL_3D_GameCharacter::ACountriesIRL_3D_GameCharacter()
+ACrownsAndCommonersCharacter::ACrownsAndCommonersCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -50,7 +50,7 @@ ACountriesIRL_3D_GameCharacter::ACountriesIRL_3D_GameCharacter()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
 
-void ACountriesIRL_3D_GameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ACrownsAndCommonersCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
@@ -60,19 +60,19 @@ void ACountriesIRL_3D_GameCharacter::SetupPlayerInputComponent(UInputComponent* 
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		// Moving
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ACountriesIRL_3D_GameCharacter::Move);
-		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &ACountriesIRL_3D_GameCharacter::Look);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ACrownsAndCommonersCharacter::Move);
+		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &ACrownsAndCommonersCharacter::Look);
 
 		// Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACountriesIRL_3D_GameCharacter::Look);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACrownsAndCommonersCharacter::Look);
 	}
 	else
 	{
-		UE_LOG(LogCountriesIRL_3D_Game, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
+		UE_LOG(LogCrownsAndCommoners, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
 	}
 }
 
-void ACountriesIRL_3D_GameCharacter::Move(const FInputActionValue& Value)
+void ACrownsAndCommonersCharacter::Move(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
@@ -81,7 +81,7 @@ void ACountriesIRL_3D_GameCharacter::Move(const FInputActionValue& Value)
 	DoMove(MovementVector.X, MovementVector.Y);
 }
 
-void ACountriesIRL_3D_GameCharacter::Look(const FInputActionValue& Value)
+void ACrownsAndCommonersCharacter::Look(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
@@ -90,7 +90,7 @@ void ACountriesIRL_3D_GameCharacter::Look(const FInputActionValue& Value)
 	DoLook(LookAxisVector.X, LookAxisVector.Y);
 }
 
-void ACountriesIRL_3D_GameCharacter::DoMove(float Right, float Forward)
+void ACrownsAndCommonersCharacter::DoMove(float Right, float Forward)
 {
 	if (GetController() != nullptr)
 	{
@@ -110,7 +110,7 @@ void ACountriesIRL_3D_GameCharacter::DoMove(float Right, float Forward)
 	}
 }
 
-void ACountriesIRL_3D_GameCharacter::DoLook(float Yaw, float Pitch)
+void ACrownsAndCommonersCharacter::DoLook(float Yaw, float Pitch)
 {
 	if (GetController() != nullptr)
 	{
@@ -120,13 +120,13 @@ void ACountriesIRL_3D_GameCharacter::DoLook(float Yaw, float Pitch)
 	}
 }
 
-void ACountriesIRL_3D_GameCharacter::DoJumpStart()
+void ACrownsAndCommonersCharacter::DoJumpStart()
 {
 	// signal the character to jump
 	Jump();
 }
 
-void ACountriesIRL_3D_GameCharacter::DoJumpEnd()
+void ACrownsAndCommonersCharacter::DoJumpEnd()
 {
 	// signal the character to stop jumping
 	StopJumping();

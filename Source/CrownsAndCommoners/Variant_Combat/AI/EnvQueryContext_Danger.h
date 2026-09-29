@@ -11,7 +11,7 @@
  *  Returns the enemy character's last known danger location
  */
 UCLASS()
-class COUNTRIESIRL_3D_GAME_API UEnvQueryContext_Danger : public UEnvQueryContext
+class CROWNSANDCOMMONERS_API UEnvQueryContext_Danger : public UEnvQueryContext
 {
 	GENERATED_BODY()
 	

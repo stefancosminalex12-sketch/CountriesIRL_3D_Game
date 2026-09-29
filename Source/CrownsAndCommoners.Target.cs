@@ -3,13 +3,13 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class CountriesIRL_3D_GameEditorTarget : TargetRules
+public class CrownsAndCommonersTarget : TargetRules
 {
-	public CountriesIRL_3D_GameEditorTarget(TargetInfo Target) : base(Target)
+	public CrownsAndCommonersTarget(TargetInfo Target) : base(Target)
 	{
-		Type = TargetType.Editor;
+		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V7;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_8;
-		ExtraModuleNames.Add("CountriesIRL_3D_Game");
+		ExtraModuleNames.Add("CrownsAndCommoners");
 	}
 }
