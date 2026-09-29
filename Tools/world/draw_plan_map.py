@@ -34,6 +34,8 @@ PARCH = (236, 222, 188)
 PARCH_DARK = (214, 194, 150)
 SEA = (150, 178, 150)
 RIVER = (78, 122, 106)
+RIVER_TEXT = (44, 88, 76)
+BOAT_ROUTE = (214, 228, 206)
 ROAD = (168, 46, 32)
 INK = (58, 40, 26)
 ROOF = (176, 52, 40)
@@ -199,6 +201,87 @@ def draw_symbol(img, d, icons, kind, imp, X, Y):
     return s
 
 
+RIVER_WIDTH = {1: (2.2, 7.5), 2: (1.8, 5.0), 3: (1.5, 3.5)}   # (at the source, at the mouth), times S
+
+
+def river_points(r):
+    """Pixel points of a river and, for each, how far along it is (0 = source, 1 = mouth)."""
+    pts = [px(lon, lat) for lon, lat in r["line"]]
+    run = [0.0]
+    for a, b in zip(pts, pts[1:]):
+        run.append(run[-1] + math.hypot(b[0] - a[0], b[1] - a[1]))
+    return pts, [v / (run[-1] or 1) for v in run]
+
+
+def river_width(r, t):
+    w0, w1 = RIVER_WIDTH[r["tier"]]
+    return (w0 + (w1 - w0) * math.sqrt(t)) * S
+
+
+def draw_rivers(d, rivers):
+    """Small rivers first so the big ones sit on top; boat routes (navigable in 1455) get a pale dashed channel."""
+    for r in sorted(rivers, key=lambda r: -r["tier"]):
+        pts, ts = river_points(r)
+        for (a, b), t in zip(zip(pts, pts[1:]), ts[1:]):
+            w = river_width(r, t)
+            d.line([a, b], fill=RIVER, width=max(2, int(w)))
+            d.ellipse([b[0] - w / 2, b[1] - w / 2, b[0] + w / 2, b[1] + w / 2], fill=RIVER)
+    dash, gap = 7 * S, 6 * S
+    for r in rivers:
+        if r["navigable_from"] is None:
+            continue
+        pts, ts = river_points(r)
+        on, left = True, dash
+        for (a, b), t in zip(zip(pts, pts[1:]), ts[1:]):
+            if t < r["navigable_from"]:
+                continue
+            seg = math.hypot(b[0] - a[0], b[1] - a[1])
+            pos = 0.0
+            while pos < seg:
+                step = min(left, seg - pos)
+                if on:
+                    p0 = (a[0] + (b[0] - a[0]) * pos / seg, a[1] + (b[1] - a[1]) * pos / seg)
+                    p1 = (a[0] + (b[0] - a[0]) * (pos + step) / seg, a[1] + (b[1] - a[1]) * (pos + step) / seg)
+                    d.line([p0, p1], fill=BOAT_ROUTE, width=max(1, int(1.1 * S)))
+                pos += step
+                left -= step
+                if left <= 0:
+                    on, left = not on, (gap if on else dash)
+
+
+def label_rivers(img, rivers, obstacles, fnt):
+    """River names written along the river (Gough-style), only where they cover nothing else."""
+    for r in sorted(rivers, key=lambda r: r["tier"]):
+        pts, ts = river_points(r)
+        text = r["name"]
+        box = fnt.getbbox(text)
+        tw, th = box[2] - box[0], box[3] - box[1]
+        for want in (0.55, 0.4, 0.7, 0.3, 0.8, 0.2):
+            i = min(range(len(ts)), key=lambda k: abs(ts[k] - want))
+            a, b = pts[max(0, i - 3)], pts[min(len(pts) - 1, i + 3)]
+            ang = math.degrees(math.atan2(-(b[1] - a[1]), b[0] - a[0]))
+            if ang > 90:
+                ang -= 180
+            elif ang < -90:
+                ang += 180
+            if abs(ang) > 70:                     # nearly vertical river: keep the text readable
+                continue
+            off = river_width(r, ts[i]) / 2 + th * 0.8
+            nx, ny = -math.sin(math.radians(ang)) * off, -math.cos(math.radians(ang)) * off
+            cx, cy = pts[i][0] + nx, pts[i][1] + ny
+            layer = Image.new("RGBA", (tw + 8, th + 8), (0, 0, 0, 0))
+            ImageDraw.Draw(layer).text((4 - box[0], 4 - box[1]), text, font=fnt, fill=RIVER_TEXT + (255,),
+                                       stroke_width=max(1, int(S)), stroke_fill=PARCH + (255,))
+            layer = layer.rotate(ang, expand=True, resample=Image.BICUBIC)
+            x0, y0 = int(cx - layer.width / 2), int(cy - layer.height / 2)
+            rect = (x0 + 4, y0 + 4, x0 + layer.width - 4, y0 + layer.height - 4)
+            if any(rect[0] < o[2] and rect[2] > o[0] and rect[1] < o[3] and rect[3] > o[1] for o in obstacles):
+                continue
+            img.paste(layer, (x0, y0), layer)
+            obstacles.append(rect)
+            break
+
+
 def main():
     rnd = random.Random(3)
 
@@ -249,16 +332,9 @@ def main():
             for poly in geo_polys(f["geometry"]):
                 d.line([px(lon, lat) for lon, lat in poly[0]] + [px(*poly[0][0])], fill=INK, width=max(2, int(1.5 * S)))
 
-    # Rivers: OpenStreetMap main rivers if downloaded, otherwise Natural Earth
-    river_files = ["osm_rivers_england"] if os.path.exists(f"{DATA}/osm_rivers_england.geojson") else \
-        ["ne_10m_rivers_lake_centerlines", "ne_10m_rivers_europe"]
-    for fname in river_files:
-        rivers = json.load(open(f"{DATA}/{fname}.geojson", encoding="utf-8"))
-        for f in rivers["features"]:
-            for line in geo_lines(f["geometry"]):
-                if not any(in_box(lon, lat) for lon, lat in line) or all(lat < 51.0 and lon > 0.5 for lon, lat in line):
-                    continue
-                d.line([px(lon, lat) for lon, lat in line], fill=RIVER, width=max(2, int(1.6 * S)), joint="curve")
+    # Rivers: the game's simplified, connected network (Tools/world/build_rivers.py), wider towards the mouth
+    rivers = json.load(open(f"{ROOT}/Data/World/Rivers_England1455.json", encoding="utf-8"))["rivers"]
+    draw_rivers(d, rivers)
 
     places = {row["Id"]: row for row in csv.DictReader(open(f"{ROOT}/Data/World/Places_England1455.csv", encoding="utf-8"))}
     P = lambda i: px(float(places[i]["Lon"]), float(places[i]["Lat"]))
@@ -375,6 +451,9 @@ def main():
         obstacles.append(rect)
         d.text((sx - box[0], sy - box[1]), text, font=fnt, fill=colour, stroke_width=max(1, int(1.2 * S)), stroke_fill=PARCH)
 
+    label_rivers(img, rivers, obstacles, font("EBGaramond-Italic", 19))
+    d = ImageDraw.Draw(img)
+
     # Title, scale, legend
     area_game = england_area / COMPRESSION ** 2
     counts = {}
@@ -388,7 +467,7 @@ def main():
     legend = (f"Towns & cities {counts.get('Town', 0) + counts.get('City', 0)}  /  castles {counts.get('Castle', 0)}  /  "
               f"abbeys, priories & friaries {counts.get('Abbey', 0)}  /  cathedrals {counts.get('Cathedral', 0)}  /  "
               f"landmarks {counts.get('Landmark', 0)}  /  nature {counts.get('Nature', 0)}  /  battles {counts.get('Battle', 0)}  /  "
-              f"villages {counts.get('Village', 0)}.   Red lines: roads. Wales faded: future DLC. "
+              f"villages {counts.get('Village', 0)}.   Red lines: roads. Rivers: the {len(rivers)} main rivers, dashed where boats went in 1455. Wales faded: future DLC. "
               f"Data: Natural Earth, OpenStreetMap contributors, Wikidata, AWS Terrain Tiles.")
     d.text((MARGIN, H - MARGIN + int(10 * S)), legend, font=font("EBGaramond-Italic", 18), fill=INK)
 

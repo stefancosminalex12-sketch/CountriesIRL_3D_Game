@@ -1,0 +1,44 @@
+Id,Name,OsmName,SeedLat,SeedLon,FlowsInto,Tier,NavigableTo,NavLat,NavLon,Note
+thames,Thames,River Thames,51.752,-1.252,sea,1,oxford,,,Barges to Oxford; the road of London
+severn,Severn,River Severn,52.190,-2.222,sea,1,shrewsbury,,,Trows from Bristol up to Shrewsbury
+trent,Trent,River Trent,52.936,-1.132,sea,1,nottingham,,,Into the Humber; boats to Nottingham
+ouse_yorks,Ouse,River Ouse,53.955,-1.080,sea,1,york,,,Into the Humber; ships to York
+great_ouse,Great Ouse,River Great Ouse|Great Ouse|Graet Ouse|Great Ouse (Old West River)|Old West River (Great Ouse)|River Great Ouse or Ely Ouse|Great Ouse or Ten Mile River|Eau Brink Cut - River Great Ouse|Great Ouse (Sandy's Cut)|River Great Ouse (Sandy's Cut),52.330,-0.180,sea,1,huntingdon,,,Into the Wash at Lynn; boats to Huntingdon
+kennet,Kennet,River Kennet,51.401,-1.323,thames,3,,,,Joins the Thames at Reading
+lea,Lea,River Lea,51.796,-0.078,thames,3,ware,,,Malt barges from Ware to London
+medway,Medway,River Medway,51.272,0.520,sea,2,maidstone,,,Kentish ragstone shipped from Maidstone; Rochester
+wye,Wye,River Wye,52.052,-2.715,severn,2,,,,Hereford; tidal only at Chepstow
+teme,Teme,River Teme,52.366,-2.720,severn,3,,,,Ludlow (Duke of York)
+avon_warks,Avon,River Avon,52.280,-1.585,severn,2,,,,Warwick and Stratford; joins the Severn at Tewkesbury
+avon_bristol,Avon,River Avon,51.380,-2.360,sea,2,bristol,,,Bath and Bristol; ships reach Bristol
+soar,Soar,River Soar,52.636,-1.140,trent,3,,,,Leicester
+derwent_derby,Derwent,River Derwent,52.925,-1.475,trent,3,,,,Derby
+ure,Ure,River Ure,54.285,-1.805,ouse_yorks,2,,,,Wensleydale: Middleham and Jervaulx; Ripon
+swale,Swale,River Swale,54.400,-1.735,ure,3,,,,Richmond
+wharfe,Wharfe,River Wharfe,53.905,-1.690,ouse_yorks,3,,,,Otley and Tadcaster
+aire,Aire,River Aire,53.790,-1.540,ouse_yorks,2,,,,Skipton and Leeds
+calder,Calder,River Calder,53.675,-1.490,aire,3,,,,Wakefield
+don,Don,River Don,53.525,-1.130,ouse_yorks,2,,,,Sheffield and Doncaster (drawn on its later course)
+derwent_yorks,Derwent,River Derwent,54.133,-0.795,ouse_yorks,3,,,,Malton and Stamford Bridge
+hull,Hull,River Hull,53.850,-0.405,sea,3,beverley,,,Beverley Beck; the port of Hull
+tyne,Tyne,River Tyne,54.965,-1.610,sea,2,newcastle,,,Coal ships at Newcastle
+wear,Wear,River Wear,54.775,-1.575,sea,3,,,,Durham on its loop
+tees,Tees,River Tees,54.505,-1.355,sea,2,yarm,54.506,-1.357,Barnard Castle; ships to Yarm
+eden,Eden,River Eden,54.900,-2.940,sea,2,,,,Appleby and Carlisle
+lune,Lune,River Lune,54.050,-2.800,sea,3,lancaster,,,Lancaster
+ribble,Ribble,River Ribble,53.750,-2.700,sea,2,preston,,,Clitheroe and Preston
+mersey,Mersey,River Mersey,53.385,-2.590,sea,2,,,,Warrington; Liverpool at the mouth
+dee,Dee,River Dee,53.185,-2.890,sea,2,chester,,,Chester's port (silting up)
+cam,Cam,River Cam,52.210,0.120,great_ouse,3,cambridge,,,Boats to Cambridge and Stourbridge Fair
+nene,Nene,River Nene,52.570,-0.240,sea,2,peterborough,,,Northampton; boats to Peterborough
+welland,Welland,River Welland,52.650,-0.480,sea,3,stamford,,,Stamford
+witham,Witham,River Witham,53.228,-0.540,sea,2,lincoln,,,Lincoln to Boston
+yare,Yare,River Yare,52.620,1.430,sea,2,,,,To Yarmouth
+wensum,Wensum,River Wensum,52.630,1.300,yare,3,norwich,,,Norwich
+stour_kent,Stour,Great Stour|Stour,51.280,1.080,sea,3,canterbury,,,Canterbury; its port at Fordwich
+test,Test,River Test,50.990,-1.500,sea,3,,,,Romsey; into Southampton Water
+itchen,Itchen,River Itchen,51.060,-1.310,sea,3,winchester,,,Made navigable to Winchester c. 1200
+avon_hants,Avon,River Avon,51.070,-1.795,sea,2,,,,Salisbury; into the sea at Christchurch
+exe,Exe,River Exe,50.720,-3.535,sea,2,topsham,50.683,-3.464,Exeter's weirs block ships; they unload at Topsham
+tamar,Tamar,River Tamar,50.520,-4.215,sea,2,,,,Border of Cornwall; Plymouth at the mouth
+parrett,Parrett,River Parrett,51.130,-3.000,sea,3,bridgwater,,,Bridgwater's port

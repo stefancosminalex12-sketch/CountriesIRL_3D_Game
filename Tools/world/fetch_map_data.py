@@ -108,7 +108,11 @@ RIVERS = ["Thames", "Severn", "Trent", "Great Ouse", "Tyne", "North Tyne", "Sout
           "Wey", "Frome", "Teme", "Lugg", "Weaver", "Coquet", "Ouse", "Idle", "Ancholme", "Waveney", "Bure", "Orwell",
           "Blackwater", "Arun", "Adur", "Rother", "Axe", "Taw", "Torridge", "Fowey", "Camel", "Brue", "Windrush",
           "Evenlode", "Thame", "Ock", "Loddon", "Irwell", "Ribble", "Wyre", "Kent", "Leven", "Esk", "Aln", "Wansbeck",
-          "Rye", "Foss", "Hodder", "Skell", "Cover", "Bain", "Nene", "Ise", "Tove", "Ouzel", "Stour"]
+          "Rye", "Foss", "Hodder", "Skell", "Cover", "Bain", "Nene", "Ise", "Tove", "Ouzel", "Stour", "Great Stour"]
+
+# Areas where a main river's stretches carry odd OSM names: (id, name regex, lon/lat box). The Great Ouse in the
+# Fens is "Old West River", "Ten Mile River", "Ely Ouse"...; build_rivers.py picks the right names.
+RIVER_AREAS = [("fens_ouse", "Ouse|West River", (0.0, 52.30, 0.45, 52.80))]
 
 
 def douglas_peucker(points, tol):
@@ -129,22 +133,36 @@ def douglas_peucker(points, tol):
 
 
 def fetch_rivers():
+    """Main rivers by name (only names not downloaded yet), plus the RIVER_AREAS searches."""
     path = f"{OUT}/osm_rivers_england.geojson"
-    if os.path.exists(path):
-        return
-    names = "|".join(sorted(set(RIVERS)))
-    q = f"""[out:json][timeout:170];
-way["waterway"="river"]["name"~"^River ({names})$"]({BBOX[1]},{BBOX[0]},{BBOX[3]},{BBOX[2]});
-out geom;"""
-    data = json.loads(get("https://overpass-api.de/api/interpreter", data=urllib.parse.urlencode({"data": q}).encode()))
-    features = []
-    for el in data["elements"]:
-        pts = [(g["lon"], g["lat"]) for g in el.get("geometry", [])]
-        pts = douglas_peucker(pts, 0.002)   # ~150 m
-        if len(pts) >= 2:
-            features.append({"type": "Feature", "properties": {"name": el.get("tags", {}).get("name", "")},
-                             "geometry": {"type": "LineString", "coordinates": [[round(x, 4), round(y, 4)] for x, y in pts]}})
-    json.dump({"type": "FeatureCollection", "features": features}, open(path, "w", encoding="utf-8"))
+    features = json.load(open(path, encoding="utf-8"))["features"] if os.path.exists(path) else []
+    before = len(features)
+
+    def add(query, area=None):
+        data = json.loads(get("https://overpass-api.de/api/interpreter", data=urllib.parse.urlencode({"data": query}).encode()))
+        for el in data["elements"]:
+            pts = douglas_peucker([(g["lon"], g["lat"]) for g in el.get("geometry", [])], 0.002)   # ~150 m
+            if len(pts) >= 2:
+                props = {"name": el.get("tags", {}).get("name", "")}
+                if area:
+                    props["area"] = area
+                features.append({"type": "Feature", "properties": props,
+                                 "geometry": {"type": "LineString", "coordinates": [[round(x, 4), round(y, 4)] for x, y in pts]}})
+
+    have = {f["properties"]["name"] for f in features}
+    missing = sorted(n for n in set(RIVERS) if f"River {n}" not in have and n not in have)
+    if missing:
+        add(f"""[out:json][timeout:170];
+way["waterway"="river"]["name"~"^(River )?({'|'.join(missing)})$"]({BBOX[1]},{BBOX[0]},{BBOX[3]},{BBOX[2]});
+out geom;""")
+    done_areas = {f["properties"].get("area") for f in features}
+    for area, regex, (w, south, e, n) in RIVER_AREAS:
+        if area not in done_areas:
+            add(f"""[out:json][timeout:120];
+way["waterway"="river"]["name"~"{regex}"]({south},{w},{n},{e});
+out geom;""", area)
+    if len(features) != before:
+        json.dump({"type": "FeatureCollection", "features": features}, open(path, "w", encoding="utf-8"))
     print("river pieces:", len(features))
 
 
