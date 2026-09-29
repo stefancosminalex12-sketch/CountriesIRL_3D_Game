@@ -48,9 +48,9 @@ private:
 	UPROPERTY(Transient)
 	TObjectPtr<UAudioComponent> Ambience;
 
-	/** The theme song (the user's own), from 16 s into the recording, looping */
+	/** Main menu music: the user's songs, first track first, then random; N / controller Y skips */
 	UPROPERTY(Transient)
-	TObjectPtr<UAudioComponent> Music;
+	TObjectPtr<class UCIRLPlaylistComponent> Playlist;
 
 	TSharedPtr<SCIRLTitleScreen> TitleScreen;
 	TSharedPtr<FNavigationConfig> PreviousNavigation;

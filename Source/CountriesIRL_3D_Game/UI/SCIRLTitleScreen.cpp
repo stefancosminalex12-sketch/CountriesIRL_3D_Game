@@ -55,6 +55,8 @@ void SCIRLTitleScreen::Construct(const FArguments& InArgs)
 	OnNewGame = InArgs._OnNewGame;
 	OnQuit = InArgs._OnQuit;
 	Audio = InArgs._Audio;
+	NowPlaying = InArgs._NowPlaying;
+	OnNextSong = InArgs._OnNextSong;
 
 	const UGeneralProjectSettings* Project = GetDefault<UGeneralProjectSettings>();
 
@@ -145,6 +147,11 @@ void SCIRLTitleScreen::Construct(const FArguments& InArgs)
 			.Text(FText::Format(LOCTEXT("Version", "Version {0}  ·  pre-alpha test build"), FText::FromString(Project->ProjectVersion)))
 			.Font(Font(EFont::BodyItalic, 19.f))
 			.ColorAndOpacity(TextMuted())
+		]
+
+		+ SOverlay::Slot().HAlign(HAlign_Right).VAlign(VAlign_Bottom).Padding(FMargin(0.f, 0.f, 70.f, 36.f))
+		[
+			MakeNowPlaying()
 		];
 
 	ChildSlot
@@ -356,6 +363,78 @@ TSharedRef<SWidget> SCIRLTitleScreen::MakeSettingsPanel()
 		];
 }
 
+TSharedRef<SWidget> SCIRLTitleScreen::MakeNowPlaying()
+{
+	TSharedPtr<SCIRLButton> NextButton;
+	SAssignNew(NextButton, SCIRLButton)
+	.ButtonStyle(&PlainButtonStyle())
+	.IsFocusable(false)		// a shortcut, not part of the menu's up/down navigation
+	.ToolTipText(LOCTEXT("NextTip", "Next song (N, or Y on a controller)"))
+	.OnClicked_Lambda([this]() { OnNextSong.ExecuteIfBound(); return FReply::Handled(); });
+
+	TWeakPtr<SCIRLButton> Weak = NextButton;
+	auto IsLit = [Weak]()
+	{
+		const TSharedPtr<SCIRLButton> Pinned = Weak.Pin();
+		return Pinned.IsValid() && Pinned->IsHovered();
+	};
+
+	NextButton->SetContent(
+		SNew(SHorizontalBox)
+		+ SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center)
+		[
+			SNew(SBorder)
+			.BorderImage(KeyCap())
+			.Padding(FMargin(9.f, 2.f))
+			[
+				SNew(STextBlock)
+				.Text(LOCTEXT("NextKey", "N"))
+				.Font(Font(EFont::TitleSemiBold, 17.f))
+				.ColorAndOpacity_Lambda([IsLit]() { return FSlateColor(IsLit() ? GoldBright() : Text()); })
+			]
+		]
+		+ SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center).Padding(FMargin(10.f, 0.f, 0.f, 0.f))
+		[
+			SNew(STextBlock)
+			.Text(LOCTEXT("NextSong", "Next song"))
+			.Font(Font(EFont::Title, 20.f))
+			.ColorAndOpacity_Lambda([IsLit]() { return FSlateColor(IsLit() ? GoldBright() : Text()); })
+			.ShadowOffset(FVector2D(1.f, 1.f))
+			.ShadowColorAndOpacity(FLinearColor(0.f, 0.f, 0.f, 0.8f))
+		]);
+
+	return SNew(SHorizontalBox)
+		.Visibility_Lambda([this]() { return !bLoading && !NowPlaying.Get().IsEmpty() ? EVisibility::SelfHitTestInvisible : EVisibility::Collapsed; })
+
+		+ SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center).Padding(FMargin(0.f, 0.f, 30.f, 0.f))
+		[
+			SNew(SVerticalBox)
+			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Right)
+			[
+				SNew(STextBlock)
+				.Text(LOCTEXT("NowPlaying", "Now playing"))
+				.Font(Font(EFont::BodyItalic, 17.f))
+				.ColorAndOpacity(TextMuted())
+				.ShadowOffset(FVector2D(1.f, 1.f))
+				.ShadowColorAndOpacity(FLinearColor(0.f, 0.f, 0.f, 0.8f))
+			]
+			+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Right)
+			[
+				SNew(STextBlock)
+				.Text(NowPlaying)
+				.Font(Font(EFont::Title, 22.f))
+				.ColorAndOpacity(GoldBright())
+				.ShadowOffset(FVector2D(2.f, 2.f))
+				.ShadowColorAndOpacity(FLinearColor(0.f, 0.f, 0.f, 0.8f))
+			]
+		]
+
+		+ SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center)
+		[
+			NextButton.ToSharedRef()
+		];
+}
+
 void SCIRLTitleScreen::OpenSettings()
 {
 	bSettingsOpen = true;
@@ -388,6 +467,12 @@ FReply SCIRLTitleScreen::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent&
 	if (bSettingsOpen && (InKeyEvent.GetKey() == EKeys::Escape || InKeyEvent.GetKey() == EKeys::Gamepad_FaceButton_Right))
 	{
 		CloseSettings();
+		return FReply::Handled();
+	}
+	// N / controller Y: next song, from anywhere on the menu
+	if (!bLoading && (InKeyEvent.GetKey() == EKeys::N || InKeyEvent.GetKey() == EKeys::Gamepad_FaceButton_Top))
+	{
+		OnNextSong.ExecuteIfBound();
 		return FReply::Handled();
 	}
 	return SCompoundWidget::OnKeyDown(MyGeometry, InKeyEvent);

@@ -24,6 +24,10 @@ public:
 	SLATE_BEGIN_ARGS(SCIRLTitleScreen) {}
 		/** Volumes shown and changed by Settings */
 		SLATE_ARGUMENT(TWeakObjectPtr<UCIRLAudioSubsystem>, Audio)
+		/** Name of the song playing, shown bottom right (hidden when empty) */
+		SLATE_ATTRIBUTE(FText, NowPlaying)
+		/** Skip to the next song (the Next song button, N, controller Y) */
+		SLATE_EVENT(FOnAction, OnNextSong)
 		/** Load the world (called once the loading painting is on screen) */
 		SLATE_EVENT(FOnAction, OnNewGame)
 		SLATE_EVENT(FOnAction, OnQuit)
@@ -39,6 +43,12 @@ public:
 private:
 
 	TSharedRef<SWidget> MakeSettingsPanel();
+
+	/** Bottom right: "Now playing" and the song's name, with the Next song button */
+	TSharedRef<SWidget> MakeNowPlaying();
+
+	TAttribute<FText> NowPlaying;
+	FOnAction OnNextSong;
 
 	void OpenSettings();
 	void CloseSettings();

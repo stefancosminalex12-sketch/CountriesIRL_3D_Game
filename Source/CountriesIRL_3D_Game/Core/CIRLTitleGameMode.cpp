@@ -3,6 +3,8 @@
 #include "Core/CIRLTitleGameMode.h"
 #include "UI/SCIRLTitleScreen.h"
 #include "Audio/CIRLAudioSubsystem.h"
+#include "Audio/CIRLMusicSettings.h"
+#include "Audio/CIRLPlaylistComponent.h"
 #include "UI/CIRLMenuNavigation.h"
 #include "World/WorldSimulationSettings.h"
 #include "Engine/GameViewportClient.h"
@@ -14,9 +16,8 @@
 
 namespace
 {
-	/** Title screen ambience and music (Art/Audio/SOURCES.md) */
+	/** Title screen ambience (Art/Audio/SOURCES.md); the music is a playlist in the project settings */
 	const TCHAR* TitleAmbiencePath = TEXT("/Game/CountriesIRL/Audio/Ambience/amb_title_river.amb_title_river");
-	const TCHAR* TitleMusicPath = TEXT("/Game/CountriesIRL/Audio/Music/mus_theme_title.mus_theme_title");
 }
 
 ACIRLTitleGameMode::ACIRLTitleGameMode()
@@ -42,28 +43,27 @@ void ACIRLTitleController::BeginPlay()
 		Audio->ApplyVolumes(GetWorld());
 	}
 
+	// Main menu music (Project Settings > CountriesIRL Audio > Title Playlist): the first track, then random
+	Playlist = NewObject<UCIRLPlaylistComponent>(this, TEXT("TitleMusic"));
+	Playlist->RegisterComponent();
+	Playlist->Play(GetDefault<UCIRLMusicSettings>()->TitlePlaylist);
+
+	TWeakObjectPtr<UCIRLPlaylistComponent> WeakPlaylist = Playlist;
 	SAssignNew(TitleScreen, SCIRLTitleScreen)
 		.Audio(Audio)
+		.NowPlaying_Lambda([WeakPlaylist]() { return FText::FromString(WeakPlaylist.IsValid() ? WeakPlaylist->GetCurrentTitle() : FString()); })
+		.OnNextSong_Lambda([WeakPlaylist]() { if (WeakPlaylist.IsValid()) { WeakPlaylist->Next(); } })
 		.OnNewGame(SCIRLTitleScreen::FOnAction::CreateUObject(this, &ACIRLTitleController::StartNewGame))
 		.OnQuit(SCIRLTitleScreen::FOnAction::CreateUObject(this, &ACIRLTitleController::Quit));
 	Viewport->AddViewportWidgetForPlayer(GetLocalPlayer(), TitleScreen.ToSharedRef(), 10);
 
-	// The river stays underneath, quieter, so the theme leads
+	// The river stays underneath, quieter, so the music leads
 	if (USoundBase* Sound = LoadObject<USoundBase>(nullptr, TitleAmbiencePath))
 	{
 		Ambience = UGameplayStatics::CreateSound2D(this, Sound, 0.45f);
 		if (Ambience)
 		{
 			Ambience->FadeIn(2.5f);
-		}
-	}
-	// The theme (music sound class, loops) starts with the picture
-	if (USoundBase* Sound = LoadObject<USoundBase>(nullptr, TitleMusicPath))
-	{
-		Music = UGameplayStatics::CreateSound2D(this, Sound, 1.f);
-		if (Music)
-		{
-			Music->FadeIn(2.f);
 		}
 	}
 
@@ -96,9 +96,9 @@ void ACIRLTitleController::StartNewGame()
 	{
 		Ambience->FadeOut(0.3f, 0.f);
 	}
-	if (Music)
+	if (Playlist)
 	{
-		Music->FadeOut(0.3f, 0.f);
+		Playlist->Stop(0.3f);
 	}
 	// The world's own player controller takes over input and hides the cursor
 	SetInputMode(FInputModeGameOnly());

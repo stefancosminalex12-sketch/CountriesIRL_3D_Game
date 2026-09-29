@@ -3,7 +3,7 @@ Import game sounds (Art/Audio/<Folder>/*.wav, not Art/Audio/Source) as Sound Wav
     py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/import_audio.py" [part of a file name]
 or headless: UnrealEditor-Cmd.exe <project> -run=pythonscript -script="<this file> [part of a file name]"
 Art/Audio/Ambience/amb_x.wav -> /Game/CountriesIRL/Audio/Ambience/amb_x (ambiences are set to loop).
-Art/Audio/Music/mus_x.wav -> /Game/CountriesIRL/Audio/Music/mus_x (loops, sound class SC_Music so the Music slider
+Art/Audio/Music/mus_x.wav -> /Game/CountriesIRL/Audio/Music/mus_x (doesn't loop: playlists play it; sound class SC_Music so the Music slider
 controls it; everything else uses the default class SC_SFX). Run setup_sound_classes.py first.
 """
 import glob
@@ -35,7 +35,7 @@ for task in tasks:
         if isinstance(sound, unreal.SoundWave) and "/Ambience/" in object_path:
             sound.set_editor_property("looping", True)
         if isinstance(sound, unreal.SoundWave) and "/Music/" in object_path:
-            sound.set_editor_property("looping", True)
+            sound.set_editor_property("looping", False)   # playlists move on to the next track
             if music_class:
                 sound.set_editor_property("sound_class_object", music_class)
         # New assets aren't always marked dirty after import: save regardless
