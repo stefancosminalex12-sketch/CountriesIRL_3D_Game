@@ -43,6 +43,9 @@ public:
 	/** Opens the menu on the Equipment tab (Tab or I; Back/View on a controller) */
 	UPROPERTY() TObjectPtr<UInputAction> Equipment;
 
+	/** Opens the menu on the Map tab (M; D-pad right). Later M becomes the small regional travel map */
+	UPROPERTY() TObjectPtr<UInputAction> Map;
+
 	/** Debug: cycles through the ball's eye emotions */
 	UPROPERTY() TObjectPtr<UInputAction> CycleEmotion;
 };

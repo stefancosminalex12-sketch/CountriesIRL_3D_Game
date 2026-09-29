@@ -59,6 +59,7 @@ void ACIRLPlayerController::SetupInputComponent()
 	{
 		EIC->BindAction(InputConfig->GameMenu, ETriggerEvent::Started, this, &ACIRLPlayerController::OnGameMenuPressed);
 		EIC->BindAction(InputConfig->Equipment, ETriggerEvent::Started, this, &ACIRLPlayerController::OnEquipmentPressed);
+		EIC->BindAction(InputConfig->Map, ETriggerEvent::Started, this, &ACIRLPlayerController::OnMapPressed);
 	}
 }
 
@@ -85,6 +86,11 @@ void ACIRLPlayerController::OnGameMenuPressed()
 void ACIRLPlayerController::OnEquipmentPressed()
 {
 	OpenGameMenu(ECIRLMenuTab::Equipment);
+}
+
+void ACIRLPlayerController::OnMapPressed()
+{
+	OpenGameMenu(ECIRLMenuTab::Map);
 }
 
 void ACIRLPlayerController::OpenGameMenu(ECIRLMenuTab Tab)
@@ -128,7 +134,8 @@ void ACIRLPlayerController::OpenGameMenu(ECIRLMenuTab Tab)
 		.OnCloseRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::CloseGameMenu))
 		.OnMainMenuRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::ReturnToTitle))
 		.OnQuitRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::QuitGame))
-		.Audio(UCIRLAudioSubsystem::Get(this));
+		.Audio(UCIRLAudioSubsystem::Get(this))
+		.Player(GetPawn());
 	Viewport->AddViewportWidgetForPlayer(LocalPlayer, GameMenu.ToSharedRef(), 50);
 
 	// Menus can be walked with WASD as well as the arrow keys and the controller

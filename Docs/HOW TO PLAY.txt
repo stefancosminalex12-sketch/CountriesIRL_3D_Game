@@ -23,6 +23,7 @@ CONTROLS
   E              get on / off a horse (stand close to it)
   V              switch first-person / third-person view
   T              change your eyes' emotion (just for fun)
+  M              map of England (drag to move, mouse wheel to zoom, Space finds you)
   Tab / I        equipment (being built)
   Esc            menu: resume, controls, main menu, quit
 

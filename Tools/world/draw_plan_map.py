@@ -714,6 +714,24 @@ def main():
         except OSError:
             import time
             time.sleep(1)
+    # Calibration for the game's map screen (Tools/world/export_game_map.py) and for building the world:
+    # where the rulers' zero is, pixels per game km, and every place in game km (east, north) from that zero
+    def game_km(lon, lat):
+        X, Y = px(lon, lat)
+        return [round((X - ox) / game_km_px, 4), round((oy - Y) / game_km_px, 4)]
+    calibration = {
+        "note": "Game km are measured east and north from the rulers' zero (England's west and south edges). "
+                "In the game world +X is north, +Y is east, 1 game km = 100000 units.",
+        "compression": COMPRESSION,
+        "image_size": [W, H],
+        "origin_px": [ox, oy],
+        "px_per_game_km": game_km_px,
+        "playable_size_game_km": [round(size_game[0], 3), round(size_game[1], 3)],
+        "places_game_km": {pid: dict(name=row["Name"], type=row["Type"], km=game_km(float(row["Lon"]), float(row["Lat"])))
+                           for pid, row in sorted(places.items())},
+    }
+    with open(out.replace(".png", ".json"), "w", encoding="utf-8") as f:
+        json.dump(calibration, f, indent=1, ensure_ascii=False)
     print(f"Playable England real area {england_area:,.0f} km2; at 1:{COMPRESSION:g} -> {area_game:,.0f} km2 in game; image {W}x{H}; {counts}")
 
 

@@ -5,6 +5,7 @@
 #include "UI/CIRLUIStyle.h"
 #include "UI/SCIRLEquipmentPage.h"
 #include "UI/SCIRLCharacterPage.h"
+#include "UI/SCIRLMapPage.h"
 #include "UI/SCIRLPaperDollView.h"
 #include "UI/SCIRLSoundSettings.h"
 #include "Audio/CIRLAudioSubsystem.h"
@@ -92,9 +93,12 @@ void SCIRLGameMenu::Construct(const FArguments& InArgs)
 		switch (static_cast<ECIRLMenuTab>(Index))
 		{
 		case ECIRLMenuTab::Map:
-			Page = MakeComingSoon(LOCTEXT("MapSoonTitle", "The map is still being drawn"),
-				LOCTEXT("MapSoonNote", "A map of England in the style of the Gough Map comes in a later version."));
+		{
+			TSharedRef<SCIRLMapPage> MapPage = SNew(SCIRLMapPage).Player(InArgs._Player);
+			TabFocus[Index] = MapPage;
+			Page = MapPage;
 			break;
+		}
 		case ECIRLMenuTab::Quests:
 			Page = MakeComingSoon(LOCTEXT("QuestsSoonTitle", "No quests yet"),
 				LOCTEXT("QuestsSoonNote", "The local lord has not sent for you... yet."));
@@ -432,6 +436,7 @@ TSharedRef<SWidget> SCIRLGameMenu::MakeControlsList() const
 		{ TEXT("E"),			LOCTEXT("CtrlInteract", "Get on / off a horse") },
 		{ TEXT("V"),			LOCTEXT("CtrlView", "First-person / third-person view") },
 		{ TEXT("T"),			LOCTEXT("CtrlEmotion", "Change your eyes' emotion") },
+		{ TEXT("M"),			LOCTEXT("CtrlMap", "Map") },
 		{ TEXT("Tab  /  I"),	LOCTEXT("CtrlEquipment", "Equipment") },
 		{ TEXT("Esc"),			LOCTEXT("CtrlMenu", "This menu") },
 	};
@@ -478,6 +483,12 @@ void SCIRLGameMenu::RebuildKeyHints()
 	{
 		KeyHints->AddSlot().AutoWidth()[MakeKeyHint(LOCTEXT("HintEnter", "Enter"), LOCTEXT("HintSelect", "Select"))];
 	}
+	else if (CurrentTab == ECIRLMenuTab::Map)
+	{
+		KeyHints->AddSlot().AutoWidth()[MakeKeyHint(LOCTEXT("HintDrag", "Drag / WASD"), LOCTEXT("HintMove", "Move"))];
+		KeyHints->AddSlot().AutoWidth()[MakeKeyHint(LOCTEXT("HintWheel", "Wheel / + -"), LOCTEXT("HintZoom", "Zoom"))];
+		KeyHints->AddSlot().AutoWidth()[MakeKeyHint(LOCTEXT("HintSpace", "Space"), LOCTEXT("HintFindMe", "Find Me"))];
+	}
 	else if (CurrentTab == ECIRLMenuTab::Equipment)
 	{
 		KeyHints->AddSlot().AutoWidth()[MakeKeyHint(LOCTEXT("HintEnterSlot", "Enter"), LOCTEXT("HintChoose", "Choose Item"))];
@@ -504,17 +515,18 @@ FReply SCIRLGameMenu::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& In
 		FocusCurrentTab();
 		return FReply::Handled();
 	}
-	// Esc, controller B/Start, or the Equipment key again while on Equipment: back to the game
+	// Esc, controller B/Start, or a tab's own key again while on that tab (Tab/I Equipment, M Map): back to the game
 	const bool bEquipmentKey = Key == EKeys::Tab || Key == EKeys::I || Key == EKeys::Gamepad_Special_Left;
+	const bool bMapKey = Key == EKeys::M || Key == EKeys::Gamepad_DPad_Right;
 	if (Key == EKeys::Escape || Key == EKeys::Gamepad_Special_Right || Key == EKeys::Gamepad_FaceButton_Right
-		|| (bEquipmentKey && CurrentTab == ECIRLMenuTab::Equipment))
+		|| (bEquipmentKey && CurrentTab == ECIRLMenuTab::Equipment) || (bMapKey && CurrentTab == ECIRLMenuTab::Map))
 	{
 		OnCloseRequested.ExecuteIfBound();
 		return FReply::Handled();
 	}
-	if (bEquipmentKey)
+	if (bEquipmentKey || bMapKey)
 	{
-		SetTab(ECIRLMenuTab::Equipment);
+		SetTab(bMapKey ? ECIRLMenuTab::Map : ECIRLMenuTab::Equipment);
 		FocusCurrentTab();
 		return FReply::Handled();
 	}

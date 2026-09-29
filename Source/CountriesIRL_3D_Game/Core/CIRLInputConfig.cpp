@@ -36,6 +36,7 @@ void UCIRLInputConfig::Build()
 	Interact = MakeAction(this, TEXT("IA_Interact"), EInputActionValueType::Boolean);
 	GameMenu = MakeAction(this, TEXT("IA_GameMenu"), EInputActionValueType::Boolean);
 	Equipment = MakeAction(this, TEXT("IA_Equipment"), EInputActionValueType::Boolean);
+	Map = MakeAction(this, TEXT("IA_Map"), EInputActionValueType::Boolean);
 
 	UInputMappingContext* C = NewObject<UInputMappingContext>(this, TEXT("IMC_Default"));
 	DefaultContext = C;
@@ -91,6 +92,8 @@ void UCIRLInputConfig::Build()
 	C->MapKey(Equipment, EKeys::Tab);
 	C->MapKey(Equipment, EKeys::I);
 	C->MapKey(Equipment, EKeys::Gamepad_Special_Left);
+	C->MapKey(Map, EKeys::M);
+	C->MapKey(Map, EKeys::Gamepad_DPad_Right);
 
 	C->MapKey(CycleEmotion, EKeys::T);
 }

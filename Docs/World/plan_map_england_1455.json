@@ -1,0 +1,3403 @@
+{
+ "note": "Game km are measured east and north from the rulers' zero (England's west and south edges). In the game world +X is north, +Y is east, 1 game km = 100000 units.",
+ "compression": 20.0,
+ "image_size": [
+  5557,
+  9381
+ ],
+ "origin_px": [
+  388,
+  8368
+ ],
+ "px_per_game_km": 260.0,
+ "playable_size_game_km": [
+  18.404,
+  29.104
+ ],
+ "places_game_km": {
+  "abingdon": {
+   "name": "Abingdon",
+   "type": "Village",
+   "km": [
+    8.2466,
+    6.2674
+   ]
+  },
+  "alnwick": {
+   "name": "Alnwick Castle",
+   "type": "Castle",
+   "km": [
+    6.8297,
+    26.9727
+   ]
+  },
+  "appleby": {
+   "name": "Appleby",
+   "type": "Village",
+   "km": [
+    4.2068,
+    22.3399
+   ]
+  },
+  "arbor_low": {
+   "name": "Arbor Low",
+   "type": "Landmark",
+   "km": [
+    6.6431,
+    14.5496
+   ]
+  },
+  "arden": {
+   "name": "Forest of Arden",
+   "type": "Area",
+   "km": [
+    6.6823,
+    9.9118
+   ]
+  },
+  "askrigg": {
+   "name": "Askrigg",
+   "type": "Village",
+   "km": [
+    5.5869,
+    20.8803
+   ]
+  },
+  "avebury": {
+   "name": "Avebury",
+   "type": "Landmark",
+   "km": [
+    6.3326,
+    4.9284
+   ]
+  },
+  "aysgarth_falls": {
+   "name": "Aysgarth Falls",
+   "type": "Nature",
+   "km": [
+    5.9045,
+    20.7676
+   ]
+  },
+  "bamburgh": {
+   "name": "Bamburgh Castle",
+   "type": "Castle",
+   "km": [
+    6.8163,
+    28.0397
+   ]
+  },
+  "banbury": {
+   "name": "Banbury",
+   "type": "Town",
+   "km": [
+    8.0563,
+    8.4351
+   ]
+  },
+  "barnet": {
+   "name": "Barnet",
+   "type": "Town",
+   "km": [
+    11.8743,
+    6.169
+   ]
+  },
+  "barnsdale": {
+   "name": "Barnsdale",
+   "type": "Area",
+   "km": [
+    8.3571,
+    17.0436
+   ]
+  },
+  "bath": {
+   "name": "Bath",
+   "type": "Town",
+   "km": [
+    4.6423,
+    4.6652
+   ]
+  },
+  "bath_cathedral": {
+   "name": "Bath Cathedral Priory",
+   "type": "Cathedral",
+   "km": [
+    4.6426,
+    4.6675
+   ]
+  },
+  "battle_barnet": {
+   "name": "Barnet (1471)",
+   "type": "Battle",
+   "km": [
+    11.871,
+    6.2519
+   ]
+  },
+  "battle_blore_heath": {
+   "name": "Blore Heath (1459)",
+   "type": "Battle",
+   "km": [
+    4.4222,
+    13.1382
+   ]
+  },
+  "battle_bosworth": {
+   "name": "Bosworth (1485)",
+   "type": "Battle",
+   "km": [
+    7.8202,
+    11.3553
+   ]
+  },
+  "battle_edgecote": {
+   "name": "Edgecote (1469)",
+   "type": "Battle",
+   "km": [
+    8.3665,
+    8.7198
+   ]
+  },
+  "battle_ferrybridge": {
+   "name": "Ferrybridge (1461)",
+   "type": "Battle",
+   "km": [
+    8.2935,
+    17.5522
+   ]
+  },
+  "battle_hedgeley_moor": {
+   "name": "Hedgeley Moor (1464)",
+   "type": "Battle",
+   "km": [
+    6.0994,
+    27.2768
+   ]
+  },
+  "battle_heworth_moor": {
+   "name": "Heworth Moor (1453)",
+   "type": "Battle",
+   "km": [
+    9.0505,
+    18.973
+   ]
+  },
+  "battle_hexham": {
+   "name": "Hexham (1464)",
+   "type": "Battle",
+   "km": [
+    5.5099,
+    24.507
+   ]
+  },
+  "battle_losecote": {
+   "name": "Losecote Field (1470)",
+   "type": "Battle",
+   "km": [
+    10.7485,
+    11.8805
+   ]
+  },
+  "battle_ludford": {
+   "name": "Ludford Bridge (1459)",
+   "type": "Battle",
+   "km": [
+    3.4431,
+    10.0887
+   ]
+  },
+  "battle_mortimers_cross": {
+   "name": "Mortimer's Cross (1461)",
+   "type": "Battle",
+   "km": [
+    3.0378,
+    9.5193
+   ]
+  },
+  "battle_nibley_green": {
+   "name": "Nibley Green (1470)",
+   "type": "Battle",
+   "km": [
+    4.51,
+    6.2077
+   ]
+  },
+  "battle_northampton": {
+   "name": "Northampton (1460)",
+   "type": "Battle",
+   "km": [
+    9.5664,
+    9.3092
+   ]
+  },
+  "battle_st_albans_1455": {
+   "name": "First Battle of St Albans (1455)",
+   "type": "Battle",
+   "km": [
+    11.4087,
+    6.7163
+   ]
+  },
+  "battle_st_albans_1461": {
+   "name": "Second Battle of St Albans (1461)",
+   "type": "Battle",
+   "km": [
+    11.4188,
+    6.7329
+   ]
+  },
+  "battle_stamford_bridge_1454": {
+   "name": "Stamford Bridge (1454)",
+   "type": "Battle",
+   "km": [
+    9.4893,
+    19.0891
+   ]
+  },
+  "battle_stoke": {
+   "name": "Stoke Field (1487)",
+   "type": "Battle",
+   "km": [
+    9.5697,
+    13.8094
+   ]
+  },
+  "battle_tewkesbury": {
+   "name": "Tewkesbury (1471)",
+   "type": "Battle",
+   "km": [
+    5.2988,
+    7.9934
+   ]
+  },
+  "battle_towton": {
+   "name": "Towton (1461)",
+   "type": "Battle",
+   "km": [
+    8.2901,
+    18.2488
+   ]
+  },
+  "battle_wakefield": {
+   "name": "Wakefield (1460)",
+   "type": "Battle",
+   "km": [
+    7.5458,
+    17.3753
+   ]
+  },
+  "beachy_head": {
+   "name": "Beachy Head",
+   "type": "Nature",
+   "km": [
+    13.3515,
+    1.0883
+   ]
+  },
+  "berwick": {
+   "name": "Berwick-upon-Tweed",
+   "type": "Town",
+   "km": [
+    5.8281,
+    28.9354
+   ]
+  },
+  "beverley": {
+   "name": "Beverley",
+   "type": "Town",
+   "km": [
+    11.1173,
+    18.2709
+   ]
+  },
+  "beverley_minster": {
+   "name": "Beverley Minster",
+   "type": "Cathedral",
+   "km": [
+    11.1216,
+    18.2565
+   ]
+  },
+  "bolton_castle": {
+   "name": "Bolton Castle",
+   "type": "Castle",
+   "km": [
+    5.9956,
+    20.9246
+   ]
+  },
+  "bolton_priory": {
+   "name": "Bolton Priory",
+   "type": "Abbey",
+   "km": [
+    6.2227,
+    19.0476
+   ]
+  },
+  "boston_town": {
+   "name": "Boston",
+   "type": "Town",
+   "km": [
+    12.4572,
+    13.4943
+   ]
+  },
+  "bridgwater": {
+   "name": "Bridgwater",
+   "type": "Town",
+   "km": [
+    2.4851,
+    3.2665
+   ]
+  },
+  "bristol": {
+   "name": "Bristol",
+   "type": "City",
+   "km": [
+    3.8786,
+    5.0688
+   ]
+  },
+  "broads": {
+   "name": "The Broads",
+   "type": "Area",
+   "km": [
+    17.7363,
+    11.8468
+   ]
+  },
+  "bury": {
+   "name": "St Edmund's Abbey",
+   "type": "Abbey",
+   "km": [
+    14.946,
+    9.4363
+   ]
+  },
+  "bury_st_edmunds": {
+   "name": "Bury St Edmunds",
+   "type": "Town",
+   "km": [
+    14.9262,
+    9.4491
+   ]
+  },
+  "c_appleby_castle": {
+   "name": "Appleby Castle",
+   "type": "Castle",
+   "km": [
+    4.2075,
+    22.3188
+   ]
+  },
+  "c_arundel_castle": {
+   "name": "Arundel Castle",
+   "type": "Castle",
+   "km": [
+    10.6899,
+    1.7633
+   ]
+  },
+  "c_barnard_castle_castle": {
+   "name": "Barnard Castle",
+   "type": "Castle",
+   "km": [
+    6.0904,
+    22.148
+   ]
+  },
+  "c_belsay_castle": {
+   "name": "Belsay Castle",
+   "type": "Castle",
+   "km": [
+    6.2837,
+    25.2368
+   ]
+  },
+  "c_berkeley_castle": {
+   "name": "Berkeley Castle",
+   "type": "Castle",
+   "km": [
+    4.3144,
+    6.3658
+   ]
+  },
+  "c_bodiam_castle": {
+   "name": "Bodiam Castle",
+   "type": "Castle",
+   "km": [
+    14.3648,
+    2.5716
+   ]
+  },
+  "c_brancepeth_castle": {
+   "name": "Brancepeth Castle",
+   "type": "Castle",
+   "km": [
+    7.0172,
+    23.1984
+   ]
+  },
+  "c_bristol_castle": {
+   "name": "Bristol Castle",
+   "type": "Castle",
+   "km": [
+    3.8746,
+    5.0793
+   ]
+  },
+  "c_brough_castle": {
+   "name": "Brough Castle",
+   "type": "Castle",
+   "km": [
+    4.7612,
+    22.0292
+   ]
+  },
+  "c_caister_castle": {
+   "name": "Caister Castle",
+   "type": "Castle",
+   "km": [
+    18.2424,
+    11.6837
+   ]
+  },
+  "c_chillingham_castle": {
+   "name": "Chillingham Castle",
+   "type": "Castle",
+   "km": [
+    6.1661,
+    27.5798
+   ]
+  },
+  "c_clitheroe_castle": {
+   "name": "Clitheroe Castle",
+   "type": "Castle",
+   "km": [
+    4.5281,
+    18.4307
+   ]
+  },
+  "c_cockermouth_castle": {
+   "name": "Cockermouth Castle",
+   "type": "Castle",
+   "km": [
+    1.2852,
+    22.8236
+   ]
+  },
+  "c_conisbrough_castle": {
+   "name": "Conisbrough Castle",
+   "type": "Castle",
+   "km": [
+    8.4372,
+    16.2933
+   ]
+  },
+  "c_corfe_castle": {
+   "name": "Corfe Castle",
+   "type": "Castle",
+   "km": [
+    5.6476,
+    0.5681
+   ]
+  },
+  "c_dacre_castle": {
+   "name": "Dacre Castle",
+   "type": "Castle",
+   "km": [
+    3.0428,
+    22.6362
+   ]
+  },
+  "c_danby_castle": {
+   "name": "Danby Castle",
+   "type": "Castle",
+   "km": [
+    9.5456,
+    21.6626
+   ]
+  },
+  "c_dover_castle": {
+   "name": "Dover Castle",
+   "type": "Castle",
+   "km": [
+    16.9776,
+    3.2682
+   ]
+  },
+  "c_dunster_castle": {
+   "name": "Dunster Castle",
+   "type": "Castle",
+   "km": [
+    1.0049,
+    3.559
+   ]
+  },
+  "c_ford_castle": {
+   "name": "Ford Castle",
+   "type": "Castle",
+   "km": [
+    5.5424,
+    28.1636
+   ]
+  },
+  "c_framlingham_castle": {
+   "name": "Framlingham Castle",
+   "type": "Castle",
+   "km": [
+    17.056,
+    9.3258
+   ]
+  },
+  "c_goodrich_castle": {
+   "name": "Goodrich Castle",
+   "type": "Castle",
+   "km": [
+    3.7824,
+    7.4057
+   ]
+  },
+  "c_greystoke_castle": {
+   "name": "Greystoke Castle",
+   "type": "Castle",
+   "km": [
+    2.9068,
+    22.8485
+   ]
+  },
+  "c_hedingham_castle": {
+   "name": "Hedingham Castle",
+   "type": "Castle",
+   "km": [
+    14.5578,
+    8.0459
+   ]
+  },
+  "c_helmsley_castle": {
+   "name": "Helmsley Castle",
+   "type": "Castle",
+   "km": [
+    8.9805,
+    20.4972
+   ]
+  },
+  "c_herstmonceux_castle": {
+   "name": "Herstmonceux Castle",
+   "type": "Castle",
+   "km": [
+    13.6805,
+    1.8413
+   ]
+  },
+  "c_knaresborough_castle": {
+   "name": "Knaresborough Castle",
+   "type": "Castle",
+   "km": [
+    7.6239,
+    19.1825
+   ]
+  },
+  "c_leeds_castle": {
+   "name": "Leeds Castle",
+   "type": "Castle",
+   "km": [
+    14.6546,
+    3.9349
+   ]
+  },
+  "c_naworth_castle": {
+   "name": "Naworth Castle",
+   "type": "Castle",
+   "km": [
+    3.5372,
+    24.4274
+   ]
+  },
+  "c_norham_castle": {
+   "name": "Norham Castle",
+   "type": "Castle",
+   "km": [
+    5.3397,
+    28.6634
+   ]
+  },
+  "c_penrith_castle": {
+   "name": "Penrith Castle",
+   "type": "Castle",
+   "km": [
+    3.3081,
+    22.8048
+   ]
+  },
+  "c_peveril_castle": {
+   "name": "Peveril Castle",
+   "type": "Castle",
+   "km": [
+    6.5912,
+    15.4967
+   ]
+  },
+  "c_pickering_castle": {
+   "name": "Pickering Castle",
+   "type": "Castle",
+   "km": [
+    9.9462,
+    20.5265
+   ]
+  },
+  "c_richmond_castle": {
+   "name": "Richmond Castle",
+   "type": "Castle",
+   "km": [
+    6.7241,
+    21.3679
+   ]
+  },
+  "c_scarborough_castle": {
+   "name": "Scarborough Castle",
+   "type": "Castle",
+   "km": [
+    11.2446,
+    20.7311
+   ]
+  },
+  "c_stafford_castle": {
+   "name": "Stafford Castle",
+   "type": "Castle",
+   "km": [
+    5.3531,
+    12.4953
+   ]
+  },
+  "c_sudeley_castle": {
+   "name": "Sudeley Castle",
+   "type": "Castle",
+   "km": [
+    5.9919,
+    7.7955
+   ]
+  },
+  "c_tonbridge_castle": {
+   "name": "Tonbridge Castle",
+   "type": "Castle",
+   "km": [
+    13.4557,
+    3.6486
+   ]
+  },
+  "c_tutbury_castle": {
+   "name": "Tutbury Castle",
+   "type": "Castle",
+   "km": [
+    6.8812,
+    12.8391
+   ]
+  },
+  "c_wigmore_castle": {
+   "name": "Wigmore Castle",
+   "type": "Castle",
+   "km": [
+    2.9259,
+    9.8438
+   ]
+  },
+  "cambridge": {
+   "name": "Cambridge",
+   "type": "Town",
+   "km": [
+    12.9429,
+    9.2207
+   ]
+  },
+  "canterbury": {
+   "name": "Canterbury",
+   "type": "City",
+   "km": [
+    16.1619,
+    4.1069
+   ]
+  },
+  "canterbury_cathedral": {
+   "name": "Canterbury Cathedral",
+   "type": "Cathedral",
+   "km": [
+    16.1713,
+    4.1058
+   ]
+  },
+  "carlisle": {
+   "name": "Carlisle",
+   "type": "City",
+   "km": [
+    2.7162,
+    24.0758
+   ]
+  },
+  "carlisle_castle": {
+   "name": "Carlisle Castle",
+   "type": "Castle",
+   "km": [
+    2.6928,
+    24.1034
+   ]
+  },
+  "carlisle_cathedral": {
+   "name": "Carlisle Cathedral",
+   "type": "Cathedral",
+   "km": [
+    2.7008,
+    24.0907
+   ]
+  },
+  "castle_bolton": {
+   "name": "Castle Bolton",
+   "type": "Village",
+   "km": [
+    6.0023,
+    20.9246
+   ]
+  },
+  "castlerigg": {
+   "name": "Castlerigg Stone Circle",
+   "type": "Landmark",
+   "km": [
+    2.1649,
+    22.4764
+   ]
+  },
+  "cheddar_gorge": {
+   "name": "Cheddar Gorge",
+   "type": "Nature",
+   "km": [
+    3.2857,
+    4.1234
+   ]
+  },
+  "chester": {
+   "name": "Chester",
+   "type": "City",
+   "km": [
+    2.8569,
+    14.6718
+   ]
+  },
+  "cheviots": {
+   "name": "Cheviot Hills",
+   "type": "Area",
+   "km": [
+    5.1749,
+    26.9949
+   ]
+  },
+  "chichester": {
+   "name": "Chichester",
+   "type": "City",
+   "km": [
+    9.9486,
+    1.6611
+   ]
+  },
+  "chichester_cathedral": {
+   "name": "Chichester Cathedral",
+   "type": "Cathedral",
+   "km": [
+    9.9288,
+    1.6539
+   ]
+  },
+  "chilterns": {
+   "name": "Chiltern Hills",
+   "type": "Area",
+   "km": [
+    9.8645,
+    6.4288
+   ]
+  },
+  "cirencester": {
+   "name": "Cirencester",
+   "type": "Town",
+   "km": [
+    5.952,
+    6.5339
+   ]
+  },
+  "colchester": {
+   "name": "Colchester",
+   "type": "Town",
+   "km": [
+    15.5623,
+    7.4737
+   ]
+  },
+  "cotswolds": {
+   "name": "Cotswolds",
+   "type": "Area",
+   "km": [
+    6.4143,
+    7.1475
+   ]
+  },
+  "coventry": {
+   "name": "Coventry",
+   "type": "City",
+   "km": [
+    7.4862,
+    10.343
+   ]
+  },
+  "coventry_cathedral": {
+   "name": "Coventry Cathedral Priory",
+   "type": "Cathedral",
+   "km": [
+    7.4912,
+    10.348
+   ]
+  },
+  "derby": {
+   "name": "Derby",
+   "type": "Village",
+   "km": [
+    7.5967,
+    13.1847
+   ]
+  },
+  "devils_arrows": {
+   "name": "Devil's Arrows",
+   "type": "Landmark",
+   "km": [
+    7.8423,
+    19.658
+   ]
+  },
+  "doncaster": {
+   "name": "Doncaster",
+   "type": "Town",
+   "km": [
+    8.749,
+    16.5073
+   ]
+  },
+  "dover": {
+   "name": "Dover",
+   "type": "Town",
+   "km": [
+    16.9424,
+    3.2555
+   ]
+  },
+  "dunstable": {
+   "name": "Dunstable",
+   "type": "Village",
+   "km": [
+    10.7991,
+    7.4571
+   ]
+  },
+  "dunstanburgh": {
+   "name": "Dunstanburgh Castle",
+   "type": "Castle",
+   "km": [
+    7.2015,
+    27.3763
+   ]
+  },
+  "durdle_door": {
+   "name": "Durdle Door",
+   "type": "Nature",
+   "km": [
+    4.9183,
+    0.4658
+   ]
+  },
+  "durham": {
+   "name": "Durham",
+   "type": "City",
+   "km": [
+    7.2651,
+    23.4345
+   ]
+  },
+  "durham_cathedral": {
+   "name": "Durham Cathedral",
+   "type": "Cathedral",
+   "km": [
+    7.2641,
+    23.4207
+   ]
+  },
+  "east_witton": {
+   "name": "East Witton",
+   "type": "Village",
+   "km": [
+    6.5717,
+    20.6039
+   ]
+  },
+  "ely": {
+   "name": "Ely",
+   "type": "Town",
+   "km": [
+    13.4219,
+    10.2933
+   ]
+  },
+  "ely_cathedral": {
+   "name": "Ely Cathedral",
+   "type": "Cathedral",
+   "km": [
+    13.4279,
+    10.291
+   ]
+  },
+  "evesham": {
+   "name": "Evesham",
+   "type": "Village",
+   "km": [
+    6.0224,
+    8.596
+   ]
+  },
+  "exmoor": {
+   "name": "Exmoor",
+   "type": "Area",
+   "km": [
+    0.3178,
+    3.3882
+   ]
+  },
+  "fens": {
+   "name": "The Fens",
+   "type": "Area",
+   "km": [
+    12.7117,
+    11.1281
+   ]
+  },
+  "flamborough": {
+   "name": "Flamborough Head",
+   "type": "Nature",
+   "km": [
+    12.2863,
+    19.7857
+   ]
+  },
+  "forest_of_dean": {
+   "name": "Forest of Dean",
+   "type": "Area",
+   "km": [
+    4.0025,
+    6.9264
+   ]
+  },
+  "forest_of_galtres": {
+   "name": "Forest of Galtres",
+   "type": "Area",
+   "km": [
+    8.7926,
+    19.4761
+   ]
+  },
+  "fotheringhay": {
+   "name": "Fotheringhay Castle",
+   "type": "Castle",
+   "km": [
+    11.0737,
+    10.9898
+   ]
+  },
+  "fotheringhay_village": {
+   "name": "Fotheringhay",
+   "type": "Village",
+   "km": [
+    11.0771,
+    11.0009
+   ]
+  },
+  "fountains": {
+   "name": "Fountains Abbey",
+   "type": "Abbey",
+   "km": [
+    7.2484,
+    19.747
+   ]
+  },
+  "geddington_cross": {
+   "name": "Geddington Eleanor Cross",
+   "type": "Landmark",
+   "km": [
+    10.243,
+    10.5089
+   ]
+  },
+  "glastonbury": {
+   "name": "Glastonbury Abbey",
+   "type": "Abbey",
+   "km": [
+    3.4498,
+    3.366
+   ]
+  },
+  "glastonbury_tor": {
+   "name": "Glastonbury Tor",
+   "type": "Landmark",
+   "km": [
+    3.5037,
+    3.3572
+   ]
+  },
+  "gloucester": {
+   "name": "Gloucester",
+   "type": "City",
+   "km": [
+    5.0275,
+    7.3355
+   ]
+  },
+  "gloucester_abbey": {
+   "name": "Gloucester Abbey",
+   "type": "Abbey",
+   "km": [
+    5.0188,
+    7.3549
+   ]
+  },
+  "grantham": {
+   "name": "Grantham",
+   "type": "Village",
+   "km": [
+    10.3937,
+    13.1294
+   ]
+  },
+  "grimsby": {
+   "name": "Grimsby",
+   "type": "Village",
+   "km": [
+    12.2763,
+    16.7505
+   ]
+  },
+  "guys_cliffe": {
+   "name": "Guy's Cliffe",
+   "type": "Landmark",
+   "km": [
+    7.2775,
+    9.7393
+   ]
+  },
+  "hadrians_wall": {
+   "name": "Hadrian's Wall",
+   "type": "Landmark",
+   "km": [
+    4.8959,
+    24.7652
+   ]
+  },
+  "halifax": {
+   "name": "Halifax",
+   "type": "Village",
+   "km": [
+    6.3138,
+    17.6019
+   ]
+  },
+  "hardingstone_cross": {
+   "name": "Hardingstone Eleanor Cross",
+   "type": "Landmark",
+   "km": [
+    9.5982,
+    9.2506
+   ]
+  },
+  "hardraw_force": {
+   "name": "Hardraw Force",
+   "type": "Nature",
+   "km": [
+    5.1689,
+    20.919
+   ]
+  },
+  "hartlepool": {
+   "name": "Hartlepool",
+   "type": "Village",
+   "km": [
+    8.4911,
+    22.959
+   ]
+  },
+  "hastings": {
+   "name": "Hastings",
+   "type": "Village",
+   "km": [
+    14.4653,
+    1.7534
+   ]
+  },
+  "helvellyn": {
+   "name": "Helvellyn",
+   "type": "Nature",
+   "km": [
+    2.4392,
+    22.0579
+   ]
+  },
+  "hereford": {
+   "name": "Hereford",
+   "type": "City",
+   "km": [
+    3.4465,
+    8.397
+   ]
+  },
+  "hereford_cathedral": {
+   "name": "Hereford Cathedral",
+   "type": "Cathedral",
+   "km": [
+    3.4465,
+    8.387
+   ]
+  },
+  "hertford": {
+   "name": "Hertford",
+   "type": "Village",
+   "km": [
+    12.2826,
+    6.959
+   ]
+  },
+  "hexham": {
+   "name": "Hexham",
+   "type": "Town",
+   "km": [
+    5.5062,
+    24.5175
+   ]
+  },
+  "high_force": {
+   "name": "High Force",
+   "type": "Nature",
+   "km": [
+    5.2218,
+    22.7379
+   ]
+  },
+  "hull": {
+   "name": "Kingston upon Hull",
+   "type": "Town",
+   "km": [
+    11.4322,
+    17.7291
+   ]
+  },
+  "huntingdon": {
+   "name": "Huntingdon",
+   "type": "Village",
+   "km": [
+    11.9313,
+    9.9173
+   ]
+  },
+  "ingleborough": {
+   "name": "Ingleborough",
+   "type": "Nature",
+   "km": [
+    4.5117,
+    20.0621
+   ]
+  },
+  "inglewood_forest": {
+   "name": "Inglewood Forest",
+   "type": "Area",
+   "km": [
+    2.9306,
+    23.2908
+   ]
+  },
+  "ipswich": {
+   "name": "Ipswich",
+   "type": "Town",
+   "km": [
+    16.4132,
+    8.4136
+   ]
+  },
+  "isle_of_wight": {
+   "name": "Isle of Wight",
+   "type": "Area",
+   "km": [
+    8.1896,
+    0.7898
+   ]
+  },
+  "jervaulx": {
+   "name": "Jervaulx Abbey",
+   "type": "Abbey",
+   "km": [
+    6.7225,
+    20.626
+   ]
+  },
+  "kendal": {
+   "name": "Kendal",
+   "type": "Town",
+   "km": [
+    3.346,
+    20.9577
+   ]
+  },
+  "kenilworth": {
+   "name": "Kenilworth Castle",
+   "type": "Castle",
+   "km": [
+    7.2149,
+    10.0113
+   ]
+  },
+  "kinder_scout": {
+   "name": "Kinder Scout",
+   "type": "Nature",
+   "km": [
+    6.2669,
+    15.7388
+   ]
+  },
+  "kings_lynn": {
+   "name": "King's Lynn",
+   "type": "Town",
+   "km": [
+    13.8774,
+    12.2559
+   ]
+  },
+  "kingston": {
+   "name": "Kingston upon Thames",
+   "type": "Village",
+   "km": [
+    11.537,
+    4.8383
+   ]
+  },
+  "lake_district": {
+   "name": "The Lakes",
+   "type": "Area",
+   "km": [
+    2.1937,
+    21.6322
+   ]
+  },
+  "lancaster": {
+   "name": "Lancaster",
+   "type": "Town",
+   "km": [
+    3.1617,
+    19.4042
+   ]
+  },
+  "lavenham": {
+   "name": "Lavenham",
+   "type": "Town",
+   "km": [
+    15.214,
+    8.69
+   ]
+  },
+  "leeds": {
+   "name": "Leeds",
+   "type": "Village",
+   "km": [
+    7.3549,
+    18.037
+   ]
+  },
+  "leicester": {
+   "name": "Leicester",
+   "type": "Town",
+   "km": [
+    8.749,
+    11.6035
+   ]
+  },
+  "lichfield": {
+   "name": "Lichfield",
+   "type": "City",
+   "km": [
+    6.4217,
+    11.8567
+   ]
+  },
+  "lichfield_cathedral": {
+   "name": "Lichfield Cathedral",
+   "type": "Cathedral",
+   "km": [
+    6.4126,
+    11.8777
+   ]
+  },
+  "lincoln": {
+   "name": "Lincoln",
+   "type": "City",
+   "km": [
+    10.7421,
+    14.9096
+   ]
+  },
+  "lincoln_cathedral": {
+   "name": "Lincoln Cathedral",
+   "type": "Cathedral",
+   "km": [
+    10.7485,
+    14.9118
+   ]
+  },
+  "lindisfarne": {
+   "name": "Lindisfarne Priory",
+   "type": "Abbey",
+   "km": [
+    6.5064,
+    28.4323
+   ]
+  },
+  "liverpool": {
+   "name": "Liverpool",
+   "type": "Village",
+   "km": [
+    2.5233,
+    15.8737
+   ]
+  },
+  "london": {
+   "name": "London",
+   "type": "City",
+   "km": [
+    12.2361,
+    5.395
+   ]
+  },
+  "long_meg": {
+   "name": "Long Meg and Her Daughters",
+   "type": "Landmark",
+   "km": [
+    3.6083,
+    23.1686
+   ]
+  },
+  "ludlow": {
+   "name": "Ludlow",
+   "type": "Town",
+   "km": [
+    3.4398,
+    10.1163
+   ]
+  },
+  "ludlow_castle": {
+   "name": "Ludlow Castle",
+   "type": "Castle",
+   "km": [
+    3.423,
+    10.1163
+   ]
+  },
+  "maiden_castle": {
+   "name": "Maiden Castle",
+   "type": "Landmark",
+   "km": [
+    4.2752,
+    0.8694
+   ]
+  },
+  "maidstone": {
+   "name": "Maidstone",
+   "type": "Village",
+   "km": [
+    14.3162,
+    4.0626
+   ]
+  },
+  "malham_cove": {
+   "name": "Malham Cove",
+   "type": "Nature",
+   "km": [
+    5.3156,
+    19.5424
+   ]
+  },
+  "mam_tor": {
+   "name": "Mam Tor",
+   "type": "Nature",
+   "km": [
+    6.4813,
+    15.5453
+   ]
+  },
+  "manchester": {
+   "name": "Manchester",
+   "type": "Village",
+   "km": [
+    5.0322,
+    16.274
+   ]
+  },
+  "marlborough": {
+   "name": "Marlborough",
+   "type": "Village",
+   "km": [
+    6.7493,
+    4.8809
+   ]
+  },
+  "masham": {
+   "name": "Masham",
+   "type": "Village",
+   "km": [
+    6.9971,
+    20.3772
+   ]
+  },
+  "middleham": {
+   "name": "Middleham",
+   "type": "Town",
+   "km": [
+    6.4913,
+    20.72
+   ]
+  },
+  "middleham_castle": {
+   "name": "Middleham Castle",
+   "type": "Castle",
+   "km": [
+    6.4947,
+    20.7145
+   ]
+  },
+  "morpeth": {
+   "name": "Morpeth",
+   "type": "Village",
+   "km": [
+    6.89,
+    25.6017
+   ]
+  },
+  "new_forest": {
+   "name": "New Forest",
+   "type": "Area",
+   "km": [
+    7.1847,
+    1.8402
+   ]
+  },
+  "newark": {
+   "name": "Newark",
+   "type": "Town",
+   "km": [
+    9.8343,
+    14.036
+   ]
+  },
+  "newcastle": {
+   "name": "Newcastle upon Tyne",
+   "type": "Town",
+   "km": [
+    7.1378,
+    24.507
+   ]
+  },
+  "north_downs": {
+   "name": "North Downs",
+   "type": "Area",
+   "km": [
+    13.2142,
+    3.941
+   ]
+  },
+  "north_york_moors": {
+   "name": "North York Moors",
+   "type": "Area",
+   "km": [
+    9.5295,
+    21.3005
+   ]
+  },
+  "northallerton": {
+   "name": "Northallerton",
+   "type": "Village",
+   "km": [
+    7.7408,
+    21.0185
+   ]
+  },
+  "northampton": {
+   "name": "Northampton",
+   "type": "Town",
+   "km": [
+    9.5396,
+    9.3976
+   ]
+  },
+  "norwich": {
+   "name": "Norwich",
+   "type": "City",
+   "km": [
+    16.8888,
+    11.5703
+   ]
+  },
+  "norwich_cathedral": {
+   "name": "Norwich Cathedral",
+   "type": "Cathedral",
+   "km": [
+    16.9012,
+    11.5814
+   ]
+  },
+  "nottingham": {
+   "name": "Nottingham",
+   "type": "Town",
+   "km": [
+    8.6921,
+    13.3616
+   ]
+  },
+  "nottingham_castle": {
+   "name": "Nottingham Castle",
+   "type": "Castle",
+   "km": [
+    8.6787,
+    13.3395
+   ]
+  },
+  "old_sarum": {
+   "name": "Old Sarum",
+   "type": "Landmark",
+   "km": [
+    6.4994,
+    3.0741
+   ]
+  },
+  "old_st_pauls": {
+   "name": "Old St Paul's Cathedral",
+   "type": "Cathedral",
+   "km": [
+    12.2146,
+    5.3994
+   ]
+  },
+  "oxford": {
+   "name": "Oxford",
+   "type": "Town",
+   "km": [
+    8.3303,
+    6.7163
+   ]
+  },
+  "peak": {
+   "name": "The Peak",
+   "type": "Area",
+   "km": [
+    6.5148,
+    15.5509
+   ]
+  },
+  "peak_cavern": {
+   "name": "Peak Cavern",
+   "type": "Nature",
+   "km": [
+    6.5851,
+    15.5011
+   ]
+  },
+  "pen_y_ghent": {
+   "name": "Pen-y-ghent",
+   "type": "Nature",
+   "km": [
+    5.0108,
+    20.0068
+   ]
+  },
+  "pennines": {
+   "name": "Pennines",
+   "type": "Area",
+   "km": [
+    4.6725,
+    23.2908
+   ]
+  },
+  "penrith": {
+   "name": "Penrith",
+   "type": "Town",
+   "km": [
+    3.3259,
+    22.8153
+   ]
+  },
+  "peterborough": {
+   "name": "Peterborough",
+   "type": "Village",
+   "km": [
+    11.7303,
+    11.2497
+   ]
+  },
+  "pickering": {
+   "name": "Pickering",
+   "type": "Village",
+   "km": [
+    9.9449,
+    20.5044
+   ]
+  },
+  "pontefract": {
+   "name": "Pontefract",
+   "type": "Town",
+   "km": [
+    8.1494,
+    17.4361
+   ]
+  },
+  "pontefract_castle": {
+   "name": "Pontefract Castle",
+   "type": "Castle",
+   "km": [
+    8.1729,
+    17.4527
+   ]
+  },
+  "poole": {
+   "name": "Poole",
+   "type": "Village",
+   "km": [
+    5.8884,
+    0.9833
+   ]
+  },
+  "portsmouth": {
+   "name": "Portsmouth",
+   "type": "Village",
+   "km": [
+    8.9025,
+    1.4852
+   ]
+  },
+  "preston": {
+   "name": "Preston",
+   "type": "Town",
+   "km": [
+    3.4897,
+    17.8352
+   ]
+  },
+  "raby": {
+   "name": "Raby Castle",
+   "type": "Castle",
+   "km": [
+    6.5148,
+    22.4117
+   ]
+  },
+  "reading": {
+   "name": "Reading",
+   "type": "Town",
+   "km": [
+    9.2679,
+    5.0705
+   ]
+  },
+  "redbourn": {
+   "name": "Redbourn",
+   "type": "Village",
+   "km": [
+    11.2312,
+    6.9706
+   ]
+  },
+  "rh_abingdon_abbey": {
+   "name": "Abingdon Abbey",
+   "type": "Abbey",
+   "km": [
+    8.2724,
+    6.2663
+   ]
+  },
+  "rh_amesbury_priory": {
+   "name": "Amesbury Priory",
+   "type": "Abbey",
+   "km": [
+    6.5674,
+    3.5092
+   ]
+  },
+  "rh_barking_abbey": {
+   "name": "Barking Abbey",
+   "type": "Abbey",
+   "km": [
+    12.7968,
+    5.5216
+   ]
+  },
+  "rh_battle_abbey": {
+   "name": "Battle Abbey",
+   "type": "Abbey",
+   "km": [
+    14.1715,
+    2.089
+   ]
+  },
+  "rh_beaulieu_abbey": {
+   "name": "Beaulieu Abbey",
+   "type": "Abbey",
+   "km": [
+    7.6865,
+    1.5737
+   ]
+  },
+  "rh_boxley_abbey": {
+   "name": "Boxley Abbey",
+   "type": "Abbey",
+   "km": [
+    14.3022,
+    4.2185
+   ]
+  },
+  "rh_bromholm_priory": {
+   "name": "Bromholm Priory",
+   "type": "Abbey",
+   "km": [
+    17.5172,
+    12.7634
+   ]
+  },
+  "rh_burscough_priory": {
+   "name": "Burscough Priory",
+   "type": "Abbey",
+   "km": [
+    2.9765,
+    16.839
+   ]
+  },
+  "rh_castle_acre_priory": {
+   "name": "Castle Acre Priory",
+   "type": "Abbey",
+   "km": [
+    14.8341,
+    11.9601
+   ]
+  },
+  "rh_chertsey_abbey": {
+   "name": "Chertsey Abbey",
+   "type": "Abbey",
+   "km": [
+    10.8687,
+    4.7343
+   ]
+  },
+  "rh_coverham_abbey": {
+   "name": "Coverham Abbey",
+   "type": "Abbey",
+   "km": [
+    6.3852,
+    20.6548
+   ]
+  },
+  "rh_crowland_abbey": {
+   "name": "Crowland Abbey",
+   "type": "Abbey",
+   "km": [
+    11.9905,
+    11.8269
+   ]
+  },
+  "rh_delapre_abbey": {
+   "name": "Delapre Abbey",
+   "type": "Abbey",
+   "km": [
+    9.5647,
+    9.3296
+   ]
+  },
+  "rh_dunstable_priory": {
+   "name": "Dunstable Priory",
+   "type": "Abbey",
+   "km": [
+    10.8104,
+    7.4571
+   ]
+  },
+  "rh_easby_abbey": {
+   "name": "Easby Abbey",
+   "type": "Abbey",
+   "km": [
+    6.7938,
+    21.3436
+   ]
+  },
+  "rh_evesham_abbey": {
+   "name": "Evesham Abbey",
+   "type": "Abbey",
+   "km": [
+    6.0231,
+    8.5921
+   ]
+  },
+  "rh_faversham_abbey": {
+   "name": "Faversham Abbey",
+   "type": "Abbey",
+   "km": [
+    15.5449,
+    4.3098
+   ]
+  },
+  "rh_furness_abbey": {
+   "name": "Furness Abbey",
+   "type": "Abbey",
+   "km": [
+    1.8322,
+    19.899
+   ]
+  },
+  "rh_hailes_abbey": {
+   "name": "Hailes Abbey",
+   "type": "Abbey",
+   "km": [
+    6.0857,
+    7.9121
+   ]
+  },
+  "rh_hexham_abbey": {
+   "name": "Hexham Abbey",
+   "type": "Abbey",
+   "km": [
+    5.4998,
+    24.5181
+   ]
+  },
+  "rh_kirkstall_abbey": {
+   "name": "Kirkstall Abbey",
+   "type": "Abbey",
+   "km": [
+    7.1576,
+    18.152
+   ]
+  },
+  "rh_lanercost_priory": {
+   "name": "Lanercost Priory",
+   "type": "Abbey",
+   "km": [
+    3.5158,
+    24.4855
+   ]
+  },
+  "rh_leicester_abbey": {
+   "name": "Leicester Abbey",
+   "type": "Abbey",
+   "km": [
+    8.736,
+    11.6748
+   ]
+  },
+  "rh_leominster_priory": {
+   "name": "Leominster Priory",
+   "type": "Abbey",
+   "km": [
+    3.3825,
+    9.3584
+   ]
+  },
+  "rh_lewes_priory": {
+   "name": "Lewes Priory",
+   "type": "Abbey",
+   "km": [
+    12.5717,
+    1.8313
+   ]
+  },
+  "rh_malmesbury_abbey": {
+   "name": "Malmesbury Abbey",
+   "type": "Abbey",
+   "km": [
+    5.5152,
+    5.7914
+   ]
+  },
+  "rh_mount_grace_priory": {
+   "name": "Mount Grace Priory",
+   "type": "Abbey",
+   "km": [
+    8.1545,
+    21.2463
+   ]
+  },
+  "rh_newstead_abbey": {
+   "name": "Newstead Abbey",
+   "type": "Abbey",
+   "km": [
+    8.5484,
+    14.0493
+   ]
+  },
+  "rh_peterborough_abbey": {
+   "name": "Peterborough Abbey",
+   "type": "Abbey",
+   "km": [
+    11.744,
+    11.2524
+   ]
+  },
+  "rh_ramsey_abbey": {
+   "name": "Ramsey Abbey",
+   "type": "Abbey",
+   "km": [
+    12.2053,
+    10.5653
+   ]
+  },
+  "rh_reading_abbey": {
+   "name": "Reading Abbey",
+   "type": "Abbey",
+   "km": [
+    9.3115,
+    5.0815
+   ]
+  },
+  "rh_romsey_abbey": {
+   "name": "Romsey Abbey",
+   "type": "Abbey",
+   "km": [
+    7.515,
+    2.5019
+   ]
+  },
+  "rh_selby_abbey": {
+   "name": "Selby Abbey",
+   "type": "Abbey",
+   "km": [
+    8.9664,
+    17.9524
+   ]
+  },
+  "rh_sempringham_priory": {
+   "name": "Sempringham Priory",
+   "type": "Abbey",
+   "km": [
+    11.333,
+    12.9381
+   ]
+  },
+  "rh_shaftesbury_abbey": {
+   "name": "Shaftesbury Abbey",
+   "type": "Abbey",
+   "km": [
+    5.1796,
+    2.5882
+   ]
+  },
+  "rh_shap_abbey": {
+   "name": "Shap Abbey",
+   "type": "Abbey",
+   "km": [
+    3.5037,
+    22.0673
+   ]
+  },
+  "rh_sherborne_abbey": {
+   "name": "Sherborne Abbey",
+   "type": "Abbey",
+   "km": [
+    4.1141,
+    2.2642
+   ]
+  },
+  "rh_st_benet_s_abbey": {
+   "name": "St Benet's Abbey",
+   "type": "Abbey",
+   "km": [
+    17.6512,
+    11.8805
+   ]
+  },
+  "rh_syon_abbey": {
+   "name": "Syon Abbey",
+   "type": "Abbey",
+   "km": [
+    11.4995,
+    5.1943
+   ]
+  },
+  "rh_tewkesbury_abbey": {
+   "name": "Tewkesbury Abbey",
+   "type": "Abbey",
+   "km": [
+    5.3076,
+    8.0338
+   ]
+  },
+  "rh_thetford_priory": {
+   "name": "Thetford Priory",
+   "type": "Abbey",
+   "km": [
+    15.0317,
+    10.3895
+   ]
+  },
+  "rh_thornton_abbey": {
+   "name": "Thornton Abbey",
+   "type": "Abbey",
+   "km": [
+    11.5035,
+    17.2393
+   ]
+  },
+  "rh_tynemouth_priory": {
+   "name": "Tynemouth Priory",
+   "type": "Abbey",
+   "km": [
+    7.7914,
+    24.7696
+   ]
+  },
+  "rh_vale_royal_abbey": {
+   "name": "Vale Royal Abbey",
+   "type": "Abbey",
+   "km": [
+    4.0273,
+    14.8581
+   ]
+  },
+  "rh_waltham_abbey": {
+   "name": "Waltham Abbey",
+   "type": "Abbey",
+   "km": [
+    12.5359,
+    6.3686
+   ]
+  },
+  "rh_wenlock_priory": {
+   "name": "Wenlock Priory",
+   "type": "Abbey",
+   "km": [
+    3.9851,
+    11.3885
+   ]
+  },
+  "rh_whalley_abbey": {
+   "name": "Whalley Abbey",
+   "type": "Abbey",
+   "km": [
+    4.4695,
+    18.1487
+   ]
+  },
+  "rh_whitby_abbey": {
+   "name": "Whitby Abbey",
+   "type": "Abbey",
+   "km": [
+    10.5093,
+    21.8423
+   ]
+  },
+  "rh_wigmore_abbey": {
+   "name": "Wigmore Abbey",
+   "type": "Abbey",
+   "km": [
+    2.9474,
+    9.94
+   ]
+  },
+  "rh_winchcombe_abbey": {
+   "name": "Winchcombe Abbey",
+   "type": "Abbey",
+   "km": [
+    5.9524,
+    7.8303
+   ]
+  },
+  "richborough": {
+   "name": "Richborough",
+   "type": "Landmark",
+   "km": [
+    17.0061,
+    4.1843
+   ]
+  },
+  "richmond": {
+   "name": "Richmond",
+   "type": "Town",
+   "km": [
+    6.7258,
+    21.3724
+   ]
+  },
+  "rievaulx": {
+   "name": "Rievaulx Abbey",
+   "type": "Abbey",
+   "km": [
+    8.8026,
+    20.5652
+   ]
+  },
+  "ripon": {
+   "name": "Ripon",
+   "type": "Town",
+   "km": [
+    7.4393,
+    19.9073
+   ]
+  },
+  "rochester": {
+   "name": "Rochester",
+   "type": "Town",
+   "km": [
+    14.2426,
+    4.7039
+   ]
+  },
+  "rochester_cathedral": {
+   "name": "Rochester Cathedral",
+   "type": "Cathedral",
+   "km": [
+    14.2302,
+    4.7095
+   ]
+  },
+  "rockingham_forest": {
+   "name": "Rockingham Forest",
+   "type": "Area",
+   "km": [
+    10.3669,
+    10.8516
+   ]
+  },
+  "rollright": {
+   "name": "Rollright Stones",
+   "type": "Landmark",
+   "km": [
+    7.2842,
+    7.9508
+   ]
+  },
+  "romney_marsh": {
+   "name": "Romney Marsh",
+   "type": "Area",
+   "km": [
+    15.559,
+    2.6695
+   ]
+  },
+  "roseberry": {
+   "name": "Roseberry Topping",
+   "type": "Nature",
+   "km": [
+    8.8361,
+    21.9418
+   ]
+  },
+  "rudston_monolith": {
+   "name": "Rudston Monolith",
+   "type": "Landmark",
+   "km": [
+    11.4636,
+    19.6635
+   ]
+  },
+  "rye": {
+   "name": "Rye",
+   "type": "Town",
+   "km": [
+    14.9996,
+    2.2825
+   ]
+  },
+  "salisbury": {
+   "name": "Salisbury",
+   "type": "City",
+   "km": [
+    6.5315,
+    2.9403
+   ]
+  },
+  "salisbury_cathedral": {
+   "name": "Salisbury Cathedral",
+   "type": "Cathedral",
+   "km": [
+    6.5232,
+    2.9182
+   ]
+  },
+  "salisbury_plain": {
+   "name": "Salisbury Plain",
+   "type": "Area",
+   "km": [
+    6.3138,
+    3.8857
+   ]
+  },
+  "sandal": {
+   "name": "Sandal Castle",
+   "type": "Castle",
+   "km": [
+    7.5465,
+    17.2868
+   ]
+  },
+  "sandal_magna": {
+   "name": "Sandal Magna",
+   "type": "Village",
+   "km": [
+    7.5632,
+    17.2813
+   ]
+  },
+  "sandwich": {
+   "name": "Sandwich",
+   "type": "Town",
+   "km": [
+    17.0295,
+    4.0792
+   ]
+  },
+  "savernake_forest": {
+   "name": "Savernake Forest",
+   "type": "Area",
+   "km": [
+    6.9057,
+    4.678
+   ]
+  },
+  "saxton": {
+   "name": "Saxton",
+   "type": "Village",
+   "km": [
+    8.2332,
+    18.1824
+   ]
+  },
+  "scafell_pike": {
+   "name": "Scafell Pike",
+   "type": "Nature",
+   "km": [
+    1.7867,
+    21.6554
+   ]
+  },
+  "scarborough": {
+   "name": "Scarborough",
+   "type": "Town",
+   "km": [
+    11.2044,
+    20.7089
+   ]
+  },
+  "selby": {
+   "name": "Selby",
+   "type": "Village",
+   "km": [
+    8.9701,
+    17.9502
+   ]
+  },
+  "sheffield": {
+   "name": "Sheffield",
+   "type": "Village",
+   "km": [
+    7.6199,
+    15.7228
+   ]
+  },
+  "sheriff_hutton": {
+   "name": "Sheriff Hutton",
+   "type": "Castle",
+   "km": [
+    9.1812,
+    19.6364
+   ]
+  },
+  "sherwood": {
+   "name": "Sherwood Forest",
+   "type": "Area",
+   "km": [
+    8.9601,
+    14.7216
+   ]
+  },
+  "shrewsbury": {
+   "name": "Shrewsbury",
+   "type": "Town",
+   "km": [
+    3.3192,
+    11.996
+   ]
+  },
+  "skiddaw": {
+   "name": "Skiddaw",
+   "type": "Nature",
+   "km": [
+    2.0001,
+    22.7434
+   ]
+  },
+  "skipton": {
+   "name": "Skipton",
+   "type": "Town",
+   "km": [
+    5.7879,
+    18.9343
+   ]
+  },
+  "skipton_castle": {
+   "name": "Skipton Castle",
+   "type": "Castle",
+   "km": [
+    5.7846,
+    18.9398
+   ]
+  },
+  "somerset_levels": {
+   "name": "Somerset Levels",
+   "type": "Area",
+   "km": [
+    3.1651,
+    3.2776
+   ]
+  },
+  "south_downs": {
+   "name": "South Downs",
+   "type": "Area",
+   "km": [
+    10.5344,
+    2.1719
+   ]
+  },
+  "southampton": {
+   "name": "Southampton",
+   "type": "Town",
+   "km": [
+    7.8413,
+    2.0281
+   ]
+  },
+  "spurn": {
+   "name": "Spurn Head",
+   "type": "Nature",
+   "km": [
+    12.9127,
+    16.8169
+   ]
+  },
+  "st_albans": {
+   "name": "St Albans",
+   "type": "Town",
+   "km": [
+    11.4087,
+    6.7163
+   ]
+  },
+  "st_albans_abbey": {
+   "name": "St Albans Abbey",
+   "type": "Abbey",
+   "km": [
+    11.3987,
+    6.7053
+   ]
+  },
+  "stafford": {
+   "name": "Stafford",
+   "type": "Town",
+   "km": [
+    5.4529,
+    12.5434
+   ]
+  },
+  "stamford": {
+   "name": "Stamford",
+   "type": "Town",
+   "km": [
+    10.9364,
+    11.692
+   ]
+  },
+  "stanton_drew": {
+   "name": "Stanton Drew",
+   "type": "Landmark",
+   "km": [
+    3.9154,
+    4.5884
+   ]
+  },
+  "stonehenge": {
+   "name": "Stonehenge",
+   "type": "Landmark",
+   "km": [
+    6.427,
+    3.5479
+   ]
+  },
+  "stratford": {
+   "name": "Stratford-upon-Avon",
+   "type": "Village",
+   "km": [
+    6.822,
+    9.1472
+   ]
+  },
+  "sudbury": {
+   "name": "Sudbury",
+   "type": "Village",
+   "km": [
+    14.9929,
+    8.2975
+   ]
+  },
+  "tadcaster": {
+   "name": "Tadcaster",
+   "type": "Town",
+   "km": [
+    8.3169,
+    18.5031
+   ]
+  },
+  "tattershall": {
+   "name": "Tattershall Castle",
+   "type": "Castle",
+   "km": [
+    11.8978,
+    14.1687
+   ]
+  },
+  "taunton": {
+   "name": "Taunton",
+   "type": "Village",
+   "km": [
+    2.1501,
+    2.6418
+   ]
+  },
+  "tewkesbury": {
+   "name": "Tewkesbury",
+   "type": "Town",
+   "km": [
+    5.3089,
+    8.0487
+   ]
+  },
+  "the_needles": {
+   "name": "The Needles",
+   "type": "Nature",
+   "km": [
+    7.2115,
+    0.6903
+   ]
+  },
+  "thetford": {
+   "name": "Thetford",
+   "type": "Village",
+   "km": [
+    15.0532,
+    10.3707
+   ]
+  },
+  "thirsk": {
+   "name": "Thirsk",
+   "type": "Village",
+   "km": [
+    8.0456,
+    20.4325
+   ]
+  },
+  "tower_london": {
+   "name": "Tower of London",
+   "type": "Castle",
+   "km": [
+    12.2897,
+    5.3674
+   ]
+  },
+  "towton": {
+   "name": "Towton",
+   "type": "Village",
+   "km": [
+    8.3035,
+    18.2875
+   ]
+  },
+  "uffington_horse": {
+   "name": "Uffington White Horse",
+   "type": "Landmark",
+   "km": [
+    7.2956,
+    5.7516
+   ]
+  },
+  "ullswater": {
+   "name": "Ullswater",
+   "type": "Nature",
+   "km": [
+    2.9139,
+    22.3371
+   ]
+  },
+  "v_alnwick": {
+   "name": "Alnwick",
+   "type": "Village",
+   "km": [
+    6.8266,
+    26.9584
+   ]
+  },
+  "v_bamburgh": {
+   "name": "Bamburgh",
+   "type": "Village",
+   "km": [
+    6.7761,
+    28.0121
+   ]
+  },
+  "v_battle": {
+   "name": "Battle",
+   "type": "Village",
+   "km": [
+    14.1521,
+    2.1166
+   ]
+  },
+  "v_beaulieu": {
+   "name": "Beaulieu",
+   "type": "Village",
+   "km": [
+    7.6808,
+    1.5544
+   ]
+  },
+  "v_berkeley": {
+   "name": "Berkeley",
+   "type": "Village",
+   "km": [
+    4.3073,
+    6.3791
+   ]
+  },
+  "v_birmingham": {
+   "name": "Birmingham",
+   "type": "Village",
+   "km": [
+    6.1714,
+    10.7411
+   ]
+  },
+  "v_bowness_on_windermere": {
+   "name": "Bowness-on-Windermere",
+   "type": "Village",
+   "km": [
+    2.7695,
+    21.159
+   ]
+  },
+  "v_brampton": {
+   "name": "Brampton",
+   "type": "Village",
+   "km": [
+    3.3899,
+    24.3461
+   ]
+  },
+  "v_bridgnorth": {
+   "name": "Bridgnorth",
+   "type": "Village",
+   "km": [
+    4.4396,
+    11.0451
+   ]
+  },
+  "v_brough": {
+   "name": "Brough",
+   "type": "Village",
+   "km": [
+    4.777,
+    22.0502
+   ]
+  },
+  "v_caister_on_sea": {
+   "name": "Caister-on-Sea",
+   "type": "Village",
+   "km": [
+    18.3493,
+    11.6864
+   ]
+  },
+  "v_castle_hedingham": {
+   "name": "Castle Hedingham",
+   "type": "Village",
+   "km": [
+    14.5675,
+    8.0376
+   ]
+  },
+  "v_castleton": {
+   "name": "Castleton",
+   "type": "Village",
+   "km": [
+    6.5985,
+    15.5177
+   ]
+  },
+  "v_catterick": {
+   "name": "Catterick",
+   "type": "Village",
+   "km": [
+    7.0842,
+    21.2286
+   ]
+  },
+  "v_chester_le_street": {
+   "name": "Chester-le-Street",
+   "type": "Village",
+   "km": [
+    7.2856,
+    23.8956
+   ]
+  },
+  "v_chipping_campden": {
+   "name": "Chipping Campden",
+   "type": "Village",
+   "km": [
+    6.5851,
+    8.3749
+   ]
+  },
+  "v_clare": {
+   "name": "Clare",
+   "type": "Village",
+   "km": [
+    14.4871,
+    8.5297
+   ]
+  },
+  "v_clitheroe": {
+   "name": "Clitheroe",
+   "type": "Village",
+   "km": [
+    4.5331,
+    18.4318
+   ]
+  },
+  "v_cockermouth": {
+   "name": "Cockermouth",
+   "type": "Village",
+   "km": [
+    1.2826,
+    22.8004
+   ]
+  },
+  "v_coleshill": {
+   "name": "Coleshill",
+   "type": "Village",
+   "km": [
+    6.823,
+    10.8461
+   ]
+  },
+  "v_conisbrough": {
+   "name": "Conisbrough",
+   "type": "Village",
+   "km": [
+    8.4342,
+    16.264
+   ]
+  },
+  "v_corfe_castle": {
+   "name": "Corfe Castle",
+   "type": "Village",
+   "km": [
+    5.6529,
+    0.5603
+   ]
+  },
+  "v_crowland": {
+   "name": "Crowland",
+   "type": "Village",
+   "km": [
+    11.9805,
+    11.8235
+   ]
+  },
+  "v_dartford": {
+   "name": "Dartford",
+   "type": "Village",
+   "km": [
+    13.2718,
+    5.0157
+   ]
+  },
+  "v_droitwich": {
+   "name": "Droitwich",
+   "type": "Village",
+   "km": [
+    5.3323,
+    9.5635
+   ]
+  },
+  "v_dunster": {
+   "name": "Dunster",
+   "type": "Village",
+   "km": [
+    1.0015,
+    3.5678
+   ]
+  },
+  "v_dunwich": {
+   "name": "Dunwich",
+   "type": "Village",
+   "km": [
+    18.008,
+    9.6215
+   ]
+  },
+  "v_east_stoke": {
+   "name": "East Stoke",
+   "type": "Village",
+   "km": [
+    9.6032,
+    13.8315
+   ]
+  },
+  "v_edgcote": {
+   "name": "Edgcote",
+   "type": "Village",
+   "km": [
+    8.3069,
+    8.784
+   ]
+  },
+  "v_empingham": {
+   "name": "Empingham",
+   "type": "Village",
+   "km": [
+    10.5465,
+    11.7716
+   ]
+  },
+  "v_eton": {
+   "name": "Eton",
+   "type": "Village",
+   "km": [
+    10.5036,
+    5.2573
+   ]
+  },
+  "v_ewelme": {
+   "name": "Ewelme",
+   "type": "Village",
+   "km": [
+    8.9567,
+    5.9921
+   ]
+  },
+  "v_faversham": {
+   "name": "Faversham",
+   "type": "Village",
+   "km": [
+    15.5349,
+    4.3153
+   ]
+  },
+  "v_ferrybridge": {
+   "name": "Ferrybridge",
+   "type": "Village",
+   "km": [
+    8.2533,
+    17.5632
+   ]
+  },
+  "v_framlingham": {
+   "name": "Framlingham",
+   "type": "Village",
+   "km": [
+    17.0442,
+    9.3153
+   ]
+  },
+  "v_glastonbury": {
+   "name": "Glastonbury",
+   "type": "Village",
+   "km": [
+    3.4414,
+    3.3743
+   ]
+  },
+  "v_helmsley": {
+   "name": "Helmsley",
+   "type": "Village",
+   "km": [
+    8.9983,
+    20.511
+   ]
+  },
+  "v_henley_on_thames": {
+   "name": "Henley-on-Thames",
+   "type": "Village",
+   "km": [
+    9.5195,
+    5.5205
+   ]
+  },
+  "v_herstmonceux": {
+   "name": "Herstmonceux",
+   "type": "Village",
+   "km": [
+    13.6162,
+    1.9507
+   ]
+  },
+  "v_kenilworth": {
+   "name": "Kenilworth",
+   "type": "Village",
+   "km": [
+    7.2986,
+    9.9726
+   ]
+  },
+  "v_keswick": {
+   "name": "Keswick",
+   "type": "Village",
+   "km": [
+    2.0346,
+    22.4659
+   ]
+  },
+  "v_kingsland": {
+   "name": "Kingsland",
+   "type": "Village",
+   "km": [
+    3.1306,
+    9.4596
+   ]
+  },
+  "v_lathom": {
+   "name": "Lathom",
+   "type": "Village",
+   "km": [
+    3.0981,
+    16.8777
+   ]
+  },
+  "v_leominster": {
+   "name": "Leominster",
+   "type": "Village",
+   "km": [
+    3.3711,
+    9.349
+   ]
+  },
+  "v_little_walsingham": {
+   "name": "Little Walsingham",
+   "type": "Village",
+   "km": [
+    15.4719,
+    13.0299
+   ]
+  },
+  "v_mansfield": {
+   "name": "Mansfield",
+   "type": "Village",
+   "km": [
+    8.5367,
+    14.4142
+   ]
+  },
+  "v_market_bosworth": {
+   "name": "Market Bosworth",
+   "type": "Village",
+   "km": [
+    7.849,
+    11.5366
+   ]
+  },
+  "v_market_drayton": {
+   "name": "Market Drayton",
+   "type": "Village",
+   "km": [
+    4.2209,
+    13.0874
+   ]
+  },
+  "v_market_harborough": {
+   "name": "Market Harborough",
+   "type": "Village",
+   "km": [
+    9.4605,
+    10.7272
+   ]
+  },
+  "v_nantwich": {
+   "name": "Nantwich",
+   "type": "Village",
+   "km": [
+    4.0966,
+    13.9846
+   ]
+  },
+  "v_newbury": {
+   "name": "Newbury",
+   "type": "Village",
+   "km": [
+    8.1126,
+    4.7758
+   ]
+  },
+  "v_newcastle_under_lyme": {
+   "name": "Newcastle-under-Lyme",
+   "type": "Village",
+   "km": [
+    5.0818,
+    13.6761
+   ]
+  },
+  "v_norham": {
+   "name": "Norham",
+   "type": "Village",
+   "km": [
+    5.3156,
+    28.6423
+   ]
+  },
+  "v_northleach": {
+   "name": "Northleach",
+   "type": "Village",
+   "km": [
+    6.3895,
+    7.142
+   ]
+  },
+  "v_paston": {
+   "name": "Paston",
+   "type": "Village",
+   "km": [
+    17.401,
+    12.8297
+   ]
+  },
+  "v_reeth": {
+   "name": "Reeth",
+   "type": "Village",
+   "km": [
+    6.0385,
+    21.2961
+   ]
+  },
+  "v_ross_on_wye": {
+   "name": "Ross-on-Wye",
+   "type": "Village",
+   "km": [
+    3.8786,
+    7.6119
+   ]
+  },
+  "v_settle": {
+   "name": "Settle",
+   "type": "Village",
+   "km": [
+    4.9143,
+    19.5209
+   ]
+  },
+  "v_shaftesbury": {
+   "name": "Shaftesbury",
+   "type": "Village",
+   "km": [
+    5.1853,
+    2.5915
+   ]
+  },
+  "v_shap": {
+   "name": "Shap",
+   "type": "Village",
+   "km": [
+    3.5805,
+    22.069
+   ]
+  },
+  "v_sherborne": {
+   "name": "Sherborne",
+   "type": "Village",
+   "km": [
+    4.1127,
+    2.2653
+   ]
+  },
+  "v_st_ives": {
+   "name": "St Ives",
+   "type": "Village",
+   "km": [
+    12.2893,
+    9.9361
+   ]
+  },
+  "v_stow_on_the_wold": {
+   "name": "Stow-on-the-Wold",
+   "type": "Village",
+   "km": [
+    6.7744,
+    7.7004
+   ]
+  },
+  "v_tattershall": {
+   "name": "Tattershall",
+   "type": "Village",
+   "km": [
+    11.9058,
+    14.1908
+   ]
+  },
+  "v_tonbridge": {
+   "name": "Tonbridge",
+   "type": "Village",
+   "km": [
+    13.4701,
+    3.6574
+   ]
+  },
+  "v_towcester": {
+   "name": "Towcester",
+   "type": "Village",
+   "km": [
+    9.228,
+    8.8061
+   ]
+  },
+  "v_tutbury": {
+   "name": "Tutbury",
+   "type": "Village",
+   "km": [
+    6.8967,
+    12.8087
+   ]
+  },
+  "v_wallingford": {
+   "name": "Wallingford",
+   "type": "Village",
+   "km": [
+    8.7758,
+    5.8705
+   ]
+  },
+  "v_waltham_abbey": {
+   "name": "Waltham Abbey",
+   "type": "Village",
+   "km": [
+    12.5456,
+    6.3437
+   ]
+  },
+  "v_warkworth": {
+   "name": "Warkworth",
+   "type": "Village",
+   "km": [
+    7.1479,
+    26.5802
+   ]
+  },
+  "v_warrington": {
+   "name": "Warrington",
+   "type": "Village",
+   "km": [
+    3.8685,
+    15.772
+   ]
+  },
+  "v_weymouth": {
+   "name": "Weymouth",
+   "type": "Village",
+   "km": [
+    4.3217,
+    0.4011
+   ]
+  },
+  "v_whickham": {
+   "name": "Whickham",
+   "type": "Village",
+   "km": [
+    6.9298,
+    24.3743
+   ]
+  },
+  "v_whitchurch": {
+   "name": "Whitchurch",
+   "type": "Village",
+   "km": [
+    3.5604,
+    13.4445
+   ]
+  },
+  "v_wigan": {
+   "name": "Wigan",
+   "type": "Village",
+   "km": [
+    3.7285,
+    16.6278
+   ]
+  },
+  "v_wigmore": {
+   "name": "Wigmore",
+   "type": "Village",
+   "km": [
+    2.9601,
+    9.8366
+   ]
+  },
+  "v_winchcombe": {
+   "name": "Winchcombe",
+   "type": "Village",
+   "km": [
+    5.9621,
+    7.8386
+   ]
+  },
+  "v_winchelsea": {
+   "name": "Winchelsea",
+   "type": "Village",
+   "km": [
+    14.9185,
+    2.1448
+   ]
+  },
+  "v_woodstock": {
+   "name": "Woodstock",
+   "type": "Village",
+   "km": [
+    8.0081,
+    7.2459
+   ]
+  },
+  "vale_of_york": {
+   "name": "Vale of York",
+   "type": "Area",
+   "km": [
+    8.1896,
+    18.5915
+   ]
+  },
+  "wakefield": {
+   "name": "Wakefield",
+   "type": "Town",
+   "km": [
+    7.5297,
+    17.3918
+   ]
+  },
+  "wakefield_bridge_chapel": {
+   "name": "Wakefield Bridge Chapel",
+   "type": "Landmark",
+   "km": [
+    7.5565,
+    17.3531
+   ]
+  },
+  "walsingham": {
+   "name": "Walsingham Priory",
+   "type": "Abbey",
+   "km": [
+    15.4752,
+    13.0243
+   ]
+  },
+  "ware": {
+   "name": "Ware",
+   "type": "Village",
+   "km": [
+    12.4505,
+    7.0425
+   ]
+  },
+  "warkworth": {
+   "name": "Warkworth Castle",
+   "type": "Castle",
+   "km": [
+    7.1479,
+    26.5802
+   ]
+  },
+  "warwick": {
+   "name": "Warwick",
+   "type": "Town",
+   "km": [
+    7.235,
+    9.6464
+   ]
+  },
+  "warwick_castle": {
+   "name": "Warwick Castle",
+   "type": "Castle",
+   "km": [
+    7.235,
+    9.6298
+   ]
+  },
+  "weald": {
+   "name": "The Weald",
+   "type": "Area",
+   "km": [
+    13.7166,
+    2.8353
+   ]
+  },
+  "wells": {
+   "name": "Wells",
+   "type": "City",
+   "km": [
+    3.6776,
+    3.7143
+   ]
+  },
+  "wells_cathedral": {
+   "name": "Wells Cathedral",
+   "type": "Cathedral",
+   "km": [
+    3.6897,
+    3.7221
+   ]
+  },
+  "wensley": {
+   "name": "Wensley",
+   "type": "Village",
+   "km": [
+    6.3138,
+    20.814
+   ]
+  },
+  "wensleydale_area": {
+   "name": "Wensleydale",
+   "type": "Area",
+   "km": [
+    5.4094,
+    20.8306
+   ]
+  },
+  "westminster_abbey": {
+   "name": "Westminster Abbey",
+   "type": "Abbey",
+   "km": [
+    12.1155,
+    5.3176
+   ]
+  },
+  "whitby": {
+   "name": "Whitby",
+   "type": "Town",
+   "km": [
+    10.4842,
+    21.8312
+   ]
+  },
+  "white_cliffs": {
+   "name": "White Cliffs of Dover",
+   "type": "Nature",
+   "km": [
+    16.8272,
+    3.1549
+   ]
+  },
+  "winchester": {
+   "name": "Winchester",
+   "type": "City",
+   "km": [
+    8.1628,
+    2.9072
+   ]
+  },
+  "winchester_cathedral": {
+   "name": "Winchester Cathedral",
+   "type": "Cathedral",
+   "km": [
+    8.1458,
+    2.8939
+   ]
+  },
+  "windermere": {
+   "name": "Windermere",
+   "type": "Nature",
+   "km": [
+    2.7001,
+    21.1562
+   ]
+  },
+  "windsor": {
+   "name": "Windsor Castle",
+   "type": "Castle",
+   "km": [
+    10.521,
+    5.2347
+   ]
+  },
+  "windsor_forest": {
+   "name": "Windsor Forest",
+   "type": "Area",
+   "km": [
+    10.1995,
+    4.8809
+   ]
+  },
+  "wookey_hole": {
+   "name": "Wookey Hole Caves",
+   "type": "Nature",
+   "km": [
+    3.5972,
+    3.8194
+   ]
+  },
+  "worcester": {
+   "name": "Worcester",
+   "type": "City",
+   "km": [
+    5.1079,
+    9.1489
+   ]
+  },
+  "worcester_cathedral": {
+   "name": "Worcester Cathedral",
+   "type": "Cathedral",
+   "km": [
+    5.1049,
+    9.1317
+   ]
+  },
+  "wroxeter": {
+   "name": "Wroxeter",
+   "type": "Landmark",
+   "km": [
+    3.687,
+    11.8147
+   ]
+  },
+  "yarmouth": {
+   "name": "Great Yarmouth",
+   "type": "Town",
+   "km": [
+    18.3392,
+    11.4487
+   ]
+  },
+  "york": {
+   "name": "York",
+   "type": "City",
+   "km": [
+    8.9232,
+    18.9177
+   ]
+  },
+  "york_minster": {
+   "name": "York Minster",
+   "type": "Cathedral",
+   "km": [
+    8.9202,
+    18.936
+   ]
+  },
+  "yorkshire_dales": {
+   "name": "Yorkshire Dales",
+   "type": "Area",
+   "km": [
+    5.6774,
+    20.5265
+   ]
+  }
+ }
+}

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DeveloperSettings.h"
+#include "World/CIRLWorldMap.h"
 #include "WorldSimulationSettings.generated.h"
 
 class UClimateProfile;
@@ -27,6 +28,14 @@ public:
 	/** Level that New Game opens (the world; for now the test sandbox) */
 	UPROPERTY(config, EditAnywhere, Category="Maps", meta=(AllowedClasses="/Script/Engine.World"))
 	FSoftObjectPath NewGameMap = FSoftObjectPath(TEXT("/Game/CountriesIRL/Maps/L_DevSandbox.L_DevSandbox"));
+
+	/** The map of the world shown on the menu's Map tab */
+	UPROPERTY(config, EditAnywhere, Category="Maps")
+	TSoftObjectPtr<UCIRLMapDefinition> WorldMap = TSoftObjectPtr<UCIRLMapDefinition>(FSoftObjectPath(TEXT("/Game/CountriesIRL/UI/Map/DA_WorldMap_England1455.DA_WorldMap_England1455")));
+
+	/** Test levels placed somewhere on the world map (the sandbox stands in for Middleham) */
+	UPROPERTY(config, EditAnywhere, Category="Maps")
+	TArray<FCIRLLevelMapAnchor> LevelMapAnchors;
 
 	/** In-game date and time when a new game starts. Dates are in the Julian calendar, as used in England until 1752. */
 	UPROPERTY(config, EditAnywhere, Category="Time")

@@ -51,6 +51,8 @@ public:
 		SLATE_EVENT(FOnCloseRequested, OnQuitRequested)
 		/** Volumes shown and changed on the Game tab */
 		SLATE_ARGUMENT(TWeakObjectPtr<class UCIRLAudioSubsystem>, Audio)
+		/** Shown as "You" on the Map tab */
+		SLATE_ARGUMENT(TWeakObjectPtr<AActor>, Player)
 	SLATE_END_ARGS()
 
 	void Construct(const FArguments& InArgs);
