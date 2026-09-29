@@ -24,8 +24,8 @@ COMPRESSION = float(sys.argv[1]) if len(sys.argv) > 1 else 12.0
 LAT0, LON0 = 53.0, -1.9
 KX = 111.32 * math.cos(math.radians(LAT0))
 KY = 110.57
-BOX = (-3.95, 50.45, 1.85, 55.85)    # lon/lat window drawn: England of the first release (Devon, Cornwall and Wales cut)
-PX_PER_KM = 11.0                     # image scale (real km)
+BOX = (-3.8, 50.5, 1.8, 55.83)       # lon/lat window drawn: England of the first release, nothing else
+PX_PER_KM = 13.0                     # image scale (real km)
 S = 2.25                             # size factor for symbols and text (designed at 4 px/km, kept when zooming in)
 MARGIN = int(110 * S)
 TOP = int(150 * S)
@@ -39,8 +39,6 @@ BOAT_ROUTE = (214, 228, 206)
 ROAD = (168, 46, 32)
 INK = (58, 40, 26)
 ROOF = (176, 52, 40)
-FADED = (196, 192, 176)
-ROAD_FADED = (196, 150, 130)
 
 
 def km(lon, lat):
@@ -250,7 +248,7 @@ def draw_rivers(d, rivers):
                     on, left = not on, (gap if on else dash)
 
 
-def label_rivers(img, rivers, obstacles, fnt):
+def label_rivers(img, rivers, obstacles, fnt, land):
     """River names written along the river (Gough-style), only where they cover nothing else."""
     for r in sorted(rivers, key=lambda r: r["tier"]):
         pts, ts = river_points(r)
@@ -270,6 +268,8 @@ def label_rivers(img, rivers, obstacles, fnt):
             off = river_width(r, ts[i]) / 2 + th * 0.8
             nx, ny = -math.sin(math.radians(ang)) * off, -math.cos(math.radians(ang)) * off
             cx, cy = pts[i][0] + nx, pts[i][1] + ny
+            if not (0 <= cx < img.width and 0 <= cy < img.height) or land.getpixel((int(cx), int(cy))) == 0:
+                continue                          # keep names on England
             layer = Image.new("RGBA", (tw + 8, th + 8), (0, 0, 0, 0))
             ImageDraw.Draw(layer).text((4 - box[0], 4 - box[1]), text, font=fnt, fill=RIVER_TEXT + (255,),
                                        stroke_width=max(1, int(S)), stroke_fill=PARCH + (255,))
@@ -309,33 +309,28 @@ def main():
     blot = blot.resize((W, H), Image.BICUBIC).filter(ImageFilter.GaussianBlur(30))
     img = Image.composite(Image.new("RGB", (W, H), (124, 158, 132)), img, blot)
 
-    # Land: England bright, Wales faded (future DLC)
+    # Land: only the England of the first release. Wales, Scotland and the cut areas are not drawn at all.
+    sea = img.copy()
     land = Image.new("L", (W, H), 0)
     ld = ImageDraw.Draw(land)
     d = ImageDraw.Draw(img)
     units = json.load(open(f"{DATA}/ne_10m_admin_0_map_units.geojson", encoding="utf-8"))
-    england_area = 0.0
     for f in units["features"]:
         name = f["properties"].get("NAME")
-        if name not in ("England", "Wales"):
+        if name != "England":
             continue
         for poly in geo_polys(f["geometry"]):
             ring = [px(lon, lat) for lon, lat in poly[0]]
-            d.polygon(ring, fill=PARCH if name == "England" else FADED)
-            if name == "England":
-                ld.polygon(ring, fill=255)
-                pts = [km(lon, lat) for lon, lat in poly[0]]
-                england_area += abs(sum(pts[i][0] * pts[i - 1][1] - pts[i - 1][0] * pts[i][1] for i in range(len(pts)))) / 2
-
-    # Areas left out of the first release: faded like Wales, and not part of the playable land
-    cut = Image.new("L", (W, H), 0)
+            d.polygon(ring, fill=PARCH)
+            ld.polygon(ring, fill=255)
+    cut = Image.new("L", (W, H), 0)                            # areas left out of the first release
     cd = ImageDraw.Draw(cut)
     for a in CUT:
         cd.polygon([px(lon, lat) for lon, lat in a["polygon"]], fill=255)
-    faded_land = ImageChops.multiply(land, cut)
-    img = Image.composite(Image.new("RGB", (W, H), FADED), img, faded_land)
     land = ImageChops.subtract(land, cut)
+    img = Image.composite(img, sea, land)
     d = ImageDraw.Draw(img)
+    england_area = land.histogram()[255] / PX_PER_KM ** 2      # playable England, real km2
     england_area = land.histogram()[255] / PX_PER_KM ** 2      # playable England, real km2
 
     # Parchment grain on England
@@ -354,19 +349,31 @@ def main():
         img = Image.composite(shaded, img, land)
 
     d = ImageDraw.Draw(img)
-    # Coastline outline
+    # Outline: England's coast and land border (not along cut areas), and the edge of each cut area
+    outline_w = max(2, int(1.5 * S))
     for f in units["features"]:
-        if f["properties"].get("NAME") in ("England", "Wales"):
+        if f["properties"].get("NAME") == "England":
             for poly in geo_polys(f["geometry"]):
-                d.line([px(lon, lat) for lon, lat in poly[0]] + [px(*poly[0][0])], fill=INK, width=max(2, int(1.5 * S)))
+                ring = poly[0] + [poly[0][0]]
+                for a, b in zip(ring, ring[1:]):
+                    if not is_cut(*a) and not is_cut(*b):
+                        d.line([px(*a), px(*b)], fill=INK, width=outline_w)
+    for a in CUT:
+        d.line([px(lon, lat) for lon, lat in a["polygon"][:a["border_points"]]], fill=INK, width=outline_w, joint="curve")
 
-    # Rivers: the game's simplified, connected network (Tools/world/build_rivers.py), wider towards the mouth
+    # Rivers: the game's simplified, connected network (Tools/world/build_rivers.py), wider towards the mouth.
+    # Drawn on their own layer and kept to England, so the stretches in Wales or cut areas do not show.
     rivers = [r for r in json.load(open(f"{ROOT}/Data/World/Rivers_England1455.json", encoding="utf-8"))["rivers"]
               if not is_cut(*r["line"][-1])]                   # rivers reaching the sea in a cut area are left out
-    draw_rivers(d, rivers)
+    layer = img.copy()
+    draw_rivers(ImageDraw.Draw(layer), rivers)
+    img = Image.composite(layer, img, land.filter(ImageFilter.MaxFilter(7)))
+    d = ImageDraw.Draw(img)
 
     all_places = {row["Id"]: row for row in csv.DictReader(open(f"{ROOT}/Data/World/Places_England1455.csv", encoding="utf-8"))}
-    places = {i: r for i, r in all_places.items() if not is_cut(float(r["Lon"]), float(r["Lat"]))}
+    wales = [poly[0] for f in units["features"] if f["properties"].get("NAME") == "Wales" for poly in geo_polys(f["geometry"])]
+    shown = lambda r: not is_cut(float(r["Lon"]), float(r["Lat"])) and not any(in_poly(float(r["Lon"]), float(r["Lat"]), w) for w in wales)
+    places = {i: r for i, r in all_places.items() if shown(r)}
     P = lambda i: px(float(all_places[i]["Lon"]), float(all_places[i]["Lat"]))
 
     # Main roads of the period (after the Gough Map's red routes)
@@ -395,11 +402,9 @@ def main():
     ]
     for road in roads:
         road = [i for i in road if i in all_places]
-        for a, b in zip(road, road[1:]):                         # roads into a cut area fade out with it
-            d.line([P(a), P(b)], fill=ROAD if a in places and b in places else ROAD_FADED, width=max(2, int(1.8 * S)))
-    for a in CUT:                                                # name the cut area where it shows on the map
-        X, Y = px(-3.55, 50.72)
-        d.text((X, Y), f"{a['name']}: later update", font=font("EBGaramond-Italic", 26), fill=(120, 112, 96), anchor="mm")
+        for a, b in zip(road, road[1:]):                         # roads into a cut area are left out with it
+            if a in places and b in places:
+                d.line([P(a), P(b)], fill=ROAD, width=max(2, int(1.8 * S)))
 
     # Grid in GAME kilometres
     step_game = 5
@@ -486,7 +491,7 @@ def main():
         obstacles.append(rect)
         d.text((sx - box[0], sy - box[1]), text, font=fnt, fill=colour, stroke_width=max(1, int(1.2 * S)), stroke_fill=PARCH)
 
-    label_rivers(img, rivers, obstacles, font("EBGaramond-Italic", 19))
+    label_rivers(img, rivers, obstacles, font("EBGaramond-Italic", 19), land)
     d = ImageDraw.Draw(img)
 
     # Title, scale, legend
@@ -503,7 +508,7 @@ def main():
               f"abbeys, priories & friaries {counts.get('Abbey', 0)}  /  cathedrals {counts.get('Cathedral', 0)}  /  "
               f"landmarks {counts.get('Landmark', 0)}  /  nature {counts.get('Nature', 0)}  /  battles {counts.get('Battle', 0)}  /  "
               f"villages {counts.get('Village', 0)}.\n"
-              f"Red lines: roads. Rivers: the {len(rivers)} main rivers, dashed where boats went in 1455. Faded: not in the first release (Devon & Cornwall: later update; Wales: DLC). "
+              f"Red lines: roads. Rivers: the {len(rivers)} main rivers, dashed where boats went in 1455. Not shown: Devon & Cornwall (later update), Wales and Scotland (DLC). "
               f"Data: Natural Earth, OpenStreetMap contributors, Wikidata, AWS Terrain Tiles.")
     d.rectangle([0, H - MARGIN + 1, W, H], fill=SEA)            # clean strip under the map frame for the legend
     d.multiline_text((MARGIN, H - MARGIN + int(4 * S)), legend, font=font("EBGaramond-Italic", 18), fill=INK, spacing=int(4 * S))

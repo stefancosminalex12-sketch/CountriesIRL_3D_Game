@@ -5,7 +5,8 @@
       "id": "west_country",
       "name": "Devon & Cornwall",
       "comes_back": "West Country update (Courtenay-Bonville feud, Exeter, Plymouth, Dartmoor)",
-      "border_note": "Devon's border with Somerset and Dorset, from County Gate on the Exmoor coast to the sea just west of Lyme Regis (approximate, within ~2 km). The cut area is everything west of it.",
+      "border_note": "Devon's border with Somerset and Dorset, from County Gate on the Exmoor coast to the sea just west of Lyme Regis (approximate, within ~2 km). The cut area is everything west of it; the first border_points points are the border itself.",
+      "border_points": 11,
       "polygon": [
         [-3.745, 51.235], [-3.73, 51.17], [-3.64, 51.10], [-3.61, 51.03], [-3.50, 50.99], [-3.38, 50.97],
         [-3.25, 50.945], [-3.12, 50.92], [-3.03, 50.87], [-2.97, 50.80], [-2.95, 50.72],
