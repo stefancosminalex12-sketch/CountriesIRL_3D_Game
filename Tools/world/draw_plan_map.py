@@ -13,6 +13,7 @@ import os
 import random
 import sys
 
+import numpy as np
 from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
 
 Image.MAX_IMAGE_PIXELS = None
@@ -35,7 +36,8 @@ PARCH_DARK = (236, 224, 190)
 SEA = (150, 178, 150)
 RIVER = (78, 122, 106)
 RIVER_TEXT = (44, 88, 76)
-BOAT_ROUTE = (214, 228, 206)
+RIVER_NAV = (38, 88, 96)         # reach boats could use in 1455
+CONTOUR = (150, 118, 80)
 ROAD = (92, 58, 32)              # dark brown ink
 INK = (58, 40, 26)
 ROOF = (176, 52, 40)
@@ -69,6 +71,46 @@ def font(name, size):
         return ImageFont.load_default()
 
 
+COAST_KM = 1.5          # coast details smaller than this (real km, ~125 m in the game) are smoothed away
+MIN_ISLAND_KM2 = 3.0    # smaller islands are left out
+
+
+def game_coast(rings):
+    """England's outline at game detail: simplified, rounded, without tiny islands (lon/lat rings)."""
+    out = []
+    for ring in rings:
+        pts = [km(lon, lat) for lon, lat in ring[:-1]]
+        area = abs(sum(pts[i][0] * pts[i - 1][1] - pts[i - 1][0] * pts[i][1] for i in range(len(pts)))) / 2
+        if area < MIN_ISLAND_KM2 or len(pts) < 4:
+            continue
+        h = len(pts) // 2                                   # a closed ring is simplified in two halves
+        simple = douglas_peucker(pts[:h + 1], COAST_KM)[:-1] + douglas_peucker(pts[h:] + [pts[0]], COAST_KM)[:-1]
+        for _ in range(2):                                  # round the corners (Chaikin), ring closed
+            simple = [q for a, b in zip(simple, simple[1:] + simple[:1])
+                      for q in ((0.75 * a[0] + 0.25 * b[0], 0.75 * a[1] + 0.25 * b[1]), (0.25 * a[0] + 0.75 * b[0], 0.25 * a[1] + 0.75 * b[1]))]
+        out.append([unkm(x, y) for x, y in simple])
+    return out
+
+
+def douglas_peucker(pts, tol):
+    if len(pts) < 3:
+        return pts
+    a, b = pts[0], pts[-1]
+    norm = math.hypot(b[0] - a[0], b[1] - a[1]) or 1e-12
+    far, idx = 0.0, 0
+    for i in range(1, len(pts) - 1):
+        dd = abs((b[1] - a[1]) * pts[i][0] - (b[0] - a[0]) * pts[i][1] + b[0] * a[1] - b[1] * a[0]) / norm
+        if dd > far:
+            far, idx = dd, i
+    if far <= tol:
+        return [a, b]
+    return douglas_peucker(pts[:idx + 1], tol)[:-1] + douglas_peucker(pts[idx:], tol)
+
+
+def unkm(x, y):
+    return x / KX + LON0, y / KY + LAT0
+
+
 def geo_polys(geometry):
     if geometry["type"] == "Polygon":
         return [geometry["coordinates"]]
@@ -91,44 +133,43 @@ def in_box(lon, lat):
     return BOX[0] <= lon <= BOX[2] and BOX[1] <= lat <= BOX[3]
 
 
-def elevation_layer():
-    """Elevation (metres) resampled onto the map image, at quarter resolution, or None if not downloaded."""
-    meta_path = f"{DATA}/elevation_z8.json"
-    if not os.path.exists(meta_path):
-        return None
-    meta = json.load(open(meta_path))
-    tiles = Image.open(f"{DATA}/elevation_z8.png").convert("RGB")
-    n = 2 ** meta["z"]
-    tw, th = tiles.size
-    src = tiles.load()
-    w, h = W // 4, H // 4
-    out = Image.new("F", (w, h))
-    o = out.load()
-    for j in range(h):
-        for i in range(w):
-            lon, lat = unpx(i * 4 + 2, j * 4 + 2)
-            fx = ((lon + 180) / 360 * n - meta["x0"]) * 256
-            fy = ((1 - math.log(math.tan(math.radians(lat)) + 1 / math.cos(math.radians(lat))) / math.pi) / 2 * n - meta["y0"]) * 256
-            if 0 <= fx < tw and 0 <= fy < th:
-                r, g, b = src[int(fx), int(fy)]
-                o[i, j] = max((r * 256 + g + b / 256) - 32768, 0)
-    return out
+TERRAIN = f"{ROOT}/Data/World/Terrain_England1455"
+# Height bands of the game terrain (game metres) and their paper tints, blended between
+TERRAIN_TINTS = [(0, (247, 239, 212)), (8, (243, 233, 200)), (40, (233, 218, 178)), (110, (218, 198, 160)), (200, (200, 184, 160))]
+CONTOUR_M = 50          # contour line every 50 m of game height
 
 
-def hillshade(elev):
-    """Soft shading lit from the north-west, as a greyscale multiply layer (255 = no change)."""
-    w, h = elev.size
-    e = elev.load()
-    shade = Image.new("L", (w, h), 255)
-    s = shade.load()
-    cell_m = 4 / PX_PER_KM * 1000 / 3.0      # exaggerate relief 3x so it reads on paper
-    for j in range(1, h - 1):
-        for i in range(1, w - 1):
-            dzdx = (e[i + 1, j] - e[i - 1, j]) / (2 * cell_m)
-            dzdy = (e[i, j + 1] - e[i, j - 1]) / (2 * cell_m)
-            light = (-dzdx - dzdy) / math.sqrt(2)          # light from the top-left
-            s[i, j] = int(max(178, min(255, 232 + light * 200)))
-    return shade.filter(ImageFilter.GaussianBlur(1))
+def terrain_layer(img, land):
+    """The game terrain (Tools/world/build_terrain.py) on the map: height tints, shading from the game's own slopes
+    (light from the north-west) and contour lines. Returns the new image, or the old one if there is no terrain yet."""
+    if not os.path.exists(TERRAIN + ".png"):
+        return img
+    meta = json.load(open(TERRAIN + ".json"))
+    h = np.asarray(Image.open(TERRAIN + ".png"), dtype=np.float32) / meta["value_per_game_m"]
+    cell = meta["cell_game_m"]
+    gy, gx = np.gradient(h, cell)                               # game slopes
+    az, alt = math.radians(315), math.radians(45)
+    slope = np.arctan(1.5 * np.hypot(gx, gy))                   # shading drawn 1.5x steep so gentle hills read
+    aspect = np.arctan2(-gx, gy)
+    hs = np.sin(alt) * np.cos(slope) + np.cos(alt) * np.sin(slope) * np.cos(az - aspect)
+    shade = np.clip(1 + 0.6 * (hs - math.sin(alt)), 0.72, 1.06)
+    # onto the map: the terrain box is the map's BOX, drawn inside the margins
+    size = (int((x_max - x_min) * PX_PER_KM), int((y_max - y_min) * PX_PER_KM))
+    hm = np.asarray(Image.fromarray(h).resize(size, Image.BICUBIC))
+    sm = np.asarray(Image.fromarray(shade.astype(np.float32)).resize(size, Image.BICUBIC))
+    stops = [t[0] for t in TERRAIN_TINTS]
+    tint = np.stack([np.interp(hm, stops, [t[1][c] for t in TERRAIN_TINTS]) for c in range(3)], axis=-1)
+    base = np.asarray(img, dtype=np.float32)[TOP:TOP + size[1], MARGIN:MARGIN + size[0]]
+    grain = base / np.array(PARCH, dtype=np.float32)            # keep the paper grain drawn before
+    out = np.clip(tint * grain * sm[..., None], 0, 255)
+    band = np.floor(hm / CONTOUR_M)
+    edge = np.zeros(hm.shape, bool)
+    edge[:-1, :] |= band[:-1, :] != band[1:, :]
+    edge[:, :-1] |= band[:, :-1] != band[:, 1:]
+    out[edge] = out[edge] * 0.55 + np.array(CONTOUR, dtype=np.float32) * 0.45
+    layer = img.copy()
+    layer.paste(Image.fromarray(out.astype(np.uint8)), (MARGIN, TOP))
+    return Image.composite(layer, img, land)
 
 
 ICONS_DIR = f"{ROOT}/Art/AI/MapIcons"
@@ -200,7 +241,7 @@ def draw_symbol(img, d, icons, kind, imp, X, Y):
     return s
 
 
-RIVER_WIDTH = {1: (2.2, 7.5), 2: (1.8, 5.0), 3: (1.5, 3.5)}   # (at the source, at the mouth), times S
+PX_PER_GAME_M = PX_PER_KM * COMPRESSION / 1000          # map pixels per metre of game world (~0.16: 1 px = ~6.4 m)
 
 
 def river_points(r):
@@ -213,39 +254,21 @@ def river_points(r):
 
 
 def river_width(r, t):
-    w0, w1 = RIVER_WIDTH[r["tier"]]
-    return (w0 + (w1 - w0) * math.sqrt(t)) * S
+    """True width in the game (1:3 of real), widening towards the mouth; at least 2 px so it shows."""
+    w0, w1 = r["width_game_m"]
+    return max(2.0, (w0 + (w1 - w0) * math.sqrt(t)) * PX_PER_GAME_M)
 
 
 def draw_rivers(d, rivers):
-    """Small rivers first so the big ones sit on top; boat routes (navigable in 1455) get a pale dashed channel."""
+    """Small rivers first so the big ones sit on top; the reach boats could use in 1455 is a darker blue."""
     for r in sorted(rivers, key=lambda r: -r["tier"]):
         pts, ts = river_points(r)
+        nav = r["navigable_from"]
         for (a, b), t in zip(zip(pts, pts[1:]), ts[1:]):
             w = river_width(r, t)
-            d.line([a, b], fill=RIVER, width=max(2, int(w)))
-            d.ellipse([b[0] - w / 2, b[1] - w / 2, b[0] + w / 2, b[1] + w / 2], fill=RIVER)
-    dash, gap = 7 * S, 6 * S
-    for r in rivers:
-        if r["navigable_from"] is None:
-            continue
-        pts, ts = river_points(r)
-        on, left = True, dash
-        for (a, b), t in zip(zip(pts, pts[1:]), ts[1:]):
-            if t < r["navigable_from"]:
-                continue
-            seg = math.hypot(b[0] - a[0], b[1] - a[1])
-            pos = 0.0
-            while pos < seg:
-                step = min(left, seg - pos)
-                if on:
-                    p0 = (a[0] + (b[0] - a[0]) * pos / seg, a[1] + (b[1] - a[1]) * pos / seg)
-                    p1 = (a[0] + (b[0] - a[0]) * (pos + step) / seg, a[1] + (b[1] - a[1]) * (pos + step) / seg)
-                    d.line([p0, p1], fill=BOAT_ROUTE, width=max(1, int(1.1 * S)))
-                pos += step
-                left -= step
-                if left <= 0:
-                    on, left = not on, (gap if on else dash)
+            colour = RIVER_NAV if nav is not None and t > nav else RIVER
+            d.line([a, b], fill=colour, width=max(2, round(w)))
+            d.ellipse([b[0] - w / 2, b[1] - w / 2, b[0] + w / 2, b[1] + w / 2], fill=colour)
 
 
 def label_rivers(img, rivers, obstacles, fnt, land):
@@ -337,10 +360,10 @@ def main():
         name = f["properties"].get("NAME")
         if name != "England":
             continue
-        for poly in geo_polys(f["geometry"]):
-            ring = [px(lon, lat) for lon, lat in poly[0]]
-            d.polygon(ring, fill=PARCH)
-            ld.polygon(ring, fill=255)
+        coast = game_coast([poly[0] for poly in geo_polys(f["geometry"])])
+        for ring in coast:
+            d.polygon([px(lon, lat) for lon, lat in ring], fill=PARCH)
+            ld.polygon([px(lon, lat) for lon, lat in ring], fill=255)
     cut = Image.new("L", (W, H), 0)                            # areas left out of the first release
     cd = ImageDraw.Draw(cut)
     for a in CUT:
@@ -357,25 +380,17 @@ def main():
     grain = grain.resize((W, H), Image.BICUBIC).filter(ImageFilter.GaussianBlur(8)).point(lambda v: 60 if v > 150 else 0)
     img = Image.composite(Image.new("RGB", (W, H), PARCH_DARK), img, ImageChops.multiply(grain, land))
 
-    # Hills: shaded relief plus a brownish tint on high ground
-    elev = elevation_layer()
-    if elev is not None:
-        shade = hillshade(elev).resize((W, H), Image.BICUBIC)
-        high = elev.point(lambda v: v * (255 / 600.0)).convert("L").resize((W, H), Image.BICUBIC).filter(ImageFilter.GaussianBlur(3))
-        img = Image.composite(Image.new("RGB", (W, H), (214, 196, 152)), img, ImageChops.multiply(high.point(lambda v: v * 0.45), land))
-        shaded = ImageChops.multiply(img, Image.merge("RGB", (shade, shade, shade)))
-        img = Image.composite(shaded, img, land)
+    # Terrain: the game's generalised heights, not the real ones
+    img = terrain_layer(img, land)
 
     d = ImageDraw.Draw(img)
     # Outline: England's coast and land border (not along cut areas), and the edge of each cut area
     outline_w = max(2, int(1.5 * S))
-    for f in units["features"]:
-        if f["properties"].get("NAME") == "England":
-            for poly in geo_polys(f["geometry"]):
-                ring = poly[0] + [poly[0][0]]
-                for a, b in zip(ring, ring[1:]):
-                    if not is_cut(*a) and not is_cut(*b):
-                        d.line([px(*a), px(*b)], fill=INK, width=outline_w)
+    for ring in coast:
+        ring = ring + [ring[0]]
+        for a, b in zip(ring, ring[1:]):
+            if not is_cut(*a) and not is_cut(*b):
+                d.line([px(*a), px(*b)], fill=INK, width=outline_w)
     for a in CUT:
         d.line([px(lon, lat) for lon, lat in a["polygon"][:a["border_points"]]], fill=INK, width=outline_w, joint="curve")
 
@@ -507,7 +522,7 @@ def main():
               f"abbeys, priories & friaries {counts.get('Abbey', 0)}  /  cathedrals {counts.get('Cathedral', 0)}  /  "
               f"landmarks {counts.get('Landmark', 0)}  /  nature {counts.get('Nature', 0)}  /  battles {counts.get('Battle', 0)}  /  "
               f"villages {counts.get('Village', 0)}.\n"
-              f"Brown lines: the {len(roads)} main roads (thicker: the great Roman-built roads). Rivers: the {len(rivers)} main rivers, dashed where boats went in 1455. Not shown: Devon & Cornwall (later update), Wales and Scotland (DLC). "
+              f"Brown lines: the {len(roads)} main roads (thicker: the great Roman-built roads). Rivers: the {len(rivers)} main rivers at their game width, darker where boats went in 1455. Not shown: Devon & Cornwall (later update), Wales and Scotland (DLC). Terrain: the game's own heights (tints: lowland, hills, uplands, mountains; contours every 50 m of game height). "
               f"Data: Natural Earth, OpenStreetMap contributors, Wikidata, AWS Terrain Tiles.")
     d.rectangle([0, H - MARGIN + 1, W, H], fill=SEA)            # clean strip under the map frame for the legend
     d.multiline_text((MARGIN, H - MARGIN + int(4 * S)), legend, font=font("EBGaramond-Italic", 18), fill=INK, spacing=int(4 * S))

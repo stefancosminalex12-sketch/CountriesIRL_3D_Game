@@ -16,7 +16,12 @@ ROOT = "C:/Dev/CountriesIRL_3D_Game"
 LAT0, LON0 = 53.0, -1.9
 KX = 111.32 * math.cos(math.radians(LAT0))
 KY = 110.57
-SIMPLIFY_KM = 0.9          # Douglas-Peucker tolerance: only the big bends survive
+COMPRESSION = 12.0         # distances in the game (1:12)
+WIDTH_SCALE = 3.0          # river widths in the game (1:3, like towns)
+# Real width of the river (m) at its source and at its mouth, by size: 1 great, 2 main, 3 smaller
+REAL_WIDTH_M = {1: (8, 150), 2: (5, 60), 3: (3, 25)}
+BEND_WIDTHS = 4            # a river cannot bend tighter than ~4 of its own widths, so smaller bends are smoothed
+MIN_SIMPLIFY_KM = 1.0      # never keep bends smaller than this (real km; ~80 m in the game)
 GAP_KM = 6.0               # pieces of the same river closer than this are joined (OSM misses some stretches)
 
 
@@ -176,7 +181,9 @@ def main():
             stem, seed_off = main_stem(pieces_of(r["OsmName"]), seed, target)
             if parent != "sea":                                # end exactly on the river it joins
                 stem.append(nearest_on_line(stem[-1], built[parent]["km"])[1])
-            smooth = chaikin(douglas_peucker(stem, SIMPLIFY_KM))
+            mouth_game_m = REAL_WIDTH_M[int(r["Tier"])][1] / WIDTH_SCALE
+            tolerance = max(MIN_SIMPLIFY_KM, BEND_WIDTHS * mouth_game_m * COMPRESSION / 1000)
+            smooth = chaikin(douglas_peucker(stem, tolerance))
             if r.get("StartNear"):                             # drawn only from this place down (Severn: not from Wales)
                 pl = places[r["StartNear"]]
                 start = km(float(pl["Lon"]), float(pl["Lat"]))
@@ -201,6 +208,7 @@ def main():
                     "navigable_to": r["NavigableTo"] or None,
                     "navigable_from": None if b["nav_from"] is None else round(b["nav_from"], 3),
                     "length_km": round(b["length"]), "note": r["Note"], "border": r.get("Border") == "1",
+                    "width_game_m": [round(w / WIDTH_SCALE, 1) for w in REAL_WIDTH_M[int(r["Tier"])]],
                     "line": [[round(v, 4) for v in lonlat(*p)] for p in b["km"]]})
     json.dump({"source": "(c) OpenStreetMap contributors (ODbL), simplified", "rivers": out},
               open(f"{ROOT}/Data/World/Rivers_England1455.json", "w", encoding="utf-8"), indent=1)
