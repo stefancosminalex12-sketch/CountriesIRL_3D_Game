@@ -16,8 +16,12 @@ ROOT = "C:/Dev/CountriesIRL_3D_Game"
 LAT0, LON0 = 53.0, -1.9
 KX = 111.32 * math.cos(math.radians(LAT0))
 KY = 110.57
-COMPRESSION = 12.0         # distances in the game (1:12)
-WIDTH_SCALE = 3.0          # river widths in the game (1:3, like towns)
+WORLD = json.load(open(f"{ROOT}/Data/World/World_Release1.json", encoding="utf-8"))
+COMPRESSION = float(WORLD["compression"])        # distances in the game (1:20)
+WIDTH_SCALE = float(WORLD["river_width_scale"])  # river widths in the game (1:3, like towns)
+# Around important places the river keeps its real bends (Master file: accurate local geography): radius in real km
+DETAIL_RADIUS_KM = {"City": 4.0, "Town": 2.5, "Castle": 1.5, "Abbey": 1.5, "Cathedral": 1.5}
+DETAIL_SIMPLIFY_KM = 0.12  # inside those zones only tiny wiggles are smoothed
 # Real width of the river (m) at its source and at its mouth, by size: 1 great, 2 main, 3 smaller
 REAL_WIDTH_M = {1: (8, 150), 2: (5, 60), 3: (3, 25)}
 BEND_WIDTHS = 4            # a river cannot bend tighter than ~4 of its own widths, so smaller bends are smoothed
@@ -64,6 +68,21 @@ def douglas_peucker(pts, tol):
     if far <= tol:
         return [a, b]
     return douglas_peucker(pts[:idx + 1], tol)[:-1] + douglas_peucker(pts[idx:], tol)
+
+
+def simplify_with_detail(stem, tolerance, detail_points):
+    """Douglas-Peucker with two tolerances: the river's own away from places, almost none inside the zones around
+    important places (cities, towns, castles, abbeys), so their real bends survive (Durham's loop, the Thames at
+    Westminster)."""
+    near = [any(dist(p, c) < r for c, r in detail_points) for p in stem]
+    out, start = [], 0
+    for i in range(1, len(stem) + 1):
+        if i == len(stem) or near[i] != near[start]:
+            run = stem[max(0, start - 1):i]                    # overlap one point so the pieces join
+            part = douglas_peucker(run, DETAIL_SIMPLIFY_KM if near[start] else tolerance)
+            out += part if not out else part[1:]
+            start = i
+    return out
 
 
 def chaikin(pts, rounds=2):
@@ -160,6 +179,11 @@ def main():
     coast = [km(*c) for c, o in owners.items() if len(o) == 1 and 49.8 < c[1] < 56.0 and c[0] > -6.0]
 
     places = {r["Id"]: r for r in csv.DictReader(open(f"{ROOT}/Data/World/Places_England1455.csv", encoding="utf-8"))}
+    # The first release's important places (same selection as the map): rivers keep their real bends around them
+    import draw_plan_map
+    units = json.load(open(f"{ROOT}/Art/MapData/ne_10m_admin_0_map_units.geojson", encoding="utf-8"))
+    detail_points = [(km(float(p["Lon"]), float(p["Lat"])), DETAIL_RADIUS_KM[p["Type"]])
+                     for p in draw_plan_map.release_places(places, units).values() if p["Type"] in DETAIL_RADIUS_KM]
     defs = list(csv.DictReader(open(f"{ROOT}/Data/World/Rivers_England1455.csv", encoding="utf-8")))
     built = {}
     # Rivers into the sea first, then each tributary after the river it joins
@@ -183,7 +207,7 @@ def main():
                 stem.append(nearest_on_line(stem[-1], built[parent]["km"])[1])
             mouth_game_m = REAL_WIDTH_M[int(r["Tier"])][1] / WIDTH_SCALE
             tolerance = max(MIN_SIMPLIFY_KM, BEND_WIDTHS * mouth_game_m * COMPRESSION / 1000)
-            smooth = chaikin(douglas_peucker(stem, tolerance))
+            smooth = chaikin(simplify_with_detail(stem, tolerance, detail_points))
             if r.get("StartNear"):                             # drawn only from this place down (Severn: not from Wales)
                 pl = places[r["StartNear"]]
                 start = km(float(pl["Lon"]), float(pl["Lat"]))

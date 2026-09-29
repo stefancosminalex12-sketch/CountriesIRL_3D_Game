@@ -16,17 +16,18 @@ from PIL import Image
 
 ROOT = "C:/Dev/CountriesIRL_3D_Game"
 DATA = f"{ROOT}/Art/MapData"
-COMPRESSION = 12.0
+COMPRESSION = float(json.load(open(f"{ROOT}/Data/World/World_Release1.json", encoding="utf-8"))["compression"])
 BOX = (-3.8, 50.5, 1.8, 55.83)          # lon/lat of the first release's England (as the planning map)
 LAT0, LON0 = 53.0, -1.9
 KX = 111.32 * math.cos(math.radians(LAT0))
 KY = 110.57
 CELL_KM = 0.25                          # real km per heightmap pixel (~21 m of game world)
-SMOOTH_KM = 1.2                         # real bumps smaller than this are smoothed away
+SMOOTH_KM = 1.6                         # real bumps smaller than this are smoothed away (~80 m in the game)
 
 # Real height (m) -> game height (m): a curve, not one factor. Pairs of (real, game); straight lines in between.
 #   vales and fens (0-60 m) nearly flat, hills and downs (60-300 m) gentle, moors and mountains (300 m+) steeper.
-HEIGHT_CURVE = [(0, 0), (60, 6), (150, 22), (300, 55), (500, 120), (700, 190), (1000, 280)]
+# (Set for 1:20 on 2026-09-29: three quarters of the 1:12 curve, so slopes stay walkable with the land squeezed more.)
+HEIGHT_CURVE = [(0, 0), (60, 4.5), (150, 16.5), (300, 41), (500, 90), (700, 142), (1000, 210)]
 
 
 def game_height(real):

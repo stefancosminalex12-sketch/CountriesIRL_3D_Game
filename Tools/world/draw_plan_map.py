@@ -1,7 +1,7 @@
 """
 Draw the planning map of the game world: England in 1455 in the style of the Gough Map (parchment, green sea and
 rivers, red roads, little buildings for towns), with shaded hills and a grid in GAME kilometres.
-    python Tools/world/draw_plan_map.py [compression]      (default 12: 12 real km = 1 game km)
+    python Tools/world/draw_plan_map.py [compression]      (default: Data/World/World_Release1.json, now 20)
 Reads Data/World/Places_England1455.csv and the data in Art/MapData (Natural Earth, OpenStreetMap rivers,
 AWS Terrain Tiles; fetch with Tools/world/fetch_map_data.py).
 Writes Docs/World/plan_map_england_1455.png (full size) and prints the world size.
@@ -19,7 +19,8 @@ from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
 Image.MAX_IMAGE_PIXELS = None
 ROOT = "C:/Dev/CountriesIRL_3D_Game"
 DATA = f"{ROOT}/Art/MapData"
-COMPRESSION = float(sys.argv[1]) if len(sys.argv) > 1 else 12.0
+WORLD = json.load(open(f"{ROOT}/Data/World/World_Release1.json", encoding="utf-8"))
+COMPRESSION = float(sys.argv[1]) if len(sys.argv) > 1 else float(WORLD["compression"])   # real km per game km
 
 # Projection: equirectangular around the middle of England, in real kilometres
 LAT0, LON0 = 53.0, -1.9
@@ -408,8 +409,11 @@ def road_in_release(line):
     return out
 
 
+GRID_KM = 2      # grid squares and ruler numbers every 2 game km
+
+
 def draw_rulers(d, box, game_km_px):
-    """Rulers in game km along the bottom and the left of the map: a tick every km, a number every 5 km,
+    """Rulers in game km along the bottom and the left of the map: a tick every km, a number every GRID_KM,
     zero at England's west and south edges, the full length at the far end."""
     x0, y0, x1, y1 = box
     f, fb = font("EBGaramond-Regular", 20), font("EBGaramond-SemiBold", 24)
@@ -418,7 +422,7 @@ def draw_rulers(d, box, game_km_px):
     d.line([(x0, yb), (x1, yb)], fill=INK, width=3)
     for k in range(int(width_km) + 1):
         X = x0 + k * game_km_px
-        big = k % 5 == 0
+        big = k % GRID_KM == 0
         d.line([(X, yb), (X, yb + (22 if big else 11))], fill=INK, width=3 if big else 2)
         if big:
             d.text((X, yb + 26), f"{k}", font=f, fill=INK, anchor="mt")
@@ -428,13 +432,13 @@ def draw_rulers(d, box, game_km_px):
     d.line([(xl, y0), (xl, y1)], fill=INK, width=3)
     for k in range(int(height_km) + 1):
         Y = y1 - k * game_km_px
-        big = k % 5 == 0
+        big = k % GRID_KM == 0
         d.line([(xl, Y), (xl - (22 if big else 11), Y)], fill=INK, width=3 if big else 2)
         if big:
             d.text((xl - 28, Y), f"{k}", font=f, fill=INK, anchor="rm")
     d.line([(xl - 22, y0), (xl + 8, y0)], fill=INK, width=4)
     d.text((xl - 28, y0), f"{height_km:.1f} km", font=fb, fill=INK, anchor="rm")
-    d.text((x0, yb + 52), "game kilometres (1 game km = 12 real km)", font=font("EBGaramond-Italic", 20), fill=INK, anchor="lt")
+    d.text((x0, yb + 52), f"game kilometres (1 game km = {COMPRESSION:g} real km)", font=font("EBGaramond-Italic", 20), fill=INK, anchor="lt")
 
 
 def main():
@@ -507,16 +511,16 @@ def main():
     places = {i: r for i, r in release_places(all_places, units).items() if r.get("CastleType") != "town"}  # town castles: part of the town
     P = lambda i: px(float(all_places[i]["Lon"]), float(all_places[i]["Lat"]))
 
-    # Main roads of 1455 (Tools/world/build_roads.py). Drawn 3x their real width so they show: at this scale
-    # 1 px is ~6.4 m in the game (roads keep their real width), so a true 8 m road would be barely one pixel.
+    # Main roads of 1455 (Tools/world/build_roads.py). Drawn 2x their real width so they show (roads keep their
+    # real width in the game; at 1:20 one pixel is ~3.8 m).
     roads = json.load(open(f"{ROOT}/Data/World/Roads_England1455.json", encoding="utf-8"))["roads"]
     px_per_game_m = PX_PER_KM * COMPRESSION / 1000
     for road in roads:
-        w = max(2, round(road["width_m"] * 3 * px_per_game_m))
+        w = max(2, round(road["width_m"] * 2 * px_per_game_m))
         d.line([px(*p) for p in road_in_release(road["line"])], fill=ROAD, width=w, joint="curve")
 
     # Grid in GAME kilometres, measured from England's west and south edges (the rulers' zero)
-    step_game = 5
+    step_game = GRID_KM
     step_real = step_game * COMPRESSION
     game_km_px = PX_PER_KM * COMPRESSION
     land_box = land.getbbox()                                  # playable England, in map pixels
