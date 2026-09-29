@@ -368,13 +368,13 @@ TSharedRef<SWidget> SCIRLGameMenu::MakeGameTab()
 			]
 			+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 0.f, 0.f, 12.f))
 			[
-				MakeMenuButton(LOCTEXT("Settings", "Settings"),
-					FOnClicked::CreateLambda([this]() { OpenSettings(); return FReply::Handled(); }), &SettingsButton)
+				MakeMenuButton(LOCTEXT("MainMenu", "Main Menu"),
+					FOnClicked::CreateLambda([this]() { OnMainMenuRequested.ExecuteIfBound(); return FReply::Handled(); }))
 			]
 			+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 0.f, 0.f, 12.f))
 			[
-				MakeMenuButton(LOCTEXT("MainMenu", "Main Menu"),
-					FOnClicked::CreateLambda([this]() { OnMainMenuRequested.ExecuteIfBound(); return FReply::Handled(); }))
+				MakeMenuButton(LOCTEXT("Settings", "Settings"),
+					FOnClicked::CreateLambda([this]() { OpenSettings(); return FReply::Handled(); }), &SettingsButton)
 			]
 			+ SVerticalBox::Slot().AutoHeight()
 			[
