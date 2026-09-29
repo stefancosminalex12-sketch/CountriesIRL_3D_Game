@@ -309,6 +309,14 @@ def label_rivers(img, rivers, obstacles, fnt, land):
 CUT = json.load(open(f"{ROOT}/Data/World/World_Release1.json", encoding="utf-8"))["cut_areas"]
 
 
+def release_decisions():
+    """Id -> decision from Data/World/Places_Release1.csv ("cut", "village", "part_of:<id>")."""
+    path = f"{ROOT}/Data/World/Places_Release1.csv"
+    if not os.path.exists(path):
+        return {}
+    return {r["Id"]: r["Decision"] for r in csv.DictReader(open(path, encoding="utf-8"))}
+
+
 def in_poly(lon, lat, poly):
     inside = False
     for (x1, y1), (x2, y2) in zip(poly, poly[1:] + poly[:1]):
@@ -410,6 +418,13 @@ def main():
     wales = [poly[0] for f in units["features"] if f["properties"].get("NAME") == "Wales" for poly in geo_polys(f["geometry"])]
     shown = lambda r: not is_cut(float(r["Lon"]), float(r["Lat"])) and not any(in_poly(float(r["Lon"]), float(r["Lat"]), w) for w in wales)
     places = {i: r for i, r in all_places.items() if shown(r)}
+    for pid, decision in release_decisions().items():         # the first release's selection of places
+        if pid not in places:
+            continue
+        if decision == "village":
+            places[pid] = dict(places[pid], Type="Village", Importance="1")
+        else:                                                  # "cut", or "part_of:<site>" (drawn with that site)
+            del places[pid]
     P = lambda i: px(float(all_places[i]["Lon"]), float(all_places[i]["Lat"]))
 
     # Main roads of 1455 (Tools/world/build_roads.py). Drawn 3x their real width so they show: at this scale
