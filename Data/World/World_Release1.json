@@ -1,0 +1,16 @@
+{
+  "note": "What the first release leaves out. Nothing is deleted: places, rivers and roads in a cut area stay in the data and come back with a later update.",
+  "cut_areas": [
+    {
+      "id": "west_country",
+      "name": "Devon & Cornwall",
+      "comes_back": "West Country update (Courtenay-Bonville feud, Exeter, Plymouth, Dartmoor)",
+      "border_note": "Devon's border with Somerset and Dorset, from County Gate on the Exmoor coast to the sea just west of Lyme Regis (approximate, within ~2 km). The cut area is everything west of it.",
+      "polygon": [
+        [-3.745, 51.235], [-3.73, 51.17], [-3.64, 51.10], [-3.61, 51.03], [-3.50, 50.99], [-3.38, 50.97],
+        [-3.25, 50.945], [-3.12, 50.92], [-3.03, 50.87], [-2.97, 50.80], [-2.95, 50.72],
+        [-2.95, 49.5], [-7.0, 49.5], [-7.0, 51.30], [-3.745, 51.30]
+      ]
+    }
+  ]
+}
