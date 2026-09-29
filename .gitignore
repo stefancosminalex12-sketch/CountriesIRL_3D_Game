@@ -48,3 +48,6 @@ desktop.ini
 
 # Third-party art packs: downloaded originals stay local (see Art/ThirdParty/README.md)
 Art/ThirdParty/*/
+
+# Python
+__pycache__/
