@@ -204,9 +204,35 @@ def load_icons():
     return icons
 
 
-def draw_symbol(img, d, icons, kind, imp, X, Y):
+# True size on the map: a place's footprint in the game (Data/World/Footprints_Release1.csv, else these defaults).
+# Towns and villages at the town scale (1:3); castles at real size; cathedrals and abbeys by the length of the church.
+FOOTPRINT_DEFAULT_M = {("City", 3): 300, ("City", 2): 220, ("City", 1): 180, ("Town", 3): 170, ("Town", 2): 170,
+                       ("Town", 1): 110, ("Village", 1): 70, ("Castle", 3): 200, ("Castle", 2): 90, ("Castle", 1): 30,
+                       ("Abbey", 3): 140, ("Abbey", 2): 90, ("Abbey", 1): 45, ("Cathedral", 3): 150, ("Cathedral", 2): 130,
+                       ("Cathedral", 1): 110}
+# ...but never smaller than this on the map (px), so small places stay visible
+FOOTPRINT_MIN_PX = {"City": 22, "Town": 14, "Village": 8, "Castle": 9, "Abbey": 9, "Cathedral": 11}
+
+
+def load_footprints():
+    path = f"{ROOT}/Data/World/Footprints_Release1.csv"
+    if not os.path.exists(path):
+        return {}
+    return {r["Id"]: float(r["FootprintM"]) for r in csv.DictReader(open(path, encoding="utf-8"))}
+
+
+def symbol_size(pid, kind, imp, footprints):
+    """Size of a place's symbol in map pixels: its true game footprint, or a fixed symbol for battles, landmarks,
+    nature and areas (they have no building footprint)."""
+    if kind not in FOOTPRINT_MIN_PX:
+        return ICON_SIZE.get((kind, imp), 12) * S
+    metres = footprints.get(pid, FOOTPRINT_DEFAULT_M.get((kind, imp), 80))
+    return max(FOOTPRINT_MIN_PX[kind], metres * PX_PER_KM * COMPRESSION / 1000)
+
+
+def draw_symbol(img, d, icons, kind, imp, X, Y, size=None):
     """Draws a place's symbol and returns its radius (for label placement)."""
-    size = ICON_SIZE.get((kind, imp), 12) * S
+    size = size if size is not None else ICON_SIZE.get((kind, imp), 12) * S
     icon = icons.get(icon_name(kind, imp))
     if icon is not None:
         scale = size / max(icon.size)
@@ -519,7 +545,10 @@ def main():
 
     settlement_names = {r["Name"] for r in places.values() if r["Type"] in ("City", "Town", "Village")}
     order = {"Village": 0, "Abbey": 1, "Nature": 2, "Landmark": 3, "Castle": 4, "Cathedral": 5, "Battle": 6, "Town": 7, "City": 8}
-    for row in sorted(places.values(), key=lambda r: (order.get(r["Type"], 0), int(r["Importance"]))):
+    footprints = load_footprints()
+    # Biggest symbols first, so smaller places next to them (the Tower beside London) are drawn on top
+    size_of = lambda pid, r: symbol_size(pid, r["Type"], int(r["Importance"]), footprints)
+    for pid, row in sorted(places.items(), key=lambda kv: (-size_of(*kv), order.get(kv[1]["Type"], 0))):
         kind, imp = row["Type"], int(row["Importance"])
         X, Y = px(float(row["Lon"]), float(row["Lat"]))
         name = row["Name"]
@@ -527,7 +556,7 @@ def main():
             big = imp >= 2
             labels.append((1 + imp, name.upper() if big else name, f_area_big if big else f_area, (110, 84, 58), X, Y, 0, False, True))
             continue
-        r = draw_symbol(img, d, icons, kind, imp, X, Y)
+        r = draw_symbol(img, d, icons, kind, imp, X, Y, symbol_size(pid, kind, imp, footprints))
         if kind in ("City", "Town", "Cathedral", "Battle") or (kind == "Castle" and imp >= 2) or imp >= 2:
             obstacles.append((X - r, Y - r, X + r, Y + r))
         if kind in ("City", "Town"):
