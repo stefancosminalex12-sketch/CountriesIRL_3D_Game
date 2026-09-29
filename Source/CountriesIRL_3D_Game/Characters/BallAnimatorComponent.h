@@ -98,27 +98,13 @@ protected:
 
 	virtual void BeginPlay() override;
 
-	/** How long one step takes, walking and running (seconds). About a person's rhythm: ~2.8 steps a second
-	 *  walking and ~3.3 running (was 0.22 / 0.16: 4.5 and 6 quick little steps a second) */
+	/** How long one step takes, walking and running (seconds) */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
-	FVector2D StepDuration = FVector2D(0.36f, 0.30f);
-
-	/** How far ahead of its resting spot a foot lands, as a share of one step's travel, walking and running.
-	 *  Runners land closer under the body and push off further behind */
-	UPROPERTY(EditAnywhere, Category="Ball|Animation")
-	FVector2D StepLead = FVector2D(0.5f, 0.3f);
+	FVector2D StepDuration = FVector2D(0.22f, 0.16f);
 
 	/** How high feet lift during a step, walking and running */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
-	FVector2D FootLift = FVector2D(9.f, 20.f);
-
-	/** At the end of a long step the boot tilts like a real foot: heel up as it pushes off behind (turning on
-	 *  the toe), toe up as it lands ahead (turning on the heel). Largest tilts in degrees */
-	UPROPERTY(EditAnywhere, Category="Ball|Animation")
-	float MaxToeOff = 50.f;
-
-	UPROPERTY(EditAnywhere, Category="Ball|Animation")
-	float MaxHeelStrike = 25.f;
+	FVector2D FootLift = FVector2D(8.f, 15.f);
 
 	/** When standing still, a foot this far from its resting spot takes a small settling step */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
@@ -130,7 +116,7 @@ protected:
 
 	/** How much the body rises with each step (fraction of the step's lift) */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
-	float BodyBobPerLift = 0.3f;
+	float BodyBobPerLift = 0.4f;
 
 	/** Forward lean at full run (degrees) */
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
@@ -153,20 +139,17 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ball|Legs")
 	float LegThickness = 14.f;
 
-	/** Thigh (hip to knee) and shin (knee to the top of the boot) lengths in cm: a person's legs (user,
-	 *  2026-09-30: "1.70+ m, so like normal people's"). Hips and knees sit hidden inside the ball, as a person's
-	 *  would inside a costume, so what shows is the lower leg swinging from the knee. Standing, the leg is
-	 *  almost straight (was 21 + 15.5 cm from a low hip: every step folded the short knee sharply) */
+	/** Thigh (hip to knee) and shin (knee to ankle) lengths in cm. The hip sits inside the ball, so only part
+	 *  of the thigh shows. Standing, the leg is almost straight; as a foot lifts the knee bends forward */
 	UPROPERTY(EditAnywhere, Category="Ball|Legs")
-	float ThighLength = 56.f;
+	float ThighLength = 21.f;
 
 	UPROPERTY(EditAnywhere, Category="Ball|Legs")
-	float ShinLength = 30.f;
+	float ShinLength = 15.5f;
 
-	/** How far below the ball's centre the hips are, as a share of the ball's radius (negative = above). The long
-	 *  hidden leg lets the feet take a person's long strides */
+	/** How far below the ball's centre the hips are, as a share of the ball's radius */
 	UPROPERTY(EditAnywhere, Category="Ball|Legs")
-	float HipDrop = -0.15f;
+	float HipDrop = 0.6f;
 
 	/** Colour of the legs (wool hose) */
 	UPROPERTY(EditAnywhere, Category="Ball|Legs")

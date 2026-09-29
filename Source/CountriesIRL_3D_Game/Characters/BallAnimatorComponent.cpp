@@ -11,7 +11,7 @@
 namespace
 {
 	/** Feet further than this from where they belong (teleport, respawn) snap instead of stepping */
-	constexpr float FootSnapDistance = 260.f;
+	constexpr float FootSnapDistance = 150.f;
 
 	float Side(int32 Index) { return Index == 0 ? -1.f : 1.f; }
 }
@@ -249,13 +249,12 @@ void UBallAnimatorComponent::UpdateFeet(float DeltaTime, float SpeedAlpha, bool 
 	const bool bMoving = Speed > 10.f;
 	const float StepTime = FMath::Lerp(StepDuration.X, StepDuration.Y, SpeedAlpha);
 
-	// Where each foot wants to land: its resting spot, part of a step ahead in the direction of travel
-	const float Lead = FMath::Lerp(StepLead.X, StepLead.Y, SpeedAlpha);
+	// Where each foot wants to land: its resting spot, half a step ahead in the direction of travel
 	FVector Landing[2];
 	for (int32 Index = 0; Index < 2; ++Index)
 	{
 		const FVector Rest = FootRestWorld(Index);
-		Landing[Index] = KeepOnOwnSide(Index, Rest + Velocity2D * (StepTime * Lead));
+		Landing[Index] = KeepOnOwnSide(Index, Rest + Velocity2D * (StepTime * 0.5f));
 		// Each foot finds the ground exactly where it will land (steps, slopes, bodies, edges)
 		Landing[Index].Z = GroundZAt(Landing[Index], Rest.Z);
 	}
@@ -387,8 +386,7 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 			? FVector(80.f, Side(Index) * 14.f, GroundZ + FootSize.Z * 0.5f)
 			: FVector(Radius + 8.f, Side(Index) * 24.f, GroundZ + FootSize.Z * 0.5f);
 		Local = FMath::Lerp(Local, DeadFoot, DeadBlend);
-		// Flat again every frame; UpdateLegs tilts it when a long step needs it
-		Boots[Index].Root->SetRelativeLocationAndRotation(Local, FRotator::ZeroRotator);
+		Boots[Index].Root->SetRelativeLocation(Local);
 	}
 
 	// Guard: fists up in front of the face
@@ -537,9 +535,6 @@ void UBallAnimatorComponent::UpdateLegs()
 		{
 			Part->SetVisibility(bShow);
 		}
-		// In first-person the ball is hidden: the thigh and knee (inside it) would hang in the air under the camera
-		Boot.Thigh->SetOwnerNoSee(bFirstPersonHands);
-		Boot.Knee->SetOwnerNoSee(bFirstPersonHands);
 		if (!bShow)
 		{
 			continue;
@@ -547,40 +542,7 @@ void UBallAnimatorComponent::UpdateLegs()
 
 		const FVector Hip = Body.TransformPosition(FVector(0.f, Side(Index) * FootHalfSpacing, -Ball->GetBallRadius() * HipDrop));
 		// Into the top of the boot's shaft, so the joint never shows a gap
-		const FVector AnkleLocal(-5.f, 0.f, BootShaftTop - 3.f);
-		FVector AnkleTarget = Boot.Root->GetComponentTransform().TransformPosition(AnkleLocal);
-
-		// The end of a long step is out of the leg's reach: tilt the boot like a real foot instead of dragging it.
-		// Behind the body the heel comes up (turning on the toe), ahead the toe comes up (turning on the heel)
-		const float MaxReach = Thigh + Shin - 0.01f;
-		const bool bOnTheGround = AirBlend < 0.5f && RideBlend < 0.01f;
-		if (bOnTheGround && FVector::Dist(Hip, AnkleTarget) > MaxReach)
-		{
-			const FTransform Flat = Boot.Root->GetComponentTransform();
-			const bool bAhead = FVector::DotProduct(AnkleTarget - Hip, Forward) > 0.f;
-			const FVector Pivot = Flat.TransformPosition(FVector((bAhead ? -0.5f : 0.5f) * FootSize.X, 0.f, -0.5f * FootSize.Z));
-			const FVector Axis = Flat.GetUnitAxis(EAxis::Y);
-			const FVector FlatAnkle = AnkleTarget;
-			auto AnkleAt = [&](float Angle) { return Pivot + FQuat(Axis, Angle).RotateVector(FlatAnkle - Pivot); };
-
-			// Turn the way that lifts the heel or toe (the other way would push it into the ground)
-			const float Probe = FMath::DegreesToRadians(5.f);
-			const float Sign = FVector::Dist(Hip, AnkleAt(Probe)) < FVector::Dist(Hip, AnkleAt(-Probe)) ? 1.f : -1.f;
-			// The smallest tilt that brings the ankle back into reach, up to the most a foot tilts
-			float Low = 0.f;
-			float High = FMath::DegreesToRadians(bAhead ? MaxHeelStrike : MaxToeOff);
-			if (FVector::Dist(Hip, AnkleAt(Sign * High)) <= MaxReach)
-			{
-				for (int32 Iteration = 0; Iteration < 12; ++Iteration)
-				{
-					const float Mid = (Low + High) * 0.5f;
-					(FVector::Dist(Hip, AnkleAt(Sign * Mid)) <= MaxReach ? High : Low) = Mid;
-				}
-			}
-			const FQuat Tilt(Axis, Sign * High);
-			Boot.Root->SetWorldLocationAndRotation(Pivot + Tilt.RotateVector(Flat.GetLocation() - Pivot), Tilt * Flat.GetRotation());
-			AnkleTarget = AnkleAt(Sign * High);
-		}
+		const FVector AnkleTarget = Boot.Root->GetComponentTransform().TransformPosition(FVector(-5.f, 0.f, BootShaftTop - 3.f));
 
 		// Two-bone IK: fixed thigh and shin lengths; the knee bends forward in the plane of the leg
 		FVector ToAnkle = AnkleTarget - Hip;
