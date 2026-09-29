@@ -31,7 +31,7 @@ PX_PER_KM = 13.0                     # image scale (real km)
 S = 2.25                             # size factor for symbols and text (designed at 4 px/km, kept when zooming in)
 MARGIN = 340                         # left/right margin: room for the left ruler's numbers
 TOP = 760                            # title and scale lines
-BOTTOM = 880                         # bottom ruler and the legend
+BOTTOM = 960                         # bottom ruler and the legend
 
 PARCH = (247, 239, 212)          # light yellowish paper
 PARCH_DARK = (236, 224, 190)
@@ -416,6 +416,19 @@ def draw_dashed(d, pts, colour, width, dash, gap):
                 on, left = not on, (gap if on else dash)
 
 
+def draw_crossing(d, kind, X, Y):
+    """Stone bridge: solid dark bar; timber bridge: open bar; ferry: blue diamond; ford: pale ring."""
+    r = 8
+    if kind == "stone bridge":
+        d.rectangle([X - r, Y - r * 0.55, X + r, Y + r * 0.55], fill=INK, outline=PARCH, width=2)
+    elif "bridge" in kind:
+        d.rectangle([X - r, Y - r * 0.55, X + r, Y + r * 0.55], fill=PARCH, outline=INK, width=3)
+    elif kind == "ferry":
+        d.polygon([(X, Y - r), (X + r, Y), (X, Y + r), (X - r, Y)], fill=(40, 70, 110), outline=PARCH)
+    else:
+        d.ellipse([X - r * 0.8, Y - r * 0.8, X + r * 0.8, Y + r * 0.8], fill=(200, 222, 214), outline=INK, width=2)
+
+
 def road_in_release(line):
     """The part of a road before it enters a cut area, ending exactly at the edge."""
     out = [line[0]]
@@ -554,6 +567,12 @@ def main():
         w = max(2, round(road["width_m"] * 2 * px_per_game_m))
         d.line([px(*p) for p in road_in_release(road["line"])], fill=ROAD, width=w, joint="curve")
 
+    # River crossings (Tools/world/build_crossings.py): small symbols on the river
+    crossings_path = f"{ROOT}/Data/World/Crossings_England1455.json"
+    crossings = json.load(open(crossings_path, encoding="utf-8"))["crossings"] if os.path.exists(crossings_path) else []
+    for c in crossings:
+        draw_crossing(d, c["kind"], *px(c["lon"], c["lat"]))
+
     # Grid in GAME kilometres, measured from England's west and south edges (the rulers' zero)
     step_game = GRID_KM
     step_real = step_game * COMPRESSION
@@ -664,6 +683,7 @@ def main():
               f"landmarks {counts.get('Landmark', 0)}  /  nature {counts.get('Nature', 0)}\n"
               f"Icons at their true size in the game.  Dark brown: the {len(roads)} main roads (6-8 m).  Light brown: {sum(1 for r in local if r["class"] == "lane")} lanes (4 m), dashed: {sum(1 for r in local if r["class"] == "track")} tracks (2.5 m).\n"
               f"Rivers: the {len(rivers)} main rivers, 1.5x their game width, darker where boats went in 1455\n"
+              f"Crossings ({len(crossings)}): dark bar = stone bridge, open bar = timber bridge, blue diamond = ferry, pale ring = ford\n"
               f"Terrain: the game's own heights (contours every 50 m).  Not shown: Devon & Cornwall (later update), Wales and Scotland (DLC)\n"
               f"Data: Natural Earth, OpenStreetMap contributors, Wikidata, AWS Terrain Tiles")
     d.rectangle([0, H - BOTTOM + 1, W, H], fill=SEA)            # clean strip under the map frame for the legend
