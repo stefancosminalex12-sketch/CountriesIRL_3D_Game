@@ -1,0 +1,122 @@
+Id,Name,Region,From,Reason,Lat,Lon,Wiki
+v_bamburgh,Bamburgh,East March & the Palatinate,new,Village under the royal castle; besieged 1464,55.6040,-1.7220,Bamburgh
+v_warkworth,Warkworth,East March & the Palatinate,new,Percy castle village on the Coquet,55.3450,-1.6110,"Warkworth, Northumberland"
+v_norham,Norham,East March & the Palatinate,new,Border castle on the Tweed (Prince-Bishop),55.7180,-2.1580,Norham
+v_alnwick,Alnwick,East March & the Palatinate,new,Percy seat: the market below Alnwick Castle,55.4134,-1.7069,Alnwick
+morpeth,Morpeth,East March & the Palatinate,cut town,Great North Road stop; Wansbeck crossing,55.1680,-1.6880,
+v_chester_le_street,Chester-le-Street,East March & the Palatinate,new,Great North Road stop; old home of St Cuthbert,54.8594,-1.5699,Chester-le-Street
+hartlepool,Hartlepool,East March & the Palatinate,cut town,Fishing and trading port,54.6900,-1.2100,
+v_whickham,Whickham,East March & the Palatinate,new,Coal pits on the Tyne (work: mining),54.9460,-1.6761,Whickham
+appleby,Appleby,West March,cut town,Clifford castle village; Stainmore road,54.5780,-2.4890,
+v_brough,Brough,West March,new,Castle on the Stainmore road,54.5256,-2.3188,"Brough, Cumbria"
+v_shap,Shap,West March,new,Abbey and the high pass on the Carlisle road,54.5290,-2.6760,Shap
+v_cockermouth,Cockermouth,West March,new,Percy castle village,54.6613,-3.3620,Cockermouth
+v_keswick,Keswick,West March,new,Lakes village under Skiddaw,54.6008,-3.1375,"Keswick, Cumbria"
+v_brampton,Brampton,West March,new,Village below Naworth (the Dacres),54.9409,-2.7329,"Brampton, Carlisle"
+v_bowness_on_windermere,Bowness-on-Windermere,West March,new,Ferry and fishing on Windermere,54.3644,-2.9181,Bowness-on-Windermere
+wensley,Wensley,Richmondshire & the North Riding,existing village,The dale's old market and church,54.302,-1.860,
+castle_bolton,Castle Bolton,Richmondshire & the North Riding,existing village,Village of Bolton Castle (the Scropes),54.3220,-1.9530,
+askrigg,Askrigg,Richmondshire & the North Riding,existing village,Upper Wensleydale,54.3140,-2.0770,
+east_witton,East Witton,Richmondshire & the North Riding,existing village,By Jervaulx and Coverham abbeys,54.2640,-1.7830,
+masham,Masham,Richmondshire & the North Riding,existing village,Scrope of Masham; market; sheep,54.223,-1.656,
+v_catterick,Catterick,Richmondshire & the North Riding,new,Swale crossing on the Stainmore road,54.3770,-1.6300,"Catterick, North Yorkshire"
+northallerton,Northallerton,Richmondshire & the North Riding,cut town,Great North Road stop,54.3390,-1.4340,
+thirsk,Thirsk,Richmondshire & the North Riding,cut town,Great North Road stop,54.2330,-1.3430,
+pickering,Pickering,Richmondshire & the North Riding,cut town,Duchy castle village; the Moors,54.2460,-0.7760,
+v_helmsley,Helmsley,Richmondshire & the North Riding,new,Castle village by Rievaulx Abbey,54.2472,-1.0586,Helmsley
+v_reeth,Reeth,Richmondshire & the North Riding,new,Swaledale lead mining (work: mining),54.3892,-1.9422,Reeth
+towton,Towton,York & the Ridings,existing village,Battle of Towton 1461,53.845,-1.266,
+saxton,Saxton,York & the Ridings,existing village,Battle of Towton 1461: the Lancastrian side,53.826,-1.287,
+v_ferrybridge,Ferrybridge,York & the Ridings,new,Aire crossing; battle 1461,53.7140,-1.2810,Ferrybridge
+sandal_magna,Sandal Magna,York & the Ridings,existing village,Sandal Castle village; battle of Wakefield 1460,53.6630,-1.4870,
+leeds,Leeds,York & the Ridings,cut town,Small cloth market (Kirkstall Abbey near),53.7997,-1.5492,
+halifax,Halifax,York & the Ridings,cut town,Cloth village; the Halifax Gibbet,53.7210,-1.8600,
+sheffield,Sheffield,York & the Ridings,cut town,Cutlers below the Talbot castle,53.3811,-1.4701,
+selby,Selby,York & the Ridings,cut town,Abbey and Ouse ferry,53.7840,-1.0670,
+v_conisbrough,Conisbrough,York & the Ridings,new,The Duke of York's castle,53.4790,-1.2270,Conisbrough
+v_settle,Settle,York & the Ridings,new,Aire Gap road; Pennine sheep market,54.0681,-2.2778,"Settle, North Yorkshire"
+manchester,Manchester,Lancaster & Chester,cut town,Market around the new collegiate church,53.4808,-2.2426,
+liverpool,Liverpool,Lancaster & Chester,cut town,Small port and castle on the Mersey,53.4084,-2.9916,
+v_warrington,Warrington,Lancaster & Chester,new,The Mersey bridge on the Carlisle road,53.3900,-2.5900,Warrington
+v_wigan,Wigan,Lancaster & Chester,new,Carlisle road stop,53.5448,-2.6318,Wigan
+v_clitheroe,Clitheroe,Lancaster & Chester,new,Duchy of Lancaster castle,53.8711,-2.3916,Clitheroe
+v_lathom,Lathom,Lancaster & Chester,new,Seat of the Stanleys,53.5900,-2.8200,Lathom
+v_nantwich,Nantwich,Lancaster & Chester,new,Salt works (work: salt),53.0667,-2.5219,Nantwich
+v_kingsland,Kingsland,Welsh Marches,new,Battle of Mortimer's Cross 1461,52.2482,-2.8103,"Kingsland, Herefordshire"
+v_wigmore,Wigmore,Welsh Marches,new,Mortimer castle (York's inheritance),52.3164,-2.8612,"Wigmore, Herefordshire"
+v_leominster,Leominster,Welsh Marches,new,Priory and wool; March road,52.2282,-2.7385,Leominster
+v_ross_on_wye,Ross-on-Wye,Welsh Marches,new,Wye crossing on the March road,51.9140,-2.5870,Ross-on-Wye
+v_bridgnorth,Bridgnorth,Welsh Marches,new,Castle and Severn crossing,52.5350,-2.4195,Bridgnorth
+v_market_drayton,Market Drayton,Welsh Marches,new,Near Blore Heath 1459,52.9044,-2.4848,Market Drayton
+v_whitchurch,Whitchurch,Welsh Marches,new,March road stop; Talbot manor,52.9690,-2.6820,"Whitchurch, Shropshire"
+v_kenilworth,Kenilworth,West Midlands,new,Duchy castle; the Queen's court nearby,52.3410,-1.5660,Kenilworth
+v_coleshill,Coleshill,West Midlands,new,Chester road stop,52.4990,-1.7080,"Coleshill, Warwickshire"
+stratford,Stratford-upon-Avon,West Midlands,cut town,Avon bridge and market,52.1917,-1.7083,
+v_droitwich,Droitwich,West Midlands,new,Salt works (work: salt),52.2670,-2.1530,Droitwich Spa
+v_newcastle_under_lyme,Newcastle-under-Lyme,West Midlands,new,Road junction: Chester and Carlisle roads,53.0109,-2.2278,Newcastle-under-Lyme
+v_tutbury,Tutbury,West Midlands,new,Duchy of Lancaster castle,52.8540,-1.6860,Tutbury
+v_birmingham,Birmingham,West Midlands,new,Small market and metalworkers (a known name),52.4800,-1.9025,Birmingham
+evesham,Evesham,West Midlands,cut town,Abbey; battle of 1265,52.0920,-1.9470,
+fotheringhay_village,Fotheringhay,East Midlands,existing village,The Duke of York's castle and church,52.5270,-0.4380,
+derby,Derby,East Midlands,cut town,Small county town on the Derwent,52.922,-1.477,
+v_market_bosworth,Market Bosworth,East Midlands,new,Battle of Bosworth 1485,52.6239,-1.4017,Market Bosworth
+v_east_stoke,East Stoke,East Midlands,new,Battle of Stoke Field 1487,53.0390,-0.8780,"East Stoke, Nottinghamshire"
+v_edgcote,Edgcote,East Midlands,new,Battle of Edgecote 1469,52.1260,-1.2650,Edgcote
+v_towcester,Towcester,East Midlands,new,Watling Street stop,52.1300,-0.9900,Towcester
+v_mansfield,Mansfield,East Midlands,new,Sherwood Forest village; the Nottingham road,53.1444,-1.1964,Mansfield
+v_castleton,Castleton,East Midlands,new,Peveril Castle; Peak lead mining (work: mining),53.3440,-1.7750,"Castleton, Derbyshire"
+v_market_harborough,Market Harborough,East Midlands,new,Nottingham road stop,52.4775,-0.9206,Market Harborough
+v_tattershall,Tattershall,Lincolnshire & the Fens,new,Lord Cromwell's brick castle,53.1040,-0.1906,Tattershall
+grantham,Grantham,Lincolnshire & the Fens,cut town,Great North Road stop,52.912,-0.642,
+huntingdon,Huntingdon,Lincolnshire & the Fens,cut town,Great North Road; Great Ouse crossing,52.331,-0.183,
+peterborough,Peterborough,Lincolnshire & the Fens,cut town,Great abbey; the Nene,52.5720,-0.2430,
+grimsby,Grimsby,Lincolnshire & the Fens,cut town,Fishing port,53.5670,-0.0800,
+v_crowland,Crowland,Lincolnshire & the Fens,new,Fen abbey; eel-catchers (work: fens),52.6758,-0.1683,Crowland
+v_st_ives,St Ives,Lincolnshire & the Fens,new,Great fair on the Great Ouse,52.3344,-0.0761,"St Ives, Cambridgeshire"
+v_empingham,Empingham,Lincolnshire & the Fens,new,Battle of Losecote Field 1470,52.6664,-0.5964,Empingham
+v_caister_on_sea,Caister-on-Sea,East Anglia,new,Fastolf's castle; the siege of 1469,52.6510,1.7330,Caister-on-Sea
+v_paston,Paston,East Anglia,new,Home of the Pastons (the Paston letters),52.8578,1.4499,"Paston, Norfolk"
+v_little_walsingham,Little Walsingham,East Anglia,new,England's great pilgrimage shrine,52.8940,0.8740,Little Walsingham
+thetford,Thetford,East Anglia,cut town,Priory town,52.4130,0.7490,
+sudbury,Sudbury,East Anglia,cut town,Cloth village,52.0380,0.7310,
+v_framlingham,Framlingham,East Anglia,new,Mowbray (Duke of Norfolk) castle,52.2221,1.3434,Framlingham
+v_dunwich,Dunwich,East Anglia,new,Great port being eaten by the sea,52.2775,1.6311,Dunwich
+v_clare,Clare,East Anglia,new,The Duke of York's honour of Clare,52.0800,0.5800,"Clare, Suffolk"
+redbourn,Redbourn,London & the Home Counties,existing village,Watling Street by St Albans (battles of 1455 and 1461),51.7980,-0.3920,
+ware,Ware,London & the Home Counties,cut town,Malt barges on the Lea,51.811,-0.028,
+hertford,Hertford,London & the Home Counties,cut town,Duchy castle; Queen Margaret's,51.7959,-0.0781,
+dunstable,Dunstable,London & the Home Counties,cut town,Watling Street; the Lancastrian march of 1461,51.8860,-0.5210,
+kingston,Kingston upon Thames,London & the Home Counties,cut town,Thames bridge; coronation stone,51.4123,-0.3007,
+v_waltham_abbey,Waltham Abbey,London & the Home Counties,new,Great abbey; road north,51.6846,0.0004,Waltham Abbey
+v_castle_hedingham,Castle Hedingham,London & the Home Counties,new,De Vere (Earl of Oxford) castle,51.9910,0.6040,Castle Hedingham
+v_eton,Eton,Thames Valley,new,Henry VI's new college (1440),51.4881,-0.6092,"Eton, Berkshire"
+v_ewelme,Ewelme,Thames Valley,new,"Alice Chaucer, Duchess of Suffolk",51.6210,-1.0710,Ewelme
+v_wallingford,Wallingford,Thames Valley,new,Castle and Thames crossing,51.5990,-1.1250,"Wallingford, Oxfordshire"
+abingdon,Abingdon,Thames Valley,cut town,Great abbey; Thames,51.6708,-1.2830,
+v_woodstock,Woodstock,Thames Valley,new,Royal palace and park,51.8478,-1.3542,"Woodstock, Oxfordshire"
+v_henley_on_thames,Henley-on-Thames,Thames Valley,new,Thames river port,51.5357,-0.9030,Henley-on-Thames
+v_newbury,Newbury,Thames Valley,new,Cloth; Bristol road stop,51.4010,-1.3230,"Newbury, Berkshire"
+v_dartford,Dartford,Kent & Sussex,new,Dover road; York's rising of 1452,51.4444,0.2172,Dartford
+v_faversham,Faversham,Kent & Sussex,new,Abbey and port on the Dover road,51.3177,0.8928,Faversham
+maidstone,Maidstone,Kent & Sussex,cut town,Ragstone quarries; the Medway,51.2720,0.5290,
+v_tonbridge,Tonbridge,Kent & Sussex,new,Buckingham's castle,51.1987,0.2764,Tonbridge
+v_battle,Battle,Kent & Sussex,new,Battle Abbey (1066),50.9200,0.4800,"Battle, East Sussex"
+hastings,Hastings,Kent & Sussex,cut town,Cinque port,50.8543,0.5735,
+v_winchelsea,Winchelsea,Kent & Sussex,new,Cinque port raided by the French,50.9251,0.7088,Winchelsea
+v_herstmonceux,Herstmonceux,Kent & Sussex,new,New brick castle (1441),50.8900,0.3200,Herstmonceux
+portsmouth,Portsmouth,Solent & Salisbury Plain,cut town,Harbour and naval port,50.8058,-1.0872,
+poole,Poole,Solent & Salisbury Plain,cut town,Port,50.7150,-1.9870,
+marlborough,Marlborough,Solent & Salisbury Plain,cut town,Bristol road; castle mound,51.4200,-1.7300,
+v_beaulieu,Beaulieu,Solent & Salisbury Plain,new,"Abbey sanctuary (Queen Margaret, 1471)",50.8183,-1.4519,"Beaulieu, Hampshire"
+v_weymouth,Weymouth,Solent & Salisbury Plain,new,Where Queen Margaret landed in 1471,50.6097,-2.4547,"Weymouth, Dorset"
+v_corfe_castle,Corfe Castle,Solent & Salisbury Plain,new,Beaufort castle,50.6385,-2.0573,Corfe Castle (village)
+v_shaftesbury,Shaftesbury,Solent & Salisbury Plain,new,Great nunnery; western road,51.0059,-2.1969,Shaftesbury
+v_sherborne,Sherborne,Solent & Salisbury Plain,new,Abbey and castle; western road,50.9469,-2.5171,Sherborne
+v_chipping_campden,Chipping Campden,Severn & Cotswolds,new,Cotswold wool merchants,52.0520,-1.7790,Chipping Campden
+v_northleach,Northleach,Severn & Cotswolds,new,Cotswold wool; Gloucester road,51.8290,-1.8374,Northleach
+v_stow_on_the_wold,Stow-on-the-Wold,Severn & Cotswolds,new,Fosse Way sheep fair,51.9300,-1.7225,Stow-on-the-Wold
+v_berkeley,Berkeley,Severn & Cotswolds,new,Berkeley Castle (the Berkeley feud),51.6910,-2.4590,"Berkeley, Gloucestershire"
+v_winchcombe,Winchcombe,Severn & Cotswolds,new,Abbey; Sudeley Castle,51.9550,-1.9650,Winchcombe
+v_glastonbury,Glastonbury,Severn & Cotswolds,new,Village of the great abbey,51.1475,-2.7175,Glastonbury
+v_dunster,Dunster,Severn & Cotswolds,new,Luttrell castle and port,51.1825,-3.4459,Dunster
+taunton,Taunton,Severn & Cotswolds,cut town,Castle and cloth,51.0150,-3.1030,
