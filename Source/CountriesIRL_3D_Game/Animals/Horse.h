@@ -13,7 +13,7 @@ class ABallCharacter;
 
 /**
  *  A rideable horse. Moves like a horse: it turns gradually (never slides sideways), builds up and
- *  loses speed smoothly, walks, trots (the travelling pace, free) or gallops on its own stamina.
+ *  loses speed smoothly, walks, trots (the travelling pace, free), canters or gallops on its own stamina.
  *  Without a rider it just stands (an AI controller is attached for grazing/wandering later).
  *  What kind of horse it is comes from its UMountDefinition.
  */
@@ -54,7 +54,7 @@ public:
 
 	float GetBodyHalfWidth() const;
 
-	/** The gait the horse is actually in (a gallop drops to a trot when out of breath) */
+	/** The gait the horse is actually in (canter and gallop drop down a gait when out of breath) */
 	EHorseGait GetGait() const { return Gait; }
 	bool IsGalloping() const { return Gait == EHorseGait::Gallop; }
 
@@ -88,6 +88,6 @@ private:
 	TObjectPtr<ABallCharacter> Rider;
 
 	FVector DesiredDirection = FVector::ZeroVector;
-	EHorseGait RequestedGait = EHorseGait::Trot;
-	EHorseGait Gait = EHorseGait::Trot;
+	EHorseGait RequestedGait = EHorseGait::Walk;
+	EHorseGait Gait = EHorseGait::Walk;
 };

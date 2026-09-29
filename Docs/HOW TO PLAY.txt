@@ -15,7 +15,8 @@ CONTROLS
   W A S D        move (on a horse: steer where you look)
   Mouse          look around
   Shift (hold)   run / gallop on a horse (uses stamina)
-  Ctrl           on a horse: switch between trot (free) and walk
+  On a horse     W walks; Shift: tap = trot (free), hold = canter,
+                 double-tap and hold = gallop (canter and gallop use stamina)
   Space          jump (the horse jumps too)
   Left click     punch
   Right click    hold to raise your guard
@@ -26,8 +27,8 @@ CONTROLS
   Esc            menu: resume, controls, main menu, quit
 
 WHAT TO TRY
-- Walk up to the two horses (white and brown), press E. The horse trots (no stamina),
-  Ctrl slows it to a walk, hold Shift to gallop.
+- Walk up to the two horses (white and brown), press E. Hold W to walk, tap Shift to trot,
+  hold Shift to canter, double-tap and hold Shift to gallop.
 - Punch the other countryballs. Defeated ones stay, slowly decay, and end as bones.
 - The day passes in 48 minutes, with a real medieval calendar, seasons and English weather.
 

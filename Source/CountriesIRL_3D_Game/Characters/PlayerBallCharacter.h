@@ -9,6 +9,7 @@
 class UCameraComponent;
 class USpringArmComponent;
 struct FInputActionValue;
+enum class EHorseGait : uint8;
 
 /**
  *  The player's ball: adds cameras (first-person by default, third-person toggle) and input handling.
@@ -98,6 +99,14 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Camera")
 	FVector2D CameraDistance = FVector2D(380.f, 600.f);
 
+	/** In the saddle, a Shift press shorter than this is a tap (walk <-> trot); held longer it canters */
+	UPROPERTY(EditAnywhere, Category="Ball|Riding")
+	float ShiftTapSeconds = 0.25f;
+
+	/** A second Shift press this soon after a tap is a double press: gallop while held */
+	UPROPERTY(EditAnywhere, Category="Ball|Riding")
+	float ShiftDoublePressSeconds = 0.3f;
+
 	/** In first-person, sideways (A/D) movement is slower than forward, like a real side-step */
 	UPROPERTY(EditAnywhere, Category="Ball|Movement", meta=(ClampMin=0.1, ClampMax=1.0))
 	float StrafeSpeedScale = 0.7f;
@@ -113,9 +122,11 @@ private:
 	/** Nearest free horse close enough to get on */
 	class AHorse* FindHorseToMount() const;
 	void Look(const FInputActionValue& Value);
-	void StartSprint() { SetSprinting(true); }
-	void StopSprint() { SetSprinting(false); }
-	void ToggleRideAtWalk();
+	void StartSprint();
+	void StopSprint();
+
+	/** In the saddle: the gait asked for with W and Shift */
+	EHorseGait GetRideGait() const;
 	void ToggleView() { SetFirstPerson(!bFirstPerson); }
 	void CycleEmotion();
 	void Attack();
@@ -125,8 +136,14 @@ private:
 
 	bool bFirstPerson = false;
 
-	/** In the saddle: walk instead of the usual trot (Ctrl toggles; every ride starts at a trot) */
-	bool bRideAtWalk = false;
+	/** In the saddle: W walks; a tap of Shift switches to a trot (and back). Stopping resets to a walk */
+	bool bRideAtTrot = false;
+
+	/** Shift timing in the saddle: when it was pressed, the last tap, and whether this press is a double press */
+	float ShiftPressTime = -100.f;
+	float LastShiftTapTime = -100.f;
+	bool bTrotBeforeTap = false;
+	bool bShiftDoublePress = false;
 
 	/** Resting place of the first-person camera */
 	FVector FirstPersonCameraOffset = FVector::ZeroVector;

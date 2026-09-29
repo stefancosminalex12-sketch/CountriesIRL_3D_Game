@@ -424,8 +424,8 @@ TSharedRef<SWidget> SCIRLGameMenu::MakeControlsList() const
 	{
 		{ TEXT("W A S D"),		LOCTEXT("CtrlMove", "Move (on a horse: steer where you look)") },
 		{ TEXT("Mouse"),		LOCTEXT("CtrlLook", "Look around") },
-		{ TEXT("Shift"),		LOCTEXT("CtrlRun", "Run, or gallop on a horse (uses stamina)") },
-		{ TEXT("Ctrl"),			LOCTEXT("CtrlWalk", "On a horse: walk / trot (trotting is free)") },
+		{ TEXT("Shift"),		LOCTEXT("CtrlRun", "Hold to run (uses stamina)") },
+		{ TEXT("On a horse"),	LOCTEXT("CtrlRide", "W walks · Shift: tap trot, hold canter, double-tap + hold gallop") },
 		{ TEXT("Space"),		LOCTEXT("CtrlJump", "Jump (the horse jumps too)") },
 		{ TEXT("Left click"),	LOCTEXT("CtrlPunch", "Punch") },
 		{ TEXT("Right click"),	LOCTEXT("CtrlGuard", "Hold to raise your guard") },

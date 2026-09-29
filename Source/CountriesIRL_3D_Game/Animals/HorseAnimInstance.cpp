@@ -67,13 +67,15 @@ void UHorseAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	SmoothedSpeed = FMath::FInterpTo(SmoothedSpeed, Speed, DeltaSeconds, 8.f);
 
 	// Clips play faster the faster the horse moves (never slower than half speed, so it doesn't look frozen)
-	// (the gallop goes down to half speed because it also stands in for the trot on horses without a trot clip)
+	// (the gallop goes down to half speed because it also stands in for the trot and canter on horses without those clips)
 	const float WalkRate = FMath::Clamp(SmoothedSpeed / FMath::Max(Definition->WalkAnimSpeed, 1.f), 0.5f, 1.6f);
 	const float TrotRate = FMath::Clamp(SmoothedSpeed / FMath::Max(Definition->TrotAnimSpeed, 1.f), 0.6f, 1.5f);
+	const float CanterRate = FMath::Clamp(SmoothedSpeed / FMath::Max(Definition->CanterAnimSpeed, 1.f), 0.6f, 1.5f);
 	const float GallopRate = FMath::Clamp(SmoothedSpeed / FMath::Max(Definition->GallopAnimSpeed, 1.f), 0.5f, 1.4f);
 	IdleTime += DeltaSeconds;
 	WalkTime += DeltaSeconds * WalkRate;
 	TrotTime += DeltaSeconds * TrotRate;
+	CanterTime += DeltaSeconds * CanterRate;
 	GallopTime += DeltaSeconds * GallopRate;
 
 	if (OneShotTime >= 0.f)
@@ -104,16 +106,21 @@ void FHorseAnimInstanceProxy::PreUpdate(UAnimInstance* InAnimInstance, float Del
 		return;
 	}
 
-	// Standing still -> walk -> trot -> gallop: blend the two clips on either side of the current speed.
-	// Without a trot clip the trot uses the gallop clip, played slower (it looks like a canter)
-	const bool bHasTrot = Definition->TrotAnim != nullptr;
-	const float Speeds[] = { 0.f, Definition->WalkSpeed, Definition->TrotSpeed, Definition->GallopSpeed };
-	const UAnimSequence* Clips[] = { Definition->IdleAnim, Definition->WalkAnim, bHasTrot ? Definition->TrotAnim.Get() : Definition->GallopAnim.Get(), Definition->GallopAnim };
-	const float Times[] = { Horse->IdleTime, Horse->WalkTime, bHasTrot ? Horse->TrotTime : Horse->GallopTime, Horse->GallopTime };
+	// Standing still -> walk -> trot -> canter -> gallop: blend the two clips on either side of the
+	// current speed. Without trot or canter clips the gallop clip stands in, played slower
+	const UAnimSequence* Gallop = Definition->GallopAnim;
+	const UAnimSequence* Trot = Definition->TrotAnim ? Definition->TrotAnim.Get() : Gallop;
+	const UAnimSequence* Canter = Definition->CanterAnim ? Definition->CanterAnim.Get() : Gallop;
+	const float Speeds[] = { 0.f, Definition->WalkSpeed, Definition->TrotSpeed, Definition->CanterSpeed, Definition->GallopSpeed };
+	const UAnimSequence* Clips[] = { Definition->IdleAnim, Definition->WalkAnim, Trot, Canter, Gallop };
+	const float Times[] = { Horse->IdleTime, Horse->WalkTime,
+		Definition->TrotAnim ? Horse->TrotTime : Horse->GallopTime,
+		Definition->CanterAnim ? Horse->CanterTime : Horse->GallopTime,
+		Horse->GallopTime };
 
 	const float Speed = Horse->SmoothedSpeed;
 	int32 Gait = 0;
-	while (Gait < 2 && Speed > Speeds[Gait + 1])
+	while (Gait < 3 && Speed > Speeds[Gait + 1])
 	{
 		++Gait;
 	}

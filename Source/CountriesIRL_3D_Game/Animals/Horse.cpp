@@ -115,7 +115,7 @@ void AHorse::SetRider(ABallCharacter* NewRider)
 	}
 	Rider = NewRider;
 	DesiredDirection = FVector::ZeroVector;
-	RequestedGait = EHorseGait::Trot;
+	RequestedGait = EHorseGait::Walk;
 	if (Rider)
 	{
 		// The rider sits on top of us: don't let our own movement bump into them
@@ -174,9 +174,7 @@ void AHorse::Tick(float DeltaTime)
 	if (Throttle > 0.05f)
 	{
 		// Turn toward where the rider wants to go, slower the faster we run (wide turns at a gallop)
-		const float TurnRate = Speed <= Definition->TrotSpeed
-			? FMath::GetMappedRangeValueClamped(FVector2D(Definition->WalkSpeed, Definition->TrotSpeed), FVector2D(Definition->WalkTurnRate, Definition->TrotTurnRate), Speed)
-			: FMath::GetMappedRangeValueClamped(FVector2D(Definition->TrotSpeed, Definition->GallopSpeed), FVector2D(Definition->TrotTurnRate, Definition->GallopTurnRate), Speed);
+		const float TurnRate = Definition->GetTurnRateAtSpeed(Speed);
 		const float NewYaw = FMath::FixedTurn(GetActorRotation().Yaw, DesiredDirection.Rotation().Yaw, TurnRate * DeltaTime);
 		SetActorRotation(FRotator(0.f, NewYaw, 0.f));
 
@@ -195,20 +193,27 @@ void AHorse::Tick(float DeltaTime)
 		Movement->StopMovementImmediately();
 	}
 
-	// Walk and trot cost nothing. Gallop while asked, moving forward on the ground, and neither the
-	// horse nor its rider is out of breath; otherwise it drops back to the travelling trot
+	// Walk and trot cost nothing. Canter and gallop need the horse moving forward on the ground with
+	// breath left (the gallop also a rider who isn't exhausted); otherwise it drops a gait:
+	// a tired rider can still canter, a tired horse falls back to the travelling trot
 	Gait = RequestedGait;
-	if (Gait == EHorseGait::Gallop)
+	const bool bCanRunFast = Throttle > 0.5f && Movement->IsMovingOnGround() && Stamina->HasStamina();
+	const bool bRiderFresh = !Rider || Rider->GetStamina()->HasStamina();
+	if (Gait == EHorseGait::Gallop && !(bCanRunFast && bRiderFresh))
 	{
-		const bool bRiderFresh = !Rider || Rider->GetStamina()->HasStamina();
-		if (!(Throttle > 0.5f && Movement->IsMovingOnGround() && Stamina->HasStamina() && bRiderFresh))
-		{
-			Gait = EHorseGait::Trot;
-		}
+		Gait = EHorseGait::Canter;
+	}
+	if (Gait == EHorseGait::Canter && !bCanRunFast)
+	{
+		Gait = EHorseGait::Trot;
 	}
 	if (Gait == EHorseGait::Gallop)
 	{
 		Stamina->Drain(Definition->GallopStaminaPerSecond, DeltaTime);
+	}
+	else if (Gait == EHorseGait::Canter)
+	{
+		Stamina->Drain(Definition->CanterStaminaPerSecond, DeltaTime);
 	}
 	Movement->MaxWalkSpeed = Definition->GetGaitSpeed(Gait);
 }

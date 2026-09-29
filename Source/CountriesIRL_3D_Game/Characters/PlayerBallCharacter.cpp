@@ -82,7 +82,6 @@ void APlayerBallCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	EIC->BindAction(Input->Interact, ETriggerEvent::Started, this, &APlayerBallCharacter::Interact);
 	EIC->BindAction(Input->Sprint, ETriggerEvent::Started, this, &APlayerBallCharacter::StartSprint);
 	EIC->BindAction(Input->Sprint, ETriggerEvent::Completed, this, &APlayerBallCharacter::StopSprint);
-	EIC->BindAction(Input->WalkToggle, ETriggerEvent::Started, this, &APlayerBallCharacter::ToggleRideAtWalk);
 	EIC->BindAction(Input->ToggleView, ETriggerEvent::Started, this, &APlayerBallCharacter::ToggleView);
 	EIC->BindAction(Input->CycleEmotion, ETriggerEvent::Started, this, &APlayerBallCharacter::CycleEmotion);
 	EIC->BindAction(Input->Attack, ETriggerEvent::Started, this, &APlayerBallCharacter::Attack);
@@ -101,13 +100,11 @@ void APlayerBallCharacter::Move(const FInputActionValue& Value)
 	const FRotator YawRotation(0.f, Controller->GetControlRotation().Yaw, 0.f);
 	const FRotationMatrix Matrix(YawRotation);
 
-	// In the saddle the keys steer the horse, relative to where we look. It trots (the travelling
-	// pace), Shift gallops, Ctrl switches to a walk
+	// In the saddle the keys steer the horse, relative to where we look; Shift picks the gait
 	if (AHorse* Horse = GetMount())
 	{
 		const FVector Direction = Matrix.GetUnitAxis(EAxis::X) * Input.Y + Matrix.GetUnitAxis(EAxis::Y) * Input.X;
-		const EHorseGait Gait = WantsToRun() ? EHorseGait::Gallop : (bRideAtWalk ? EHorseGait::Walk : EHorseGait::Trot);
-		Horse->SetRiderInput(Direction, Gait);
+		Horse->SetRiderInput(Direction, GetRideGait());
 		return;
 	}
 
@@ -125,7 +122,9 @@ void APlayerBallCharacter::StopMove(const FInputActionValue& Value)
 {
 	if (AHorse* Horse = GetMount())
 	{
-		Horse->SetRiderInput(FVector::ZeroVector, EHorseGait::Trot);
+		// Reined in: the next start is at a walk again
+		bRideAtTrot = false;
+		Horse->SetRiderInput(FVector::ZeroVector, EHorseGait::Walk);
 	}
 }
 
@@ -152,18 +151,59 @@ void APlayerBallCharacter::Interact()
 	}
 	else if (AHorse* Horse = FindHorseToMount())
 	{
-		bRideAtWalk = false;
+		bRideAtTrot = false;
 		Mount(Horse);
 	}
 	UpdateRotationMode();
 }
 
-void APlayerBallCharacter::ToggleRideAtWalk()
+void APlayerBallCharacter::StartSprint()
 {
-	if (IsMounted())
+	// On foot Shift is simply held to run
+	SetSprinting(true);
+
+	// In the saddle, a second press right after a tap is a double press (gallop while held).
+	// It takes back that tap's walk/trot switch, so double-pressing never changes the travelling gait
+	const float Now = GetWorld()->GetRealTimeSeconds();
+	bShiftDoublePress = IsMounted() && Now - LastShiftTapTime <= ShiftDoublePressSeconds;
+	if (bShiftDoublePress)
 	{
-		bRideAtWalk = !bRideAtWalk;
+		bRideAtTrot = bTrotBeforeTap;
+		LastShiftTapTime = -100.f;
 	}
+	ShiftPressTime = Now;
+}
+
+void APlayerBallCharacter::StopSprint()
+{
+	SetSprinting(false);
+
+	// A quick tap switches between walk and trot
+	const float Now = GetWorld()->GetRealTimeSeconds();
+	if (IsMounted() && !bShiftDoublePress && Now - ShiftPressTime <= ShiftTapSeconds)
+	{
+		bTrotBeforeTap = bRideAtTrot;
+		bRideAtTrot = !bRideAtTrot;
+		LastShiftTapTime = Now;
+	}
+	bShiftDoublePress = false;
+}
+
+EHorseGait APlayerBallCharacter::GetRideGait() const
+{
+	// Double press and hold gallops; press and hold canters (once it's clearly not a tap)
+	if (WantsToRun())
+	{
+		if (bShiftDoublePress)
+		{
+			return EHorseGait::Gallop;
+		}
+		if (GetWorld()->GetRealTimeSeconds() - ShiftPressTime > ShiftTapSeconds)
+		{
+			return EHorseGait::Canter;
+		}
+	}
+	return bRideAtTrot ? EHorseGait::Trot : EHorseGait::Walk;
 }
 
 AHorse* APlayerBallCharacter::FindHorseToMount() const

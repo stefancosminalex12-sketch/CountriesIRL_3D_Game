@@ -9,12 +9,13 @@
 class USkeletalMesh;
 class UAnimSequence;
 
-/** How fast a horse is going: a walk, the trot people travelled at, or a gallop for chases and charges */
+/** How fast a horse is going: walk, the trot people travelled at, a canter, or a gallop for chases and charges */
 UENUM(BlueprintType)
 enum class EHorseGait : uint8
 {
 	Walk,
 	Trot,
+	Canter,
 	Gallop
 };
 
@@ -43,9 +44,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Animation")
 	TObjectPtr<UAnimSequence> WalkAnim;
 
-	/** Optional: without a trot clip the horse trots with the gallop clip played slower (looks like a canter) */
+	/** Optional: without trot or canter clips the horse uses the gallop clip played slower */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Animation")
 	TObjectPtr<UAnimSequence> TrotAnim;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Animation")
+	TObjectPtr<UAnimSequence> CanterAnim;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Animation")
 	TObjectPtr<UAnimSequence> GallopAnim;
@@ -64,15 +68,22 @@ public:
 	float TrotAnimSpeed = 390.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Animation")
+	float CanterAnimSpeed = 560.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Animation")
 	float GallopAnimSpeed = 750.f;
 
 	/** Speeds in cm/s. The walk (~9 km/h) is a bit quicker than a person walking; the trot (~14 km/h)
-	 *  is the travelling pace and costs no stamina; a small medieval horse gallops at ~30-35 km/h. */
+	 *  is the travelling pace and costs no stamina; the canter (~20 km/h) costs a little; a small
+	 *  medieval horse gallops at ~30-35 km/h. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement")
 	float WalkSpeed = 250.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement")
 	float TrotSpeed = 390.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement")
+	float CanterSpeed = 560.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement")
 	float GallopSpeed = 900.f;
@@ -85,11 +96,33 @@ public:
 	float TrotTurnRate = 90.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement")
+	float CanterTurnRate = 78.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Movement")
 	float GallopTurnRate = 65.f;
 
 	float GetGaitSpeed(EHorseGait Gait) const
 	{
-		return Gait == EHorseGait::Walk ? WalkSpeed : (Gait == EHorseGait::Trot ? TrotSpeed : GallopSpeed);
+		switch (Gait)
+		{
+		case EHorseGait::Walk:		return WalkSpeed;
+		case EHorseGait::Trot:		return TrotSpeed;
+		case EHorseGait::Canter:	return CanterSpeed;
+		default:					return GallopSpeed;
+		}
+	}
+
+	/** Turn rate at a ground speed, blended between the gaits (tighter turns when slow) */
+	float GetTurnRateAtSpeed(float Speed) const
+	{
+		const float Speeds[] = { WalkSpeed, TrotSpeed, CanterSpeed, GallopSpeed };
+		const float Rates[] = { WalkTurnRate, TrotTurnRate, CanterTurnRate, GallopTurnRate };
+		int32 Index = 0;
+		while (Index < 2 && Speed > Speeds[Index + 1])
+		{
+			++Index;
+		}
+		return FMath::GetMappedRangeValueClamped(FVector2D(Speeds[Index], Speeds[Index + 1]), FVector2D(Rates[Index], Rates[Index + 1]), Speed);
 	}
 
 	/** How quickly it picks up and loses speed (cm/s²): horses build up and slow down gradually */
@@ -106,7 +139,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Stamina")
 	float MaxStamina = 400.f;
 
-	/** Horse stamina spent per second of galloping, and per jump (walking and trotting cost nothing) */
+	/** Horse stamina spent per second of cantering and galloping, and per jump (walking and trotting cost nothing) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Stamina")
+	float CanterStaminaPerSecond = 2.f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Stamina")
 	float GallopStaminaPerSecond = 6.f;
 
