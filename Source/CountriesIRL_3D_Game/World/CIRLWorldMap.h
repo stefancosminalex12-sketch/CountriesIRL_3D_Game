@@ -24,6 +24,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Map")
 	TSoftObjectPtr<UTexture2D> Texture;
 
+	/** Marks you on the map, drawn pointing up (north) and turned to where you face. Empty = a drawn dot and needle */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Map")
+	TSoftObjectPtr<UTexture2D> PlayerMarker;
+
 	/** Width / height of the picture */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Map")
 	float Aspect = 1.f;

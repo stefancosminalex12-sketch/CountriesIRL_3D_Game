@@ -417,7 +417,7 @@ def draw_dashed(d, pts, colour, width, dash, gap):
 
 
 CROSSING_ICON = {"stone bridge": "map_bridge_stone", "timber bridge": "map_bridge_timber", "ferry": "map_ferry", "ford": "map_ford"}
-CROSSING_SIZE = 16      # map pixels; the 32 documented medieval bridges are drawn a bit bigger
+CROSSING_SIZE = 24      # map pixels (wide icons, so ~12 px tall); the 32 documented medieval bridges are drawn a bit bigger
 
 
 def draw_crossing(img, d, icons, kind, X, Y, documented=False):
@@ -695,7 +695,8 @@ def main():
               f"landmarks {counts.get('Landmark', 0)}  /  nature {counts.get('Nature', 0)}\n"
               f"Icons at their true size in the game.  Dark brown: the {len(roads)} main roads (6-8 m).  Light brown: {sum(1 for r in local if r["class"] == "lane")} lanes (4 m), dashed: {sum(1 for r in local if r["class"] == "track")} tracks (2.5 m).\n"
               f"Rivers: the {len(rivers)} main rivers, 1.5x their game width, darker where boats went in 1455\n"
-              f"Crossings ({len(crossings)}): dark bar = stone bridge, open bar = timber bridge, blue diamond = ferry, pale ring = ford\n"
+              f"Crossings ({len(crossings)}): " + ", ".join(f"{sum(1 for c in crossings if c['kind'] == k)} {k}s" for k in ("stone bridge", "timber bridge", "ferry", "ford"))
+              + " (the bigger bridges are the 32 documented medieval ones)\n"
               f"Terrain: the game's own heights (contours every 50 m).  Not shown: Devon & Cornwall (later update), Wales and Scotland (DLC)\n"
               f"Data: Natural Earth, OpenStreetMap contributors, Wikidata, AWS Terrain Tiles")
     d.rectangle([0, H - BOTTOM + 1, W, H], fill=SEA)            # clean strip under the map frame for the legend

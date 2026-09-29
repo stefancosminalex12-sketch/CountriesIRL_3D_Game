@@ -33,4 +33,12 @@ uv = {
     "texture_size": list(size),
 }
 json.dump(uv, open(f"{OUT_DIR}/T_WorldMap_England1455.json", "w"), indent=1)
+
+# The player's marker (the user's icon, pointing up): trimmed to its outline and centred in a 72 px square (drawn ~34 px tall, so no mipmaps needed)
+marker = Image.open(f"{ROOT}/Art/AI/MapIcons/map_player.png").convert("RGBA")
+marker = marker.crop(marker.getchannel("A").getbbox())
+side = max(marker.size)
+square = Image.new("RGBA", (side, side), (0, 0, 0, 0))
+square.paste(marker, ((side - marker.width) // 2, (side - marker.height) // 2))
+square.resize((72, 72), Image.LANCZOS).save(f"{OUT_DIR}/T_WorldMap_PlayerMarker.png")
 print("wrote", size, uv)

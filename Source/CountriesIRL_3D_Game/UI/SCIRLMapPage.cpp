@@ -26,6 +26,9 @@ namespace
 	/** Zoom speed with keys or triggers: times per second */
 	constexpr float ZoomSpeed = 2.5f;
 
+	/** Height of your marker arrow on screen */
+	constexpr double MarkerArrowHeight = 34.0;
+
 	const TArray<FKey>& UpKeys()		{ static TArray<FKey> K = { EKeys::W, EKeys::Up }; return K; }
 	const TArray<FKey>& DownKeys()		{ static TArray<FKey> K = { EKeys::S, EKeys::Down }; return K; }
 	const TArray<FKey>& LeftKeys()		{ static TArray<FKey> K = { EKeys::A, EKeys::Left }; return K; }
@@ -64,6 +67,13 @@ void SCIRLMapPage::Construct(const FArguments& InArgs)
 		MapBrush.SetResourceObject(Texture.Get());
 		MapBrush.ImageSize = FVector2D(Texture->GetSizeX(), Texture->GetSizeY());
 		MapBrush.DrawAs = ESlateBrushDrawType::Image;
+	}
+	MarkerTexture.Reset(Map ? Map->PlayerMarker.LoadSynchronous() : nullptr);
+	if (MarkerTexture)
+	{
+		MarkerBrush.SetResourceObject(MarkerTexture.Get());
+		MarkerBrush.ImageSize = FVector2D(MarkerTexture->GetSizeX(), MarkerTexture->GetSizeY());
+		MarkerBrush.DrawAs = ESlateBrushDrawType::Image;
 	}
 	if (Map)
 	{
@@ -163,7 +173,7 @@ int32 SCIRLMapPage::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeo
 	FSlateDrawElement::MakeBox(OutDrawElements, LayerId + 1,
 		AllottedGeometry.ToPaintGeometry(FVector2f(MapSize), FSlateLayoutTransform(FVector2f(TopLeft))), &MapBrush);
 
-	// You: a red dot with a needle pointing where you face (+X north = up, +Y east = right)
+	// You: the marker arrow pointing where you face (+X north = up, +Y east = right), or a drawn dot and needle
 	int32 TopLayer = LayerId + 1;
 	if (const AActor* You = Player.Get())
 	{
@@ -191,15 +201,26 @@ int32 SCIRLMapPage::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeo
 		};
 
 		Box(&Halo, FVector2D(44.0, 44.0), LayerId + 2);
-		RotatedBar(&NeedleEdge, FVector2D(9.0, 28.0), LayerId + 3);
-		RotatedBar(&Needle, FVector2D(5.0, 26.0), LayerId + 4);
-		Box(&Dot, FVector2D(18.0, 18.0), LayerId + 5);
+		if (MarkerTexture)
+		{
+			// The arrow turns around its middle, which sits on your spot
+			const FVector2D ArrowSize = MarkerBrush.ImageSize * (MarkerArrowHeight / FMath::Max(MarkerBrush.ImageSize.Y, 1.0));
+			const FGeometry Arrow = AllottedGeometry.MakeChild(FVector2f(ArrowSize),
+				FSlateLayoutTransform(FVector2f(Spot - ArrowSize * 0.5)), FSlateRenderTransform(FQuat2f(Angle)), FVector2f(0.5f, 0.5f));
+			FSlateDrawElement::MakeBox(OutDrawElements, LayerId + 5, Arrow.ToPaintGeometry(), &MarkerBrush);
+		}
+		else
+		{
+			RotatedBar(&NeedleEdge, FVector2D(9.0, 28.0), LayerId + 3);
+			RotatedBar(&Needle, FVector2D(5.0, 26.0), LayerId + 4);
+			Box(&Dot, FVector2D(18.0, 18.0), LayerId + 5);
+		}
 
 		// "You" under the marker
 		const FSlateFontInfo LabelFont = Font(EFont::Title, 17.f);
 		const FText Label = LOCTEXT("You", "You");
 		const FVector2D LabelSize = FSlateApplication::Get().GetRenderer()->GetFontMeasureService()->Measure(Label, LabelFont);
-		const FVector2D LabelPos = Spot + FVector2D(-LabelSize.X * 0.5, 16.0);
+		const FVector2D LabelPos = Spot + FVector2D(-LabelSize.X * 0.5, MarkerTexture ? MarkerArrowHeight * 0.5 + 4.0 : 16.0);
 		FSlateDrawElement::MakeText(OutDrawElements, LayerId + 5,
 			AllottedGeometry.ToPaintGeometry(FVector2f(LabelSize), FSlateLayoutTransform(FVector2f(LabelPos + FVector2D(1.5, 1.5)))),
 			Label, LabelFont, ESlateDrawEffect::None, FLinearColor(0.98f, 0.93f, 0.8f, 0.9f));

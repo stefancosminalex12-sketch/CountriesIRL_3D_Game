@@ -62,6 +62,9 @@ private:
 	TStrongObjectPtr<UTexture2D> Texture;
 	FSlateBrush MapBrush;
 
+	TStrongObjectPtr<UTexture2D> MarkerTexture;
+	FSlateBrush MarkerBrush;
+
 	TWeakObjectPtr<AActor> Player;
 
 	/** The map point (0..1) in the middle of the view, and the zoom (1 = the whole map's height fits) */
