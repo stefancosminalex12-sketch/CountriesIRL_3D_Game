@@ -1,0 +1,61 @@
+Id,Name,Size,Type,Order,Why
+lindisfarne,Lindisfarne Priory,small,priory,Benedictine,Holy Island: St Cuthbert's first home
+rh_hexham_abbey,Hexham Abbey,medium,priory,Augustinian,Great priory church of Hexham; battle of 1464
+rh_tynemouth_priory,Tynemouth Priory,medium,priory,Benedictine,Fortified priory on the headland over the Tyne
+rh_lanercost_priory,Lanercost Priory,medium,priory,Augustinian,Border priory by Hadrian's Wall
+rh_shap_abbey,Shap Abbey,small,abbey,Premonstratensian,White canons at the high pass
+rievaulx,Rievaulx Abbey,large,abbey,Cistercian,Great Cistercian abbey in its valley
+jervaulx,Jervaulx Abbey,medium,abbey,Cistercian,Wensleydale abbey near Middleham; horses and cheese
+rh_coverham_abbey,Coverham Abbey,small,abbey,Premonstratensian,Small abbey in Coverdale by Middleham; Neville patronage
+rh_easby_abbey,Easby Abbey,small,abbey,Premonstratensian,White canons by Richmond; Scrope patronage
+rh_whitby_abbey,Whitby Abbey,medium,abbey,Benedictine,Abbey on the cliff over Whitby
+rh_mount_grace_priory,Mount Grace Priory,medium,charterhouse,Carthusian,"Silent hermit-monks, each in his own cell"
+fountains,Fountains Abbey,large,abbey,Cistercian,Richest Cistercian abbey: sheep and wool
+bolton_priory,Bolton Priory,medium,priory,Augustinian,Priory in Wharfedale; Clifford country
+rh_kirkstall_abbey,Kirkstall Abbey,medium,abbey,Cistercian,Cistercian abbey by Leeds
+rh_selby_abbey,Selby Abbey,medium,abbey,Benedictine,Great abbey on the Ouse
+rh_furness_abbey,Furness Abbey,large,abbey,Cistercian,Second richest Cistercian abbey; iron and sheep
+rh_whalley_abbey,Whalley Abbey,medium,abbey,Cistercian,Abbey in the Ribble valley near Clitheroe
+rh_vale_royal_abbey,Vale Royal Abbey,medium,abbey,Cistercian,Royal foundation with the largest Cistercian church in England
+rh_burscough_priory,Burscough Priory,small,priory,Augustinian,Burial place of the Stanleys of Lathom
+rh_wenlock_priory,Wenlock Priory,medium,priory,Cluniac,Great Cluniac priory in Shropshire
+rh_leominster_priory,Leominster Priory,small,priory,Benedictine,Priory and wool town on the March road
+rh_wigmore_abbey,Wigmore Abbey,small,abbey,Augustinian,Burial place of the Mortimers (York's ancestors)
+rh_evesham_abbey,Evesham Abbey,large,abbey,Benedictine,Great abbey on the Avon
+rh_peterborough_abbey,Peterborough Abbey,large,abbey,Benedictine,Great fen abbey (a cathedral only from 1541)
+rh_ramsey_abbey,Ramsey Abbey,medium,abbey,Benedictine,Rich fen abbey
+rh_leicester_abbey,Leicester Abbey,medium,abbey,Augustinian,"Richest house in Leicestershire, outside the town walls"
+rh_newstead_abbey,Newstead Abbey,small,priory,Augustinian,Priory in Sherwood Forest
+rh_delapre_abbey,Delapre Abbey,small,nunnery,Cluniac,Nuns by Northampton: the battle of 1460 was fought beside it
+rh_crowland_abbey,Crowland Abbey,medium,abbey,Benedictine,Abbey in the fens; eel-catchers
+rh_thornton_abbey,Thornton Abbey,medium,abbey,Augustinian,Great brick gatehouse near the Humber
+rh_sempringham_priory,Sempringham Priory,small,priory,Gilbertine,Mother house of the only English-founded order
+bury,St Edmund's Abbey,large,abbey,Benedictine,Shrine of St Edmund; Parliament of 1447
+walsingham,Walsingham Priory,medium,priory,Augustinian,England's great pilgrimage shrine of Our Lady
+rh_castle_acre_priory,Castle Acre Priory,medium,priory,Cluniac,Great Cluniac priory under the castle
+rh_thetford_priory,Thetford Priory,medium,priory,Cluniac,Burial place of the Mowbray dukes of Norfolk
+rh_bromholm_priory,Bromholm Priory,small,priory,Cluniac,Holy Rood pilgrimage; where the Pastons were buried
+rh_st_benet_s_abbey,St Benet's Abbey,small,abbey,Benedictine,Abbey in the Broads; Sir John Fastolf's burial place (1459)
+westminster_abbey,Westminster Abbey,large,abbey,Benedictine,Coronation church of England; royal tombs
+st_albans_abbey,St Albans Abbey,large,abbey,Benedictine,Premier abbey of England; the battles of 1455 and 1461 round it
+rh_waltham_abbey,Waltham Abbey,medium,abbey,Augustinian,Royal abbey where King Harold lies
+rh_barking_abbey,Barking Abbey,medium,nunnery,Benedictine,Great royal nunnery east of London
+rh_syon_abbey,Syon Abbey,medium,nunnery,Bridgettine,Henry V's new abbey of nuns (1415) on the Thames
+rh_chertsey_abbey,Chertsey Abbey,medium,abbey,Benedictine,Thames abbey where Henry VI was first buried (1471)
+rh_dunstable_priory,Dunstable Priory,small,priory,Augustinian,Priory on Watling Street
+rh_reading_abbey,Reading Abbey,large,abbey,Benedictine,Royal abbey of Henry I; Parliament met here in 1453
+rh_abingdon_abbey,Abingdon Abbey,medium,abbey,Benedictine,Great Thames abbey
+rh_battle_abbey,Battle Abbey,medium,abbey,Benedictine,Built on the field of 1066
+rh_faversham_abbey,Faversham Abbey,small,abbey,Benedictine,Royal abbey of King Stephen on the Dover road
+rh_boxley_abbey,Boxley Abbey,small,abbey,Cistercian,The Rood of Grace pilgrimage
+rh_lewes_priory,Lewes Priory,medium,priory,Cluniac,Great Cluniac priory of Sussex
+rh_beaulieu_abbey,Beaulieu Abbey,medium,abbey,Cistercian,Sanctuary: Queen Margaret sheltered here in 1471
+rh_romsey_abbey,Romsey Abbey,medium,nunnery,Benedictine,Nuns' abbey in the Test valley
+rh_shaftesbury_abbey,Shaftesbury Abbey,medium,nunnery,Benedictine,Richest nunnery in England
+rh_sherborne_abbey,Sherborne Abbey,medium,abbey,Benedictine,"Abbey on the western road, rebuilt in the new style"
+rh_amesbury_priory,Amesbury Priory,small,nunnery,Fontevrauldine,Royal nunnery near Stonehenge
+rh_malmesbury_abbey,Malmesbury Abbey,medium,abbey,Benedictine,Great abbey of Wiltshire
+glastonbury,Glastonbury Abbey,large,abbey,Benedictine,Richest abbey after Westminster; the tomb of King Arthur
+rh_tewkesbury_abbey,Tewkesbury Abbey,large,abbey,Benedictine,Burial church of the Despensers; the battle of 1471 ended in it
+rh_winchcombe_abbey,Winchcombe Abbey,medium,abbey,Benedictine,Cotswold abbey by Sudeley Castle
+rh_hailes_abbey,Hailes Abbey,medium,abbey,Cistercian,The Holy Blood of Hailes pilgrimage

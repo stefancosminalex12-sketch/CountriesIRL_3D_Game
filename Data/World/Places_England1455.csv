@@ -89,7 +89,7 @@ bolton_priory,Bolton Priory,Abbey,53.9825,-1.8872,1,Wharfedale,
 glastonbury,Glastonbury Abbey,Abbey,51.146,-2.715,1,,
 bury,St Edmund's Abbey,Abbey,52.244,0.717,1,Great Benedictine abbey; Parliament met at Bury in 1447,
 bury_st_edmunds,Bury St Edmunds,Town,52.2463,0.7111,2,Great abbey town; Parliament of 1447 (Duke Humphrey's arrest),Bury St Edmunds
-walsingham,Walsingham,Abbey,52.893,0.875,1,Pilgrim shrine of Our Lady,
+walsingham,Walsingham Priory,Abbey,52.893,0.875,1,Pilgrim shrine of Our Lady,
 battle_st_albans_1455,First Battle of St Albans (1455),Battle,51.752,-0.339,3,22 May 1455; start of the war,
 battle_blore_heath,Blore Heath (1459),Battle,52.9136,-2.4247,1,,
 battle_ludford,Ludford Bridge (1459),Battle,52.362,-2.717,1,,
@@ -971,3 +971,12 @@ c_stafford_castle,Stafford Castle,Castle,52.7973,-2.1468,1,,Stafford Castle
 c_tonbridge_castle,Tonbridge Castle,Castle,51.1971,0.2721,1,,Tonbridge Castle
 c_hedingham_castle,Hedingham Castle,Castle,51.9925,0.6011,1,,Hedingham Castle
 c_dunster_castle,Dunster Castle,Castle,51.1809,-3.4449,1,,Dunster Castle
+rh_hexham_abbey,Hexham Abbey,Abbey,54.9720,-2.1030,1,,Hexham Abbey
+rh_tynemouth_priory,Tynemouth Priory,Abbey,55.0175,-1.4189,1,,Tynemouth Priory and Castle
+rh_selby_abbey,Selby Abbey,Abbey,53.7844,-1.0681,1,,Selby Abbey
+rh_peterborough_abbey,Peterborough Abbey,Abbey,52.5725,-0.2389,1,,Peterborough Cathedral
+rh_leicester_abbey,Leicester Abbey,Abbey,52.6489,-1.1369,1,,Leicester Abbey
+rh_delapre_abbey,Delapre Abbey,Abbey,52.2247,-0.8895,1,,Delapré Abbey
+rh_syon_abbey,Syon Abbey,Abbey,51.4767,-0.3119,1,,Syon Abbey
+rh_romsey_abbey,Romsey Abbey,Abbey,50.9897,-1.5014,1,,Romsey Abbey
+rh_sherborne_abbey,Sherborne Abbey,Abbey,50.9467,-2.5167,1,,Sherborne Abbey

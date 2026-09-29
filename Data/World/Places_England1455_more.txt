@@ -262,3 +262,13 @@ c_stafford_castle|Stafford Castle|Castle|52.7973|-2.1468|1||Stafford Castle
 c_tonbridge_castle|Tonbridge Castle|Castle|51.1971|0.2721|1||Tonbridge Castle
 c_hedingham_castle|Hedingham Castle|Castle|51.9925|0.6011|1||Hedingham Castle
 c_dunster_castle|Dunster Castle|Castle|51.1809|-3.4449|1||Dunster Castle
+# Religious houses added for the first release (2026-09-29)
+rh_hexham_abbey|Hexham Abbey|Abbey|54.9720|-2.1030|1||Hexham Abbey
+rh_tynemouth_priory|Tynemouth Priory|Abbey|55.0175|-1.4189|1||Tynemouth Priory and Castle
+rh_selby_abbey|Selby Abbey|Abbey|53.7844|-1.0681|1||Selby Abbey
+rh_peterborough_abbey|Peterborough Abbey|Abbey|52.5725|-0.2389|1||Peterborough Cathedral
+rh_leicester_abbey|Leicester Abbey|Abbey|52.6489|-1.1369|1||Leicester Abbey
+rh_delapre_abbey|Delapre Abbey|Abbey|52.2247|-0.8895|1||Delapré Abbey
+rh_syon_abbey|Syon Abbey|Abbey|51.4767|-0.3119|1||Syon Abbey
+rh_romsey_abbey|Romsey Abbey|Abbey|50.9897|-1.5014|1||Romsey Abbey
+rh_sherborne_abbey|Sherborne Abbey|Abbey|50.9467|-2.5167|1||Sherborne Abbey

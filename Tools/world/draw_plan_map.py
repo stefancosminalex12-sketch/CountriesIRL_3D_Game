@@ -179,7 +179,7 @@ ICON_FOR = {"City": "map_city", "Town": "map_town", "Village": "map_village", "C
 # Icon size (map pixels at 4 px/km, times S) per type and importance
 ICON_SIZE = {("City", 3): 44, ("City", 2): 34, ("City", 1): 30, ("Town", 3): 40, ("Town", 2): 26, ("Town", 1): 17,
              ("Village", 1): 7, ("Castle", 3): 22, ("Castle", 2): 18, ("Castle", 1): 10, ("Cathedral", 3): 24,
-             ("Cathedral", 2): 20, ("Cathedral", 1): 16, ("Abbey", 3): 16, ("Abbey", 2): 13, ("Abbey", 1): 8,
+             ("Cathedral", 2): 20, ("Cathedral", 1): 16, ("Abbey", 3): 18, ("Abbey", 2): 14, ("Abbey", 1): 11,
              ("Battle", 3): 22, ("Battle", 2): 16, ("Battle", 1): 14, ("Landmark", 3): 22, ("Landmark", 2): 18,
              ("Landmark", 1): 14, ("Nature", 3): 18, ("Nature", 2): 16, ("Nature", 1): 13}
 
@@ -333,16 +333,21 @@ def release_places(all_places, units):
             places[pid] = dict(places[pid], Type="Village", Importance="1")
         else:                                                  # "cut", or "part_of:<site>" (drawn with that site)
             del places[pid]
-    castles_path = f"{ROOT}/Data/World/Castles_Release1.csv"
-    if os.path.exists(castles_path):
-        castles = {r["Id"]: r for r in csv.DictReader(open(castles_path, encoding="utf-8"))}
-        for pid in [i for i, r in places.items() if r["Type"] == "Castle"]:
-            c = castles.get(pid)
+    # Castles and religious houses: only those chosen for the release, with their size and type
+    for kind, filename, describe in (
+            ("Castle", "Castles_Release1.csv", lambda c: f"{c['Size']} {c['Type']} castle; {c['Holder1455']}; {c['Why']}"),
+            ("Abbey", "Abbeys_Release1.csv", lambda c: f"{c['Size']} {c['Type']} ({c['Order']}); {c['Why']}")):
+        path = f"{ROOT}/Data/World/{filename}"
+        if not os.path.exists(path):
+            continue
+        chosen = {r["Id"]: r for r in csv.DictReader(open(path, encoding="utf-8"))}
+        for pid in [i for i, r in places.items() if r["Type"] == kind]:
+            c = chosen.get(pid)
             if c is None:
                 del places[pid]
             else:
-                places[pid] = dict(places[pid], Importance=CASTLE_IMPORTANCE[c["Size"]], CastleType=c["Type"],
-                                   Note=f"{c['Size']} {c['Type']} castle; {c['Holder1455']}; {c['Why']}")
+                places[pid] = dict(places[pid], Importance=CASTLE_IMPORTANCE[c["Size"]], Note=describe(c),
+                                   CastleType=c["Type"] if kind == "Castle" else "")
     return places
 
 
@@ -512,6 +517,7 @@ def main():
     obstacles = []          # boxes labels must not cover: symbols and labels already placed
     labels = []             # (priority, text, font, colour, X, Y, radius, must_show, centred)
 
+    settlement_names = {r["Name"] for r in places.values() if r["Type"] in ("City", "Town", "Village")}
     order = {"Village": 0, "Abbey": 1, "Nature": 2, "Landmark": 3, "Castle": 4, "Cathedral": 5, "Battle": 6, "Town": 7, "City": 8}
     for row in sorted(places.values(), key=lambda r: (order.get(r["Type"], 0), int(r["Importance"]))):
         kind, imp = row["Type"], int(row["Importance"])
@@ -527,12 +533,13 @@ def main():
         if kind in ("City", "Town"):
             fnt = f_city if imp == 3 else (f_town if imp == 2 else f_minor)
             labels.append(({3: 100, 2: 80, 1: 50}[imp] + (5 if kind == "City" else 0), name, fnt, INK, X, Y, r, imp >= 2, False))
-        elif kind == "Castle" and imp >= 2:
+        elif kind == "Castle" and imp >= 2 and name.replace(" Castle", "") not in settlement_names:
+            # (a castle named after its town, e.g. Richmond Castle, is already named by the town's label)
             labels.append((40 + imp, name.replace(" Castle", ""), f_minor, (70, 60, 55), X, Y, r, False, False))
         elif kind == "Cathedral" and imp >= 2:
             labels.append((45 + imp, name, f_small, (70, 60, 55), X, Y, r, False, False))
-        elif kind == "Abbey" and imp >= 2:
-            labels.append((30, name, f_small, (70, 60, 55), X, Y, r, False, False))
+        elif kind == "Abbey":                                  # only the chosen houses are left: name them all
+            labels.append((30 + imp, name, f_small, (70, 60, 55), X, Y, r, False, False))
         elif kind == "Landmark":
             labels.append((60 + imp, name, f_battle if imp >= 2 else f_small, (60, 50, 90), X, Y, r, imp >= 3, False))
         elif kind == "Nature":
