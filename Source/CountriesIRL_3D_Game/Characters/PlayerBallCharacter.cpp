@@ -282,14 +282,6 @@ void APlayerBallCharacter::Look(const FInputActionValue& Value)
 	AddControllerPitchInput(Input.Y);
 }
 
-void APlayerBallCharacter::DevLook(float Pitch, float Yaw)
-{
-	if (Controller)
-	{
-		Controller->SetControlRotation(FRotator(Pitch, Yaw, 0.f));
-	}
-}
-
 void APlayerBallCharacter::DevWalk(float Forward, float Right, float Seconds, bool bRun)
 {
 	DevMoveInput = FVector2D(Right, Forward);

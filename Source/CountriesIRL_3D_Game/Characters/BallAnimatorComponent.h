@@ -139,19 +139,17 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ball|Legs")
 	float LegThickness = 14.f;
 
-	/** Thigh (hip to knee) and shin (knee to ankle) lengths in cm. The hip and the knee sit just inside the ball,
-	 *  so what shows is the lower leg. Standing, the leg is straight like a person's; as a foot lifts the knee
-	 *  bends forward. (Was 21 + 15.5 from a lower hip: the leg was too short to stand straight, so the knee stayed
-	 *  bent ~40 degrees even standing and folded into a sharp zig-zag with every step; user, 2026-09-30) */
+	/** Thigh (hip to knee) and shin (knee to ankle) lengths in cm. The hip sits inside the ball, so only part
+	 *  of the thigh shows. Standing, the leg is almost straight; as a foot lifts the knee bends forward */
 	UPROPERTY(EditAnywhere, Category="Ball|Legs")
-	float ThighLength = 24.5f;
+	float ThighLength = 21.f;
 
 	UPROPERTY(EditAnywhere, Category="Ball|Legs")
-	float ShinLength = 17.5f;
+	float ShinLength = 15.5f;
 
 	/** How far below the ball's centre the hips are, as a share of the ball's radius */
 	UPROPERTY(EditAnywhere, Category="Ball|Legs")
-	float HipDrop = 0.49f;
+	float HipDrop = 0.6f;
 
 	/** Colour of the legs (wool hose) */
 	UPROPERTY(EditAnywhere, Category="Ball|Legs")

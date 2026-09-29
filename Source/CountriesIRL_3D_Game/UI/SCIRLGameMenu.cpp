@@ -492,10 +492,8 @@ TSharedRef<SWidget> SCIRLGameMenu::MakeControlsList() const
 		[
 			SNew(STextBlock)
 			.Text(Controls[Row].Action)
-			.Font(Font(EFont::Body, 19.f))
+			.Font(Font(EFont::Body, 20.f))
 			.ColorAndOpacity(Text())
-			// Long entries wrap onto a second line instead of being cut off at the card's edge
-			.AutoWrapText(true)
 		];
 	}
 	return Grid;
