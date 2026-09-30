@@ -15,6 +15,9 @@
 #include "Characters/BallMeleeComponent.h"
 #include "Characters/Heraldry.h"
 #include "Characters/AI/BallFighterController.h"
+#include "Audio/CIRLSounds.h"
+#include "Audio/CIRLMusicSettings.h"
+#include "TimerManager.h"
 #include "EngineUtils.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/Texture2D.h"
@@ -197,6 +200,7 @@ void ABallCharacter::Assassinated(ABallCharacter* By)
 	{
 		DamageFlashTime = DamageFlashDuration;
 		LastAttacker = By;
+		CIRLSounds::PlayAt(this, GetDefault<UCIRLMusicSettings>()->CutFleshSounds, GetActorLocation() + FVector(0.f, 0.f, GetBallCenterZ()));
 		Health->ApplyDamage(Health->GetHealth());
 
 		// A man going down is not silent: fighters close by hear it
@@ -309,6 +313,15 @@ void ABallCharacter::HandleDeath(UHealthComponent* DepletedHealth)
 	SetEmotion(EBallEmotion::Dead);
 	SetSprinting(false);
 	GetCharacterMovement()->DisableMovement();
+
+	// A last cry, and the thud of the body going down as it tips over
+	const UCIRLMusicSettings* Audio = GetDefault<UCIRLMusicSettings>();
+	CIRLSounds::PlayAt(this, Audio->KilledSounds, GetActorLocation() + FVector(0.f, 0.f, GetBallCenterZ()));
+	FTimerHandle FallTimer;
+	GetWorldTimerManager().SetTimer(FallTimer, FTimerDelegate::CreateWeakLambda(this, [this]()
+	{
+		CIRLSounds::PlayAt(this, GetDefault<UCIRLMusicSettings>()->BodyFallSounds, GetActorLocation() - FVector(0.f, 0.f, GetGroundOffset()));
+	}), 0.55f, false);
 
 	// The standing capsule no longer fits a body lying on the ground: a box shaped like the lying ball
 	// takes over, so the living bump into it and can climb on it; traces (looting) hit it too

@@ -4,6 +4,8 @@
 #include "Characters/BallCharacter.h"
 #include "Characters/BallHeldItemsComponent.h"
 #include "EngineUtils.h"
+#include "Audio/CIRLSounds.h"
+#include "Audio/CIRLMusicSettings.h"
 #include "Characters/HealthComponent.h"
 #include "Characters/StaminaComponent.h"
 #include "Items/CIRLInventoryComponent.h"
@@ -39,6 +41,12 @@ bool UBallMeleeComponent::TryPunch()
 
 	// Turn to face where we're punching (matters in third-person, where the ball faces its movement)
 	Ball->SetActorRotation(FRotator(0.f, Ball->GetBaseAimRotation().Yaw, 0.f));
+
+	// A weapon swishes through the air (a fist makes no sound until it lands)
+	if (Strike.bWeapon)
+	{
+		CIRLSounds::PlayAt(this, GetDefault<UCIRLMusicSettings>()->SwingSounds, Ball->GetActorLocation());
+	}
 	return true;
 }
 
@@ -328,6 +336,12 @@ void UBallMeleeComponent::ResolveHit()
 		const float Damage = FMath::RoundToFloat(Base * MultiplierFor(Zone));
 		float ArmourStopped = 0.f;
 		const float Dealt = Target->TakeStrike(Damage, static_cast<ECIRLDamageType>(Strike.DamageType), Zone, Hit, Direction, Ball->GetController(), Ball, &ArmourStopped);
+
+		// What it sounds like: on armour that stopped a good part of it, a clang; on flesh, a blade cuts and anything else thuds
+		const UCIRLMusicSettings* Audio = GetDefault<UCIRLMusicSettings>();
+		const bool bOnArmour = ArmourStopped >= 0.3f;
+		const bool bCuts = Strike.bWeapon && static_cast<ECIRLDamageType>(Strike.DamageType) != ECIRLDamageType::Blunt;
+		CIRLSounds::PlayAt(this, bOnArmour ? Audio->ArmourHitSounds : (bCuts ? Audio->CutFleshSounds : Audio->FleshHitSounds), Hit.ImpactPoint);
 		UE_LOG(LogTemp, Verbose, TEXT("Strike: hit %s zone %d for %.0f (dealt %.0f)"), *Target->GetName(), static_cast<int32>(Zone), Damage, Dealt);
 
 		if (!Target->IsDead())

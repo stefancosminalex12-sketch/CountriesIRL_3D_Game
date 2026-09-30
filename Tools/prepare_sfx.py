@@ -22,6 +22,7 @@ LOUDNESS = {
     "steps": 0.08, "land": 0.14,
     "horse_walk": 0.09, "horse_trot": 0.12, "horse_canter": 0.13, "horse_gallop": 0.15,
     "neigh": 0.16, "snort": 0.11, "deer": 0.11,
+    "swing": 0.12, "armor": 0.17, "flesh": 0.15, "cut": 0.16, "killed": 0.15, "fall": 0.14,
 }
 
 # Loops: (game name, source file, start s, end s or None for the end, crossfade s, loudness kind, mono)
@@ -29,7 +30,8 @@ LOOPS = [
     ("sfx_horse_walk", "Horse walk.mp3", 0.5, 17.5, 1.0, "horse_walk", False),
     ("sfx_horse_trot", "horse trot 2.mp3", 0.02, 1.84, 0.12, "horse_trot", False),
     ("sfx_horse_canter", "Horse canter 1.mp3", 0.3, 7.3, 0.5, "horse_canter", False),
-    ("sfx_horse_gallop", "Horse gallop 5-11.mp3", 0.2, 14.5, 0.8, "horse_gallop", False),
+    # (the first 3 s of the gallop recording have the horse calling out: left out, or it neighs on every loop)
+    ("sfx_horse_gallop", "Horse gallop 5-11.mp3", 3.0, 14.5, 0.8, "horse_gallop", False),
     # Footsteps by ground; the number is a variation of the same ground, picked at random
     ("sfx_steps_dirt_1", "dirt walk 1.mp3", 0.05, 1.95, 0.15, "steps", True),
     ("sfx_steps_dirt_2", "dirt walk 2.mp3", 0.05, 14.4, 0.4, "steps", True),
@@ -57,6 +59,17 @@ SHOTS = [
     ("sfx_horse_snort_deep", "horse deep snort 1.mp3", 0.05, 1.6, "snort"),
     ("sfx_deer_snort", "deer snort 1.mp3", 0.3, 0.9, "deer"),
     ("sfx_land_dirt_1", "fall on dirt 1.mp3", 0.15, 2.0, "land"),
+    # Fighting: swings, blows landing on armour or on flesh, a cut into flesh, a death cry, a body hitting the ground
+    ("sfx_sword_slash_1", "sword slash 1.mp3", 0.0, 0.5, "swing"),
+    ("sfx_sword_slash_2", "sword slash 2.mp3", 0.0, 0.6, "swing"),
+    ("sfx_armor_hit_1", "armor hit 1.mp3", 0.0, 0.8, "armor"),
+    ("sfx_armor_hit_2", "armor hit 2.mp3", 0.0, 0.7, "armor"),
+    ("sfx_flesh_hit_1", "flesh hit 1.mp3", 0.0, 0.55, "flesh"),
+    ("sfx_flesh_hit_2", "flesh hit 2.mp3", 0.04, 0.6, "flesh"),
+    ("sfx_axe_slice_flesh_1", "axe slice flesh 1.mp3", 0.0, 0.6, "cut"),
+    ("sfx_body_killed_1", "body killed 1.mp3", 0.08, 1.6, "killed"),
+    ("sfx_body_killed_2", "body killed 2.mp3", 0.06, 1.4, "killed"),
+    ("sfx_body_fall_1", "body fall 1.mp3", 0.12, 1.05, "fall"),
 ]
 
 

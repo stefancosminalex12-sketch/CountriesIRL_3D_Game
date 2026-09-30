@@ -183,6 +183,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Rearing")
 	float RearSeconds = 1.8f;
 
+	/** Damage to a rider thrown off (landing hard on the ground) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Rearing")
+	float ThrowDamage = 12.f;
+
 	/** Hoofbeats, one loop per gait (they loop; the horse cross-fades between them) */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Sound")
 	TObjectPtr<USoundBase> WalkSound;

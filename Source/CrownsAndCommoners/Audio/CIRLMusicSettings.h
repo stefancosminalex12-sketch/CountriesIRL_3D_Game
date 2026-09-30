@@ -71,4 +71,29 @@ public:
 	/** Landing from a jump or a fall (one picked at random) */
 	UPROPERTY(config, EditAnywhere, Category = "Sound Effects")
 	TArray<TSoftObjectPtr<USoundBase>> LandingSounds;
+
+	/** Fighting (each a set, one picked at random). For now every weapon and every armour shares them; later sets per
+	 *  kind of weapon and armour. A weapon swinging through the air */
+	UPROPERTY(config, EditAnywhere, Category = "Combat")
+	TArray<TSoftObjectPtr<USoundBase>> SwingSounds;
+
+	/** A blow stopped mostly by armour */
+	UPROPERTY(config, EditAnywhere, Category = "Combat")
+	TArray<TSoftObjectPtr<USoundBase>> ArmourHitSounds;
+
+	/** A blow on flesh or cloth with a fist or a blunt weapon */
+	UPROPERTY(config, EditAnywhere, Category = "Combat")
+	TArray<TSoftObjectPtr<USoundBase>> FleshHitSounds;
+
+	/** A blade cutting or stabbing into flesh (also the dagger of an assassination) */
+	UPROPERTY(config, EditAnywhere, Category = "Combat")
+	TArray<TSoftObjectPtr<USoundBase>> CutFleshSounds;
+
+	/** Someone dies */
+	UPROPERTY(config, EditAnywhere, Category = "Combat")
+	TArray<TSoftObjectPtr<USoundBase>> KilledSounds;
+
+	/** A body hitting the ground as it falls dead */
+	UPROPERTY(config, EditAnywhere, Category = "Combat")
+	TArray<TSoftObjectPtr<USoundBase>> BodyFallSounds;
 };

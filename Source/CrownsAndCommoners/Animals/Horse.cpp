@@ -218,8 +218,9 @@ void AHorse::ThrowRider()
 		return;
 	}
 	Thrown->Dismount();
-	// Off over the back and into the dirt
+	// Off over the back and into the dirt, and it hurts (nobody to blame but the horse: not "slain")
 	Thrown->LaunchCharacter(-GetActorForwardVector() * 380.f + FVector(0.f, 0.f, 320.f), true, true);
+	Thrown->TakeDamage(Definition->ThrowDamage, FDamageEvent(), nullptr, this);
 }
 
 bool AHorse::CanJumpInternal_Implementation() const
