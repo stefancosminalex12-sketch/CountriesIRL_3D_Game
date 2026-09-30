@@ -10,6 +10,7 @@
 #include "Core/CIRLInputConfig.h"
 #include "Core/CIRLPlayerController.h"
 #include "Items/CIRLInventoryComponent.h"
+#include "Characters/BallWornGearComponent.h"
 #include "Items/CIRLItemDatabase.h"
 #include "Items/CIRLItemSettings.h"
 #include "Camera/CameraComponent.h"
@@ -93,6 +94,7 @@ void APlayerBallCharacter::SetFirstPerson(bool bEnable)
 	// Don't draw the ball from the inside; hands and feet stay visible
 	BodyMesh->SetOwnerNoSee(bEnable);
 	Face->SetOwnerNoSee(bEnable);
+	WornGear->SetOwnerNoSee(bEnable);
 	// ...but the hidden ball still casts its shadow, so your shadow is whole in first-person too
 	BodyMesh->bCastHiddenShadow = true;
 	BodyMesh->MarkRenderStateDirty();

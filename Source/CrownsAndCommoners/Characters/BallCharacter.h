@@ -12,6 +12,7 @@ class UBallAnimatorComponent;
 class UStaminaComponent;
 class UCIRLInventoryComponent;
 class UBallHeldItemsComponent;
+class UBallWornGearComponent;
 enum class ECIRLDamageType : uint8;
 enum class EBallHitZone : uint8;
 class UHealthComponent;
@@ -50,6 +51,13 @@ public:
 
 	UStaminaComponent* GetStamina() const { return Stamina; }
 	UCIRLInventoryComponent* GetInventory() const { return Inventory; }
+	UBallWornGearComponent* GetWornGear() const { return WornGear; }
+
+	/** The ball's centre: the body, face and worn gear hang from it and lean, bob and fall with it */
+	USceneComponent* GetBodyPivot() const { return BodyPivot; }
+
+	/** Gloves and boots recolour the hands and boots (unset = bare hands, the ball's own boots) */
+	void SetGearTints(const TOptional<FLinearColor>& Gloves, const TOptional<FLinearColor>& Boots);
 
 	/**
 	 *  A blow from a fist or a weapon lands on this ball: the armour worn over that part takes its share, then the
@@ -140,6 +148,13 @@ protected:
 	/** Stand-in shapes for what is in the hands */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	TObjectPtr<UBallHeldItemsComponent> HeldItems;
+
+	/** Stand-in shapes for what is worn */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	TObjectPtr<UBallWornGearComponent> WornGear;
+
+	TOptional<FLinearColor> GloveTint;
+	TOptional<FLinearColor> BootTint;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	TObjectPtr<UHealthComponent> Health;

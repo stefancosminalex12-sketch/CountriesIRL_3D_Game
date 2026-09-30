@@ -17,7 +17,7 @@ enum class ECIRLDamageType : uint8
 	Blunt
 };
 
-/** The simple stand-in shape an item is shown as in the hand until its real model exists */
+/** The simple stand-in shape an item is shown as (in the hand, or worn on the ball) until its real model exists */
 UENUM(BlueprintType)
 enum class ECIRLItemShape : uint8
 {
@@ -34,7 +34,25 @@ enum class ECIRLItemShape : uint8
 	Shield,
 	Buckler,
 	Torch,
-	Lantern
+	Lantern,
+
+	// Worn on the ball
+	KettleHat,	// dome with a wide brim
+	Sallet,		// dome, longer to the back
+	Armet,		// tall close helmet
+	WideHat,	// small crown, very wide brim (straw hat)
+	Hat,		// crown and a narrow brim
+	Coif,		// close cap, under the helmet
+	Hood,
+	FoolHood,
+	Bowl,		// clothing or armour around the lower half (which layer comes from its slot)
+	BowlShort,	// only the hips (mail skirt)
+	BowlFull,	// up to the face (full harness)
+	Cape,
+	CapeHood,
+	Collar,
+	Purse,
+	ArrowBag
 };
 
 /**
@@ -101,6 +119,15 @@ struct FCIRLItemRow : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Item")
 	ECIRLItemShape Shape = ECIRLItemShape::None;
+
+	/** Colour of the stand-in shape, as a hex code like "A3221C" (empty = the shape's own default) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Item")
+	FString Tint;
+
+	FLinearColor GetTint(const FLinearColor& Default) const
+	{
+		return Tint.IsEmpty() ? Default : FLinearColor::FromSRGBColor(FColor::FromHex(Tint));
+	}
 
 	bool FitsSlot(ECIRLEquipSlot Slot) const { return Slots.Contains(Slot); }
 	bool IsWeapon() const { return Damage > 0.f; }

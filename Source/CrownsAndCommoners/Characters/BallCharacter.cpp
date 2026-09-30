@@ -8,6 +8,7 @@
 #include "Items/CIRLItemSettings.h"
 #include "Engine/DamageEvents.h"
 #include "Characters/BallHeldItemsComponent.h"
+#include "Characters/BallWornGearComponent.h"
 #include "Characters/HealthComponent.h"
 #include "Characters/CorpseComponent.h"
 #include "Characters/BallSkeletonComponent.h"
@@ -74,6 +75,7 @@ ABallCharacter::ABallCharacter()
 	Stamina = CreateDefaultSubobject<UStaminaComponent>(TEXT("Stamina"));
 	Inventory = CreateDefaultSubobject<UCIRLInventoryComponent>(TEXT("Inventory"));
 	HeldItems = CreateDefaultSubobject<UBallHeldItemsComponent>(TEXT("HeldItems"));
+	WornGear = CreateDefaultSubobject<UBallWornGearComponent>(TEXT("WornGear"));
 	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 	Corpse = CreateDefaultSubobject<UCorpseComponent>(TEXT("Corpse"));
 	Skeleton = CreateDefaultSubobject<UBallSkeletonComponent>(TEXT("Skeleton"));
@@ -206,6 +208,17 @@ float ABallCharacter::TakeStrike(float Damage, ECIRLDamageType DamageType, EBall
 	return TakeDamage(Reduced, FPointDamageEvent(Reduced, Hit, Direction, nullptr), EventInstigator, DamageCauser);
 }
 
+void ABallCharacter::SetGearTints(const TOptional<FLinearColor>& Gloves, const TOptional<FLinearColor>& Boots)
+{
+	GloveTint = Gloves;
+	BootTint = Boots;
+	// Before play begins the ball hasn't put its coat of arms on yet; BeginPlay colours everything once it has
+	if (HasActorBegunPlay())
+	{
+		RefreshColors();
+	}
+}
+
 float ABallCharacter::GetLoadSpeedScale() const
 {
 	// A normal load costs a little speed; past a full load it drops fast, down to half
@@ -250,7 +263,7 @@ void ABallCharacter::RefreshColors()
 		BallParts::SetColor(BodyMesh, Shade(BodyColor, true));
 	}
 	// Feet are boots: they don't rot
-	Animator->ApplyColors(Shade(HandColor, true), Shade(FootColor, false));
+	Animator->ApplyColors(Shade(GloveTint.Get(HandColor), !GloveTint.IsSet()), Shade(BootTint.Get(FootColor), false));
 }
 
 void ABallCharacter::HandleDeath(UHealthComponent* DepletedHealth)
@@ -319,6 +332,7 @@ void ABallCharacter::Tick(float DeltaTime)
 			{
 				Skeleton->Show(VisualRoot, -GetGroundOffset(), Corpse->GetTint());
 				BodyMesh->SetVisibility(false);
+				WornGear->SetShown(false);
 				Face->SetFaceVisible(false);
 				Animator->SetSkeletonPose(true);
 				UpdateCorpseCollision(true);
