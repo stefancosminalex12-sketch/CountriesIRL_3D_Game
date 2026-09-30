@@ -82,5 +82,9 @@ Same style as the lion and martlet: one solid black silhouette, 15th-century Eng
 [DONE 2026-09-30] [charge_fleur_de_lis] Generate an image of a medieval heraldic fleur-de-lis, upright, three petals bound by a band in the middle, drawn as a solid black silhouette in the style of 15th-century English heraldry (as in the royal arms of England and France). One shape only, no shield, no shading. Transparent background.
 
 
+=== BATCH 9: DEATH SCREEN BLOOD (chat: MENU & KEY ART, folder Art/AI/Menu) - 1 image ===
+[death_blood] Landscape 3:2 image (1536x1024) with a transparent background. A blood splatter overlay for a medieval game's death screen: dark red blood splashes, spatters and a few runny drips coming in from the edges and corners of the frame, thickest in the corners, thinning out towards the middle, with the whole centre of the image completely empty and transparent (text goes there). Painterly hand-painted game art, deep dark red with a slightly brown edge where it dries, not bright red, not glossy, not cartoonish, not photographic. No text, no letters, no hand prints, no weapons, no figures, no background colour, no border, no watermark.
+
+
 === OPTIONAL ===
 [loading_05] (folder Art/AI/Menu, landscape 3:2) A fifth loading painting, e.g. an English alehouse interior in 1455 at night with countryball characters. Use the menu style block from Art/AI/README.md.

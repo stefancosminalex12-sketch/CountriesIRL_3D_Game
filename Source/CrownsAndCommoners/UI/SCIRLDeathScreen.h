@@ -39,6 +39,9 @@ private:
 	/** How long it takes to fade in: slow, while the body falls */
 	static constexpr float FadeSeconds = 3.f;
 
+	/** The darkness never covers the world completely */
+	static constexpr float MaxDarkness = 0.9f;
+
 	TSharedPtr<SButton> RespawnButton;
 	double ShownAt = 0.0;
 };

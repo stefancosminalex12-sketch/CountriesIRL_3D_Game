@@ -59,7 +59,8 @@ private:
 	UWorld* CurrentWorld() const;
 
 	UPROPERTY(config)
-	float MasterVolume = 1.f;
+	// A new player starts at 60%, not full blast (user, 2026-09-30)
+	float MasterVolume = 0.6f;
 
 	UPROPERTY(config)
 	float MusicVolume = 0.8f;
