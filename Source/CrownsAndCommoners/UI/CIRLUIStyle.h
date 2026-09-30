@@ -108,8 +108,9 @@ namespace CIRLUIStyle
 	// Widgets
 
 	/** A menu button (Resume, Respawn...): a dark box that turns gold when hovered or focused. OutButton gets the
-	 *  button itself, e.g. to give it keyboard focus */
-	TSharedRef<SWidget> MakeMenuButton(const FText& Label, FOnClicked OnClicked, TSharedPtr<class SButton>* OutButton = nullptr);
+	 *  button itself, e.g. to give it keyboard focus. bCentered puts the label in the middle of the box (the menu's
+	 *  list of buttons keeps it on the left) */
+	TSharedRef<SWidget> MakeMenuButton(const FText& Label, FOnClicked OnClicked, TSharedPtr<class SButton>* OutButton = nullptr, bool bCentered = false);
 
 	/** The big menu panel: leather texture, worn-gold border and a gold ornament in each corner */
 	TSharedRef<SWidget> MakeOrnatePanel(const TSharedRef<SWidget>& Content, const FMargin& Padding);

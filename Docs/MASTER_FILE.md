@@ -442,7 +442,7 @@ Start with the **commoner origin**; build what's designed so far and add feature
      - [x] **Weather** (2026-09-27): see Time & Calendar > Weather
 3. [ ] Yorkshire test landscape
    - 3a [x] **Ground material (2026-09-30)**: the user's 13 textures made seamless for the game by `Tools/make_tileable.py` (`Art/AI/Textures` -> `Art/Textures`: where an edge didn't match, its far band is cross-faded into the near side; fixed: dirt road, oak planks, ploughed field, stone slate roof, thatch, timber beam) and imported as `/Game/CrownsAndCommoners/World/Textures/T_tex_*`. **`M_Landscape`** (`Tools/Unreal/make_landscape_material.py`) has **7 paint layers: Grass, Mud, Road, Forest (floor), Field (ploughed), Rock (limestone), Cobbles**, each repeating every 3-8 m, with large soft light and dark patches (~40 m) so the repeats don't form a grid, and the season system's weather on top (wet ground darker and shinier, frost, lying snow). Walls, plaster, thatch, planks, beams and slate are for buildings
-   - 3b [ ] Terrain: a small piece of Wensleydale around Middleham shaped after the real place (hills, the river valley, a road), painted with the layers
+   - 3b [ ] Terrain: **1 x 1 km around Middleham (user, 2026-10-01)**, shaped after the real place (the castle's ridge between the Ure and the Cover, the valley, the road), painted with the layers; grown along the road later. To be discussed with the user before building
    - 3c [ ] Trees, grass and bushes: free Fab assets (shown to the user first), placed by rules run once in the editor and touched up with the foliage brush (see World > Build approach)
 4. [ ] Village (free Fab assets, approved by the user first)
 5. [x] Rideable horse (first version, 2026-09-27; user asked for it before weather)

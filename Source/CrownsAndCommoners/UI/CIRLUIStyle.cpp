@@ -352,7 +352,7 @@ namespace CIRLUIStyle
 		return Style;
 	}
 
-	TSharedRef<SWidget> MakeMenuButton(const FText& Label, FOnClicked OnClicked, TSharedPtr<SButton>* OutButton)
+	TSharedRef<SWidget> MakeMenuButton(const FText& Label, FOnClicked OnClicked, TSharedPtr<SButton>* OutButton, bool bCentered)
 	{
 		TSharedPtr<SCIRLButton> Button;
 		SAssignNew(Button, SCIRLButton)
@@ -362,6 +362,7 @@ namespace CIRLUIStyle
 		TWeakPtr<SCIRLButton> Weak = Button;
 		Button->SetContent(
 			SNew(SBorder)
+			.HAlign(bCentered ? HAlign_Center : HAlign_Fill)
 			.BorderImage_Lambda([Weak]()
 			{
 				const TSharedPtr<SCIRLButton> Pinned = Weak.Pin();

@@ -132,14 +132,14 @@ void SCIRLDeathScreen::Construct(const FArguments& InArgs)
 			.Padding(0.f, 0.f, 0.f, 14.f)
 			[
 				MakeMenuButton(LOCTEXT("Respawn", "RESPAWN"),
-					FOnClicked::CreateLambda([OnRespawn]() { OnRespawn.ExecuteIfBound(); return FReply::Handled(); }), &RespawnButton)
+					FOnClicked::CreateLambda([OnRespawn]() { OnRespawn.ExecuteIfBound(); return FReply::Handled(); }), &RespawnButton, true)
 			]
 			+ SVerticalBox::Slot()
 			.AutoHeight()
 			.HAlign(HAlign_Center)
 			[
 				MakeMenuButton(LOCTEXT("MainMenu", "MAIN MENU"),
-					FOnClicked::CreateLambda([OnMainMenu]() { OnMainMenu.ExecuteIfBound(); return FReply::Handled(); }))
+					FOnClicked::CreateLambda([OnMainMenu]() { OnMainMenu.ExecuteIfBound(); return FReply::Handled(); }), nullptr, true)
 			]
 		]
 	];
