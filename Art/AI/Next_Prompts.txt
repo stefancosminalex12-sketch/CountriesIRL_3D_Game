@@ -68,5 +68,19 @@ Flat style like the map icons: flat colours, bold dark-brown outline, no shading
 [DONE 2026-09-30] [order_loose] Generate an image of a simple game symbol for the order "loose arrows": three arrows flying up and to the right in an arc. Flat colours, bold dark-brown outline, no shading, no texture. Must read at 24 pixels. Transparent background.
 
 
+=== BATCH 7: MORE LANDSCAPE TEXTURES for the Wensleydale test landscape (chat: TEXTURES, folder Art/AI/Textures) - 4 images, square ===
+Same rules and style as batch 3: SEAMLESS TILEABLE, straight from above (or straight on), evenly lit, no shadows, no perspective, painterly hand-painted game texture.
+[tex_forest_floor] Generate an image of a seamless tileable texture: an English oak and ash woodland floor seen from straight above, brown fallen leaves, small twigs, patches of dark earth and a little moss. Painterly hand-painted game texture, evenly lit, no shadows, no perspective.
+[tex_ploughed_field] Generate an image of a seamless tileable texture: a freshly ploughed medieval strip field seen from straight above, dark brown earth in straight furrows running top to bottom, small clods and stones. Painterly hand-painted game texture, evenly lit, no shadows, no perspective.
+[tex_limestone_rock] Generate an image of a seamless tileable texture: pale grey Yorkshire Dales limestone rock face seen straight on, weathered with cracks, small ledges and faint patches of lichen. Painterly hand-painted game texture, evenly lit, no shadows, no perspective.
+[tex_stone_slate_roof] Generate an image of a seamless tileable texture: a Yorkshire stone slate roof seen straight on, thick grey-brown sandstone slates in overlapping rows, larger at the bottom, a little moss in the gaps. Painterly hand-painted game texture, evenly lit, no shadows, no perspective.
+
+
+=== BATCH 8: MORE HERALDRY CHARGES, to draw our own coats of arms (chat: HERALDRY, folder Art/AI/Heraldry) - 2 images, square ===
+Same style as the lion and martlet: one solid black silhouette, 15th-century English heraldry, no shield, no shading. Transparent background.
+[charge_rose] Generate an image of a medieval heraldic rose seen from the front: five rounded petals, a round centre with small seed dots, five small pointed leaves showing between the petals, drawn as a solid black silhouette in the style of 15th-century English heraldry (the badge of York and Lancaster). The centre and petal edges as thin gaps so it reads when coloured in. One shape only, no stem, no shield, no shading. Transparent background.
+[charge_fleur_de_lis] Generate an image of a medieval heraldic fleur-de-lis, upright, three petals bound by a band in the middle, drawn as a solid black silhouette in the style of 15th-century English heraldry (as in the royal arms of England and France). One shape only, no shield, no shading. Transparent background.
+
+
 === OPTIONAL ===
 [loading_05] (folder Art/AI/Menu, landscape 3:2) A fifth loading painting, e.g. an English alehouse interior in 1455 at night with countryball characters. Use the menu style block from Art/AI/README.md.
