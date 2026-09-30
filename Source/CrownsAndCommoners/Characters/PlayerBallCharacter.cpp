@@ -59,6 +59,9 @@ void APlayerBallCharacter::SetFirstPerson(bool bEnable)
 	// Don't draw the ball from the inside; hands and feet stay visible
 	BodyMesh->SetOwnerNoSee(bEnable);
 	Face->SetOwnerNoSee(bEnable);
+	// ...but the hidden ball still casts its shadow, so your shadow is whole in first-person too
+	BodyMesh->bCastHiddenShadow = true;
+	BodyMesh->MarkRenderStateDirty();
 	Animator->SetFirstPersonHands(bEnable);
 }
 
