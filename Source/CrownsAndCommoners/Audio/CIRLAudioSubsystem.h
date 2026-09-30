@@ -58,9 +58,9 @@ private:
 
 	UWorld* CurrentWorld() const;
 
+	/** A new player starts at half volume, not full blast (user, 2026-09-30) */
 	UPROPERTY(config)
-	// A new player starts at 60%, not full blast (user, 2026-09-30)
-	float MasterVolume = 0.6f;
+	float MasterVolume = 0.5f;
 
 	UPROPERTY(config)
 	float MusicVolume = 0.8f;
@@ -70,7 +70,7 @@ private:
 	float GameMusicVolume = 0.5f;
 
 	UPROPERTY(config)
-	float EffectsVolume = 1.f;
+	float EffectsVolume = 0.8f;
 
 	UPROPERTY(Transient)
 	TObjectPtr<USoundMix> VolumeMix;
