@@ -45,4 +45,8 @@ public:
 	/** Plays when the player dies, instead of the world's music (which stops); empty = silence. Under the In-Game Music slider */
 	UPROPERTY(config, EditAnywhere, Category = "Music")
 	TArray<FCIRLMusicTrack> DeathMusic;
+
+	/** A sound effect when the player dies (e.g. church bells tolling), under the Effects slider, not the music ones */
+	UPROPERTY(config, EditAnywhere, Category = "Sound Effects")
+	TSoftObjectPtr<USoundBase> DeathSound;
 };

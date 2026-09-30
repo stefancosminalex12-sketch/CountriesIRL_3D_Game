@@ -20,6 +20,7 @@
 #include "Characters/PlayerBallCharacter.h"
 #include "GameFramework/GameModeBase.h"
 #include "TimerManager.h"
+#include "Components/AudioComponent.h"
 #include "UI/CIRLMenuNavigation.h"
 #include "Audio/CIRLAudioSubsystem.h"
 #include "Items/CIRLInventoryComponent.h"
@@ -224,6 +225,11 @@ void ACIRLPlayerController::OnPlayerDied()
 	{
 		GameMusic->Stop(1.f);
 	}
+	if (USoundBase* Sound = GetDefault<UCIRLMusicSettings>()->DeathSound.LoadSynchronous())
+	{
+		// Its own sound class (Effects) comes from the asset; not auto-destroyed, so respawning can fade it out
+		DeathSound = UGameplayStatics::SpawnSound2D(this, Sound, 1.f, 1.f, 0.f, nullptr, false, false);
+	}
 	const TArray<FCIRLMusicTrack>& Tracks = GetDefault<UCIRLMusicSettings>()->DeathMusic;
 	if (DeathMusic && Tracks.Num() > 0)
 	{
@@ -312,6 +318,11 @@ void ACIRLPlayerController::Respawn()
 	if (DeathMusic)
 	{
 		DeathMusic->Stop(1.f);
+	}
+	if (DeathSound)
+	{
+		DeathSound->FadeOut(1.5f, 0.f);
+		DeathSound = nullptr;
 	}
 	StartGameMusic();
 

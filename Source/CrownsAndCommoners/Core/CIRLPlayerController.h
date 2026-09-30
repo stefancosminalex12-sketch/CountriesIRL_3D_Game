@@ -124,6 +124,10 @@ private:
 	UPROPERTY(Transient)
 	TObjectPtr<class UCIRLPlaylistComponent> GameMusic;
 
+	/** The death sound effect while it plays (faded out on respawn) */
+	UPROPERTY(Transient)
+	TObjectPtr<class UAudioComponent> DeathSound;
+
 	/** Music while dead (the world's music stops) */
 	UPROPERTY(Transient)
 	TObjectPtr<class UCIRLPlaylistComponent> DeathMusic;
