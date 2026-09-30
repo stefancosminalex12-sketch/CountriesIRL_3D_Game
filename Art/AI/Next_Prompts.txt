@@ -33,9 +33,9 @@ Style for all: painterly hand-painted game texture, soft brush strokes, realisti
 
 === BATCH 4: HERALDRY (folder Art/AI/Heraldry) - 3 images, square ===
 To replace the Wikimedia coats of arms with our own before release. Claude draws the simple shapes (crosses, chevrons, checks) in code; only the animals need painting. Plain black shape, so it can be coloured in code.
-[charge_lion_rampant] Generate an image of a medieval heraldic lion rampant (standing on one hind leg, facing left, claws and tongue out, tail raised), drawn as a solid black silhouette in the style of 15th-century English heraldry. One shape only, no shield, no outline colour, no shading. Transparent background.
-[charge_lion_passant] Generate an image of a medieval heraldic lion passant guardant (walking to the left, one forepaw raised, face turned to the viewer), drawn as a solid black silhouette in the style of 15th-century English heraldry. One shape only, no shield, no shading. Transparent background.
-[charge_martlet] Generate an image of a medieval heraldic martlet (a small swallow-like bird with no feet, facing left), drawn as a solid black silhouette in the style of 15th-century English heraldry. One shape only, no shield, no shading. Transparent background.
+[DONE 2026-09-30] [charge_lion_rampant] Generate an image of a medieval heraldic lion rampant (standing on one hind leg, facing left, claws and tongue out, tail raised), drawn as a solid black silhouette in the style of 15th-century English heraldry. One shape only, no shield, no outline colour, no shading. Transparent background.
+[DONE 2026-09-30] [charge_lion_passant] Generate an image of a medieval heraldic lion passant guardant (walking to the left, one forepaw raised, face turned to the viewer), drawn as a solid black silhouette in the style of 15th-century English heraldry. One shape only, no shield, no shading. Transparent background.
+[DONE 2026-09-30] [charge_martlet] Generate an image of a medieval heraldic martlet (a small swallow-like bird with no feet, facing left), drawn as a solid black silhouette in the style of 15th-century English heraldry. One shape only, no shield, no shading. Transparent background.
 
 
 === BATCH 5: MONEY AND TRADE ICONS for v0.2 buying and selling (folder Art/AI/Icons) - 14 images, square ===
