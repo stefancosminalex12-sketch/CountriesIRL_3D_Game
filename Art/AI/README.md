@@ -68,5 +68,5 @@ For items we'll model in Blender: **3:2**, plain light-grey background, the item
 
 ## 4. Map icons
 
-- `MapIcons/` — the **simple** icons for the whole-England map (`Tools/world/draw_plan_map.py` uses any `map_*.png` found there). Done: village, town, city, castle major/minor, cathedral, abbey, battle. Still to make: `map_landmark`, `map_nature` (prompts in `MapIcon_Prompts.txt`).
+- `MapIcons/` — the **simple** icons for the whole-England map (`Tools/world/draw_plan_map.py` uses any `map_*.png` found there). **All 15 done (2026-09-30):** village, town, city, castle major/minor, cathedral, abbey, battle, landmark, nature, stone bridge, timber bridge, ferry, ford, and `map_player` (your marker on the in-game Map tab). Prompts are kept in `MapIcon_Prompts.txt`.
 - `RegionalMapIcons/` — the user's first, **detailed** set (2026-09-29). Kept as spares: the regional maps will show stylized aerial views of the real places instead; the title scroll and compass rose can still decorate the maps.
