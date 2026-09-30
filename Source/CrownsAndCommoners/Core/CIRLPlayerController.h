@@ -124,6 +124,13 @@ private:
 	UPROPERTY(Transient)
 	TObjectPtr<class UCIRLPlaylistComponent> GameMusic;
 
+	/** Music while dead (the world's music stops) */
+	UPROPERTY(Transient)
+	TObjectPtr<class UCIRLPlaylistComponent> DeathMusic;
+
+	/** Starts the world's music from its first track */
+	void StartGameMusic();
+
 	/** Slate's navigation rules from before the menu opened (the menu adds WASD) */
 	TSharedPtr<FNavigationConfig> PreviousNavigation;
 };

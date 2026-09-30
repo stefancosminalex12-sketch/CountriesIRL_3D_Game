@@ -53,6 +53,17 @@ void ACIRLPlayerController::BeginPlay()
 	{
 		GameMusic = NewObject<UCIRLPlaylistComponent>(this, TEXT("GameMusic"));
 		GameMusic->RegisterComponent();
+		DeathMusic = NewObject<UCIRLPlaylistComponent>(this, TEXT("DeathMusic"));
+		DeathMusic->RegisterComponent();
+		StartGameMusic();
+	}
+}
+
+void ACIRLPlayerController::StartGameMusic()
+{
+	if (GameMusic)
+	{
+		const UCIRLAudioSubsystem* Audio = UCIRLAudioSubsystem::Get(this);
 		GameMusic->Play(GetDefault<UCIRLMusicSettings>()->GamePlaylist, Audio ? Audio->GetGameMusicClass() : nullptr);
 	}
 }
@@ -207,6 +218,18 @@ void ACIRLPlayerController::OnPlayerDied()
 {
 	const APlayerBallCharacter* PlayerBall = Cast<APlayerBallCharacter>(GetPawn());
 	bDiedInFirstPerson = !PlayerBall || PlayerBall->IsFirstPerson();
+
+	// The world's music is cut off; death has its own (if there is any)
+	if (GameMusic)
+	{
+		GameMusic->Stop(1.f);
+	}
+	const TArray<FCIRLMusicTrack>& Tracks = GetDefault<UCIRLMusicSettings>()->DeathMusic;
+	if (DeathMusic && Tracks.Num() > 0)
+	{
+		const UCIRLAudioSubsystem* Audio = UCIRLAudioSubsystem::Get(this);
+		DeathMusic->Play(Tracks, Audio ? Audio->GetGameMusicClass() : nullptr);
+	}
 	GetWorldTimerManager().SetTimer(DeathScreenTimer, this, &ACIRLPlayerController::ShowDeathScreen, DeathScreenDelay, false);
 }
 
@@ -284,6 +307,13 @@ void ACIRLPlayerController::Respawn()
 	}
 	Possess(NewPawn);
 	SetControlRotation(FRotator(0.f, Where.Rotator().Yaw, 0.f));
+
+	// Back to life, back to the world's music
+	if (DeathMusic)
+	{
+		DeathMusic->Stop(1.f);
+	}
+	StartGameMusic();
 
 	if (APlayerBallCharacter* PlayerBall = Cast<APlayerBallCharacter>(NewPawn))
 	{

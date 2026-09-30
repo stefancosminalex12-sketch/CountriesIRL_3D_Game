@@ -121,6 +121,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Camera")
 	FVector2D CameraDistance = FVector2D(380.f, 600.f);
 
+	/** Dead: the third-person camera pulls back this far and looks down at the body at this angle (degrees) */
+	UPROPERTY(EditAnywhere, Category="Camera")
+	float DeathCameraDistance = 650.f;
+
+	UPROPERTY(EditAnywhere, Category="Camera")
+	float DeathCameraPitch = -55.f;
+
 	/** In the saddle, a Shift press shorter than this is a tap (walk <-> trot); held longer it canters */
 	UPROPERTY(EditAnywhere, Category="Ball|Riding")
 	float ShiftTapSeconds = 0.25f;

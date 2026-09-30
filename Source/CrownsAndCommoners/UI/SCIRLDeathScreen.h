@@ -30,6 +30,9 @@ public:
 
 private:
 
+	/** Seconds since it appeared */
+	float Elapsed() const;
+
 	/** 0 when it appears, 1 once it has faded in */
 	float FadeIn() const;
 

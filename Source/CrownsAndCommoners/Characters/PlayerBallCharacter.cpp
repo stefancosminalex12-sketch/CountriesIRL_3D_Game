@@ -368,7 +368,15 @@ void APlayerBallCharacter::Tick(float DeltaTime)
 	CameraBoom->SetRelativeLocation(FVector(0.f, 0.f, GetBallCenterZ() - 0.5f * SneakCameraDrop * SneakCameraBlend));
 
 	// Third-person: pull the camera back in the saddle so the whole horse is in view
-	CameraBoom->TargetArmLength = FMath::FInterpTo(CameraBoom->TargetArmLength, IsMounted() ? CameraDistance.Y : CameraDistance.X, DeltaTime, 3.f);
+	const float WantedArm = IsDead() ? DeathCameraDistance : (IsMounted() ? CameraDistance.Y : CameraDistance.X);
+	CameraBoom->TargetArmLength = FMath::FInterpTo(CameraBoom->TargetArmLength, WantedArm, DeltaTime, IsDead() ? 1.2f : 3.f);
+
+	// Dead: the view swings slowly up to look down on the body
+	if (IsDead() && Controller)
+	{
+		const FRotator View = Controller->GetControlRotation();
+		Controller->SetControlRotation(FMath::RInterpTo(View, FRotator(DeathCameraPitch, View.Yaw, 0.f), DeltaTime, 1.2f));
+	}
 
 	if (DevMoveTimeLeft > 0.f)
 	{

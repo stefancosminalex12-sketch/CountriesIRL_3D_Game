@@ -26,16 +26,22 @@ void SCIRLDeathScreen::Construct(const FArguments& InArgs)
 	const FSlateBrush* Background = DeathBackground();
 	const FSlateBrush* Emblem = DeathEmblem();
 	auto Faded = [this](FLinearColor Color) { Color.A *= FadeIn(); return FSlateColor(Color); };
+	// The background darkens at the pace it had over the first seconds, and keeps going until nothing shows through
+	auto Darkening = [this](FLinearColor Color, float OpacityAtFadeEnd)
+	{
+		Color.A = FMath::Min(Elapsed() / FadeSeconds * OpacityAtFadeEnd, 1.f);
+		return FSlateColor(Color);
+	};
 
 	ChildSlot
 	[
 		SNew(SOverlay)
-		// Darkness, fading in over the fallen body: the world still shows through
+		// Darkness over the fallen body: see-through at first, solid black after about 7 seconds
 		+ SOverlay::Slot()
 		[
 			SNew(SBorder)
 			.BorderImage(FCoreStyle::Get().GetBrush("WhiteBrush"))
-			.BorderBackgroundColor_Lambda([Faded]() { return Faded(FLinearColor(0.f, 0.f, 0.f, 0.45f)); })
+			.BorderBackgroundColor_Lambda([Darkening]() { return Darkening(FLinearColor::Black, 0.45f); })
 		]
 		// The grim tomb-slab painting, once it has been made
 		+ SOverlay::Slot()
@@ -46,7 +52,7 @@ void SCIRLDeathScreen::Construct(const FArguments& InArgs)
 			[
 				SNew(SImage)
 				.Image(Background)
-				.ColorAndOpacity_Lambda([Faded]() { return Faded(FLinearColor(1.f, 1.f, 1.f, 0.55f)); })
+				.ColorAndOpacity_Lambda([Darkening]() { return Darkening(FLinearColor::White, 0.55f); })
 			]
 		]
 		// Darker towards the edges
@@ -104,6 +110,11 @@ void SCIRLDeathScreen::Construct(const FArguments& InArgs)
 			]
 		]
 	];
+}
+
+float SCIRLDeathScreen::Elapsed() const
+{
+	return static_cast<float>(FSlateApplication::Get().GetCurrentTime() - ShownAt);
 }
 
 float SCIRLDeathScreen::FadeIn() const
