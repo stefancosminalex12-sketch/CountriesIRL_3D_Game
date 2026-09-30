@@ -16,6 +16,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "UI/SCIRLGameMenu.h"
+#include "UI/SCIRLDeathScreen.h"
+#include "Characters/PlayerBallCharacter.h"
+#include "GameFramework/GameModeBase.h"
+#include "TimerManager.h"
 #include "UI/CIRLMenuNavigation.h"
 #include "Audio/CIRLAudioSubsystem.h"
 #include "Items/CIRLInventoryComponent.h"
@@ -83,6 +87,7 @@ void ACIRLPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	{
 		CloseGameMenu();
 	}
+	HideDeathScreen();
 	if (PaperDollStage)
 	{
 		PaperDollStage->Destroy();
@@ -198,6 +203,98 @@ void ACIRLPlayerController::CloseGameMenu()
 	SetInputMode(FInputModeGameOnly());
 }
 
+void ACIRLPlayerController::OnPlayerDied()
+{
+	const APlayerBallCharacter* PlayerBall = Cast<APlayerBallCharacter>(GetPawn());
+	bDiedInFirstPerson = !PlayerBall || PlayerBall->IsFirstPerson();
+	GetWorldTimerManager().SetTimer(DeathScreenTimer, this, &ACIRLPlayerController::ShowDeathScreen, DeathScreenDelay, false);
+}
+
+void ACIRLPlayerController::ShowDeathScreen()
+{
+	UGameViewportClient* Viewport = GetWorld()->GetGameViewport();
+	ULocalPlayer* LocalPlayer = GetLocalPlayer();
+	if (DeathScreen.IsValid() || !Viewport || !LocalPlayer)
+	{
+		return;
+	}
+	if (GameMenu.IsValid())
+	{
+		CloseGameMenu();
+	}
+
+	SAssignNew(DeathScreen, SCIRLDeathScreen)
+		.OnRespawn(SCIRLDeathScreen::FOnChosen::CreateUObject(this, &ACIRLPlayerController::Respawn))
+		.OnMainMenu(SCIRLDeathScreen::FOnChosen::CreateUObject(this, &ACIRLPlayerController::ReturnToTitle));
+	Viewport->AddViewportWidgetForPlayer(LocalPlayer, DeathScreen.ToSharedRef(), 40);
+
+	PreviousNavigation = CIRLMenuNavigation::Push();
+	FlushPressedKeys();
+	SetShowMouseCursor(true);
+	FInputModeUIOnly InputMode;
+	InputMode.SetWidgetToFocus(DeathScreen->GetFocusTarget());
+	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	SetInputMode(InputMode);
+}
+
+void ACIRLPlayerController::HideDeathScreen()
+{
+	GetWorldTimerManager().ClearTimer(DeathScreenTimer);
+	if (!DeathScreen.IsValid())
+	{
+		return;
+	}
+	UGameViewportClient* Viewport = GetWorld() ? GetWorld()->GetGameViewport() : nullptr;
+	if (Viewport && GetLocalPlayer())
+	{
+		Viewport->RemoveViewportWidgetForPlayer(GetLocalPlayer(), DeathScreen.ToSharedRef());
+	}
+	DeathScreen.Reset();
+	CIRLMenuNavigation::Pop(PreviousNavigation);
+
+	FlushPressedKeys();
+	SetShowMouseCursor(false);
+	SetInputMode(FInputModeGameOnly());
+}
+
+void ACIRLPlayerController::Respawn()
+{
+	HideDeathScreen();
+	AGameModeBase* GameMode = GetWorld()->GetAuthGameMode();
+	if (!GameMode)
+	{
+		return;
+	}
+
+	// The body keeps its place in the world (it decays like any other); we leave it for a new ball
+	const ABallCharacter* OldBall = Cast<ABallCharacter>(GetPawn());
+	UTexture2D* Arms = OldBall ? OldBall->GetFlag() : nullptr;
+	UnPossess();
+
+	// For now always at the player start (later: the nearest village, a shrine, or being found by someone)
+	const AActor* Start = GameMode->FindPlayerStart(this);
+	const FTransform Where = Start ? Start->GetActorTransform() : FTransform(FVector(0.f, 0.f, 200.f));
+	FActorSpawnParameters Params;
+	// Someone (or your own body) standing on the spot must not stop you coming back
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	APawn* NewPawn = GetWorld()->SpawnActor<APawn>(GameMode->GetDefaultPawnClassForController(this), Where, Params);
+	if (!NewPawn)
+	{
+		return;
+	}
+	Possess(NewPawn);
+	SetControlRotation(FRotator(0.f, Where.Rotator().Yaw, 0.f));
+
+	if (APlayerBallCharacter* PlayerBall = Cast<APlayerBallCharacter>(NewPawn))
+	{
+		if (Arms)
+		{
+			PlayerBall->SetFlag(Arms);
+		}
+		PlayerBall->SetFirstPerson(bDiedInFirstPerson);
+	}
+}
+
 void ACIRLPlayerController::DevMenu(const FString& Tab)
 {
 	static const TCHAR* Names[] = { TEXT("Map"), TEXT("Quests"), TEXT("Equipment"), TEXT("Character"), TEXT("Game") };
@@ -215,6 +312,7 @@ void ACIRLPlayerController::DevMenu(const FString& Tab)
 void ACIRLPlayerController::ReturnToTitle()
 {
 	CloseGameMenu();
+	HideDeathScreen();
 	UGameplayStatics::OpenLevel(this, FName(*GetDefault<UWorldSimulationSettings>()->TitleMap.GetLongPackageName()));
 }
 

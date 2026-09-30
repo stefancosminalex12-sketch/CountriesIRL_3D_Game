@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Fonts/SlateFontInfo.h"
+#include "Framework/SlateDelegates.h"
 #include "Styling/SlateBrush.h"
 
 class SWidget;
@@ -89,6 +90,10 @@ namespace CIRLUIStyle
 	const FSliderStyle& SliderStyle();
 
 	// Widgets
+
+	/** A menu button (Resume, Respawn...): a dark box that turns gold when hovered or focused. OutButton gets the
+	 *  button itself, e.g. to give it keyboard focus */
+	TSharedRef<SWidget> MakeMenuButton(const FText& Label, FOnClicked OnClicked, TSharedPtr<class SButton>* OutButton = nullptr);
 
 	/** The big menu panel: leather texture, worn-gold border and a gold ornament in each corner */
 	TSharedRef<SWidget> MakeOrnatePanel(const TSharedRef<SWidget>& Content, const FMargin& Padding);

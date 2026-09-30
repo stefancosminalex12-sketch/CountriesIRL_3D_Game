@@ -84,6 +84,9 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	/** Tells the controller (death screen), then shows the fallen body from outside */
+	virtual void HandleDeath(UHealthComponent* DepletedHealth) override;
+
 	/** The player's things come from the item settings */
 	virtual bool GetsTestGear() const override { return false; }
 	virtual void Tick(float DeltaTime) override;

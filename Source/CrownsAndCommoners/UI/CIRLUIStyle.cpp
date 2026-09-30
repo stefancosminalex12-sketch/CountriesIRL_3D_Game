@@ -10,6 +10,8 @@
 #include "Widgets/Layout/SBorder.h"
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/SOverlay.h"
+#include "Widgets/Text/STextBlock.h"
+#include "UI/SCIRLButton.h"
 
 namespace CIRLUIStyle
 {
@@ -281,6 +283,44 @@ namespace CIRLUIStyle
 			return S;
 		}();
 		return Style;
+	}
+
+	TSharedRef<SWidget> MakeMenuButton(const FText& Label, FOnClicked OnClicked, TSharedPtr<SButton>* OutButton)
+	{
+		TSharedPtr<SCIRLButton> Button;
+		SAssignNew(Button, SCIRLButton)
+		.ButtonStyle(&PlainButtonStyle())
+		.OnClicked(OnClicked);
+
+		TWeakPtr<SCIRLButton> Weak = Button;
+		Button->SetContent(
+			SNew(SBorder)
+			.BorderImage_Lambda([Weak]()
+			{
+				const TSharedPtr<SCIRLButton> Pinned = Weak.Pin();
+				if (!Pinned.IsValid() || !Pinned->IsHighlighted())
+				{
+					return ButtonNormal();
+				}
+				return Pinned->IsPressed() ? ButtonPressed() : ButtonHovered();
+			})
+			.Padding(FMargin(24.f, 10.f))
+			[
+				SNew(STextBlock)
+				.Text(Label)
+				.Font(Font(EFont::Title, 21.f))
+				.ColorAndOpacity_Lambda([Weak]()
+				{
+					const TSharedPtr<SCIRLButton> Pinned = Weak.Pin();
+					return FSlateColor(Pinned.IsValid() && Pinned->IsHighlighted() ? GoldBright() : Text());
+				})
+			]);
+
+		if (OutButton)
+		{
+			*OutButton = Button;
+		}
+		return SNew(SBox).WidthOverride(360.f)[Button.ToSharedRef()];
 	}
 
 	TSharedRef<SWidget> MakeOrnatePanel(const TSharedRef<SWidget>& Content, const FMargin& Padding)

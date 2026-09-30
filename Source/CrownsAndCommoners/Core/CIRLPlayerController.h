@@ -8,6 +8,7 @@
 
 class UCIRLInputConfig;
 class SCIRLGameMenu;
+class SCIRLDeathScreen;
 class ACIRLPaperDollStage;
 class FNavigationConfig;
 enum class ECIRLMenuTab : uint8;
@@ -31,6 +32,13 @@ public:
 	void CloseGameMenu();
 
 	bool IsGameMenuOpen() const { return GameMenu.IsValid(); }
+
+	/** The player's ball has died: after a moment the death screen offers to respawn */
+	void OnPlayerDied();
+
+	/** A new ball at the player start, with the arms and view of the one that died; the old body stays where it fell */
+	UFUNCTION(Exec)
+	void Respawn();
 
 	/** Console (testing): jump to a time of day. DevTime 21.5 = 21:30 */
 	UFUNCTION(Exec)
@@ -95,6 +103,18 @@ private:
 	void WearArms(int32 Index);
 
 	TSharedPtr<SCIRLGameMenu> GameMenu;
+
+	void ShowDeathScreen();
+	void HideDeathScreen();
+
+	TSharedPtr<SCIRLDeathScreen> DeathScreen;
+	FTimerHandle DeathScreenTimer;
+
+	/** Seconds between dying and the death screen (the body falls over first) */
+	float DeathScreenDelay = 2.5f;
+
+	/** How the player was looking when they died, for the new ball */
+	bool bDiedInFirstPerson = true;
 
 	/** The studio that films the 3D character for the Equipment tab (made the first time the menu opens) */
 	UPROPERTY(Transient)

@@ -83,7 +83,6 @@ private:
 	void CloseSettings();
 
 	/** A wide menu button in the panel style (Resume, Quit...) */
-	TSharedRef<SWidget> MakeMenuButton(const FText& Label, FOnClicked OnClicked, TSharedPtr<class SButton>* OutButton = nullptr);
 
 	void RebuildKeyHints();
 

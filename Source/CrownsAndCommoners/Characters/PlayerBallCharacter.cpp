@@ -381,6 +381,18 @@ void APlayerBallCharacter::Tick(float DeltaTime)
 	}
 }
 
+void APlayerBallCharacter::HandleDeath(UHealthComponent* DepletedHealth)
+{
+	// The controller remembers how we were looking before the view changes
+	if (ACIRLPlayerController* PC = Cast<ACIRLPlayerController>(GetController()))
+	{
+		PC->OnPlayerDied();
+	}
+	Super::HandleDeath(DepletedHealth);
+	// See your own body fall
+	SetFirstPerson(false);
+}
+
 void APlayerBallCharacter::Attack()
 {
 	Melee->TryPunch();
