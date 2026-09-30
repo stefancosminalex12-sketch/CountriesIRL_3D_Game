@@ -107,8 +107,8 @@ void SCIRLDeathScreen::Construct(const FArguments& InArgs)
 			.Padding(0.f, 0.f, 0.f, 10.f)
 			[
 				SNew(SBox)
-				.WidthOverride(280.f)
-				.HeightOverride(280.f)
+				.WidthOverride(380.f)
+				.HeightOverride(380.f)
 				.Visibility(Emblem ? EVisibility::HitTestInvisible : EVisibility::Collapsed)
 				[
 					SNew(SImage)
@@ -122,7 +122,7 @@ void SCIRLDeathScreen::Construct(const FArguments& InArgs)
 			.Padding(0.f, 0.f, 0.f, 48.f)
 			[
 				SNew(STextBlock)
-				.Text(LOCTEXT("Dead", "DEAD"))
+				.Text(InArgs._Title.IsEmpty() ? LOCTEXT("Perished", "PERISHED") : InArgs._Title)
 				.Font(Font(EFont::TitleBold, 96.f))
 				.ColorAndOpacity_Lambda([Faded]() { return Faded(FLinearColor(0.72f, 0.1f, 0.07f)); })
 			]

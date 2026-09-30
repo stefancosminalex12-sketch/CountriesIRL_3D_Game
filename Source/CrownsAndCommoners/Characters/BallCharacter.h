@@ -64,6 +64,9 @@ public:
 	/** A dagger in the neck from behind: dead at once, whatever the armour */
 	void Assassinated(ABallCharacter* By);
 
+	/** Whoever dealt the last blow, if it was another ball (nullptr: a fall, the weather, a test command...) */
+	ABallCharacter* GetLastAttacker() const { return LastAttacker.Get(); }
+
 	UStaminaComponent* GetStamina() const { return Stamina; }
 	UBallHeldItemsComponent* GetHeldItems() const { return HeldItems; }
 	UCIRLInventoryComponent* GetInventory() const { return Inventory; }
@@ -306,6 +309,9 @@ protected:
 	float DamageFlashStrength = 0.65f;
 
 	float DamageFlashTime = 0.f;
+
+	/** See GetLastAttacker */
+	TWeakObjectPtr<ABallCharacter> LastAttacker;
 
 	/** Run key held */
 	bool bWantsToRun = false;

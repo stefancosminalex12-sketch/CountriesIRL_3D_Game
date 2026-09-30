@@ -196,6 +196,7 @@ void ABallCharacter::Assassinated(ABallCharacter* By)
 	if (!IsDead())
 	{
 		DamageFlashTime = DamageFlashDuration;
+		LastAttacker = By;
 		Health->ApplyDamage(Health->GetHealth());
 
 		// A man going down is not silent: fighters close by hear it
@@ -210,6 +211,8 @@ float ABallCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 {
 	float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	Damage = Melee->ModifyIncomingDamage(Damage, DamageCauser);
+	ABallCharacter* Attacker = Cast<ABallCharacter>(DamageCauser);
+	LastAttacker = Attacker != this ? Attacker : nullptr;
 	const float Removed = Health->ApplyDamage(Damage);
 	if (Removed > 0.f)
 	{

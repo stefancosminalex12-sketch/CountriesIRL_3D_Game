@@ -116,6 +116,9 @@ private:
 	/** How the player was looking when they died, for the new ball */
 	bool bDiedInFirstPerson = true;
 
+	/** Killed by someone (SLAIN) rather than just dying (PERISHED) */
+	bool bWasSlain = false;
+
 	/** The studio that films the 3D character for the Equipment tab (made the first time the menu opens) */
 	UPROPERTY(Transient)
 	TObjectPtr<ACIRLPaperDollStage> PaperDollStage;

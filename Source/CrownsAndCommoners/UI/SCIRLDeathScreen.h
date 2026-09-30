@@ -21,6 +21,8 @@ public:
 	SLATE_BEGIN_ARGS(SCIRLDeathScreen) {}
 		SLATE_EVENT(FOnChosen, OnRespawn)
 		SLATE_EVENT(FOnChosen, OnMainMenu)
+		/** The big word: how you died (PERISHED, SLAIN...) */
+		SLATE_ARGUMENT(FText, Title)
 	SLATE_END_ARGS()
 
 	void Construct(const FArguments& InArgs);

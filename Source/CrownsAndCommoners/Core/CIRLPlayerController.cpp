@@ -219,6 +219,7 @@ void ACIRLPlayerController::OnPlayerDied()
 {
 	const APlayerBallCharacter* PlayerBall = Cast<APlayerBallCharacter>(GetPawn());
 	bDiedInFirstPerson = !PlayerBall || PlayerBall->IsFirstPerson();
+	bWasSlain = PlayerBall && PlayerBall->GetLastAttacker() != nullptr;
 
 	// The world's music is cut off; death has its own (if there is any)
 	if (GameMusic)
@@ -252,7 +253,9 @@ void ACIRLPlayerController::ShowDeathScreen()
 		CloseGameMenu();
 	}
 
+	// The word says how you died (later also FALLEN, for dying in a battle)
 	SAssignNew(DeathScreen, SCIRLDeathScreen)
+		.Title(bWasSlain ? NSLOCTEXT("CIRLDeath", "Slain", "SLAIN") : NSLOCTEXT("CIRLDeath", "Perished", "PERISHED"))
 		.OnRespawn(SCIRLDeathScreen::FOnChosen::CreateUObject(this, &ACIRLPlayerController::Respawn))
 		.OnMainMenu(SCIRLDeathScreen::FOnChosen::CreateUObject(this, &ACIRLPlayerController::ReturnToTitle));
 	Viewport->AddViewportWidgetForPlayer(LocalPlayer, DeathScreen.ToSharedRef(), 40);
