@@ -145,6 +145,7 @@ void ACIRLPlayerController::OpenGameMenu(ECIRLMenuTab Tab)
 	if (PaperDollStage)
 	{
 		PaperDollStage->SetDollFlag(PlayerArms);
+		PaperDollStage->MirrorGear(Ball ? Ball->GetInventory() : nullptr);
 	}
 
 	SAssignNew(GameMenu, SCIRLGameMenu)

@@ -82,6 +82,12 @@ public:
 	/** In first-person the hands are held in front of the camera so the player can see them */
 	void SetFirstPersonHands(bool bEnable) { bFirstPersonHands = bEnable; }
 
+	/** The hand (0 left, 1 right) is holding something: it stays closed around it */
+	void SetHolding(int32 HandIndex, bool bHolds) { bHolding[FMath::Clamp(HandIndex, 0, 1)] = bHolds; }
+
+	/** The part that moves a hand (0 left, 1 right); held items hang from it */
+	USceneComponent* GetHandRoot(int32 HandIndex) const { return Hands[FMath::Clamp(HandIndex, 0, 1)].Root; }
+
 	/** Only bones remain: hands and boots lie beside the skeleton instead of the body */
 	void SetSkeletonPose(bool bEnable) { bSkeletonPose = bEnable; }
 
@@ -257,6 +263,7 @@ private:
 	bool bFirstPersonHands = false;
 
 	bool bRiding = false;
+	bool bHolding[2] = { false, false };
 	float RidingHalfWidth = 0.f;
 	float RideBlend = 0.f;
 	bool bSkeletonPose = false;

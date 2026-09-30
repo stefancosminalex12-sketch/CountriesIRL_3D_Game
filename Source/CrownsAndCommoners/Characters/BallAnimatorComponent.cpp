@@ -464,6 +464,9 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 		Hand = KeepHandOutOfWalls(Index, FVector(0.f, 0.f, CenterZ), Hand, DeltaTime);
 
+		// A hand with something in it stays closed around it
+		bFist = bFist || bHolding[Index];
+
 		// Lying flat on the ground: beside the ball, or beside the ribs once only bones are left
 		const float LyingHandZ = GroundZ + PalmSize.Z * 0.5f + 1.f;
 		const FVector DeadHand = bSkeletonPose

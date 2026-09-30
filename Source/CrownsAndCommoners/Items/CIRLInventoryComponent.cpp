@@ -156,9 +156,31 @@ void UCIRLInventoryComponent::GetChoicesForSlot(ECIRLEquipSlot Slot, TArray<FNam
 	}
 }
 
+void UCIRLInventoryComponent::CopyFrom(const UCIRLInventoryComponent& Other)
+{
+	Items = Other.Items;
+	for (int32 Slot = 0; Slot < SlotCount; ++Slot)
+	{
+		Equipped[Slot] = Other.Equipped[Slot];
+	}
+	OnChanged.Broadcast();
+}
+
 float UCIRLInventoryComponent::GetCarriedWeight() const
 {
 	float Weight = 0.f;
+	// Test builds hand the player one of everything: only what's worn counts then, or nobody could move
+	if (GetDefault<UCIRLItemSettings>()->bGiveAllItemsForTesting)
+	{
+		for (int32 Slot = 0; Slot < SlotCount; ++Slot)
+		{
+			if (const FCIRLItemRow* Item = FindItem(Equipped[Slot]))
+			{
+				Weight += Item->WeightKg;
+			}
+		}
+		return Weight;
+	}
 	for (const FCIRLItemStack& Stack : Items)
 	{
 		if (const FCIRLItemRow* Item = FindItem(Stack.ItemId))
@@ -167,6 +189,40 @@ float UCIRLInventoryComponent::GetCarriedWeight() const
 		}
 	}
 	return Weight;
+}
+
+float UCIRLInventoryComponent::GetLoadRatio() const
+{
+	return GetCarriedWeight() / FMath::Max(GetMaxCarryWeight(), 1.f);
+}
+
+float UCIRLInventoryComponent::GetArmour(TConstArrayView<ECIRLEquipSlot> Slots, ECIRLDamageType DamageType) const
+{
+	float Total = 0.f;
+	for (const ECIRLEquipSlot Slot : Slots)
+	{
+		const FCIRLItemRow* Item = FindItem(GetEquipped(Slot));
+		if (!Item)
+		{
+			continue;
+		}
+		// How each layer does against a cut / a point / a blunt blow
+		float Cut = 1.f, Pierce = 1.f, Blunt = 1.f;
+		switch (Slot)
+		{
+		case ECIRLEquipSlot::Mail:		Cut = 1.4f; Pierce = 0.7f; Blunt = 0.5f; break;
+		case ECIRLEquipSlot::Gambeson:
+		case ECIRLEquipSlot::Coif:		Cut = 0.9f; Pierce = 0.6f; Blunt = 1.3f; break;
+		case ECIRLEquipSlot::Plate:
+		case ECIRLEquipSlot::Helmet:
+		case ECIRLEquipSlot::Gloves:
+		case ECIRLEquipSlot::Boots:		Cut = 1.2f; Pierce = 1.f; Blunt = 0.8f; break;
+		default: break;
+		}
+		const float Against = DamageType == ECIRLDamageType::Cut ? Cut : (DamageType == ECIRLDamageType::Pierce ? Pierce : Blunt);
+		Total += Item->Protection * Against;
+	}
+	return Total;
 }
 
 float UCIRLInventoryComponent::GetMaxCarryWeight() const

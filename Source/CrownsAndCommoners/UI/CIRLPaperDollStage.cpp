@@ -1,6 +1,7 @@
 // Crowns & Commoners
 
 #include "UI/CIRLPaperDollStage.h"
+#include "Items/CIRLInventoryComponent.h"
 #include "Characters/BallCharacter.h"
 #include "Characters/BallAnimatorComponent.h"
 #include "Components/PointLightComponent.h"
@@ -146,6 +147,29 @@ void ACIRLPaperDollStage::SetDollFlag(UTexture2D* Flag)
 	if (Doll)
 	{
 		Doll->SetFlag(Flag);
+	}
+}
+
+void ACIRLPaperDollStage::MirrorGear(UCIRLInventoryComponent* Source)
+{
+	if (!Doll || !Source)
+	{
+		return;
+	}
+	Doll->GetInventory()->CopyFrom(*Source);
+	// Once per source: every later change is copied across
+	if (MirroredGear != Source)
+	{
+		MirroredGear = Source;
+		TWeakObjectPtr<ACIRLPaperDollStage> WeakThis(this);
+		TWeakObjectPtr<UCIRLInventoryComponent> WeakSource(Source);
+		Source->OnChanged.AddWeakLambda(this, [WeakThis, WeakSource]()
+		{
+			if (WeakThis.IsValid() && WeakSource.IsValid() && WeakThis->Doll)
+			{
+				WeakThis->Doll->GetInventory()->CopyFrom(*WeakSource);
+			}
+		});
 	}
 }
 

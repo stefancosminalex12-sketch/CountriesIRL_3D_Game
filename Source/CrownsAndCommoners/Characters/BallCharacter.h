@@ -11,6 +11,9 @@ class UStaticMeshComponent;
 class UBallAnimatorComponent;
 class UStaminaComponent;
 class UCIRLInventoryComponent;
+class UBallHeldItemsComponent;
+enum class ECIRLDamageType : uint8;
+enum class EBallHitZone : uint8;
 class UHealthComponent;
 class UCorpseComponent;
 class UBallSkeletonComponent;
@@ -47,6 +50,17 @@ public:
 
 	UStaminaComponent* GetStamina() const { return Stamina; }
 	UCIRLInventoryComponent* GetInventory() const { return Inventory; }
+
+	/**
+	 *  A blow from a fist or a weapon lands on this ball: the armour worn over that part takes its share, then the
+	 *  rest goes through the guard and onto health. OutArmour = how much the armour stopped (0..1). Returns the damage dealt.
+	 */
+	float TakeStrike(float Damage, ECIRLDamageType DamageType, EBallHitZone Zone, const struct FHitResult& Hit, const FVector& Direction,
+		AController* EventInstigator, AActor* DamageCauser, float* OutArmour = nullptr);
+
+	/** How much a heavy load slows this ball (1 = not at all) and how much more stamina everything costs (1 = normal) */
+	float GetLoadSpeedScale() const;
+	float GetLoadStaminaScale() const;
 
 	UHealthComponent* GetHealth() const { return Health; }
 
@@ -122,6 +136,10 @@ protected:
 	/** What this ball owns and wears */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	TObjectPtr<UCIRLInventoryComponent> Inventory;
+
+	/** Stand-in shapes for what is in the hands */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	TObjectPtr<UBallHeldItemsComponent> HeldItems;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	TObjectPtr<UHealthComponent> Health;
@@ -218,6 +236,18 @@ protected:
 	/** Stamina per jump */
 	UPROPERTY(EditAnywhere, Category="Ball|Movement")
 	float JumpStaminaCost = 15.f;
+
+	/** What this ball owns from the start (item ids); each is put on if a slot is free. Villagers, soldiers and
+	 *  bandits get their gear here. The player's comes from the item settings instead */
+	UPROPERTY(EditAnywhere, Category="Ball|Gear")
+	TArray<FName> StartingGear;
+
+	/** Test builds dress the balls that have no gear of their own in one of a few sets of armour, to fight against */
+	virtual bool GetsTestGear() const { return true; }
+
+	/** This much armour halves a blow (twice as much cuts it to a third, and so on) */
+	UPROPERTY(EditAnywhere, Category="Ball|Combat")
+	float ArmourHalfPoint = 60.f;
 
 	/** Seconds the ball stays tinted red after taking damage */
 	UPROPERTY(EditAnywhere, Category="Ball|Look")

@@ -44,6 +44,9 @@ public:
 	/** Puts a coat of arms on the doll (the player's own, or one being tried on) */
 	void SetDollFlag(UTexture2D* Flag);
 
+	/** The doll wears and holds what this inventory does, and keeps up as it changes */
+	void MirrorGear(class UCIRLInventoryComponent* Source);
+
 	/** Films only while the Equipment screen shows the picture */
 	void SetCapturing(bool bCapture);
 
@@ -68,6 +71,9 @@ protected:
 
 	UPROPERTY(Transient)
 	TObjectPtr<ABallCharacter> Doll;
+
+	/** Whose gear the doll copies */
+	TWeakObjectPtr<class UCIRLInventoryComponent> MirroredGear;
 
 	UPROPERTY(Transient)
 	TObjectPtr<UTextureRenderTarget2D> RenderTarget;

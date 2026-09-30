@@ -17,6 +17,26 @@ enum class ECIRLDamageType : uint8
 	Blunt
 };
 
+/** The simple stand-in shape an item is shown as in the hand until its real model exists */
+UENUM(BlueprintType)
+enum class ECIRLItemShape : uint8
+{
+	None,
+	Pole,		// long shaft with a head: bill, poleaxe, spear
+	Staff,		// plain long shaft
+	Blade,		// sword: grip, crossguard, blade
+	Dagger,
+	Club,
+	Axe,
+	Hammer,		// short shaft with a heavy head: war hammer, mace
+	Bow,
+	Crossbow,
+	Shield,
+	Buckler,
+	Torch,
+	Lantern
+};
+
 /**
  *  One kind of item: a row of the item table (Data/Items/*.csv -> DT_Items_*, Tools/Unreal/import_items.py).
  *  The row's name is the item's id, e.g. "helmet_kettle_hat". A DLC region adds items as another table.
@@ -75,6 +95,16 @@ struct FCIRLItemRow : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Item")
 	FName Icon;
 
+	/** How long it is (cm): how far a weapon reaches, and the size of its stand-in shape */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Stats")
+	float ReachCm = 0.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Item")
+	ECIRLItemShape Shape = ECIRLItemShape::None;
+
 	bool FitsSlot(ECIRLEquipSlot Slot) const { return Slots.Contains(Slot); }
 	bool IsWeapon() const { return Damage > 0.f; }
+
+	/** Bows and crossbows shoot (later); they aren't swung */
+	bool IsRanged() const { return Shape == ECIRLItemShape::Bow || Shape == ECIRLItemShape::Crossbow; }
 };

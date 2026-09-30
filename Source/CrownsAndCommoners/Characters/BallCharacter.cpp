@@ -5,6 +5,9 @@
 #include "Characters/BallParts.h"
 #include "Characters/StaminaComponent.h"
 #include "Items/CIRLInventoryComponent.h"
+#include "Items/CIRLItemSettings.h"
+#include "Engine/DamageEvents.h"
+#include "Characters/BallHeldItemsComponent.h"
 #include "Characters/HealthComponent.h"
 #include "Characters/CorpseComponent.h"
 #include "Characters/BallSkeletonComponent.h"
@@ -70,6 +73,7 @@ ABallCharacter::ABallCharacter()
 
 	Stamina = CreateDefaultSubobject<UStaminaComponent>(TEXT("Stamina"));
 	Inventory = CreateDefaultSubobject<UCIRLInventoryComponent>(TEXT("Inventory"));
+	HeldItems = CreateDefaultSubobject<UBallHeldItemsComponent>(TEXT("HeldItems"));
 	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 	Corpse = CreateDefaultSubobject<UCorpseComponent>(TEXT("Corpse"));
 	Skeleton = CreateDefaultSubobject<UBallSkeletonComponent>(TEXT("Skeleton"));
@@ -142,6 +146,25 @@ void ABallCharacter::BeginPlay()
 	SetSprinting(false);
 
 	Health->OnDepleted.AddDynamic(this, &ABallCharacter::HandleDeath);
+
+	TArray<FName> Gear = StartingGear;
+	if (Gear.Num() == 0 && GetsTestGear() && GetDefault<UCIRLItemSettings>()->bGiveAllItemsForTesting)
+	{
+		// One after another: unarmoured, padded, mail, full plate
+		static const TArray<TArray<FName>> TestKits = {
+			{ TEXT("tunic_plain_wool"), TEXT("hat_felt"), TEXT("boots_ankle") },
+			{ TEXT("gambeson_padded_jack"), TEXT("helmet_kettle_hat"), TEXT("coif_arming_cap"), TEXT("boots_ankle"), TEXT("weapon_cudgel") },
+			{ TEXT("mail_shirt"), TEXT("gambeson_padded_jack"), TEXT("helmet_sallet"), TEXT("coif_arming_cap"), TEXT("gloves_leather"), TEXT("boots_riding"), TEXT("weapon_arming_sword"), TEXT("offhand_buckler") },
+			{ TEXT("plate_full_harness"), TEXT("mail_shirt"), TEXT("gambeson_arming_doublet"), TEXT("helmet_armet"), TEXT("coif_arming_cap"), TEXT("gloves_gauntlets"), TEXT("boots_sabatons"), TEXT("weapon_poleaxe") },
+		};
+		static int32 NextKit = 0;
+		Gear = TestKits[NextKit++ % TestKits.Num()];
+	}
+	for (const FName& ItemId : Gear)
+	{
+		Inventory->AddItem(ItemId);
+		Inventory->EquipInFreeSlot(ItemId);
+	}
 }
 
 bool ABallCharacter::IsDead() const
@@ -160,6 +183,39 @@ float ABallCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 		DamageFlashTime = DamageFlashDuration;
 	}
 	return Removed;
+}
+
+float ABallCharacter::TakeStrike(float Damage, ECIRLDamageType DamageType, EBallHitZone Zone, const FHitResult& Hit, const FVector& Direction,
+	AController* EventInstigator, AActor* DamageCauser, float* OutArmour)
+{
+	// What covers the part that was hit
+	static const ECIRLEquipSlot HeadSlots[] = { ECIRLEquipSlot::Helmet, ECIRLEquipSlot::Coif };
+	static const ECIRLEquipSlot ChestSlots[] = { ECIRLEquipSlot::Plate, ECIRLEquipSlot::Mail, ECIRLEquipSlot::Gambeson, ECIRLEquipSlot::Tunic, ECIRLEquipSlot::Cloak };
+	static const ECIRLEquipSlot LowerSlots[] = { ECIRLEquipSlot::Plate, ECIRLEquipSlot::Mail, ECIRLEquipSlot::Gambeson, ECIRLEquipSlot::Boots };
+	const TConstArrayView<ECIRLEquipSlot> Slots = Zone == EBallHitZone::Head ? TConstArrayView<ECIRLEquipSlot>(HeadSlots)
+		: (Zone == EBallHitZone::Chest ? TConstArrayView<ECIRLEquipSlot>(ChestSlots) : TConstArrayView<ECIRLEquipSlot>(LowerSlots));
+
+	// Each point of armour takes a smaller bite than the last: 60 points halve a blow, 120 cut it to a third
+	const float Armour = Inventory->GetArmour(Slots, DamageType);
+	const float Through = ArmourHalfPoint / (ArmourHalfPoint + Armour);
+	if (OutArmour)
+	{
+		*OutArmour = 1.f - Through;
+	}
+	const float Reduced = FMath::Max(FMath::RoundToFloat(Damage * Through), Damage > 0.f ? 1.f : 0.f);
+	return TakeDamage(Reduced, FPointDamageEvent(Reduced, Hit, Direction, nullptr), EventInstigator, DamageCauser);
+}
+
+float ABallCharacter::GetLoadSpeedScale() const
+{
+	// A normal load costs a little speed; past a full load it drops fast, down to half
+	const float Load = Inventory->GetLoadRatio();
+	return FMath::Max(1.f - 0.2f * FMath::Clamp(Load, 0.f, 1.f) - 0.5f * FMath::Clamp(Load - 1.f, 0.f, 1.f), 0.5f);
+}
+
+float ABallCharacter::GetLoadStaminaScale() const
+{
+	return 1.f + 0.8f * FMath::Clamp(Inventory->GetLoadRatio(), 0.f, 2.f);
 }
 
 void ABallCharacter::RefreshColors()
@@ -290,21 +346,22 @@ void ABallCharacter::Tick(float DeltaTime)
 	bRunning = bWantsToRun && bMovingOnGround && !bGuarding && Stamina->HasStamina();
 	if (bRunning)
 	{
-		Stamina->Drain(RunStaminaCost, DeltaTime);
+		Stamina->Drain(RunStaminaCost * GetLoadStaminaScale(), DeltaTime);
 	}
 
-	GetCharacterMovement()->MaxWalkSpeed = bRunning ? RunSpeed : (bGuarding ? WalkSpeed * Melee->GetGuardMoveSpeedScale() : WalkSpeed);
+	// What you carry weighs on you: slower, and everything tires you sooner
+	GetCharacterMovement()->MaxWalkSpeed = GetLoadSpeedScale() * (bRunning ? RunSpeed : (bGuarding ? WalkSpeed * Melee->GetGuardMoveSpeedScale() : WalkSpeed));
 }
 
 bool ABallCharacter::CanJumpInternal_Implementation() const
 {
-	return Super::CanJumpInternal_Implementation() && Stamina->HasStamina(JumpStaminaCost);
+	return Super::CanJumpInternal_Implementation() && Stamina->HasStamina(JumpStaminaCost * GetLoadStaminaScale());
 }
 
 void ABallCharacter::OnJumped_Implementation()
 {
 	Super::OnJumped_Implementation();
-	Stamina->TryConsume(JumpStaminaCost);
+	Stamina->TryConsume(JumpStaminaCost * GetLoadStaminaScale());
 }
 
 bool ABallCharacter::Mount(AHorse* Horse)

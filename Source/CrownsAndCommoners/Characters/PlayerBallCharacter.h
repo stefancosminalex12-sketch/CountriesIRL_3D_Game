@@ -83,6 +83,9 @@ public:
 protected:
 
 	virtual void BeginPlay() override;
+
+	/** The player's things come from the item settings */
+	virtual bool GetsTestGear() const override { return false; }
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 

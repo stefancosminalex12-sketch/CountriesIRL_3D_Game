@@ -72,15 +72,27 @@ public:
 	/** Owned items that could go in this slot right now (not counting copies worn elsewhere), in pack order */
 	void GetChoicesForSlot(ECIRLEquipSlot Slot, TArray<FName>& OutItems) const;
 
+	/** Owns and wears exactly what Other does (the Equipment screen's character copies the player) */
+	void CopyFrom(const UCIRLInventoryComponent& Other);
+
 	// --- Totals ---
 
 	/** Everything owned, worn or not (kg) */
 	float GetCarriedWeight() const;
 	float GetMaxCarryWeight() const;
 
+	/** Carried weight against what a person can carry: 0 = nothing, 1 = a full load, more = overloaded */
+	float GetLoadRatio() const;
+
 	/** Sums over what's worn */
 	float GetProtection() const;
 	float GetWarmth() const;
+
+	/**
+	 *  How well the gear in these slots stops this kind of blow. Layers add up, and each kind of armour is better
+	 *  against some blows than others: mail stops cuts but not hammers, padding soaks up blows but not points.
+	 */
+	float GetArmour(TConstArrayView<ECIRLEquipSlot> Slots, ECIRLDamageType DamageType) const;
 
 private:
 

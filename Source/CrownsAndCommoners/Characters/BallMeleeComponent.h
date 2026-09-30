@@ -18,8 +18,10 @@ enum class EBallHitZone : uint8
 };
 
 /**
- *  Unarmed fighting for any ball (player now, villagers and bandits later): jabs that alternate hands,
- *  hit what the ball is aiming at within reach, and deal damage by hit zone. Weapons will build on this.
+ *  Fighting for any ball (player now, villagers and bandits later). Empty-handed: jabs that alternate hands.
+ *  With a weapon in the main hand: strikes with that weapon, with its own damage, kind of wound, reach and
+ *  speed (a heavy bill hits hard and far but slowly and costs more stamina). Hits land on what the ball is aiming
+ *  at within reach, and the damage depends on where they land and on the armour worn there.
  */
 UCLASS(ClassGroup=(Ball), meta=(BlueprintSpawnableComponent))
 class UBallMeleeComponent : public UActorComponent
@@ -35,6 +37,9 @@ public:
 	bool TryPunch();
 
 	bool IsPunching() const { return PunchTime >= 0.f; }
+
+	/** The current (or last) strike is with a weapon, not a fist */
+	bool IsWeaponStrike() const { return Strike.bWeapon; }
 
 	/** Hold to keep the guard up (fists in front of the face) */
 	UFUNCTION(BlueprintCallable, Category="Melee")
@@ -137,7 +142,36 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Melee|Guard")
 	float GuardMoveSpeedScale = 0.65f;
 
+	/** A weapon's reach past the hand counts this much of its length (it's gripped partway along, and swung) */
+	UPROPERTY(EditAnywhere, Category="Melee|Weapons")
+	float WeaponReachShare = 0.75f;
+
+	/** Every kg of weapon makes a strike this much slower (a 2.7 kg bill: about 1.7 times a punch) */
+	UPROPERTY(EditAnywhere, Category="Melee|Weapons")
+	float SlowerPerKg = 0.26f;
+
+	/** Every kg of weapon adds this much stamina to a strike */
+	UPROPERTY(EditAnywhere, Category="Melee|Weapons")
+	float StaminaPerKg = 3.f;
+
+	/** A shield or buckler in the off hand blocks better: its protection counts this many times when guarding */
+	UPROPERTY(EditAnywhere, Category="Melee|Guard")
+	float ShieldBlockScale = 2.f;
+
 private:
+
+	/** What the strike in progress is made with */
+	struct FStrike
+	{
+		bool bWeapon = false;
+		float Damage = 0.f;
+		uint8 DamageType = 0;		// ECIRLDamageType
+		float Reach = 130.f;
+		/** How much longer than a punch every part of it takes */
+		float TimeScale = 1.f;
+		FText Name;
+	};
+	FStrike Strike;
 
 	void ResolveHit();
 	float MultiplierFor(EBallHitZone Zone) const;
