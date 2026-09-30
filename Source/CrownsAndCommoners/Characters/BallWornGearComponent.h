@@ -49,7 +49,7 @@ private:
 	/** A dome or band: an egg shape around a point on the ball's axis, sizes as shares of the ball's radius */
 	void AddShell(float CenterX, float CenterZ, float HalfLength, float HalfWidth, float HalfHeight, const FLinearColor& Color);
 
-	void BuildHead(const FCIRLItemRow& Item, const FLinearColor& Color);
+	void BuildHead(const FCIRLItemRow& Item, const FLinearColor& Color, bool bUnderHelmet);
 	void BuildBody(ECIRLEquipSlot Slot, const FCIRLItemRow& Item, const FLinearColor& Color);
 	void BuildBeltItem(const FCIRLItemRow& Item, const FLinearColor& Color, float Side);
 

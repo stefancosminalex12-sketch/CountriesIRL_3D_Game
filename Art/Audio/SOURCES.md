@@ -12,4 +12,5 @@ Originals are kept unchanged in `Source/`; the game uses the edited versions (lo
 | `Music/mus_tavern_song2.wav` (main menu playlist) | `Source/tavern_song2_user.mp3` ("Tavern song2") | The user (the game's own composer) | Own work | Full length, 10 ms edge fades, not levelled |
 | `Music/mus_tavern_song3.wav` (main menu playlist) | `Source/tavern_song3_user.mp3` ("Tavern song3") | The user (the game's own composer) | Own work | Full length, 10 ms edge fades, not levelled |
 | `Music/mus_ambience_song1.wav` (first in-game track) | `Source/ambience_song1_user.mp3` ("Ambience song 1") | The user (the game's own composer) | Own work | Full length (240 s), 10 ms edge fades, not levelled |
+| `Music/mus_ambience_song2.wav` (in-game playlist) | `Source/ambience_song2_user.mp3` ("Ambience song 2") | The user (the game's own composer) | Own work | Full length, 10 ms edge fades, not levelled |
 | `Music/mus_tavern_song4.wav` (main menu playlist) | `Source/tavern_song4_user.mp3` ("Tavern song4") | The user (the game's own composer) | Own work | Full length, 10 ms edge fades, not levelled |

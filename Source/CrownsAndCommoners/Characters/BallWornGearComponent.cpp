@@ -103,11 +103,12 @@ void UBallWornGearComponent::Refresh()
 	if (bShown)
 	{
 		// Head: the coif or hood first, the helmet or hat over it
+		const bool bHelmetOn = Worn(S::Helmet) != nullptr;
 		for (const S Slot : { S::Coif, S::Helmet })
 		{
 			if (const FCIRLItemRow* Item = Worn(Slot))
 			{
-				BuildHead(*Item, Item->GetTint(Steel));
+				BuildHead(*Item, Item->GetTint(Steel), Slot == S::Coif && bHelmetOn);
 			}
 		}
 
@@ -177,7 +178,7 @@ void UBallWornGearComponent::Refresh()
 		Boots && !Boots->Tint.IsEmpty() ? TOptional<FLinearColor>(Boots->GetTint(Leather)) : TOptional<FLinearColor>());
 }
 
-void UBallWornGearComponent::BuildHead(const FCIRLItemRow& Item, const FLinearColor& Color)
+void UBallWornGearComponent::BuildHead(const FCIRLItemRow& Item, const FLinearColor& Color, bool bUnderHelmet)
 {
 	// Domes sit on top of the ball and stop above the eyes. Numbers are shares of the ball's radius:
 	// (how far back, how high the middle is, half length, half width, half height)
@@ -206,11 +207,24 @@ void UBallWornGearComponent::BuildHead(const FCIRLItemRow& Item, const FLinearCo
 		AddPart(EPartMesh::Cylinder, FVector(0.f, 0.f, 0.60f * R), FVector(2.02f * R, 2.02f * R, 3.f), Color);
 		break;
 	case ECIRLItemShape::Coif:
+		if (bUnderHelmet)
+		{
+			// Under a helmet only its edge shows: a band around the back and sides below the helmet's rim
+			// (the whole cap would poke out around the narrower dome)
+			AddShell(-0.12f, 0.18f, 0.97f, 1.0f, 0.50f, Color);
+			break;
+		}
 		// A close cap: further down the back and sides than a helmet, clear of the face
 		AddShell(-0.10f, 0.40f, 0.93f, 0.93f, 0.66f, Color);
 		break;
 	case ECIRLItemShape::Hood:
 	case ECIRLItemShape::FoolHood:
+		if (bUnderHelmet)
+		{
+			// Pushed back under the helmet: it shows around the neck and shoulders
+			AddShell(-0.16f, 0.12f, 1.0f, 1.0f, 0.62f, Color);
+			break;
+		}
 		AddShell(-0.16f, 0.30f, 1.0f, 0.97f, 0.78f, Color);
 		if (Item.Shape == ECIRLItemShape::FoolHood)
 		{
