@@ -337,11 +337,11 @@ TSharedRef<SWidget> SCIRLEquipmentPage::MakeItemDetails()
 			+ SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center).Padding(FMargin(2.f, 0.f, 12.f, 0.f))[MakeStatDiamond(7.f)]
 			+ SHorizontalBox::Slot().FillWidth(1.f).VAlign(VAlign_Center)
 			[
-				SNew(STextBlock).Text(Label).Font(Font(EFont::Body, 19.f)).ColorAndOpacity(Text())
+				SNew(STextBlock).Text(Label).Font(Font(EFont::Body, 18.f)).ColorAndOpacity(Text())
 			]
 			+ SHorizontalBox::Slot().AutoWidth().VAlign(VAlign_Center)
 			[
-				SNew(STextBlock).Text(Value).Font(Font(EFont::BodySemiBold, 19.f)).ColorAndOpacity(GoldBright())
+				SNew(STextBlock).Text(Value).Font(Font(EFont::BodySemiBold, 18.f)).ColorAndOpacity(GoldBright())
 			];
 	};
 	// A value from the selected slot's item, or a dash
@@ -366,7 +366,7 @@ TSharedRef<SWidget> SCIRLEquipmentPage::MakeItemDetails()
 				const FCIRLItemRow* Item = ItemIn(Selected, &bBlocked);
 				return Item && !bBlocked ? Item->Name : CIRLEquipSlot::Name(Selected);
 			})
-			.Font(Font(EFont::Title, 28.f))
+			.Font(Font(EFont::Title, 24.f))
 			.ColorAndOpacity(GoldBright())
 			.AutoWrapText(true)
 		]
@@ -389,9 +389,9 @@ TSharedRef<SWidget> SCIRLEquipmentPage::MakeItemDetails()
 		+ SVerticalBox::Slot().AutoHeight()[MakeDivider(0.4f)]
 
 		// The item; while the slot is empty, a big faint picture of what goes here
-		+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(FMargin(0.f, 16.f))
+		+ SVerticalBox::Slot().AutoHeight().HAlign(HAlign_Center).Padding(FMargin(0.f, 10.f))
 		[
-			SNew(SBox).WidthOverride(180.f).HeightOverride(180.f)
+			SNew(SBox).WidthOverride(140.f).HeightOverride(140.f)
 			[
 				SNew(SImage)
 				.Image_Lambda([this]()
@@ -409,28 +409,31 @@ TSharedRef<SWidget> SCIRLEquipmentPage::MakeItemDetails()
 			]
 		]
 
-		+ SVerticalBox::Slot().AutoHeight()
+		// The description takes the space that's left and scrolls if it's longer than that: it never runs over the stats
+		+ SVerticalBox::Slot().FillHeight(1.f)
 		[
-			SNew(STextBlock)
-			.Text_Lambda([this]()
-			{
-				bool bBlocked = false;
-				const FCIRLItemRow* Item = ItemIn(Selected, &bBlocked);
-				if (Item && bBlocked)
+			SNew(SScrollBox)
+			+ SScrollBox::Slot()
+			[
+				SNew(STextBlock)
+				.Text_Lambda([this]()
 				{
-					return LOCTEXT("TwoHands", "A two-handed weapon needs both hands, so the off hand holds nothing.");
-				}
-				return Item ? Item->Description : CIRLEquipSlot::Holds(Selected);
-			})
-			.Font(Font(EFont::Body, 19.f))
-			.ColorAndOpacity(Text())
-			.AutoWrapText(true)
+					bool bBlocked = false;
+					const FCIRLItemRow* Item = ItemIn(Selected, &bBlocked);
+					if (Item && bBlocked)
+					{
+						return LOCTEXT("TwoHands", "A two-handed weapon needs both hands, so the off hand holds nothing.");
+					}
+					return Item ? Item->Description : CIRLEquipSlot::Holds(Selected);
+				})
+				.Font(Font(EFont::Body, 17.f))
+				.ColorAndOpacity(Text())
+				.AutoWrapText(true)
+			]
 		]
 
-		+ SVerticalBox::Slot().FillHeight(1.f)
-
-		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 14.f, 0.f, 8.f))[MakeDivider(0.25f)]
-		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 3.f))
+		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 10.f, 0.f, 6.f))[MakeDivider(0.25f)]
+		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 2.f))
 		[
 			// Weapons show what they do; everything else what it stops
 			StatRow(TAttribute<FText>::CreateLambda([this]()
@@ -440,22 +443,22 @@ TSharedRef<SWidget> SCIRLEquipmentPage::MakeItemDetails()
 				}),
 				ItemValue([](const FCIRLItemRow& Item) { return Number(Item.IsWeapon() ? Item.Damage : Item.Protection); }))
 		]
-		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 3.f))
+		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 2.f))
 		[
 			StatRow(LOCTEXT("ItemWarmth", "Warmth"), ItemValue([](const FCIRLItemRow& Item) { return Number(Item.Warmth); }))
 		]
-		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 3.f))
+		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 2.f))
 		[
 			StatRow(LOCTEXT("ItemWeight", "Weight"), ItemValue([](const FCIRLItemRow& Item)
 			{
 				return FText::Format(LOCTEXT("Kg", "{0} kg"), Number(Item.WeightKg, Item.WeightKg < 10.f ? 1 : 0));
 			}))
 		]
-		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 3.f))
+		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 2.f))
 		[
 			StatRow(LOCTEXT("Durability", "Durability"), ItemValue([](const FCIRLItemRow& Item) { return Number(Item.Durability); }))
 		]
-		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 3.f))
+		+ SVerticalBox::Slot().AutoHeight().Padding(FMargin(0.f, 2.f))
 		[
 			StatRow(LOCTEXT("Value", "Value"), ItemValue([](const FCIRLItemRow& Item) { return Money(Item.ValuePence); }))
 		];
