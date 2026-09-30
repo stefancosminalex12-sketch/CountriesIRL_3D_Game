@@ -2,11 +2,11 @@ NEXT ART TO MAKE (ChatGPT) - written 2026-09-30. Work down the list; one ChatGPT
 Save as PNG with the [file name] into the folder named for each batch. Tell Claude when a batch is in; Claude imports it.
 
 
-=== BATCH 1: GAME ICON (folder Art/AI/Menu) - 1 image, square ===
+=== BATCH 1: GAME ICON (folder Art/AI/Menu) - DONE 2026-09-30 ===
 [game_icon] Generate an image of an app icon for a medieval game called "Crowns & Commoners": a simple gold crown resting on top of a plain round ball painted white with a red cross (the flag of England), seen from the front. Painterly hand-painted style, warm colours, dark charcoal background with a thin worn-gold border, centred, bold and readable when very small, no text, no letters.
 
 
-=== BATCH 2: MARKERS for the map and the compass bar (folder Art/AI/MapIcons) - 7 images, square ===
+=== BATCH 2: MARKERS for the map and the compass bar (folder Art/AI/MapIcons) - DONE 2026-09-30 ===
 Same flat style as the other map icons: flat colours, bold dark-brown outline, no shading, no texture, no ground, transparent background.
 [marker_waypoint] Generate an image of a simple map symbol for a travel waypoint: a small banner flag on a short pole, deep red flag with a swallow-tail end. Flat colours, bold dark-brown outline, no shading, no texture, no ground. Must read at 20 pixels. Transparent background.
 [marker_pin] Generate an image of a simple map symbol for a custom map pin: a round-headed pin with a short point at the bottom, cream head with a dark-brown dot in the middle. Flat colours, bold dark-brown outline, no shading, no texture, no ground. Must read at 20 pixels. Transparent background.

@@ -7,6 +7,8 @@ Build/*
 !Build/*/
 Build/*/**
 !Build/*/PakBlacklist*.txt
+# The game's icon (made from Art/AI/Menu/game_icon.png)
+!Build/Windows/Application.ico
 .vs/
 .vscode/
 .idea/
