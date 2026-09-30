@@ -12,7 +12,7 @@ import json
 import os
 from PIL import Image
 
-ROOT = "C:/Dev/CountriesIRL_3D_Game"
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))).replace("\\", "/")   # the project folder
 SOURCE = f"{ROOT}/Docs/World/plan_map_england_1455.png"
 OUT_DIR = f"{ROOT}/Saved/MapExport"
 MAX_SIDE = 8188

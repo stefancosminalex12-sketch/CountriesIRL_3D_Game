@@ -1,7 +1,7 @@
 """
 Create the horse MountDefinition assets and place rideable horses in the dev sandbox.
 
-    py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/make_mounts.py"
+    py "C:/Dev/CrownsAndCommoners/Tools/Unreal/make_mounts.py"
 
 Safe to re-run: assets are updated and the horses (DevTest/Horses) replaced.
 """
@@ -35,7 +35,7 @@ white = mount_asset("DA_Mount_HorseWhite", "Horse_White")
 # Two horses near the player start, side-on so they're easy to walk up to
 actors = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
 FOLDER = "DevTest/Horses"
-horse_class = unreal.load_class(None, "/Script/CountriesIRL_3D_Game.Horse")
+horse_class = unreal.load_class(None, "/Script/CrownsAndCommoners.Horse")
 for actor in actors.get_all_level_actors():
     if str(actor.get_folder_path()) == FOLDER or actor.get_class() == horse_class:
         actors.destroy_actor(actor)

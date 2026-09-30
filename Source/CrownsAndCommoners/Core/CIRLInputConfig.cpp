@@ -1,4 +1,4 @@
-// CountriesIRL 3D Game
+// Crowns & Commoners
 
 #include "Core/CIRLInputConfig.h"
 #include "InputAction.h"

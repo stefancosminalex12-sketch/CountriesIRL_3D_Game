@@ -5,7 +5,7 @@ Create the game's sound classes (safe to run again):
       SC_GameMusic                             music in the world (Music x In-Game Music; the in-game playlist sets it)
       SC_SFX                                   everything else (Project Settings > Audio > Default Sound Class)
 The player's volume sliders (C++ UCIRLAudioSubsystem) turn these up and down. Run inside the editor:
-    py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/setup_sound_classes.py"
+    py "C:/Dev/CrownsAndCommoners/Tools/Unreal/setup_sound_classes.py"
 or headless: UnrealEditor-Cmd.exe <project> -run=pythonscript -script="<this file>"
 """
 import unreal

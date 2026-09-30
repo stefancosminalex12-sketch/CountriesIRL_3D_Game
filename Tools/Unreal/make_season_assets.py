@@ -1,7 +1,7 @@
 """
 Create the season assets and a small test garden in the dev sandbox.
 
-    py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/make_season_assets.py"
+    py "C:/Dev/CrownsAndCommoners/Tools/Unreal/make_season_assets.py"
 
 - DA_Climate_Yorkshire   climate data (defaults come from the C++ class: Yorkshire, 1450s)
 - MPC_Season             material parameters the season system writes every frame

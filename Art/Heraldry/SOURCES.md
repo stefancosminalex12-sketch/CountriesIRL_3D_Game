@@ -16,4 +16,4 @@ CC BY-SA images: credit the artist; our square versions are shared under the sam
 | flag_percy.png | [Modern arms of Percy.svg](https://commons.wikimedia.org/wiki/File:Modern_arms_of_Percy.svg) | Wikimandia | CC BY-SA 4.0 |
 | flag_mowbray.png | [Arms of Mowbray.svg](https://commons.wikimedia.org/wiki/File:Arms_of_Mowbray.svg) | Wikimandia | CC BY-SA 4.0 |
 | flag_talbot.png | [Coat of Arms of John Talbot, 1st Earl of Shrewsbury.svg](https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_John_Talbot,_1st_Earl_of_Shrewsbury.svg) | unknown | CC BY-SA 4.0 |
-| flag_york.png, flag_lancaster.png | drawn by Tools/make_flags.py (livery colours) | CountriesIRL | ours |
+| flag_york.png, flag_lancaster.png | drawn by Tools/make_flags.py (livery colours) | Crowns & Commoners | ours |

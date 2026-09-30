@@ -1,6 +1,6 @@
 """
 Import game sounds (Art/Audio/<Folder>/*.wav, not Art/Audio/Source) as Sound Waves. Run inside the editor:
-    py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/import_audio.py" [part of a file name]
+    py "C:/Dev/CrownsAndCommoners/Tools/Unreal/import_audio.py" [part of a file name]
 or headless: UnrealEditor-Cmd.exe <project> -run=pythonscript -script="<this file> [part of a file name]"
 Art/Audio/Ambience/amb_x.wav -> /Game/CrownsAndCommoners/Audio/Ambience/amb_x (ambiences are set to loop).
 Art/Audio/Music/mus_x.wav -> /Game/CrownsAndCommoners/Audio/Music/mus_x (doesn't loop: playlists play it; sound class SC_Music so the Music slider
@@ -11,7 +11,7 @@ import os
 import sys
 import unreal
 
-ROOT = "C:/Dev/CountriesIRL_3D_Game/Art/Audio"
+ROOT = unreal.Paths.convert_relative_path_to_full(unreal.Paths.project_dir()) + "Art/Audio"
 only = sys.argv[1] if len(sys.argv) > 1 else ""
 
 tasks = []

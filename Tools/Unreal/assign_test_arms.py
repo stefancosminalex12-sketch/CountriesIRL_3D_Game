@@ -1,6 +1,6 @@
 """
 Give the test balls in the open level different coats of arms (so the heraldry can be seen in the world).
-    py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/assign_test_arms.py"
+    py "C:/Dev/CrownsAndCommoners/Tools/Unreal/assign_test_arms.py"
 """
 import unreal
 

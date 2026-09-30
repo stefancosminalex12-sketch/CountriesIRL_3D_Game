@@ -1,6 +1,6 @@
 """
 Import the coats of arms (Art/Heraldry/flag_*.png) and build M_BallArms. Run inside the editor:
-    py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/make_flag_assets.py"
+    py "C:/Dev/CrownsAndCommoners/Tools/Unreal/make_flag_assets.py"
 
 M_BallArms paints a coat of arms across the ball: the texture is projected flat through the ball from the front
 (object space, so it turns with the ball), like a countryball flag. Parameters:
@@ -11,7 +11,7 @@ import glob
 import os
 import unreal
 
-SOURCE = "C:/Dev/CountriesIRL_3D_Game/Art/Heraldry"
+SOURCE = unreal.Paths.convert_relative_path_to_full(unreal.Paths.project_dir()) + "Art/Heraldry"
 FLAGS = "/Game/CrownsAndCommoners/Characters/Flags"
 MATERIALS = "/Game/CrownsAndCommoners/Characters/Materials"
 lib = unreal.MaterialEditingLibrary

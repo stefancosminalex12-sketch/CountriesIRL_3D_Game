@@ -18,7 +18,7 @@ from PIL import Image, ImageFilter
 
 OUT = "Art/Heraldry"
 SOURCE = os.path.join(OUT, "Source")
-UA = "CountriesIRL-dev/0.1 (indie game prototype; heraldry textures)"
+UA = "CrownsAndCommoners-dev/0.1 (indie game prototype; heraldry textures)"
 S = 1024
 
 # id -> Wikimedia file. York and Lancaster keep the livery versions drawn by Tools/make_flags.py
@@ -100,7 +100,7 @@ def main():
         lines.append(f"| flag_{key}.png | [{title[5:]}]({page}) | {artist} | {licence} |")
         print("arms", key, "|", licence, "|", artist)
         time.sleep(2)
-    lines += ["| flag_york.png, flag_lancaster.png | drawn by Tools/make_flags.py (livery colours) | CountriesIRL | ours |", ""]
+    lines += ["| flag_york.png, flag_lancaster.png | drawn by Tools/make_flags.py (livery colours) | Crowns & Commoners | ours |", ""]
     with open(os.path.join(OUT, "SOURCES.md"), "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
 

@@ -1,4 +1,4 @@
-// CountriesIRL 3D Game
+// Crowns & Commoners
 
 #include "Core/CIRLPlayerController.h"
 #include "Core/CIRLInputConfig.h"
@@ -42,7 +42,7 @@ void ACIRLPlayerController::BeginPlay()
 		Audio->ApplyVolumes(GetWorld());
 	}
 
-	// In-game music (Project Settings > CountriesIRL Audio > Game Playlist): the first track, then random,
+	// In-game music (Project Settings > Crowns & Commoners Audio > Game Playlist): the first track, then random,
 	// under the In-Game Music slider
 	if (IsLocalPlayerController())
 	{

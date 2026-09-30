@@ -1,8 +1,8 @@
 """
 Import the game's world map (made by Tools/world/export_game_map.py) and write its calibration into the map data asset.
 
-In the editor:   py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/import_world_map.py"
-Or headless:     UnrealEditor-Cmd.exe <uproject> -run=pythonscript -script="C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/import_world_map.py"
+In the editor:   py "C:/Dev/CrownsAndCommoners/Tools/Unreal/import_world_map.py"
+Or headless:     UnrealEditor-Cmd.exe <uproject> -run=pythonscript -script="C:/Dev/CrownsAndCommoners/Tools/Unreal/import_world_map.py"
 
 Creates /Game/CrownsAndCommoners/UI/Map/T_WorldMap_England1455 (UI texture, BC7 so the lettering stays crisp, no mipmaps,
 never streamed) and DA_WorldMap_England1455 (CIRLMapDefinition). Safe to re-run after redrawing the map.
@@ -10,7 +10,7 @@ never streamed) and DA_WorldMap_England1455 (CIRLMapDefinition). Safe to re-run 
 import json
 import unreal
 
-SOURCE = "C:/Dev/CountriesIRL_3D_Game/Saved/MapExport/T_WorldMap_England1455.png"
+SOURCE = unreal.Paths.convert_relative_path_to_full(unreal.Paths.project_dir()) + "Saved/MapExport/T_WorldMap_England1455.png"
 FOLDER = "/Game/CrownsAndCommoners/UI/Map"
 TEXTURE = "T_WorldMap_England1455"
 MARKER = "T_WorldMap_PlayerMarker"

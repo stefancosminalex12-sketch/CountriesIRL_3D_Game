@@ -15,7 +15,7 @@ import time
 import urllib.parse
 import urllib.request
 
-ROOT = "C:/Dev/CountriesIRL_3D_Game"
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))).replace("\\", "/")   # the project folder
 WAYPOINTS = f"{ROOT}/Data/World/Road_Waypoints.csv"
 UA = "CrownsAndCommoners-dev/0.1 (indie game prototype; map planning)"
 # Width of the road surface in the game, metres. Roads are not compressed: only the land between places is.

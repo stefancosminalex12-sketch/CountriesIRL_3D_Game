@@ -1,13 +1,13 @@
 """
 Import the UI fonts (Art/Fonts/*.ttf) as Font Face assets. Run inside the editor:
-    py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/import_fonts.py"
+    py "C:/Dev/CrownsAndCommoners/Tools/Unreal/import_fonts.py"
 The game builds its fonts from these faces in code (see UI/CIRLUIStyle.cpp).
 """
 import glob
 import os
 import unreal
 
-SOURCE = "C:/Dev/CountriesIRL_3D_Game/Art/Fonts"
+SOURCE = unreal.Paths.convert_relative_path_to_full(unreal.Paths.project_dir()) + "Art/Fonts"
 DESTINATION = "/Game/CrownsAndCommoners/UI/Fonts"
 
 tasks = []

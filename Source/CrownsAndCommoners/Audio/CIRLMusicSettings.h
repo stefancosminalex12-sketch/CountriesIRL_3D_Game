@@ -1,4 +1,4 @@
-// CountriesIRL 3D Game
+// Crowns & Commoners
 
 #pragma once
 
@@ -22,10 +22,10 @@ struct FCIRLMusicTrack
 };
 
 /**
- *  Which music plays where (Project Settings > CountriesIRL Audio). Music assets are in
+ *  Which music plays where (Project Settings > Crowns & Commoners Audio). Music assets are in
  *  /Game/CrownsAndCommoners/Audio/Music (Tools/Unreal/import_audio.py); they don't loop, the playlist moves on.
  */
-UCLASS(config = Game, defaultconfig, meta = (DisplayName = "CountriesIRL Audio"))
+UCLASS(config = Game, defaultconfig, meta = (DisplayName = "Crowns & Commoners Audio"))
 class UCIRLMusicSettings : public UDeveloperSettings
 {
 	GENERATED_BODY()

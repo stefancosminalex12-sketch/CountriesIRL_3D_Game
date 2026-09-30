@@ -1,7 +1,7 @@
 """
 Import animated FBX files as skeletal meshes with their animations.
 
-    py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/import_fbx_skeletal.py" <destination /Game/...> <file.fbx[@scale]> [more ...]
+    py "C:/Dev/CrownsAndCommoners/Tools/Unreal/import_fbx_skeletal.py" <destination /Game/...> <file.fbx[@scale]> [more ...]
 
 Each file goes into its own subfolder named after the file. "@0.4" imports the mesh and its
 animations at 40% size (e.g. to bring a model to real-life scale).

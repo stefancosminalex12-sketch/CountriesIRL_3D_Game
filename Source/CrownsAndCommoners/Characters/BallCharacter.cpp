@@ -1,4 +1,4 @@
-// CountriesIRL 3D Game
+// Crowns & Commoners
 
 #include "Characters/BallCharacter.h"
 #include "Characters/BallAnimatorComponent.h"

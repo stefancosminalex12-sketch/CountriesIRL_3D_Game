@@ -1,4 +1,4 @@
-// CountriesIRL 3D Game
+// Crowns & Commoners
 
 #include "UI/SCIRLPaperDollView.h"
 #include "UI/CIRLPaperDollStage.h"

@@ -1,4 +1,4 @@
-// Source of the Custom node in /Game/CountriesIRL/Characters/Materials/M_BallEyes.
+// Source of the Custom node in /Game/CrownsAndCommoners/Characters/Materials/M_BallEyes.
 // Draws both countryball eyes on a sphere shell around the ball body.
 // Inputs:  P (local position on the shell), EyeScale, UpperLid, UpperLidAngle, LowerLid,
 //          Dead (0 = alive, 1 = x_x, 2 = hollow skull sockets)

@@ -1,7 +1,7 @@
 """
 Place every imported animal in the dev sandbox, playing its idle animation (DevTest/Animals).
 
-    py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/place_animal_lineup.py"
+    py "C:/Dev/CrownsAndCommoners/Tools/Unreal/place_animal_lineup.py"
 
 Safe to re-run: the lineup is replaced.
 """

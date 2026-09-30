@@ -1,7 +1,7 @@
 """
 Eyes: no glow and no glassy shine (user, 2026-09-30: in dark places and next to walls the eyes lit up and reflected,
 and their glow lit the wall). Turns M_BallEyes' emissive strength to 0 and makes the surface matte like paint.
-    headless: UnrealEditor-Cmd.exe <uproject> -run=pythonscript -script="C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/fix_eye_glow.py"
+    headless: UnrealEditor-Cmd.exe <uproject> -run=pythonscript -script="C:/Dev/CrownsAndCommoners/Tools/Unreal/fix_eye_glow.py"
 Only changes values (no nodes are removed), so it is safe to run again.
 """
 import unreal

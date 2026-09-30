@@ -6,13 +6,14 @@ how far boats could go in 1455, Border=1 if it forms a land border, StartNear=a 
 Writes Data/World/Rivers_England1455.json: for every river one smooth centreline from source to mouth (lon/lat),
 ending exactly on the river it flows into, plus how much of it is navigable.
 """
+import os
 import csv
 import heapq
 import json
 import math
 from collections import defaultdict
 
-ROOT = "C:/Dev/CountriesIRL_3D_Game"
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))).replace("\\", "/")   # the project folder
 LAT0, LON0 = 53.0, -1.9
 KX = 111.32 * math.cos(math.radians(LAT0))
 KY = 110.57

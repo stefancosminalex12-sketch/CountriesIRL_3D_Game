@@ -1,4 +1,4 @@
-// CountriesIRL 3D Game
+// Crowns & Commoners
 
 #include "Animals/HorseAnimInstance.h"
 #include "Animals/Horse.h"

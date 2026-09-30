@@ -1,4 +1,4 @@
-// CountriesIRL 3D Game
+// Crowns & Commoners
 
 #include "World/WeatherSubsystem.h"
 #include "World/ClimateProfile.h"

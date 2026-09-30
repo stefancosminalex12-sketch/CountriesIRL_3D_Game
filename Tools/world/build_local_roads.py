@@ -9,6 +9,7 @@ Where they run: each link follows the game terrain (Data/World/Terrain_England14
 round steep ground and along valleys, like real lanes. Realistic, not documented: refine per region from old maps.
 Writes Data/World/LocalRoads_England1455.json.
 """
+import os
 import csv
 import heapq
 import json
@@ -18,7 +19,7 @@ import sys
 import numpy as np
 from PIL import Image, ImageDraw
 
-ROOT = "C:/Dev/CountriesIRL_3D_Game"
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))).replace("\\", "/")   # the project folder
 sys.path.insert(0, f"{ROOT}/Tools/world")
 import draw_plan_map as m  # noqa: E402
 

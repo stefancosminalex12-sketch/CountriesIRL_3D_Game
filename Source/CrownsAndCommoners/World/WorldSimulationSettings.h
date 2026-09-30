@@ -1,4 +1,4 @@
-// CountriesIRL 3D Game
+// Crowns & Commoners
 
 #pragma once
 
@@ -11,10 +11,10 @@ class UClimateProfile;
 class UMaterialParameterCollection;
 
 /**
- *  Project-wide settings for the living world (Project Settings > Game > CountriesIRL World).
+ *  Project-wide settings for the living world (Project Settings > Game > Crowns & Commoners World).
  *  Stored in Config/DefaultGame.ini so DLC regions can override them with data, not code.
  */
-UCLASS(config=Game, defaultconfig, meta=(DisplayName="CountriesIRL World"))
+UCLASS(config=Game, defaultconfig, meta=(DisplayName="Crowns & Commoners World"))
 class UWorldSimulationSettings : public UDeveloperSettings
 {
 	GENERATED_BODY()

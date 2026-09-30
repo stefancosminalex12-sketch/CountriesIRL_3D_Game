@@ -1,6 +1,6 @@
 """
 Import a source file (FBX/glTF/GLB...) into the Unreal project. Run inside the editor:
-    py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/import_asset.py" <source file> <destination folder, e.g. /Game/Characters>
+    py "C:/Dev/CrownsAndCommoners/Tools/Unreal/import_asset.py" <source file> <destination folder, e.g. /Game/Characters>
 """
 import sys
 import unreal

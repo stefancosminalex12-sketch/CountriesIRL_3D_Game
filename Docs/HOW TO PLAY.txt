@@ -6,7 +6,7 @@ This is an early test: a small practice area, not the real game world yet.
 
 HOW TO START
 1. Unzip this folder anywhere (e.g. your Desktop).
-2. Double-click  CountriesIRL_3D_Game.exe, then choose New Game on the title screen
+2. Double-click  CrownsAndCommoners.exe, then choose New Game on the title screen
 3. Windows may say "Windows protected your PC" (the game is not signed yet).
    Click "More info", then "Run anyway". This is normal for small indie test builds.
 4. If Windows asks to install "Microsoft Visual C++ Redistributable" or DirectX, allow it.

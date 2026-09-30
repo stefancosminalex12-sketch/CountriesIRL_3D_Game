@@ -1,4 +1,4 @@
-// CountriesIRL 3D Game
+// Crowns & Commoners
 
 #include "Core/CIRLTitleGameMode.h"
 #include "UI/SCIRLTitleScreen.h"
@@ -43,7 +43,7 @@ void ACIRLTitleController::BeginPlay()
 		Audio->ApplyVolumes(GetWorld());
 	}
 
-	// Main menu music (Project Settings > CountriesIRL Audio > Title Playlist): the first track, then random
+	// Main menu music (Project Settings > Crowns & Commoners Audio > Title Playlist): the first track, then random
 	Playlist = NewObject<UCIRLPlaylistComponent>(this, TEXT("TitleMusic"));
 	Playlist->RegisterComponent();
 	Playlist->Play(GetDefault<UCIRLMusicSettings>()->TitlePlaylist);

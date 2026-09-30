@@ -1,6 +1,6 @@
 """
 Type a console command into the running Unreal editor (the "Cmd" box at the bottom), via the Unreal MCP.
-    python Tools/ue_console.py "py \"C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/import_fonts.py\""
+    python Tools/ue_console.py "py \"C:/Dev/CrownsAndCommoners/Tools/Unreal/import_fonts.py\""
 Useful for editor Python scripts, which the MCP tools can't run directly.
 """
 import json

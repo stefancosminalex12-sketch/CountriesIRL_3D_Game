@@ -1,4 +1,4 @@
-// CountriesIRL 3D Game
+// Crowns & Commoners
 
 #pragma once
 
@@ -27,7 +27,7 @@ public:
 
 /**
  *  Shows the title screen (UI/SCIRLTitleScreen) and handles its buttons:
- *  New Game opens the world (Project Settings > CountriesIRL World > New Game Map), Quit leaves the game.
+ *  New Game opens the world (Project Settings > Crowns & Commoners World > New Game Map), Quit leaves the game.
  */
 UCLASS()
 class ACIRLTitleController : public APlayerController

@@ -9,12 +9,13 @@ Rules (river widths in the game, 1:3 of real):
   lanes: ford under 6 m; timber bridge 6-15 m (stone at a town); wider: stone bridge at a town, else a ferry
   tracks: ford under 8 m; wider: timber footbridge near a settlement, else a ferry
 """
+import os
 import csv
 import json
 import math
 import sys
 
-ROOT = "C:/Dev/CountriesIRL_3D_Game"
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))).replace("\\", "/")   # the project folder
 sys.path.insert(0, f"{ROOT}/Tools/world")
 import draw_plan_map as m  # noqa: E402
 

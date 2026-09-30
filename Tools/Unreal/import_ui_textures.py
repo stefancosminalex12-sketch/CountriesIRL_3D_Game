@@ -1,6 +1,6 @@
 """
 Import the menu art (Art/AI/Menu/*.png, plus our own Art/UI/*.png such as gradients) as UI textures. Run inside the editor:
-    py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/import_ui_textures.py" [part of a file name, e.g. gradient]
+    py "C:/Dev/CrownsAndCommoners/Tools/Unreal/import_ui_textures.py" [part of a file name, e.g. gradient]
 Textures are named T_<file name> in /Game/CrownsAndCommoners/UI/Textures (icons in /Game/CrownsAndCommoners/UI/Icons), set up for UI:
 no mipmaps, never streamed (stays sharp), UI texture group and compression.
 """
@@ -11,9 +11,9 @@ import unreal
 
 # Source folder -> content folder. Item icons come from Tools/prepare_icons.py
 SOURCES = {
-    "C:/Dev/CountriesIRL_3D_Game/Art/AI/Menu": "/Game/CrownsAndCommoners/UI/Textures",
-    "C:/Dev/CountriesIRL_3D_Game/Art/UI": "/Game/CrownsAndCommoners/UI/Textures",
-    "C:/Dev/CountriesIRL_3D_Game/Art/UI/Icons": "/Game/CrownsAndCommoners/UI/Icons",
+    unreal.Paths.convert_relative_path_to_full(unreal.Paths.project_dir()) + "Art/AI/Menu": "/Game/CrownsAndCommoners/UI/Textures",
+    unreal.Paths.convert_relative_path_to_full(unreal.Paths.project_dir()) + "Art/UI": "/Game/CrownsAndCommoners/UI/Textures",
+    unreal.Paths.convert_relative_path_to_full(unreal.Paths.project_dir()) + "Art/UI/Icons": "/Game/CrownsAndCommoners/UI/Icons",
 }
 
 tasks = []

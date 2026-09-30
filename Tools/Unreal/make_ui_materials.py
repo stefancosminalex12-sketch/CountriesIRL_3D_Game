@@ -1,6 +1,6 @@
 """
 Create UI materials used by the menus. Run inside the editor:
-    py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/make_ui_materials.py"
+    py "C:/Dev/CrownsAndCommoners/Tools/Unreal/make_ui_materials.py"
 
 M_UI_PaperDoll: shows the paper-doll camera's picture (render target in the "Picture" parameter) with the
 right transparency: scene captures store opacity inverted in alpha, so Opacity = 1 - alpha.

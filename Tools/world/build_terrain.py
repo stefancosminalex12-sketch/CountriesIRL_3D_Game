@@ -8,13 +8,14 @@ The real land is generalised for the game: small bumps are smoothed away (they s
 are squashed by landform, so vales and fens stay flat, hills and downs stay gentle and moors and mountains stay
 dramatic instead of turning into cliffs (heights squashed less than distances) or going flat (squashed as much).
 """
+import os
 import json
 import math
 
 import numpy as np
 from PIL import Image
 
-ROOT = "C:/Dev/CountriesIRL_3D_Game"
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))).replace("\\", "/")   # the project folder
 DATA = f"{ROOT}/Art/MapData"
 COMPRESSION = float(json.load(open(f"{ROOT}/Data/World/World_Release1.json", encoding="utf-8"))["compression"])
 BOX = (-3.8, 50.5, 1.8, 55.83)          # lon/lat of the first release's England (as the planning map)
