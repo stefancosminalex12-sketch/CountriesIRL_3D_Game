@@ -55,7 +55,7 @@ void ABallFighterController::NoticeKilling(const ABallCharacter* Victim, ABallCh
 ABallCharacter* ABallFighterController::FindEnemy(const ABallCharacter* Ball) const
 {
 	ABallCharacter* Best = nullptr;
-	float BestDistance = SightRange;
+	float BestDistance = TNumericLimits<float>::Max();
 	for (TActorIterator<ABallCharacter> It(GetWorld()); It; ++It)
 	{
 		ABallCharacter* Other = *It;
@@ -65,14 +65,18 @@ ABallCharacter* ABallFighterController::FindEnemy(const ABallCharacter* Ball) co
 		}
 		const FVector To = Other->GetActorLocation() - Ball->GetActorLocation();
 		const float Distance = To.Size2D();
-		// Crouched and quiet, they must come much closer to be heard, and are a little harder to spot
+		// Crouched and quiet, they must come much closer to be heard, and are a little harder to spot.
+		// Running, they are heard and seen from further away, in front and to the sides alike
 		const bool bSneaking = Other->IsSneaking();
-		if (Distance >= BestDistance || Distance >= SightRange * (bSneaking ? SneakSightScale : 1.f))
+		const bool bRunning = Other->IsRunning();
+		const float SeenFrom = SightRange * (bSneaking ? SneakSightScale : (bRunning ? RunSightScale : 1.f));
+		const float HeardFrom = NoticeRange * (bSneaking ? SneakNoticeScale : (bRunning ? RunNoticeScale : 1.f));
+		if (Distance >= BestDistance || Distance >= SeenFrom)
 		{
 			continue;
 		}
 		const bool bInFront = FVector::DotProduct(Ball->GetActorForwardVector(), To.GetSafeNormal2D()) >= SightCosine;
-		if ((bInFront || Distance < NoticeRange * (bSneaking ? SneakNoticeScale : 1.f)) && LineOfSightTo(Other))
+		if ((bInFront || Distance < HeardFrom) && LineOfSightTo(Other))
 		{
 			Best = Other;
 			BestDistance = Distance;

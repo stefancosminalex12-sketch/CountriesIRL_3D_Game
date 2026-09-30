@@ -80,6 +80,14 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Fighter|Senses")
 	float SneakSightScale = 0.7f;
 
+	/** Someone running is loud and catches the eye: heard from this many times NoticeRange (on any side),
+	 *  and seen from this many times SightRange */
+	UPROPERTY(EditAnywhere, Category="Fighter|Senses")
+	float RunNoticeScale = 2.5f;
+
+	UPROPERTY(EditAnywhere, Category="Fighter|Senses")
+	float RunSightScale = 1.4f;
+
 	/** It hears someone being stabbed to death this close (cm) and turns on the killer */
 	UPROPERTY(EditAnywhere, Category="Fighter|Senses")
 	float KillingNoticeRange = 500.f;
