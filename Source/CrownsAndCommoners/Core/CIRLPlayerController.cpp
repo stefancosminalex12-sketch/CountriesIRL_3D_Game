@@ -295,10 +295,14 @@ void ACIRLPlayerController::Respawn()
 		return;
 	}
 
-	// The body keeps its place in the world (it decays like any other); we leave it for a new ball
-	const ABallCharacter* OldBall = Cast<ABallCharacter>(GetPawn());
+	// The old body is removed while the screen is dark, so nobody sees it vanish (the player loses nothing by dying)
+	ABallCharacter* OldBall = Cast<ABallCharacter>(GetPawn());
 	UTexture2D* Arms = OldBall ? OldBall->GetFlag() : nullptr;
 	UnPossess();
+	if (OldBall)
+	{
+		OldBall->Destroy();
+	}
 
 	// For now always at the player start (later: the nearest village, a shrine, or being found by someone)
 	const AActor* Start = GameMode->FindPlayerStart(this);

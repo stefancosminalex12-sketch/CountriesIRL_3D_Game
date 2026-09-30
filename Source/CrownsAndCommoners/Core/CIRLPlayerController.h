@@ -36,7 +36,7 @@ public:
 	/** The player's ball has died: after a moment the death screen offers to respawn */
 	void OnPlayerDied();
 
-	/** A new ball at the player start, with the arms and view of the one that died; the old body stays where it fell */
+	/** A new ball at the player start, with the arms and view of the one that died; the old body is removed */
 	UFUNCTION(Exec)
 	void Respawn();
 
