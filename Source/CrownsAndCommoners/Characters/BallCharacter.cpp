@@ -483,7 +483,8 @@ void ABallCharacter::UpdateSeat()
 	// The bottom of the ball rests on the saddle
 	const float BallBottomZ = GetBallCenterZ() - GetBallHalfHeight();
 	SetActorRelativeLocation(MountedHorse->GetSaddleOffset() - FVector(0.f, 0.f, BallBottomZ));
-	SetActorRelativeRotation(FRotator::ZeroRotator);
+	// Leans back part of the way when the horse rears
+	SetActorRelativeRotation(FRotator(MountedHorse->GetRearPitch() * 0.5f, 0.f, 0.f));
 }
 
 void ABallCharacter::UpdateCorpseCollision(bool bBones)

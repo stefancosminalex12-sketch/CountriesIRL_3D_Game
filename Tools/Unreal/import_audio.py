@@ -3,6 +3,7 @@ Import game sounds (Art/Audio/<Folder>/*.wav, not Art/Audio/Source) as Sound Wav
     py "C:/Dev/CrownsAndCommoners/Tools/Unreal/import_audio.py" [part of a file name]
 or headless: UnrealEditor-Cmd.exe <project> -run=pythonscript -script="<this file> [part of a file name]"
 Art/Audio/Ambience/amb_x.wav -> /Game/CrownsAndCommoners/Audio/Ambience/amb_x (ambiences are set to loop).
+Art/Audio/Sfx/sfx_x.wav -> /Game/CrownsAndCommoners/Audio/Sfx/sfx_x (gaits and footsteps loop, the rest play once).
 Art/Audio/Music/mus_x.wav -> /Game/CrownsAndCommoners/Audio/Music/mus_x (doesn't loop: playlists play it; sound class SC_Music so the Music slider
 controls it; everything else uses the default class SC_SFX). Run setup_sound_classes.py first.
 """
@@ -34,6 +35,10 @@ for task in tasks:
         sound = unreal.load_asset(object_path)
         if isinstance(sound, unreal.SoundWave) and "/Ambience/" in object_path:
             sound.set_editor_property("looping", True)
+        # Continuous effects (a horse's gaits, footsteps) loop; one-shots don't
+        if isinstance(sound, unreal.SoundWave) and "/Sfx/" in object_path:
+            loops = any(part in object_path for part in ("_walk", "_trot", "_canter", "_gallop", "sfx_steps_"))
+            sound.set_editor_property("looping", loops)
         if isinstance(sound, unreal.SoundWave) and "/Music/" in object_path:
             sound.set_editor_property("looping", False)   # playlists move on to the next track
             if music_class:

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Sound/SoundBase.h"
 #include "Engine/DataAsset.h"
 #include "MountDefinition.generated.h"
 
@@ -170,4 +171,36 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Riding")
 	float SaddleHeight = 14.f;
+
+	/** Rearing on the hind legs: how far up it goes (degrees), where the hind hooves are (cm behind the body's centre)
+	 *  and how long the whole rear takes (seconds) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Rearing")
+	float RearAngle = 40.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Rearing")
+	float RearPivotBack = 70.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Rearing")
+	float RearSeconds = 1.8f;
+
+	/** Hoofbeats, one loop per gait (they loop; the horse cross-fades between them) */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Sound")
+	TObjectPtr<USoundBase> WalkSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Sound")
+	TObjectPtr<USoundBase> TrotSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Sound")
+	TObjectPtr<USoundBase> CanterSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Sound")
+	TObjectPtr<USoundBase> GallopSound;
+
+	/** Neighs (one picked at random): when it rears or throws its rider */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Sound")
+	TArray<TObjectPtr<USoundBase>> NeighSounds;
+
+	/** Snorts (one picked at random): now and then, and often when it is out of breath */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Sound")
+	TArray<TObjectPtr<USoundBase>> SnortSounds;
 };

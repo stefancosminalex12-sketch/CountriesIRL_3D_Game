@@ -49,4 +49,8 @@ public:
 	/** A sound effect when the player dies (e.g. church bells tolling), under the Effects slider, not the music ones */
 	UPROPERTY(config, EditAnywhere, Category = "Sound Effects")
 	TSoftObjectPtr<USoundBase> DeathSound;
+
+	/** The player's footsteps (a loop, louder and quicker when running, quiet when sneaking). Later one per kind of ground */
+	UPROPERTY(config, EditAnywhere, Category = "Sound Effects")
+	TSoftObjectPtr<USoundBase> FootstepSound;
 };

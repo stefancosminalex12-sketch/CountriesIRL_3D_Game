@@ -2,6 +2,7 @@
 
 #include "Animals/Horse.h"
 #include "Animals/HorseAnimInstance.h"
+#include "Animals/HorseSoundComponent.h"
 #include "Characters/BallCharacter.h"
 #include "Characters/StaminaComponent.h"
 #include "Characters/HealthComponent.h"
@@ -17,6 +18,7 @@ AHorse::AHorse()
 
 	Stamina = CreateDefaultSubobject<UStaminaComponent>(TEXT("Stamina"));
 	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
+	Sounds = CreateDefaultSubobject<UHorseSoundComponent>(TEXT("Sounds"));
 
 	// Horses aren't steered by the controller's view; they turn themselves in Tick
 	bUseControllerRotationYaw = false;
@@ -68,7 +70,9 @@ void AHorse::ApplyDefinition()
 
 	USkeletalMeshComponent* Body = GetMesh();
 	Body->SetSkeletalMesh(Definition->Mesh);
-	Body->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -Definition->CapsuleHalfHeight), FRotator(0.f, Definition->MeshYaw, 0.f));
+	MeshBaseLocation = FVector(0.f, 0.f, -Definition->CapsuleHalfHeight);
+	MeshBaseRotation = FRotator(0.f, Definition->MeshYaw, 0.f);
+	Body->SetRelativeLocationAndRotation(MeshBaseLocation, MeshBaseRotation);
 	if (Body->GetAnimInstance() == nullptr || !Body->GetAnimInstance()->IsA<UHorseAnimInstance>())
 	{
 		Body->SetAnimInstanceClass(UHorseAnimInstance::StaticClass());
@@ -135,7 +139,87 @@ void AHorse::SetRiderInput(const FVector& Direction, EHorseGait NewGait)
 
 void AHorse::RiderJump()
 {
+	// A standing horse can't jump anything: it rears instead
+	if (GetVelocity().Size2D() < 60.f && GetCharacterMovement()->IsMovingOnGround())
+	{
+		Rear(false);
+		return;
+	}
 	Jump();
+}
+
+bool AHorse::Rear(bool bThrowRider)
+{
+	if (!Definition || IsDead() || IsRearing() || !GetCharacterMovement()->IsMovingOnGround())
+	{
+		return false;
+	}
+	RearTime = 0.f;
+	bThrowRiderAtTop = bThrowRider && Rider != nullptr;
+	GetCharacterMovement()->StopMovementImmediately();
+	Sounds->PlayNeigh();
+	// The jump clip has the front legs tucked up, as they are when rearing
+	if (UHorseAnimInstance* Anim = Cast<UHorseAnimInstance>(GetMesh()->GetAnimInstance()))
+	{
+		Anim->PlayOneShot(Definition->JumpAnim);
+	}
+	return true;
+}
+
+float AHorse::RearAmount() const
+{
+	if (!IsRearing() || !Definition)
+	{
+		return 0.f;
+	}
+	// Up quickly (first 30%), hold, down again (last 35%)
+	const float T = RearTime / FMath::Max(Definition->RearSeconds, 0.1f);
+	if (T < 0.3f)
+	{
+		return FMath::InterpEaseOut(0.f, 1.f, T / 0.3f, 2.f);
+	}
+	if (T < 0.65f)
+	{
+		return 1.f;
+	}
+	return 1.f - FMath::InterpEaseInOut(0.f, 1.f, FMath::Clamp((T - 0.65f) / 0.35f, 0.f, 1.f), 2.f);
+}
+
+float AHorse::GetRearPitch() const
+{
+	return Definition ? RearAmount() * Definition->RearAngle : 0.f;
+}
+
+void AHorse::UpdateRear(float DeltaTime)
+{
+	RearTime += DeltaTime;
+	// Tilt the body up around the hind hooves
+	const FVector Pivot(-Definition->RearPivotBack, 0.f, -Definition->CapsuleHalfHeight);
+	const FRotator Tilt(GetRearPitch(), 0.f, 0.f);
+	GetMesh()->SetRelativeLocationAndRotation(Pivot + Tilt.RotateVector(MeshBaseLocation - Pivot), (Tilt.Quaternion() * MeshBaseRotation.Quaternion()).Rotator());
+
+	if (bThrowRiderAtTop && RearTime >= Definition->RearSeconds * 0.35f)
+	{
+		bThrowRiderAtTop = false;
+		ThrowRider();
+	}
+	if (RearTime >= Definition->RearSeconds)
+	{
+		RearTime = -1.f;
+		GetMesh()->SetRelativeLocationAndRotation(MeshBaseLocation, MeshBaseRotation);
+	}
+}
+
+void AHorse::ThrowRider()
+{
+	ABallCharacter* Thrown = Rider;
+	if (!Thrown)
+	{
+		return;
+	}
+	Thrown->Dismount();
+	// Off over the back and into the dirt
+	Thrown->LaunchCharacter(-GetActorForwardVector() * 380.f + FVector(0.f, 0.f, 320.f), true, true);
 }
 
 bool AHorse::CanJumpInternal_Implementation() const
@@ -171,6 +255,12 @@ void AHorse::Tick(float DeltaTime)
 	}
 
 	UCharacterMovementComponent* Movement = GetCharacterMovement();
+	if (IsRearing())
+	{
+		// Up on its hind legs it goes nowhere
+		UpdateRear(DeltaTime);
+		return;
+	}
 	const float Throttle = DesiredDirection.Size();
 	const float Speed = GetVelocity().Size2D();
 
@@ -200,6 +290,21 @@ void AHorse::Tick(float DeltaTime)
 	// breath left (the gallop also a rider who isn't exhausted); otherwise it drops a gait:
 	// a tired rider can still canter, a tired horse falls back to the travelling trot
 	Gait = RequestedGait;
+	// Out of breath: once the rider has eased off, asking for a canter or gallop again gets them thrown
+	const bool bAsksFast = Rider && Throttle > 0.5f && (RequestedGait == EHorseGait::Canter || RequestedGait == EHorseGait::Gallop);
+	if (Stamina->HasStamina())
+	{
+		bRiderEasedOff = false;
+	}
+	else if (!bAsksFast)
+	{
+		bRiderEasedOff = true;
+	}
+	else if (bRiderEasedOff && Rear(true))
+	{
+		bRiderEasedOff = false;
+		return;
+	}
 	const bool bCanRunFast = Throttle > 0.5f && Movement->IsMovingOnGround() && Stamina->HasStamina();
 	const bool bRiderFresh = !Rider || Rider->GetStamina()->HasStamina();
 	if (Gait == EHorseGait::Gallop && !(bCanRunFast && bRiderFresh))

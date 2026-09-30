@@ -159,6 +159,12 @@ private:
 	/** 0 = standing, 1 = crouched (smoothed, for the cameras) */
 	float SneakCameraBlend = 0.f;
 
+	/** Our own footsteps, and how loud they are now */
+	UPROPERTY(Transient)
+	TObjectPtr<class UAudioComponent> Footsteps;
+	float FootstepVolume = 0.f;
+	void UpdateFootsteps(float DeltaTime);
+
 	/** In the saddle: the gait asked for with W and Shift */
 	EHorseGait GetRideGait() const;
 	void ToggleView() { SetFirstPerson(!bFirstPerson); }
