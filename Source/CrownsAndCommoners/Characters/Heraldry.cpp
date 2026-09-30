@@ -44,7 +44,7 @@ namespace CIRLHeraldry
 	UTexture2D* LoadTexture(const FCIRLArms& Arms)
 	{
 		const FString Name = FString::Printf(TEXT("T_flag_%s"), *Arms.Id.ToString());
-		const FString Path = FString::Printf(TEXT("/Game/CountriesIRL/Characters/Flags/%s.%s"), *Name, *Name);
+		const FString Path = FString::Printf(TEXT("/Game/CrownsAndCommoners/Characters/Flags/%s.%s"), *Name, *Name);
 		return Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *Path, nullptr, LOAD_NoWarn | LOAD_Quiet));
 	}
 

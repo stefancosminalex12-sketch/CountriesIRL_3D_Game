@@ -9,7 +9,7 @@ actors = unreal.get_editor_subsystem(unreal.EditorActorSubsystem).get_all_level_
 balls = sorted([a for a in actors if a.get_class().get_name() == "BallCharacter"], key=lambda a: a.get_actor_location().y)
 for index, ball in enumerate(balls):
     name = ARMS[index % len(ARMS)]
-    texture = unreal.load_asset(f"/Game/CountriesIRL/Characters/Flags/T_flag_{name}")
+    texture = unreal.load_asset(f"/Game/CrownsAndCommoners/Characters/Flags/T_flag_{name}")
     ball.set_editor_property("flag", texture)
     ball.modify()
     print("TEST_ARMS", ball.get_actor_label(), name)

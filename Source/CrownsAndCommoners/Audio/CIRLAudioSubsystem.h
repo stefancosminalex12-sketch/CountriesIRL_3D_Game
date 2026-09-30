@@ -20,7 +20,7 @@ enum class ECIRLVolume : uint8
 
 /**
  *  The player's volumes, kept for the whole game session and saved in GameUserSettings.ini.
- *  Sounds belong to a sound class (/Game/CountriesIRL/Audio/Classes): SC_Music for music, SC_GameMusic for music
+ *  Sounds belong to a sound class (/Game/CrownsAndCommoners/Audio/Classes): SC_Music for music, SC_GameMusic for music
  *  playing in the world (the in-game playlist sets it), SC_SFX for everything else (Project Settings > Audio >
  *  Default Sound Class), all children of SC_Master. The volumes are applied with one sound mix that overrides the
  *  classes: menu music plays at Master x Music, in-game music at Master x Music x In-Game Music, effects at Master x Effects.

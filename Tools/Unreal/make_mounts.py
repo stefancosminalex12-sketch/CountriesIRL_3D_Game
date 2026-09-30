@@ -7,7 +7,7 @@ Safe to re-run: assets are updated and the horses (DevTest/Horses) replaced.
 """
 import unreal
 
-ANIMALS = "/Game/CountriesIRL/Animals"
+ANIMALS = "/Game/CrownsAndCommoners/Animals"
 tools = unreal.AssetToolsHelpers.get_asset_tools()
 
 

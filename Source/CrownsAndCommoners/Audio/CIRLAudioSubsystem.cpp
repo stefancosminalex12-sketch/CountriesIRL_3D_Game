@@ -10,9 +10,9 @@
 
 namespace
 {
-	const TCHAR* MusicClassPath = TEXT("/Game/CountriesIRL/Audio/Classes/SC_Music.SC_Music");
-	const TCHAR* GameMusicClassPath = TEXT("/Game/CountriesIRL/Audio/Classes/SC_GameMusic.SC_GameMusic");
-	const TCHAR* EffectsClassPath = TEXT("/Game/CountriesIRL/Audio/Classes/SC_SFX.SC_SFX");
+	const TCHAR* MusicClassPath = TEXT("/Game/CrownsAndCommoners/Audio/Classes/SC_Music.SC_Music");
+	const TCHAR* GameMusicClassPath = TEXT("/Game/CrownsAndCommoners/Audio/Classes/SC_GameMusic.SC_GameMusic");
+	const TCHAR* EffectsClassPath = TEXT("/Game/CrownsAndCommoners/Audio/Classes/SC_SFX.SC_SFX");
 }
 
 UCIRLAudioSubsystem* UCIRLAudioSubsystem::Get(const UObject* WorldContextObject)

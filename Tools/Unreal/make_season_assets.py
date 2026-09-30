@@ -14,7 +14,7 @@ Safe to re-run: assets are rebuilt and the garden is replaced.
 """
 import unreal
 
-FOLDER = "/Game/CountriesIRL/World"
+FOLDER = "/Game/CrownsAndCommoners/World"
 tools = unreal.AssetToolsHelpers.get_asset_tools()
 mel = unreal.MaterialEditingLibrary
 assets = unreal.EditorAssetLibrary

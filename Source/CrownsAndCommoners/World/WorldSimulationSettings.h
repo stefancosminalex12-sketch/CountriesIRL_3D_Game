@@ -23,15 +23,15 @@ public:
 
 	/** Level shown when the game starts: the title screen */
 	UPROPERTY(config, EditAnywhere, Category="Maps", meta=(AllowedClasses="/Script/Engine.World"))
-	FSoftObjectPath TitleMap = FSoftObjectPath(TEXT("/Game/CountriesIRL/Maps/L_MainMenu.L_MainMenu"));
+	FSoftObjectPath TitleMap = FSoftObjectPath(TEXT("/Game/CrownsAndCommoners/Maps/L_MainMenu.L_MainMenu"));
 
 	/** Level that New Game opens (the world; for now the test sandbox) */
 	UPROPERTY(config, EditAnywhere, Category="Maps", meta=(AllowedClasses="/Script/Engine.World"))
-	FSoftObjectPath NewGameMap = FSoftObjectPath(TEXT("/Game/CountriesIRL/Maps/L_DevSandbox.L_DevSandbox"));
+	FSoftObjectPath NewGameMap = FSoftObjectPath(TEXT("/Game/CrownsAndCommoners/Maps/L_DevSandbox.L_DevSandbox"));
 
 	/** The map of the world shown on the menu's Map tab */
 	UPROPERTY(config, EditAnywhere, Category="Maps")
-	TSoftObjectPtr<UCIRLMapDefinition> WorldMap = TSoftObjectPtr<UCIRLMapDefinition>(FSoftObjectPath(TEXT("/Game/CountriesIRL/UI/Map/DA_WorldMap_England1455.DA_WorldMap_England1455")));
+	TSoftObjectPtr<UCIRLMapDefinition> WorldMap = TSoftObjectPtr<UCIRLMapDefinition>(FSoftObjectPath(TEXT("/Game/CrownsAndCommoners/UI/Map/DA_WorldMap_England1455.DA_WorldMap_England1455")));
 
 	/** Test levels placed somewhere on the world map (the sandbox stands in for Middleham) */
 	UPROPERTY(config, EditAnywhere, Category="Maps")
@@ -59,10 +59,10 @@ public:
 
 	/** The region's climate (temperatures, foliage and grass through the year). Empty = built-in Yorkshire defaults. */
 	UPROPERTY(config, EditAnywhere, Category="Seasons")
-	TSoftObjectPtr<UClimateProfile> Climate = TSoftObjectPtr<UClimateProfile>(FSoftObjectPath(TEXT("/Game/CountriesIRL/World/DA_Climate_Yorkshire.DA_Climate_Yorkshire")));
+	TSoftObjectPtr<UClimateProfile> Climate = TSoftObjectPtr<UClimateProfile>(FSoftObjectPath(TEXT("/Game/CrownsAndCommoners/World/DA_Climate_Yorkshire.DA_Climate_Yorkshire")));
 
 	/** Material parameters the seasons and weather write to (LeafAmount, LeafTint, GrassTint, Frost, Mist, Temperature,
 	 *  CloudCover, Rain, Snowfall, Wetness, SnowCover, Wind) */
 	UPROPERTY(config, EditAnywhere, Category="Seasons")
-	TSoftObjectPtr<UMaterialParameterCollection> SeasonParameters = TSoftObjectPtr<UMaterialParameterCollection>(FSoftObjectPath(TEXT("/Game/CountriesIRL/World/MPC_Season.MPC_Season")));
+	TSoftObjectPtr<UMaterialParameterCollection> SeasonParameters = TSoftObjectPtr<UMaterialParameterCollection>(FSoftObjectPath(TEXT("/Game/CrownsAndCommoners/World/MPC_Season.MPC_Season")));
 };

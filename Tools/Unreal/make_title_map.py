@@ -5,7 +5,7 @@ Afterwards the editor goes back to L_DevSandbox.
 """
 import unreal
 
-MAP = "/Game/CountriesIRL/Maps/L_MainMenu"
+MAP = "/Game/CrownsAndCommoners/Maps/L_MainMenu"
 levels = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
 
 if not unreal.EditorAssetLibrary.does_asset_exist(MAP):
@@ -18,4 +18,4 @@ settings = world.get_world_settings()
 settings.set_editor_property("default_game_mode", unreal.load_class(None, "/Script/CountriesIRL_3D_Game.CIRLTitleGameMode"))
 levels.save_current_level()
 print("TITLE_MAP", MAP, settings.get_editor_property("default_game_mode"))
-levels.load_level("/Game/CountriesIRL/Maps/L_DevSandbox")
+levels.load_level("/Game/CrownsAndCommoners/Maps/L_DevSandbox")

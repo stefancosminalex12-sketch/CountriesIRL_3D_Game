@@ -44,7 +44,7 @@ UBallFaceComponent::UBallFaceComponent()
 
 void UBallFaceComponent::CreateFaceMesh(AActor* Owner, USceneComponent* Parent, UStaticMesh* SphereMesh, float BallRadius, float HeightScale)
 {
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> EyeMaterial(TEXT("/Game/CountriesIRL/Characters/Materials/M_BallEyes.M_BallEyes"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> EyeMaterial(TEXT("/Game/CrownsAndCommoners/Characters/Materials/M_BallEyes.M_BallEyes"));
 
 	FaceShell = BallParts::Create(Owner, TEXT("FaceShell"), Parent, SphereMesh);
 	FaceShell->SetRelativeScale3D(FVector(BallRadius + ShellOffset, BallRadius + ShellOffset, BallRadius * HeightScale + ShellOffset) / 50.f);

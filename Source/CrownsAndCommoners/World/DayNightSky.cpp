@@ -67,8 +67,8 @@ ADayNightSky::ADayNightSky()
 	// Rain streaks and snowflakes (materials from Tools/Unreal/make_season_assets.py)
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> RainMaterial(TEXT("/Game/CountriesIRL/World/M_Rain.M_Rain"));
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> SnowMaterial(TEXT("/Game/CountriesIRL/World/M_Snow.M_Snow"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> RainMaterial(TEXT("/Game/CrownsAndCommoners/World/M_Rain.M_Rain"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> SnowMaterial(TEXT("/Game/CrownsAndCommoners/World/M_Snow.M_Snow"));
 
 	Rain = CreateDefaultSubobject<UPrecipitationComponent>(TEXT("Rain"));
 	Rain->SetupAttachment(RootComponent);

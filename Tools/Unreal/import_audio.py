@@ -2,8 +2,8 @@
 Import game sounds (Art/Audio/<Folder>/*.wav, not Art/Audio/Source) as Sound Waves. Run inside the editor:
     py "C:/Dev/CountriesIRL_3D_Game/Tools/Unreal/import_audio.py" [part of a file name]
 or headless: UnrealEditor-Cmd.exe <project> -run=pythonscript -script="<this file> [part of a file name]"
-Art/Audio/Ambience/amb_x.wav -> /Game/CountriesIRL/Audio/Ambience/amb_x (ambiences are set to loop).
-Art/Audio/Music/mus_x.wav -> /Game/CountriesIRL/Audio/Music/mus_x (doesn't loop: playlists play it; sound class SC_Music so the Music slider
+Art/Audio/Ambience/amb_x.wav -> /Game/CrownsAndCommoners/Audio/Ambience/amb_x (ambiences are set to loop).
+Art/Audio/Music/mus_x.wav -> /Game/CrownsAndCommoners/Audio/Music/mus_x (doesn't loop: playlists play it; sound class SC_Music so the Music slider
 controls it; everything else uses the default class SC_SFX). Run setup_sound_classes.py first.
 """
 import glob
@@ -21,14 +21,14 @@ for path in sorted(glob.glob(os.path.join(ROOT, "*", "*.wav"))):
         continue
     task = unreal.AssetImportTask()
     task.filename = path.replace("\\", "/")
-    task.destination_path = "/Game/CountriesIRL/Audio/" + folder
+    task.destination_path = "/Game/CrownsAndCommoners/Audio/" + folder
     task.automated = True
     task.replace_existing = True
     task.save = False
     tasks.append(task)
 
 unreal.AssetToolsHelpers.get_asset_tools().import_asset_tasks(tasks)
-music_class = unreal.load_asset("/Game/CountriesIRL/Audio/Classes/SC_Music")
+music_class = unreal.load_asset("/Game/CrownsAndCommoners/Audio/Classes/SC_Music")
 for task in tasks:
     for object_path in task.imported_object_paths:
         sound = unreal.load_asset(object_path)

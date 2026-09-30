@@ -1,6 +1,6 @@
 """
 Create the game's sound classes (safe to run again):
-  /Game/CountriesIRL/Audio/Classes/SC_Master   the "Sound" volume
+  /Game/CrownsAndCommoners/Audio/Classes/SC_Master   the "Sound" volume
       SC_Music                                 music (main menu; the Music slider)
       SC_GameMusic                             music in the world (Music x In-Game Music; the in-game playlist sets it)
       SC_SFX                                   everything else (Project Settings > Audio > Default Sound Class)
@@ -10,7 +10,7 @@ or headless: UnrealEditor-Cmd.exe <project> -run=pythonscript -script="<this fil
 """
 import unreal
 
-FOLDER = "/Game/CountriesIRL/Audio/Classes"
+FOLDER = "/Game/CrownsAndCommoners/Audio/Classes"
 tools = unreal.AssetToolsHelpers.get_asset_tools()
 
 

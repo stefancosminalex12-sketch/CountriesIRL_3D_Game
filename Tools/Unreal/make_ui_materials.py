@@ -7,7 +7,7 @@ right transparency: scene captures store opacity inverted in alpha, so Opacity =
 """
 import unreal
 
-PATH = "/Game/CountriesIRL/UI/Materials"
+PATH = "/Game/CrownsAndCommoners/UI/Materials"
 NAME = "M_UI_PaperDoll"
 lib = unreal.MaterialEditingLibrary
 tools = unreal.AssetToolsHelpers.get_asset_tools()

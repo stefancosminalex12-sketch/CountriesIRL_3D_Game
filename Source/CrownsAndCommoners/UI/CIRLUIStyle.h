@@ -28,7 +28,7 @@ namespace CIRLUIStyle
 		BodyItalic,
 	};
 
-	/** Font from the imported font faces (/Game/CountriesIRL/UI/Fonts), built once */
+	/** Font from the imported font faces (/Game/CrownsAndCommoners/UI/Fonts), built once */
 	FSlateFontInfo Font(EFont Face, float Size);
 
 	// Colours
@@ -79,7 +79,7 @@ namespace CIRLUIStyle
 	const FSlateBrush* GradientLeft();
 	const FSlateBrush* GradientBottom();
 
-	/** Item icon from /Game/CountriesIRL/UI/Icons (T_<Name>), or nullptr if that icon hasn't been made yet */
+	/** Item icon from /Game/CrownsAndCommoners/UI/Icons (T_<Name>), or nullptr if that icon hasn't been made yet */
 	const FSlateBrush* ItemIcon(FName Name);
 
 	/** Invisible button frame, for buttons that draw their own hover/pressed look */

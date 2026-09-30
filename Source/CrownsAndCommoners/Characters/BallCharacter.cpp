@@ -54,7 +54,7 @@ ABallCharacter::ABallCharacter()
 
 	BodyMesh = BallParts::Create(this, TEXT("BodyMesh"), BodyPivot, Sphere);
 	// Coat of arms across the ball (M_BallArms projects the texture from the front)
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> FlagMaterialAsset(TEXT("/Game/CountriesIRL/Characters/Materials/M_BallArms.M_BallArms"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> FlagMaterialAsset(TEXT("/Game/CrownsAndCommoners/Characters/Materials/M_BallArms.M_BallArms"));
 	if (FlagMaterialAsset.Succeeded())
 	{
 		BodyMesh->SetMaterial(0, FlagMaterialAsset.Object);

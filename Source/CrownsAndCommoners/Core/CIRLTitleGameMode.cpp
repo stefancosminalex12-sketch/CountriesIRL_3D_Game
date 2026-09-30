@@ -17,7 +17,7 @@
 namespace
 {
 	/** Title screen ambience (Art/Audio/SOURCES.md); the music is a playlist in the project settings */
-	const TCHAR* TitleAmbiencePath = TEXT("/Game/CountriesIRL/Audio/Ambience/amb_title_river.amb_title_river");
+	const TCHAR* TitleAmbiencePath = TEXT("/Game/CrownsAndCommoners/Audio/Ambience/amb_title_river.amb_title_river");
 }
 
 ACIRLTitleGameMode::ACIRLTitleGameMode()

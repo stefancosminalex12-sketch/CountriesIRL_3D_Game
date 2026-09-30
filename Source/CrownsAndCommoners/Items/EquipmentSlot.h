@@ -40,6 +40,6 @@ namespace CIRLEquipSlot
 	/** What goes in it, e.g. "Kettle hat, sallet, armet, or a straw or felt hat." */
 	FText Holds(ECIRLEquipSlot Slot);
 
-	/** Icon (in /Game/CountriesIRL/UI/Icons) drawn faintly while the slot is empty */
+	/** Icon (in /Game/CrownsAndCommoners/UI/Icons) drawn faintly while the slot is empty */
 	FName SilhouetteIcon(ECIRLEquipSlot Slot);
 }

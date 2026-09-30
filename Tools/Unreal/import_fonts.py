@@ -8,7 +8,7 @@ import os
 import unreal
 
 SOURCE = "C:/Dev/CountriesIRL_3D_Game/Art/Fonts"
-DESTINATION = "/Game/CountriesIRL/UI/Fonts"
+DESTINATION = "/Game/CrownsAndCommoners/UI/Fonts"
 
 tasks = []
 for path in sorted(glob.glob(os.path.join(SOURCE, "*.ttf"))):

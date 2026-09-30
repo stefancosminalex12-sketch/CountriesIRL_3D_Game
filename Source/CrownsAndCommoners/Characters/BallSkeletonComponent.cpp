@@ -21,7 +21,7 @@ UBallSkeletonComponent::UBallSkeletonComponent()
 
 	CylinderMesh = BallParts::LoadCylinder();
 
-	static ConstructorHelpers::FObjectFinder<UMaterialInterface> Eyes(TEXT("/Game/CountriesIRL/Characters/Materials/M_BallEyes.M_BallEyes"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> Eyes(TEXT("/Game/CrownsAndCommoners/Characters/Materials/M_BallEyes.M_BallEyes"));
 	EyeMaterial = Eyes.Object;
 }
 

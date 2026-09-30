@@ -7,7 +7,7 @@ Only changes values (no nodes are removed), so it is safe to run again.
 import unreal
 
 lib = unreal.MaterialEditingLibrary
-path = "/Game/CountriesIRL/Characters/Materials/M_BallEyes"
+path = "/Game/CrownsAndCommoners/Characters/Materials/M_BallEyes"
 m = unreal.load_asset(path)
 
 # Emissive = eye mask x a constant: the constant becomes 0, so the eyes are lit only by the world like the ball

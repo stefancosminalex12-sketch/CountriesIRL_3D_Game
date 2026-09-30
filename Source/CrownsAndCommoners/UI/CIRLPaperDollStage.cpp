@@ -82,7 +82,7 @@ void ACIRLPaperDollStage::BeginPlay()
 	RenderTarget->UpdateResourceImmediate(true);
 	Capture->TextureTarget = RenderTarget;
 
-	if (UMaterialInterface* Base = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/CountriesIRL/UI/Materials/M_UI_PaperDoll.M_UI_PaperDoll")))
+	if (UMaterialInterface* Base = LoadObject<UMaterialInterface>(nullptr, TEXT("/Game/CrownsAndCommoners/UI/Materials/M_UI_PaperDoll.M_UI_PaperDoll")))
 	{
 		Picture = UMaterialInstanceDynamic::Create(Base, this);
 		Picture->SetTextureParameterValue(TEXT("Picture"), RenderTarget);

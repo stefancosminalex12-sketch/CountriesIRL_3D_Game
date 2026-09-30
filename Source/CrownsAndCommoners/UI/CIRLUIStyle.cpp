@@ -33,7 +33,7 @@ namespace CIRLUIStyle
 			return Brush;
 		}
 
-		/** Brush drawing a texture from /Game/CountriesIRL/UI/Textures (kept loaded for the whole game) */
+		/** Brush drawing a texture from /Game/CrownsAndCommoners/UI/Textures (kept loaded for the whole game) */
 		FSlateBrush MakeImage(const TCHAR* TextureAsset, const FVector2D& Size, ESlateBrushTileType::Type Tiling = ESlateBrushTileType::NoTile)
 		{
 			FSlateBrush Brush;
@@ -70,12 +70,12 @@ namespace CIRLUIStyle
 	{
 		static const TCHAR* Assets[] =
 		{
-			TEXT("/Game/CountriesIRL/UI/Fonts/FF_Cinzel_Regular.FF_Cinzel_Regular"),
-			TEXT("/Game/CountriesIRL/UI/Fonts/FF_Cinzel_SemiBold.FF_Cinzel_SemiBold"),
-			TEXT("/Game/CountriesIRL/UI/Fonts/FF_Cinzel_Bold.FF_Cinzel_Bold"),
-			TEXT("/Game/CountriesIRL/UI/Fonts/FF_EBGaramond_Regular.FF_EBGaramond_Regular"),
-			TEXT("/Game/CountriesIRL/UI/Fonts/FF_EBGaramond_SemiBold.FF_EBGaramond_SemiBold"),
-			TEXT("/Game/CountriesIRL/UI/Fonts/FF_EBGaramond_Italic.FF_EBGaramond_Italic"),
+			TEXT("/Game/CrownsAndCommoners/UI/Fonts/FF_Cinzel_Regular.FF_Cinzel_Regular"),
+			TEXT("/Game/CrownsAndCommoners/UI/Fonts/FF_Cinzel_SemiBold.FF_Cinzel_SemiBold"),
+			TEXT("/Game/CrownsAndCommoners/UI/Fonts/FF_Cinzel_Bold.FF_Cinzel_Bold"),
+			TEXT("/Game/CrownsAndCommoners/UI/Fonts/FF_EBGaramond_Regular.FF_EBGaramond_Regular"),
+			TEXT("/Game/CrownsAndCommoners/UI/Fonts/FF_EBGaramond_SemiBold.FF_EBGaramond_SemiBold"),
+			TEXT("/Game/CrownsAndCommoners/UI/Fonts/FF_EBGaramond_Italic.FF_EBGaramond_Italic"),
 		};
 		static TSharedPtr<const FCompositeFont> Composites[UE_ARRAY_COUNT(Assets)];
 
@@ -150,7 +150,7 @@ namespace CIRLUIStyle
 		// White ring image (Art/UI/doll_ring.png, a double gold line), tinted worn gold
 		static const FSlateBrush Brush = []
 		{
-			FSlateBrush B = MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_doll_ring.T_doll_ring"), FVector2D(512.f));
+			FSlateBrush B = MakeImage(TEXT("/Game/CrownsAndCommoners/UI/Textures/T_doll_ring.T_doll_ring"), FVector2D(512.f));
 			B.TintColor = SRGB(150, 122, 74, 0.55f);
 			return B;
 		}();
@@ -178,19 +178,19 @@ namespace CIRLUIStyle
 	const FSlateBrush* PanelTexture()
 	{
 		// One tile covers ~420 px, so the leather grain reads without repeating visibly
-		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_panel_texture.T_panel_texture"), FVector2D(420.f), ESlateBrushTileType::Both);
+		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CrownsAndCommoners/UI/Textures/T_panel_texture.T_panel_texture"), FVector2D(420.f), ESlateBrushTileType::Both);
 		return &Brush;
 	}
 
 	const FSlateBrush* CornerOrnament()
 	{
-		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_corner_ornament.T_corner_ornament"), FVector2D(118.f));
+		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CrownsAndCommoners/UI/Textures/T_corner_ornament.T_corner_ornament"), FVector2D(118.f));
 		return &Brush;
 	}
 
 	const FSlateBrush* TitleBackground()
 	{
-		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_menu_background.T_menu_background"), FVector2D(1536.f, 1024.f));
+		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CrownsAndCommoners/UI/Textures/T_menu_background.T_menu_background"), FVector2D(1536.f, 1024.f));
 		return &Brush;
 	}
 
@@ -203,10 +203,10 @@ namespace CIRLUIStyle
 	{
 		static const FSlateBrush Brushes[] =
 		{
-			MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_loading_01.T_loading_01"), FVector2D(1536.f, 1024.f)),
-			MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_loading_02.T_loading_02"), FVector2D(1536.f, 1024.f)),
-			MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_loading_03.T_loading_03"), FVector2D(1536.f, 1024.f)),
-			MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_loading_04.T_loading_04"), FVector2D(1536.f, 1024.f)),
+			MakeImage(TEXT("/Game/CrownsAndCommoners/UI/Textures/T_loading_01.T_loading_01"), FVector2D(1536.f, 1024.f)),
+			MakeImage(TEXT("/Game/CrownsAndCommoners/UI/Textures/T_loading_02.T_loading_02"), FVector2D(1536.f, 1024.f)),
+			MakeImage(TEXT("/Game/CrownsAndCommoners/UI/Textures/T_loading_03.T_loading_03"), FVector2D(1536.f, 1024.f)),
+			MakeImage(TEXT("/Game/CrownsAndCommoners/UI/Textures/T_loading_04.T_loading_04"), FVector2D(1536.f, 1024.f)),
 		};
 		static_assert(UE_ARRAY_COUNT(Brushes) == 4, "Keep LoadingPaintingCount() in step");
 		return &Brushes[FMath::Clamp(Index, 0, 3)];
@@ -214,13 +214,13 @@ namespace CIRLUIStyle
 
 	const FSlateBrush* GradientLeft()
 	{
-		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_gradient_left.T_gradient_left"), FVector2D(512.f, 4.f));
+		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CrownsAndCommoners/UI/Textures/T_gradient_left.T_gradient_left"), FVector2D(512.f, 4.f));
 		return &Brush;
 	}
 
 	const FSlateBrush* GradientBottom()
 	{
-		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CountriesIRL/UI/Textures/T_gradient_bottom.T_gradient_bottom"), FVector2D(4.f, 512.f));
+		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CrownsAndCommoners/UI/Textures/T_gradient_bottom.T_gradient_bottom"), FVector2D(4.f, 512.f));
 		return &Brush;
 	}
 
@@ -233,7 +233,7 @@ namespace CIRLUIStyle
 			return Found->Get();
 		}
 
-		const FString Path = FString::Printf(TEXT("/Game/CountriesIRL/UI/Icons/T_%s.T_%s"), *Name.ToString(), *Name.ToString());
+		const FString Path = FString::Printf(TEXT("/Game/CrownsAndCommoners/UI/Icons/T_%s.T_%s"), *Name.ToString(), *Name.ToString());
 		UTexture2D* Texture = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *Path, nullptr, LOAD_NoWarn | LOAD_Quiet));
 		TUniquePtr<FSlateBrush> Brush;
 		if (Texture)

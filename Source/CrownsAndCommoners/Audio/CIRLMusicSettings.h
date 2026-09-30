@@ -23,7 +23,7 @@ struct FCIRLMusicTrack
 
 /**
  *  Which music plays where (Project Settings > CountriesIRL Audio). Music assets are in
- *  /Game/CountriesIRL/Audio/Music (Tools/Unreal/import_audio.py); they don't loop, the playlist moves on.
+ *  /Game/CrownsAndCommoners/Audio/Music (Tools/Unreal/import_audio.py); they don't loop, the playlist moves on.
  */
 UCLASS(config = Game, defaultconfig, meta = (DisplayName = "CountriesIRL Audio"))
 class UCIRLMusicSettings : public UDeveloperSettings

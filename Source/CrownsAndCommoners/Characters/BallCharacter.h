@@ -52,7 +52,7 @@ public:
 
 	UBallAnimatorComponent* GetAnimator() const { return Animator; }
 
-	/** Coat of arms painted across the ball (a texture from /Game/CountriesIRL/Characters/Flags) */
+	/** Coat of arms painted across the ball (a texture from /Game/CrownsAndCommoners/Characters/Flags) */
 	UFUNCTION(BlueprintCallable, Category="Ball|Look")
 	void SetFlag(UTexture2D* NewFlag);
 

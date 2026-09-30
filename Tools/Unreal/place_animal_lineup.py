@@ -7,7 +7,7 @@ Safe to re-run: the lineup is replaced.
 """
 import unreal
 
-ROOT = "/Game/CountriesIRL/Animals"
+ROOT = "/Game/CrownsAndCommoners/Animals"
 FOLDER = "DevTest/Animals"
 actors = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
 

@@ -12,8 +12,8 @@ import os
 import unreal
 
 SOURCE = "C:/Dev/CountriesIRL_3D_Game/Art/Heraldry"
-FLAGS = "/Game/CountriesIRL/Characters/Flags"
-MATERIALS = "/Game/CountriesIRL/Characters/Materials"
+FLAGS = "/Game/CrownsAndCommoners/Characters/Flags"
+MATERIALS = "/Game/CrownsAndCommoners/Characters/Materials"
 lib = unreal.MaterialEditingLibrary
 tools = unreal.AssetToolsHelpers.get_asset_tools()
 
