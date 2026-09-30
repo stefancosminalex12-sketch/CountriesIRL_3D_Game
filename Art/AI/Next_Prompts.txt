@@ -17,7 +17,7 @@ Same flat style as the other map icons: flat colours, bold dark-brown outline, n
 [marker_destroyed] Generate an image of a simple map symbol for a destroyed place: a bold X made of two crossed brush strokes, dark red. Flat, no shading, no texture, no ground. Must read at 15 pixels. Transparent background.
 
 
-=== BATCH 3: GROUND AND BUILDING TEXTURES for the first landscape and village (folder Art/AI/Textures) - 9 images, square ===
+=== BATCH 3: GROUND AND BUILDING TEXTURES for the first landscape and village (folder Art/AI/Textures) - DONE 2026-09-30 (saved, not yet imported into Unreal) ===
 Each must be a SEAMLESS TILEABLE texture seen straight from above (or straight on for walls), evenly lit, no shadows, no perspective, no objects, nothing that stands out when repeated.
 Style for all: painterly hand-painted game texture, soft brush strokes, realistic colours, not photorealistic, 15th-century England.
 [tex_grass] Generate an image of a seamless tileable texture: short English meadow grass seen from straight above, soft mid-green with slightly lighter and darker patches, a few tiny clover leaves, no flowers. Painterly hand-painted game texture, evenly lit, no shadows, no perspective.
