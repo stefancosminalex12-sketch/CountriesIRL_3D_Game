@@ -145,6 +145,7 @@ void ABallCharacter::BeginPlay()
 	RefreshColors();
 
 	SetEmotion(StartingEmotion);
+	Face->SetLashes(bFemale);
 	SetSprinting(false);
 
 	Health->OnDepleted.AddDynamic(this, &ABallCharacter::HandleDeath);

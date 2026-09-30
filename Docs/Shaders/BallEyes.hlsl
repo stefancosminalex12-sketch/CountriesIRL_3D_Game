@@ -1,12 +1,12 @@
-// Source of the Custom node in /Game/CrownsAndCommoners/Characters/Materials/M_BallEyes.
-// Draws both countryball eyes on a sphere shell around the ball body.
-// Inputs:  P (local position on the shell), EyeScale, UpperLid, UpperLidAngle, LowerLid,
-//          Dead (0 = alive, 1 = x_x, 2 = hollow skull sockets)
-// Output:  float2(opacity mask, whiteness)  -> x drives Opacity Mask, y drives Base Color
-// Eye placement and size constants live only here; UBallFaceComponent drives the parameters.
-// The shell mesh is the engine sphere (radius 50 in local space) scaled to just above the body.
+// The code of the Custom node in /Game/CrownsAndCommoners/Characters/Materials/M_BallEyes, written out by
+// Tools/Unreal/update_ball_eyes.py (this header is not in the node). Draws both countryball eyes on a sphere shell.
+// Inputs: P (local position on the shell), EyeScale, UpperLid, UpperLidAngle, LowerLid,
+//         Dead (0 alive, 1 x_x, 2 hollow skull sockets), Stretch (the shell's egg stretch), Lashes (0 / 1).
+// Output: float2(opacity mask, whiteness) -> x drives Opacity Mask, y drives Base Color.
 
-float3 d = normalize(P);
+
+// The shell may be stretched into the ball's egg shape: undo it so the eyes stay round
+float3 d = normalize(P * float3(1.0, 1.0, Stretch));
 float mask = 0.0;
 float white = 0.0;
 
@@ -44,6 +44,23 @@ for (int i = 0; i < 2; i++)
         float d2 = abs(q.x * a.y + q.y * a.x);
         if (min(d1, d2) < 1.6 && length(q) < H * 0.9) { mask = 1.0; white = 0.0; }
         continue;
+    }
+
+    // Eyelashes (Lashes = 1): three short strokes fanning out from the outer top corner of the eye.
+    // They start on the eye's edge (or on the upper lid when it is lowered, so they follow a blink)
+    if (Lashes > 0.5)
+    {
+        float2 qo = float2(q.x * s, q.y);   // x runs toward the outer side of the face
+        float lidTop = (UpperLid > 0.01) ? ((H + O) - UpperLid * 2.0 * (H + O)) : 1000.0;
+        for (int k = 0; k < 3; k++)
+        {
+            float t = radians(18.0 + 26.0 * k);
+            float2 lashRoot = float2(W * cos(t), min(H * sin(t), lidTop));
+            float2 lashDir = normalize(float2(cos(t) * 1.3, sin(t) * 0.8 + 0.3));
+            float2 rel = qo - lashRoot;
+            float along = clamp(dot(rel, lashDir), 0.0, 0.55 * W);
+            if (length(rel - lashDir * along) < 0.95) { mask = 1.0; white = 0.0; }
+        }
     }
 
     // Approximate signed distance to the eye ellipse (cm)

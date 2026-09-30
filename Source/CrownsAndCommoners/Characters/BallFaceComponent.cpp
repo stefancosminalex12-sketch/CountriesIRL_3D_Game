@@ -155,4 +155,11 @@ void UBallFaceComponent::PushPoseToMaterial()
 	// Dead: 0 = alive, 1 = x_x (2 = hollow skull sockets, used by the skeleton's skull)
 	FaceMaterial->SetScalarParameterValue(TEXT("Dead"), CurrentPose.bDead ? 1.f : 0.f);
 	FaceMaterial->SetScalarParameterValue(TEXT("ShellStretch"), ShellStretch);
+	FaceMaterial->SetScalarParameterValue(TEXT("Lashes"), bLashes ? 1.f : 0.f);
+}
+
+void UBallFaceComponent::SetLashes(bool bOn)
+{
+	bLashes = bOn;
+	PushPoseToMaterial();
 }

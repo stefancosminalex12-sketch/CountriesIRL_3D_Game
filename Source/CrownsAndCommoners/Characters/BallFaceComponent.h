@@ -76,6 +76,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Ball|Face")
 	void SetEmotion(EBallEmotion NewEmotion);
 
+	/** Eyelashes at the outer corners of the eyes (women) */
+	void SetLashes(bool bOn);
+
 	UFUNCTION(BlueprintPure, Category="Ball|Face")
 	EBallEmotion GetEmotion() const { return Emotion; }
 
@@ -118,4 +121,6 @@ private:
 
 	/** How much taller than wide the face shell is (the ball's egg shape); passed to the eye shader */
 	float ShellStretch = 1.f;
+
+	bool bLashes = false;
 };

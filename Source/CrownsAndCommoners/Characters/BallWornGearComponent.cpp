@@ -7,11 +7,12 @@
 #include "Components/StaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
 
+// (named differently from the held-item colours: the build compiles these files together)
 namespace
 {
-	const FLinearColor Leather(0.22f, 0.13f, 0.07f);
-	const FLinearColor Steel(0.55f, 0.57f, 0.60f);
-	const FLinearColor Wood(0.30f, 0.19f, 0.10f);
+	const FLinearColor WornLeather(0.22f, 0.13f, 0.07f);
+	const FLinearColor WornSteel(0.55f, 0.57f, 0.60f);
+	const FLinearColor WornWood(0.30f, 0.19f, 0.10f);
 }
 
 void UBallWornGearComponent::BeginPlay()
@@ -108,7 +109,7 @@ void UBallWornGearComponent::Refresh()
 		{
 			if (const FCIRLItemRow* Item = Worn(Slot))
 			{
-				BuildHead(*Item, Item->GetTint(Steel), Slot == S::Coif && bHelmetOn);
+				BuildHead(*Item, Item->GetTint(WornSteel), Slot == S::Coif && bHelmetOn);
 			}
 		}
 
@@ -117,14 +118,14 @@ void UBallWornGearComponent::Refresh()
 		{
 			if (const FCIRLItemRow* Item = Worn(Slot))
 			{
-				BuildBody(Slot, *Item, Item->GetTint(Steel));
+				BuildBody(Slot, *Item, Item->GetTint(WornSteel));
 			}
 		}
 
 		// Cloak: draped over the back and shoulders, open at the front
 		if (const FCIRLItemRow* Cloak = Worn(S::Cloak))
 		{
-			const FLinearColor Color = Cloak->GetTint(Leather);
+			const FLinearColor Color = Cloak->GetTint(WornLeather);
 			AddShell(-0.20f, -0.10f, 1.0f, 1.03f, 1.0f, Color);
 			if (Cloak->Shape == ECIRLItemShape::CapeHood)
 			{
@@ -136,7 +137,7 @@ void UBallWornGearComponent::Refresh()
 		// Collar: a gold ring around the ball under the face
 		if (const FCIRLItemRow* Collar = Worn(S::Necklace))
 		{
-			AddPart(EPartMesh::Cylinder, FVector(0.f, 0.f, -0.03f * R), FVector(2.10f * R, 2.10f * R, 3.f), Collar->GetTint(Steel));
+			AddPart(EPartMesh::Cylinder, FVector(0.f, 0.f, -0.03f * R), FVector(2.10f * R, 2.10f * R, 3.f), Collar->GetTint(WornSteel));
 		}
 
 		// Belt: shown once something hangs from it; one half on the left hip, the other on the right
@@ -144,15 +145,15 @@ void UBallWornGearComponent::Refresh()
 		const FCIRLItemRow* Belt2 = Worn(S::Belt2);
 		if (Belt1 || Belt2)
 		{
-			AddPart(EPartMesh::Cylinder, FVector(0.f, 0.f, -0.32f * R), FVector(2.20f * R, 2.20f * R, 0.075f * R), Leather);
-			AddPart(EPartMesh::Cube, FVector(1.10f * R, 0.f, -0.32f * R), FVector(3.f, 0.10f * R, 0.11f * R), Steel);
+			AddPart(EPartMesh::Cylinder, FVector(0.f, 0.f, -0.32f * R), FVector(2.20f * R, 2.20f * R, 0.075f * R), WornLeather);
+			AddPart(EPartMesh::Cube, FVector(1.10f * R, 0.f, -0.32f * R), FVector(3.f, 0.10f * R, 0.11f * R), WornSteel);
 			if (Belt1)
 			{
-				BuildBeltItem(*Belt1, Belt1->GetTint(Leather), -1.f);
+				BuildBeltItem(*Belt1, Belt1->GetTint(WornLeather), -1.f);
 			}
 			if (Belt2)
 			{
-				BuildBeltItem(*Belt2, Belt2->GetTint(Leather), 1.f);
+				BuildBeltItem(*Belt2, Belt2->GetTint(WornLeather), 1.f);
 			}
 		}
 
@@ -160,8 +161,8 @@ void UBallWornGearComponent::Refresh()
 		if (const FCIRLItemRow* Back = Worn(S::Back))
 		{
 			const float Height = FMath::Max(Back->ReachCm, 40.f);
-			AddPart(EPartMesh::Cube, FVector(-1.24f * R, 0.f, 0.05f * R), FVector(5.f, Height * 0.68f, Height), Back->GetTint(Wood));
-			AddPart(EPartMesh::Cube, FVector(-1.24f * R - 3.f, 0.f, 0.05f * R), FVector(2.f, Height * 0.68f + 4.f, 5.f), Steel);
+			AddPart(EPartMesh::Cube, FVector(-1.24f * R, 0.f, 0.05f * R), FVector(5.f, Height * 0.68f, Height), Back->GetTint(WornWood));
+			AddPart(EPartMesh::Cube, FVector(-1.24f * R - 3.f, 0.f, 0.05f * R), FVector(2.f, Height * 0.68f + 4.f, 5.f), WornSteel);
 		}
 	}
 
@@ -174,8 +175,8 @@ void UBallWornGearComponent::Refresh()
 	const FCIRLItemRow* Gloves = Worn(S::Gloves);
 	const FCIRLItemRow* Boots = Worn(S::Boots);
 	CastChecked<ABallCharacter>(GetOwner())->SetGearTints(
-		Gloves && !Gloves->Tint.IsEmpty() ? TOptional<FLinearColor>(Gloves->GetTint(Leather)) : TOptional<FLinearColor>(),
-		Boots && !Boots->Tint.IsEmpty() ? TOptional<FLinearColor>(Boots->GetTint(Leather)) : TOptional<FLinearColor>());
+		Gloves && !Gloves->Tint.IsEmpty() ? TOptional<FLinearColor>(Gloves->GetTint(WornLeather)) : TOptional<FLinearColor>(),
+		Boots && !Boots->Tint.IsEmpty() ? TOptional<FLinearColor>(Boots->GetTint(WornLeather)) : TOptional<FLinearColor>());
 }
 
 void UBallWornGearComponent::AddCap(float RimHeight, float TopRoom, const FLinearColor& Color, float LengthScale, float ShiftBack)
@@ -282,8 +283,8 @@ void UBallWornGearComponent::BuildBeltItem(const FCIRLItemRow& Item, const FLine
 	{
 	case ECIRLItemShape::Dagger:
 		// Hilt above the belt, the blade in its sheath below
-		AddPart(EPartMesh::Cylinder, Hang + FVector(0.f, 0.f, 5.f), FVector(2.6f, 2.6f, 10.f), Leather);
-		AddPart(EPartMesh::Cube, Hang + FVector(0.f, 0.f, -L * 0.5f), FVector(2.f, 3.2f, L), Steel);
+		AddPart(EPartMesh::Cylinder, Hang + FVector(0.f, 0.f, 5.f), FVector(2.6f, 2.6f, 10.f), WornLeather);
+		AddPart(EPartMesh::Cube, Hang + FVector(0.f, 0.f, -L * 0.5f), FVector(2.f, 3.2f, L), WornSteel);
 		break;
 	case ECIRLItemShape::Purse:
 		AddPart(EPartMesh::Sphere, Hang + FVector(0.f, 0.f, -9.f), FVector(11.f, 11.f, 13.f), Color);
@@ -293,7 +294,7 @@ void UBallWornGearComponent::BuildBeltItem(const FCIRLItemRow& Item, const FLine
 		AddPart(EPartMesh::Cylinder, Hang + FVector(-10.f, 0.f, -20.f), FVector(11.f, 11.f, 58.f), Color, FRotator(-25.f, 0.f, 0.f));
 		break;
 	case ECIRLItemShape::Torch:
-		AddPart(EPartMesh::Cylinder, Hang + FVector(0.f, 0.f, -L * 0.4f), FVector(3.5f, 3.5f, L), Wood);
+		AddPart(EPartMesh::Cylinder, Hang + FVector(0.f, 0.f, -L * 0.4f), FVector(3.5f, 3.5f, L), WornWood);
 		AddPart(EPartMesh::Sphere, Hang + FVector(0.f, 0.f, L * 0.1f + 4.f), FVector(8.f, 8.f, 11.f), FLinearColor(0.2f, 0.17f, 0.13f));
 		break;
 	default:

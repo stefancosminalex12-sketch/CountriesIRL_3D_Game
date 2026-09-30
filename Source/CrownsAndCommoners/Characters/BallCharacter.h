@@ -252,6 +252,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ball|Movement")
 	float JumpStaminaCost = 15.f;
 
+	/** A woman: drawn with eyelashes (later: her own height range and clothes) */
+	UPROPERTY(EditAnywhere, Category="Ball|Look")
+	bool bFemale = false;
+
 	/** What this ball owns from the start (item ids); each is put on if a slot is free. Villagers, soldiers and
 	 *  bandits get their gear here. The player's comes from the item settings instead */
 	UPROPERTY(EditAnywhere, Category="Ball|Gear")
