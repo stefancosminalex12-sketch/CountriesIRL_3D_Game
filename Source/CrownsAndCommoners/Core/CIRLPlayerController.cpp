@@ -17,6 +17,8 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "UI/SCIRLGameMenu.h"
 #include "UI/SCIRLDeathScreen.h"
+#include "UI/SCIRLCompassBar.h"
+#include "Widgets/Layout/SBox.h"
 #include "Characters/PlayerBallCharacter.h"
 #include "GameFramework/GameModeBase.h"
 #include "TimerManager.h"
@@ -57,6 +59,20 @@ void ACIRLPlayerController::BeginPlay()
 		DeathMusic = NewObject<UCIRLPlaylistComponent>(this, TEXT("DeathMusic"));
 		DeathMusic->RegisterComponent();
 		StartGameMusic();
+
+		// The compass bar, top centre, under every menu
+		if (UGameViewportClient* Viewport = GetWorld()->GetGameViewport())
+		{
+			Compass = SNew(SBox)
+				.HAlign(HAlign_Center)
+				.VAlign(VAlign_Top)
+				.Padding(FMargin(0.f, 22.f, 0.f, 0.f))
+				.Visibility(EVisibility::HitTestInvisible)
+				[
+					SNew(SCIRLCompassBar).Owner(this)
+				];
+			Viewport->AddViewportWidgetForPlayer(GetLocalPlayer(), Compass.ToSharedRef(), 5);
+		}
 	}
 }
 
@@ -100,6 +116,14 @@ void ACIRLPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		CloseGameMenu();
 	}
 	HideDeathScreen();
+	if (Compass.IsValid())
+	{
+		if (UGameViewportClient* Viewport = GetWorld() ? GetWorld()->GetGameViewport() : nullptr)
+		{
+			Viewport->RemoveViewportWidgetForPlayer(GetLocalPlayer(), Compass.ToSharedRef());
+		}
+		Compass.Reset();
+	}
 	if (PaperDollStage)
 	{
 		PaperDollStage->Destroy();

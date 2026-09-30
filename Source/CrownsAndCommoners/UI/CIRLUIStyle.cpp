@@ -273,6 +273,26 @@ namespace CIRLUIStyle
 		return &Brush;
 	}
 
+	const FSlateBrush* MapMarker(FName Name)
+	{
+		static TMap<FName, TUniquePtr<FSlateBrush>> Markers;
+		if (const TUniquePtr<FSlateBrush>* Found = Markers.Find(Name))
+		{
+			return Found->Get();
+		}
+		const FString Path = FString::Printf(TEXT("/Game/CrownsAndCommoners/UI/Markers/T_%s.T_%s"), *Name.ToString(), *Name.ToString());
+		TUniquePtr<FSlateBrush> Brush;
+		if (UTexture2D* Texture = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *Path, nullptr, LOAD_NoWarn | LOAD_Quiet)))
+		{
+			Texture->AddToRoot();
+			Brush = MakeUnique<FSlateBrush>();
+			Brush->DrawAs = ESlateBrushDrawType::Image;
+			Brush->ImageSize = FVector2D(256.f);
+			Brush->SetResourceObject(Texture);
+		}
+		return Markers.Add(Name, MoveTemp(Brush)).Get();
+	}
+
 	const FSlateBrush* ItemIcon(FName Name)
 	{
 		// Loaded on first use; icons that don't exist yet are remembered as missing (no repeated lookups)

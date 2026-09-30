@@ -93,6 +93,9 @@ namespace CIRLUIStyle
 	const FSlateBrush* GradientLeft();
 	const FSlateBrush* GradientBottom();
 
+	/** Map marker for the compass bar from /Game/CrownsAndCommoners/UI/Markers (T_<Name>, e.g. marker_horse), or nullptr */
+	const FSlateBrush* MapMarker(FName Name);
+
 	/** Item icon from /Game/CrownsAndCommoners/UI/Icons (T_<Name>), or nullptr if that icon hasn't been made yet */
 	const FSlateBrush* ItemIcon(FName Name);
 

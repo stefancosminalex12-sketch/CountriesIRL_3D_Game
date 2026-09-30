@@ -108,6 +108,9 @@ private:
 	void HideDeathScreen();
 
 	TSharedPtr<SCIRLDeathScreen> DeathScreen;
+
+	/** The compass bar at the top of the screen */
+	TSharedPtr<SWidget> Compass;
 	FTimerHandle DeathScreenTimer;
 
 	/** Seconds between dying and the death screen starting to fade in (the body falls while it does) */

@@ -114,6 +114,9 @@ public:
 	void Dismount();
 
 	AHorse* GetMount() const { return MountedHorse; }
+
+	/** The horse this ball rode last (still set after getting off; nullptr if it never rode or the horse is gone) */
+	AHorse* GetLastMount() const { return LastMount.Get(); }
 	bool IsMounted() const { return MountedHorse != nullptr; }
 
 	/** Wants to go fast: runs on foot, gallops on horseback */
@@ -321,6 +324,8 @@ protected:
 
 	UPROPERTY(Transient)
 	TObjectPtr<AHorse> MountedHorse;
+
+	TWeakObjectPtr<AHorse> LastMount;
 
 	/** Keeps the ball sitting in the saddle as the horse's back moves */
 	void UpdateSeat();

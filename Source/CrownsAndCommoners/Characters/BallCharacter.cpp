@@ -423,6 +423,7 @@ bool ABallCharacter::Mount(AHorse* Horse)
 	}
 
 	MountedHorse = Horse;
+	LastMount = Horse;
 	Horse->SetRider(this);
 
 	// Our own legs stop moving us; we ride along attached to the horse

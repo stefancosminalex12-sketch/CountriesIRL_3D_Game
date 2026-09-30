@@ -14,6 +14,7 @@ SOURCES = {
     unreal.Paths.convert_relative_path_to_full(unreal.Paths.project_dir()) + "Art/AI/Menu": "/Game/CrownsAndCommoners/UI/Textures",
     unreal.Paths.convert_relative_path_to_full(unreal.Paths.project_dir()) + "Art/UI": "/Game/CrownsAndCommoners/UI/Textures",
     unreal.Paths.convert_relative_path_to_full(unreal.Paths.project_dir()) + "Art/UI/Icons": "/Game/CrownsAndCommoners/UI/Icons",
+    unreal.Paths.convert_relative_path_to_full(unreal.Paths.project_dir()) + "Art/UI/Markers": "/Game/CrownsAndCommoners/UI/Markers",
 }
 
 tasks = []
