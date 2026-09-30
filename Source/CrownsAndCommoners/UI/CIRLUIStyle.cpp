@@ -50,6 +50,27 @@ namespace CIRLUIStyle
 			return Brush;
 		}
 
+		/** Like MakeImage, for art that may not exist yet: nullptr (quietly) until the texture has been imported */
+		const FSlateBrush* OptionalImage(const TCHAR* Name, const FVector2D& Size)
+		{
+			static TMap<FString, TUniquePtr<FSlateBrush>> Brushes;
+			if (const TUniquePtr<FSlateBrush>* Found = Brushes.Find(Name))
+			{
+				return Found->Get();
+			}
+			const FString Path = FString::Printf(TEXT("/Game/CrownsAndCommoners/UI/Textures/%s.%s"), Name, Name);
+			TUniquePtr<FSlateBrush> Brush;
+			if (UTexture2D* Texture = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *Path, nullptr, LOAD_NoWarn | LOAD_Quiet)))
+			{
+				Texture->AddToRoot();
+				Brush = MakeUnique<FSlateBrush>();
+				Brush->DrawAs = ESlateBrushDrawType::Image;
+				Brush->ImageSize = Size;
+				Brush->SetResourceObject(Texture);
+			}
+			return Brushes.Add(Name, MoveTemp(Brush)).Get();
+		}
+
 		TSharedPtr<const FCompositeFont> LoadComposite(const TCHAR* FaceAsset)
 		{
 			// Font faces stay loaded for the whole game once a menu has used them
@@ -212,6 +233,22 @@ namespace CIRLUIStyle
 		};
 		static_assert(UE_ARRAY_COUNT(Brushes) == 4, "Keep LoadingPaintingCount() in step");
 		return &Brushes[FMath::Clamp(Index, 0, 3)];
+	}
+
+	const FSlateBrush* Vignette()
+	{
+		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CrownsAndCommoners/UI/Textures/T_vignette.T_vignette"), FVector2D(1024.f, 1024.f));
+		return &Brush;
+	}
+
+	const FSlateBrush* DeathBackground()
+	{
+		return OptionalImage(TEXT("T_death_background"), FVector2D(1536.f, 1024.f));
+	}
+
+	const FSlateBrush* DeathEmblem()
+	{
+		return OptionalImage(TEXT("T_death_emblem"), FVector2D(1024.f, 1024.f));
 	}
 
 	const FSlateBrush* GradientLeft()

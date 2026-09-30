@@ -8,8 +8,9 @@
 class SButton;
 
 /**
- *  Shown a moment after the player dies: the world darkens, "You died", and the choice to respawn or go back to the
- *  main menu. The world keeps going behind it (your body lies where it fell). Pure Slate, in the menus' style.
+ *  Shown a moment after the player dies: the screen fades to black (a grim tomb-slab painting, darker at the edges),
+ *  a memento mori emblem, DEAD, and the choice to respawn or go back to the main menu. The world keeps going behind
+ *  it (your body lies where it fell). Pure Slate, in the menus' style.
  */
 class SCIRLDeathScreen : public SCompoundWidget
 {

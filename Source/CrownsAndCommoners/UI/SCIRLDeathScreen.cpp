@@ -7,6 +7,8 @@
 #include "Widgets/Input/SButton.h"
 #include "Widgets/Layout/SBorder.h"
 #include "Widgets/Layout/SBox.h"
+#include "Widgets/Layout/SScaleBox.h"
+#include "Widgets/Images/SImage.h"
 #include "Widgets/SBoxPanel.h"
 #include "Widgets/SOverlay.h"
 #include "Widgets/Text/STextBlock.h"
@@ -21,58 +23,83 @@ void SCIRLDeathScreen::Construct(const FArguments& InArgs)
 	const FOnChosen OnRespawn = InArgs._OnRespawn;
 	const FOnChosen OnMainMenu = InArgs._OnMainMenu;
 
+	const FSlateBrush* Background = DeathBackground();
+	const FSlateBrush* Emblem = DeathEmblem();
+	auto Faded = [this](FLinearColor Color) { Color.A *= FadeIn(); return FSlateColor(Color); };
+
 	ChildSlot
 	[
 		SNew(SOverlay)
-		// The world darkens, with a touch of red
+		// Black, fading in over the fallen body
 		+ SOverlay::Slot()
 		[
 			SNew(SBorder)
 			.BorderImage(FCoreStyle::Get().GetBrush("WhiteBrush"))
-			.BorderBackgroundColor_Lambda([this]() { return FSlateColor(FLinearColor(0.10f, 0.008f, 0.004f, 0.72f * FadeIn())); })
+			.BorderBackgroundColor_Lambda([Faded]() { return Faded(FLinearColor::Black); })
+		]
+		// The grim tomb-slab painting, once it has been made
+		+ SOverlay::Slot()
+		[
+			SNew(SScaleBox)
+			.Stretch(EStretch::ScaleToFill)
+			.Visibility(Background ? EVisibility::HitTestInvisible : EVisibility::Collapsed)
+			[
+				SNew(SImage)
+				.Image(Background)
+				.ColorAndOpacity_Lambda([Faded]() { return Faded(FLinearColor::White); })
+			]
+		]
+		// Darker towards the edges
+		+ SOverlay::Slot()
+		[
+			SNew(SImage)
+			.Image(Vignette())
+			.ColorAndOpacity_Lambda([Faded]() { return Faded(FLinearColor::White); })
 		]
 		+ SOverlay::Slot()
 		.HAlign(HAlign_Center)
 		.VAlign(VAlign_Center)
 		[
 			SNew(SVerticalBox)
+			// Memento mori, once it has been made
 			+ SVerticalBox::Slot()
 			.AutoHeight()
 			.HAlign(HAlign_Center)
+			.Padding(0.f, 0.f, 0.f, 10.f)
 			[
-				SNew(STextBlock)
-				.Text(LOCTEXT("YouDied", "You died"))
-				.Font(Font(EFont::TitleBold, 78.f))
-				.ColorAndOpacity_Lambda([this]() { return FSlateColor(FLinearColor(0.85f, 0.16f, 0.1f, FadeIn())); })
+				SNew(SBox)
+				.WidthOverride(280.f)
+				.HeightOverride(280.f)
+				.Visibility(Emblem ? EVisibility::HitTestInvisible : EVisibility::Collapsed)
+				[
+					SNew(SImage)
+					.Image(Emblem)
+					.ColorAndOpacity_Lambda([Faded]() { return Faded(FLinearColor::White); })
+				]
 			]
 			+ SVerticalBox::Slot()
 			.AutoHeight()
 			.HAlign(HAlign_Center)
-			.Padding(0.f, 6.f, 0.f, 44.f)
+			.Padding(0.f, 0.f, 0.f, 48.f)
 			[
 				SNew(STextBlock)
-				.Text(LOCTEXT("BodyLies", "Your body lies where it fell."))
-				.Font(Font(EFont::BodyItalic, 24.f))
-				.ColorAndOpacity_Lambda([this]()
-				{
-					FLinearColor Color = TextMuted();
-					Color.A *= FadeIn();
-					return FSlateColor(Color);
-				})
+				.Text(LOCTEXT("Dead", "DEAD"))
+				.Font(Font(EFont::TitleBold, 96.f))
+				.ColorAndOpacity_Lambda([Faded]() { return Faded(FLinearColor(0.72f, 0.1f, 0.07f)); })
 			]
 			+ SVerticalBox::Slot()
 			.AutoHeight()
 			.HAlign(HAlign_Center)
 			.Padding(0.f, 0.f, 0.f, 14.f)
 			[
-				MakeMenuButton(LOCTEXT("Respawn", "Respawn"),
+				MakeMenuButton(LOCTEXT("Respawn", "RESPAWN"),
 					FOnClicked::CreateLambda([OnRespawn]() { OnRespawn.ExecuteIfBound(); return FReply::Handled(); }), &RespawnButton)
 			]
 			+ SVerticalBox::Slot()
 			.AutoHeight()
 			.HAlign(HAlign_Center)
 			[
-				MakeMenuButton(LOCTEXT("MainMenu", "Main Menu"),
+				MakeMenuButton(LOCTEXT("MainMenu", "MAIN MENU"),
 					FOnClicked::CreateLambda([OnMainMenu]() { OnMainMenu.ExecuteIfBound(); return FReply::Handled(); }))
 			]
 		]

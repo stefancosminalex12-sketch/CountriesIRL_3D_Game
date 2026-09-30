@@ -76,6 +76,14 @@ namespace CIRLUIStyle
 	/** Loading screen paintings (market, soldiers, castle, army camp) */
 	int32 LoadingPaintingCount();
 	const FSlateBrush* LoadingPainting(int32 Index);
+	/** Black at the edges fading to clear in the middle (Art/UI/vignette.png, made by code), stretched over the screen */
+	const FSlateBrush* Vignette();
+
+	/** The death screen's dark tomb-slab background and its memento mori emblem (Art/AI/Menu/death_background,
+	 *  death_emblem). nullptr until the art has been made and imported: the screen does without */
+	const FSlateBrush* DeathBackground();
+	const FSlateBrush* DeathEmblem();
+
 	/** White fading to clear left-to-right / top-to-bottom; tint it to darken part of a painting */
 	const FSlateBrush* GradientLeft();
 	const FSlateBrush* GradientBottom();
