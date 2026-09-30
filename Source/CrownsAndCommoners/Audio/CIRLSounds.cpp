@@ -4,6 +4,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundAttenuation.h"
 #include "Sound/SoundBase.h"
+#include "Sound/SoundConcurrency.h"
 
 namespace CIRLSounds
 {
@@ -23,6 +24,20 @@ namespace CIRLSounds
 		return Attenuation.Get();
 	}
 
+	USoundConcurrency* WorldConcurrency()
+	{
+		static TStrongObjectPtr<USoundConcurrency> Concurrency;
+		if (!Concurrency.IsValid())
+		{
+			Concurrency.Reset(NewObject<USoundConcurrency>(GetTransientPackage(), TEXT("CIRLWorldConcurrency")));
+			FSoundConcurrencySettings& Settings = Concurrency->Concurrency;
+			Settings.MaxCount = 5;
+			Settings.ResolutionRule = EMaxConcurrentResolutionRule::StopOldest;
+			Settings.RetriggerTime = 0.06f;
+		}
+		return Concurrency.Get();
+	}
+
 	void PlayAt(const UObject* WorldContext, const TArray<TSoftObjectPtr<USoundBase>>& Sounds, const FVector& Location, float Volume)
 	{
 		if (Sounds.Num() == 0 || !WorldContext)
@@ -31,7 +46,7 @@ namespace CIRLSounds
 		}
 		if (USoundBase* Sound = Sounds[FMath::RandHelper(Sounds.Num())].LoadSynchronous())
 		{
-			UGameplayStatics::PlaySoundAtLocation(WorldContext, Sound, Location, Volume, FMath::FRandRange(0.93f, 1.07f), 0.f, WorldAttenuation());
+			UGameplayStatics::PlaySoundAtLocation(WorldContext, Sound, Location, Volume, FMath::FRandRange(0.93f, 1.07f), 0.f, WorldAttenuation(), WorldConcurrency());
 		}
 	}
 }

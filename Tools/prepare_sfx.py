@@ -17,12 +17,13 @@ import numpy as np
 SRC, OUT = "Art/Audio/Source", "Art/Audio/Sfx"
 MAX_LOOP = 60.0      # seconds kept of a long recording (the rest only makes the game bigger)
 
-# How loud each kind of sound is, as the level of its loud parts (0..1)
+# How loud each kind of sound is, as the level of its loud parts (0..1). Kept well below full scale: in a fight
+# several play at once (swing, hit, cry, hooves, steps) and they add up (user, 2026-09-30: "some clipping")
 LOUDNESS = {
-    "steps": 0.08, "land": 0.14,
-    "horse_walk": 0.09, "horse_trot": 0.12, "horse_canter": 0.13, "horse_gallop": 0.15,
-    "neigh": 0.16, "snort": 0.11, "deer": 0.11,
-    "swing": 0.12, "armor": 0.17, "flesh": 0.15, "cut": 0.16, "killed": 0.15, "fall": 0.14,
+    "steps": 0.05, "land": 0.09,
+    "horse_walk": 0.06, "horse_trot": 0.075, "horse_canter": 0.085, "horse_gallop": 0.095,
+    "neigh": 0.1, "snort": 0.07, "deer": 0.07,
+    "swing": 0.07, "armor": 0.1, "flesh": 0.09, "cut": 0.095, "killed": 0.09, "fall": 0.085,
 }
 
 # Loops: (game name, source file, start s, end s or None for the end, crossfade s, loudness kind, mono)
@@ -85,9 +86,9 @@ def level(audio, rate, target):
     loud = windows[windows > 0.2 * windows.max()]
     gain = target / max(float(np.sqrt((loud ** 2).mean())), 1e-6)
     audio = audio * gain
-    # Never louder than 95% at the very peak
+    # Never louder than 70% at the very peak, leaving room for sounds playing together
     peak = float(np.abs(audio).max())
-    return audio * (0.95 / peak) if peak > 0.95 else audio
+    return audio * (0.7 / peak) if peak > 0.7 else audio
 
 
 def write(name, audio, rate):

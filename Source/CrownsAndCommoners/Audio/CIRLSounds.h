@@ -18,4 +18,8 @@ namespace CIRLSounds
 
 	/** How sounds in the world fade with distance: full within 3 m, gone at about 35 m */
 	USoundAttenuation* WorldAttenuation();
+
+	/** How many one-off world sounds may play at once (a few; the oldest gives way), and the same sound isn't
+	 *  restarted within a few hundredths of a second, so a busy fight doesn't pile up into noise */
+	class USoundConcurrency* WorldConcurrency();
 }
