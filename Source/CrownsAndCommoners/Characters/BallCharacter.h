@@ -10,6 +10,7 @@
 class UStaticMeshComponent;
 class UBallAnimatorComponent;
 class UStaminaComponent;
+class UCIRLInventoryComponent;
 class UHealthComponent;
 class UCorpseComponent;
 class UBallSkeletonComponent;
@@ -45,6 +46,7 @@ public:
 	bool IsRunning() const { return bRunning; }
 
 	UStaminaComponent* GetStamina() const { return Stamina; }
+	UCIRLInventoryComponent* GetInventory() const { return Inventory; }
 
 	UHealthComponent* GetHealth() const { return Health; }
 
@@ -116,6 +118,10 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	TObjectPtr<UStaminaComponent> Stamina;
+
+	/** What this ball owns and wears */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	TObjectPtr<UCIRLInventoryComponent> Inventory;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	TObjectPtr<UHealthComponent> Health;

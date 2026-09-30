@@ -4,6 +4,7 @@
 #include "Characters/BallAnimatorComponent.h"
 #include "Characters/BallParts.h"
 #include "Characters/StaminaComponent.h"
+#include "Items/CIRLInventoryComponent.h"
 #include "Characters/HealthComponent.h"
 #include "Characters/CorpseComponent.h"
 #include "Characters/BallSkeletonComponent.h"
@@ -68,6 +69,7 @@ ABallCharacter::ABallCharacter()
 	Animator->CreateLimbMeshes(this, VisualRoot, BodyPivot, Sphere, BallRadius, GetBallCenterZ(), -HalfHeight);
 
 	Stamina = CreateDefaultSubobject<UStaminaComponent>(TEXT("Stamina"));
+	Inventory = CreateDefaultSubobject<UCIRLInventoryComponent>(TEXT("Inventory"));
 	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 	Corpse = CreateDefaultSubobject<UCorpseComponent>(TEXT("Corpse"));
 	Skeleton = CreateDefaultSubobject<UBallSkeletonComponent>(TEXT("Skeleton"));

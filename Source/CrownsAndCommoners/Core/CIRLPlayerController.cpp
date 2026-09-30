@@ -18,6 +18,7 @@
 #include "UI/SCIRLGameMenu.h"
 #include "UI/CIRLMenuNavigation.h"
 #include "Audio/CIRLAudioSubsystem.h"
+#include "Items/CIRLInventoryComponent.h"
 #include "Audio/CIRLPlaylistComponent.h"
 #include "UI/CIRLPaperDollStage.h"
 #include "Characters/Heraldry.h"
@@ -155,7 +156,8 @@ void ACIRLPlayerController::OpenGameMenu(ECIRLMenuTab Tab)
 		.OnMainMenuRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::ReturnToTitle))
 		.OnQuitRequested(SCIRLGameMenu::FOnCloseRequested::CreateUObject(this, &ACIRLPlayerController::QuitGame))
 		.Audio(UCIRLAudioSubsystem::Get(this))
-		.Player(GetPawn());
+		.Player(GetPawn())
+		.Inventory(Ball ? Ball->GetInventory() : nullptr);
 	Viewport->AddViewportWidgetForPlayer(LocalPlayer, GameMenu.ToSharedRef(), 50);
 
 	// Menus can be walked with WASD as well as the arrow keys and the controller

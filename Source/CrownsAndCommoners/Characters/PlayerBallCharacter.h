@@ -64,6 +64,14 @@ public:
 	UFUNCTION(Exec)
 	void DevRide();
 
+	/** Console (testing): get an item, e.g. DevGive helmet_sallet or DevGive belt_knife 3 */
+	UFUNCTION(Exec)
+	void DevGive(FName ItemId, int32 Count = 1);
+
+	/** Console (testing): get one of every item */
+	UFUNCTION(Exec)
+	void DevGiveAll();
+
 	/** Console (testing): press jump (on foot or on horseback) */
 	UFUNCTION(Exec)
 	void DevJump() { JumpPressed(); }

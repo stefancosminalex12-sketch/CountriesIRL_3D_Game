@@ -9,6 +9,9 @@
 #include "Engine/DamageEvents.h"
 #include "Core/CIRLInputConfig.h"
 #include "Core/CIRLPlayerController.h"
+#include "Items/CIRLInventoryComponent.h"
+#include "Items/CIRLItemDatabase.h"
+#include "Items/CIRLItemSettings.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -45,6 +48,37 @@ void APlayerBallCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	SetFirstPerson(bStartInFirstPerson);
+
+	// A new character owns the commoner's things and wears what fits (until saved games bring their own)
+	const UCIRLItemSettings* ItemSettings = GetDefault<UCIRLItemSettings>();
+	for (const FName& ItemId : ItemSettings->StartingItems)
+	{
+		Inventory->AddItem(ItemId);
+		Inventory->EquipInFreeSlot(ItemId);
+	}
+	if (ItemSettings->bGiveAllItemsForTesting)
+	{
+		DevGiveAll();
+	}
+}
+
+void APlayerBallCharacter::DevGive(FName ItemId, int32 Count)
+{
+	Inventory->AddItem(ItemId, FMath::Max(Count, 1));
+}
+
+void APlayerBallCharacter::DevGiveAll()
+{
+	if (const UCIRLItemDatabase* Database = UCIRLItemDatabase::Get(this))
+	{
+		for (const FName& ItemId : Database->GetAllIds())
+		{
+			if (Inventory->CountOf(ItemId) == 0)
+			{
+				Inventory->AddItem(ItemId);
+			}
+		}
+	}
 }
 
 void APlayerBallCharacter::SetFirstPerson(bool bEnable)

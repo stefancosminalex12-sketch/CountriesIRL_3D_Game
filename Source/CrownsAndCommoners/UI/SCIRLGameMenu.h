@@ -53,6 +53,8 @@ public:
 		SLATE_ARGUMENT(TWeakObjectPtr<class UCIRLAudioSubsystem>, Audio)
 		/** Shown as "You" on the Map tab */
 		SLATE_ARGUMENT(TWeakObjectPtr<AActor>, Player)
+		/** What the player owns and wears (Equipment tab) */
+		SLATE_ARGUMENT(TWeakObjectPtr<class UCIRLInventoryComponent>, Inventory)
 	SLATE_END_ARGS()
 
 	void Construct(const FArguments& InArgs);

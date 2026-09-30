@@ -4,6 +4,7 @@
 #include "UI/SCIRLButton.h"
 #include "UI/CIRLUIStyle.h"
 #include "UI/SCIRLEquipmentPage.h"
+#include "Items/CIRLInventoryComponent.h"
 #include "UI/SCIRLCharacterPage.h"
 #include "UI/SCIRLMapPage.h"
 #include "UI/SCIRLPaperDollView.h"
@@ -106,6 +107,7 @@ void SCIRLGameMenu::Construct(const FArguments& InArgs)
 		case ECIRLMenuTab::Equipment:
 		{
 			TSharedRef<SCIRLEquipmentPage> Equipment = SNew(SCIRLEquipmentPage)
+				.Inventory(InArgs._Inventory)
 				.CharacterView()
 				[
 					SNew(SCIRLPaperDollView).Stage(InArgs._PaperDollStage)
