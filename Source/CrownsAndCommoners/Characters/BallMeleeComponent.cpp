@@ -21,26 +21,8 @@ bool UBallMeleeComponent::TryPunch()
 	{
 		return false;
 	}
-	// What's in the main hand decides the strike. Bows and crossbows aren't swung: with one in hand it's still a fist
-	FStrike NewStrike;
-	const UCIRLInventoryComponent* Things = Ball->GetInventory();
-	const FCIRLItemRow* Weapon = Things->FindItem(Things->GetEquipped(ECIRLEquipSlot::WeaponMain));
-	float Cost = StaminaCost;
-	if (Weapon && Weapon->IsWeapon() && !Weapon->IsRanged())
-	{
-		NewStrike.bWeapon = true;
-		NewStrike.Damage = Weapon->Damage;
-		NewStrike.DamageType = static_cast<uint8>(Weapon->DamageType);
-		NewStrike.Reach = Reach + Weapon->ReachCm * WeaponReachShare;
-		NewStrike.TimeScale = 1.f + Weapon->WeightKg * SlowerPerKg;
-		NewStrike.Name = Weapon->Name;
-		Cost += Weapon->WeightKg * StaminaPerKg;
-	}
-	else
-	{
-		NewStrike.DamageType = static_cast<uint8>(ECIRLDamageType::Blunt);
-		NewStrike.Reach = Reach;
-	}
+	float Cost = 0.f;
+	const FStrike NewStrike = MakeStrike(Cost);
 	if (!Ball->GetStamina()->TryConsume(Cost * Ball->GetLoadStaminaScale()))
 	{
 		return false;
@@ -56,6 +38,36 @@ bool UBallMeleeComponent::TryPunch()
 	// Turn to face where we're punching (matters in third-person, where the ball faces its movement)
 	Ball->SetActorRotation(FRotator(0.f, Ball->GetBaseAimRotation().Yaw, 0.f));
 	return true;
+}
+
+UBallMeleeComponent::FStrike UBallMeleeComponent::MakeStrike(float& OutStaminaCost) const
+{
+	// What's in the main hand decides the strike. Bows and crossbows aren't swung: with one in hand it's still a fist
+	FStrike NewStrike;
+	NewStrike.DamageType = static_cast<uint8>(ECIRLDamageType::Blunt);
+	NewStrike.Reach = Reach;
+	OutStaminaCost = StaminaCost;
+
+	const ABallCharacter* Ball = Cast<ABallCharacter>(GetOwner());
+	const UCIRLInventoryComponent* Things = Ball ? Ball->GetInventory() : nullptr;
+	const FCIRLItemRow* Weapon = Things ? Things->FindItem(Things->GetEquipped(ECIRLEquipSlot::WeaponMain)) : nullptr;
+	if (Weapon && Weapon->IsWeapon() && !Weapon->IsRanged())
+	{
+		NewStrike.bWeapon = true;
+		NewStrike.Damage = Weapon->Damage;
+		NewStrike.DamageType = static_cast<uint8>(Weapon->DamageType);
+		NewStrike.Reach = Reach + Weapon->ReachCm * WeaponReachShare;
+		NewStrike.TimeScale = 1.f + Weapon->WeightKg * SlowerPerKg;
+		NewStrike.Name = Weapon->Name;
+		OutStaminaCost += Weapon->WeightKg * StaminaPerKg;
+	}
+	return NewStrike;
+}
+
+float UBallMeleeComponent::GetReadyReach() const
+{
+	float Cost = 0.f;
+	return MakeStrike(Cost).Reach;
 }
 
 float UBallMeleeComponent::GetPunchExtension(int32& OutHand) const

@@ -83,6 +83,9 @@ public:
 
 	UTexture2D* GetFlag() const { return Flag; }
 
+	/** The look on its face when nothing is going on */
+	EBallEmotion GetStartingEmotion() const { return StartingEmotion; }
+
 	UFUNCTION(BlueprintPure, Category="Ball")
 	bool IsDead() const;
 

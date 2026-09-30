@@ -38,6 +38,12 @@ public:
 
 	bool IsPunching() const { return PunchTime >= 0.f; }
 
+	/** Not striking and not on cooldown: a new strike could start now (if there is the stamina for it) */
+	bool IsReadyToStrike() const { return CooldownLeft <= 0.f && !IsPunching(); }
+
+	/** How far a strike started now would reach from the eyes, in cm (a fist, or the weapon in the main hand) */
+	float GetReadyReach() const;
+
 	/** The current (or last) strike is with a weapon, not a fist */
 	bool IsWeaponStrike() const { return Strike.bWeapon; }
 
@@ -172,6 +178,9 @@ private:
 		FText Name;
 	};
 	FStrike Strike;
+
+	/** The strike the ball would make right now, and the stamina it costs (before the load it carries) */
+	FStrike MakeStrike(float& OutStaminaCost) const;
 
 	void ResolveHit();
 	float MultiplierFor(EBallHitZone Zone) const;
