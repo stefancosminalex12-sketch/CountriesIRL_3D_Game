@@ -33,6 +33,9 @@ private:
 	/** 0 when it appears, 1 once it has faded in */
 	float FadeIn() const;
 
+	/** How long it takes to fade in: slow, while the body falls */
+	static constexpr float FadeSeconds = 3.f;
+
 	TSharedPtr<SButton> RespawnButton;
 	double ShownAt = 0.0;
 };

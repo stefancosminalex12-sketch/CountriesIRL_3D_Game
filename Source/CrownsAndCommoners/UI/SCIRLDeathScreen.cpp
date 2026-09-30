@@ -30,12 +30,12 @@ void SCIRLDeathScreen::Construct(const FArguments& InArgs)
 	ChildSlot
 	[
 		SNew(SOverlay)
-		// Black, fading in over the fallen body
+		// Darkness, fading in over the fallen body: the world still shows through
 		+ SOverlay::Slot()
 		[
 			SNew(SBorder)
 			.BorderImage(FCoreStyle::Get().GetBrush("WhiteBrush"))
-			.BorderBackgroundColor_Lambda([Faded]() { return Faded(FLinearColor::Black); })
+			.BorderBackgroundColor_Lambda([Faded]() { return Faded(FLinearColor(0.f, 0.f, 0.f, 0.45f)); })
 		]
 		// The grim tomb-slab painting, once it has been made
 		+ SOverlay::Slot()
@@ -46,7 +46,7 @@ void SCIRLDeathScreen::Construct(const FArguments& InArgs)
 			[
 				SNew(SImage)
 				.Image(Background)
-				.ColorAndOpacity_Lambda([Faded]() { return Faded(FLinearColor::White); })
+				.ColorAndOpacity_Lambda([Faded]() { return Faded(FLinearColor(1.f, 1.f, 1.f, 0.55f)); })
 			]
 		]
 		// Darker towards the edges
@@ -108,7 +108,7 @@ void SCIRLDeathScreen::Construct(const FArguments& InArgs)
 
 float SCIRLDeathScreen::FadeIn() const
 {
-	return FMath::Clamp(static_cast<float>(FSlateApplication::Get().GetCurrentTime() - ShownAt) / 1.2f, 0.f, 1.f);
+	return FMath::Clamp(static_cast<float>(FSlateApplication::Get().GetCurrentTime() - ShownAt) / FadeSeconds, 0.f, 1.f);
 }
 
 TSharedPtr<SWidget> SCIRLDeathScreen::GetFocusTarget() const

@@ -110,8 +110,8 @@ private:
 	TSharedPtr<SCIRLDeathScreen> DeathScreen;
 	FTimerHandle DeathScreenTimer;
 
-	/** Seconds between dying and the death screen (the body falls over first) */
-	float DeathScreenDelay = 2.5f;
+	/** Seconds between dying and the death screen starting to fade in (the body falls while it does) */
+	float DeathScreenDelay = 0.2f;
 
 	/** How the player was looking when they died, for the new ball */
 	bool bDiedInFirstPerson = true;
