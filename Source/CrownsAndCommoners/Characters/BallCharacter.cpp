@@ -14,6 +14,7 @@
 #include "Characters/BallSkeletonComponent.h"
 #include "Characters/BallMeleeComponent.h"
 #include "Characters/Heraldry.h"
+#include "Characters/AI/BallFighterController.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/Texture2D.h"
 #include "Materials/MaterialInstanceDynamic.h"
@@ -176,6 +177,26 @@ void ABallCharacter::BeginPlay()
 bool ABallCharacter::IsDead() const
 {
 	return Health->IsDepleted();
+}
+
+bool ABallCharacter::IsSneaking() const
+{
+	return bWantsToSneak && !IsDead() && !IsMounted();
+}
+
+bool ABallCharacter::IsAwareOf(const ABallCharacter* Other) const
+{
+	const ABallFighterController* Fighter = Cast<ABallFighterController>(GetController());
+	return Fighter && Other && Fighter->GetTarget() == Other;
+}
+
+void ABallCharacter::Assassinated(ABallCharacter* By)
+{
+	if (!IsDead())
+	{
+		DamageFlashTime = DamageFlashDuration;
+		Health->ApplyDamage(Health->GetHealth());
+	}
 }
 
 float ABallCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -361,14 +382,16 @@ void ABallCharacter::Tick(float DeltaTime)
 	const bool bMovingOnGround = GetVelocity().Size2D() > 10.f && GetCharacterMovement()->IsMovingOnGround();
 	// No running with the guard up, and moving is slower
 	const bool bGuarding = Melee->IsGuarding();
-	bRunning = bWantsToRun && bMovingOnGround && !bGuarding && Stamina->HasStamina();
+	const bool bSneaking = IsSneaking();
+	bRunning = bWantsToRun && bMovingOnGround && !bGuarding && !bSneaking && Stamina->HasStamina();
 	if (bRunning)
 	{
 		Stamina->Drain(RunStaminaCost * GetLoadStaminaScale(), DeltaTime);
 	}
 
 	// What you carry weighs on you: slower, and everything tires you sooner
-	GetCharacterMovement()->MaxWalkSpeed = GetLoadSpeedScale() * (bRunning ? RunSpeed : (bGuarding ? WalkSpeed * Melee->GetGuardMoveSpeedScale() : WalkSpeed));
+	const float OnFootSpeed = bRunning ? RunSpeed : (bGuarding ? WalkSpeed * Melee->GetGuardMoveSpeedScale() : WalkSpeed);
+	GetCharacterMovement()->MaxWalkSpeed = GetLoadSpeedScale() * (bSneaking ? FMath::Min(SneakSpeed, OnFootSpeed) : OnFootSpeed);
 }
 
 bool ABallCharacter::CanJumpInternal_Implementation() const

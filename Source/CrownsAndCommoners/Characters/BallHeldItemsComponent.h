@@ -27,6 +27,9 @@ public:
 	/** Rebuilds the shapes from what is in the hands now (called when the inventory changes) */
 	void Refresh();
 
+	/** Shows this item in the main hand instead of what is equipped there (a dagger drawn from the belt); NAME_None = back to normal */
+	void SetMainHandOverride(FName ItemId);
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -64,4 +67,6 @@ private:
 	TObjectPtr<UStaticMesh> SphereMesh;
 
 	FHeld Hands[2];
+
+	FName MainHandOverride;
 };

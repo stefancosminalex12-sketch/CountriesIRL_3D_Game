@@ -52,12 +52,14 @@ ABallCharacter* ABallFighterController::FindEnemy(const ABallCharacter* Ball) co
 		}
 		const FVector To = Other->GetActorLocation() - Ball->GetActorLocation();
 		const float Distance = To.Size2D();
-		if (Distance >= BestDistance)
+		// Crouched and quiet, they must come much closer to be heard, and are a little harder to spot
+		const bool bSneaking = Other->IsSneaking();
+		if (Distance >= BestDistance || Distance >= SightRange * (bSneaking ? SneakSightScale : 1.f))
 		{
 			continue;
 		}
 		const bool bInFront = FVector::DotProduct(Ball->GetActorForwardVector(), To.GetSafeNormal2D()) >= SightCosine;
-		if ((bInFront || Distance < NoticeRange) && LineOfSightTo(Other))
+		if ((bInFront || Distance < NoticeRange * (bSneaking ? SneakNoticeScale : 1.f)) && LineOfSightTo(Other))
 		{
 			Best = Other;
 			BestDistance = Distance;

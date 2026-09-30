@@ -194,6 +194,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ball|Punch")
 	float PunchLunge = 6.f;
 
+	/** Sneaking: how far the body sinks onto bent knees (cm) and leans forward (degrees) */
+	UPROPERTY(EditAnywhere, Category="Ball|Sneak")
+	float SneakDrop = 16.f;
+
+	UPROPERTY(EditAnywhere, Category="Ball|Sneak")
+	float SneakLean = 9.f;
+
 	UPROPERTY(EditAnywhere, Category="Ball|Animation")
 	FVector FootSize = FVector(34.f, 19.f, 13.f);
 
@@ -290,6 +297,9 @@ private:
 	/** Smoothed hand orientation and fist amount (left, right) */
 	FQuat HandRotation[2] = { FQuat::Identity, FQuat::Identity };
 	float FistAmount[2] = { 0.f, 0.f };
+
+	/** 0 = standing, 1 = crouched and sneaking (smoothed) */
+	float SneakBlend = 0.f;
 
 	/** 0 = hands down, 1 = guard up (smoothed) */
 	float GuardBlend = 0.f;

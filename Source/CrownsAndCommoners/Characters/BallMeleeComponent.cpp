@@ -2,6 +2,8 @@
 
 #include "Characters/BallMeleeComponent.h"
 #include "Characters/BallCharacter.h"
+#include "Characters/BallHeldItemsComponent.h"
+#include "EngineUtils.h"
 #include "Characters/HealthComponent.h"
 #include "Characters/StaminaComponent.h"
 #include "Items/CIRLInventoryComponent.h"
@@ -17,7 +19,7 @@ UBallMeleeComponent::UBallMeleeComponent()
 bool UBallMeleeComponent::TryPunch()
 {
 	ABallCharacter* Ball = Cast<ABallCharacter>(GetOwner());
-	if (!Ball || Ball->IsDead() || CooldownLeft > 0.f || IsPunching())
+	if (!Ball || Ball->IsDead() || CooldownLeft > 0.f || IsPunching() || IsStabbing())
 	{
 		return false;
 	}
@@ -112,6 +114,27 @@ void UBallMeleeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 		CastChecked<ABallCharacter>(GetOwner())->GetStamina()->Drain(GuardStaminaPerSecond, DeltaTime);
 	}
 
+	if (IsStabbing())
+	{
+		ABallCharacter* Ball = CastChecked<ABallCharacter>(GetOwner());
+		StabTime += DeltaTime;
+		if (!bStabResolved && StabTime >= StabDuration * StabImpactShare)
+		{
+			bStabResolved = true;
+			if (ABallCharacter* Victim = StabVictim.Get())
+			{
+				Victim->Assassinated(Ball);
+			}
+		}
+		if (StabTime >= StabDuration || Ball->IsDead())
+		{
+			// The dagger goes back on the belt
+			StabTime = -1.f;
+			StabVictim = nullptr;
+			Ball->GetHeldItems()->SetMainHandOverride(NAME_None);
+		}
+	}
+
 	if (!IsPunching())
 	{
 		return;
@@ -133,7 +156,84 @@ void UBallMeleeComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 bool UBallMeleeComponent::IsGuarding() const
 {
 	const ABallCharacter* Ball = Cast<ABallCharacter>(GetOwner());
-	return bWantsGuard && Ball && !Ball->IsDead() && Ball->GetStamina()->HasStamina();
+	return bWantsGuard && !IsStabbing() && Ball && !Ball->IsDead() && Ball->GetStamina()->HasStamina();
+}
+
+FName UBallMeleeComponent::FindDagger() const
+{
+	const ABallCharacter* Ball = Cast<ABallCharacter>(GetOwner());
+	const UCIRLInventoryComponent* Things = Ball ? Ball->GetInventory() : nullptr;
+	if (Things)
+	{
+		for (const ECIRLEquipSlot Slot : { ECIRLEquipSlot::Belt1, ECIRLEquipSlot::Belt2 })
+		{
+			const FName ItemId = Things->GetEquipped(Slot);
+			const FCIRLItemRow* Item = Things->FindItem(ItemId);
+			if (Item && Item->Shape == ECIRLItemShape::Dagger)
+			{
+				return ItemId;
+			}
+		}
+	}
+	return NAME_None;
+}
+
+ABallCharacter* UBallMeleeComponent::FindAssassinationTarget() const
+{
+	const ABallCharacter* Ball = Cast<ABallCharacter>(GetOwner());
+	if (!Ball || Ball->IsDead() || Ball->IsMounted() || IsPunching() || IsStabbing() || FindDagger().IsNone())
+	{
+		return nullptr;
+	}
+	const FVector Facing = FRotator(0.f, Ball->GetBaseAimRotation().Yaw, 0.f).Vector();
+
+	ABallCharacter* Best = nullptr;
+	float BestDistance = AssassinateRange;
+	for (TActorIterator<ABallCharacter> It(GetWorld()); It; ++It)
+	{
+		ABallCharacter* Other = *It;
+		if (Other == Ball || Other->IsDead() || Other->IsMounted() || Other->IsAwareOf(Ball))
+		{
+			continue;
+		}
+		const FVector To = Other->GetActorLocation() - Ball->GetActorLocation();
+		const float Distance = To.Size2D();
+		if (Distance >= BestDistance || FMath::Abs(To.Z) > 60.f)
+		{
+			continue;
+		}
+		const FVector Toward = To.GetSafeNormal2D();
+		// We look at them, and stand behind them
+		if (FVector::DotProduct(Facing, Toward) > 0.6f && FVector::DotProduct(Other->GetActorForwardVector(), -Toward) < -AssassinateBehindCosine)
+		{
+			Best = Other;
+			BestDistance = Distance;
+		}
+	}
+	return Best;
+}
+
+bool UBallMeleeComponent::TryAssassinate(ABallCharacter* Victim)
+{
+	ABallCharacter* Ball = Cast<ABallCharacter>(GetOwner());
+	const FName Dagger = FindDagger();
+	if (!Ball || !Victim || Victim->IsDead() || Dagger.IsNone() || IsStabbing() || IsPunching())
+	{
+		return false;
+	}
+	StabVictim = Victim;
+	StabTime = 0.f;
+	bStabResolved = false;
+
+	// The back of the neck: high on the back of the ball
+	const float R = Victim->GetBallRadius();
+	StabPoint = Victim->GetActorLocation() + FVector(0.f, 0.f, Victim->GetBallCenterZ() + 0.72f * R) - Victim->GetActorForwardVector() * (0.62f * R);
+
+	// Turn to them, dagger in hand
+	const FVector To = Victim->GetActorLocation() - Ball->GetActorLocation();
+	Ball->SetActorRotation(FRotator(0.f, To.Rotation().Yaw, 0.f));
+	Ball->GetHeldItems()->SetMainHandOverride(Dagger);
+	return true;
 }
 
 float UBallMeleeComponent::ModifyIncomingDamage(float Damage, const AActor* DamageCauser)

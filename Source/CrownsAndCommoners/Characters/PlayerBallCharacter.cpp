@@ -121,6 +121,8 @@ void APlayerBallCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	EIC->BindAction(Input->Interact, ETriggerEvent::Started, this, &APlayerBallCharacter::Interact);
 	EIC->BindAction(Input->Sprint, ETriggerEvent::Started, this, &APlayerBallCharacter::StartSprint);
 	EIC->BindAction(Input->Sprint, ETriggerEvent::Completed, this, &APlayerBallCharacter::StopSprint);
+	EIC->BindAction(Input->Sneak, ETriggerEvent::Started, this, &APlayerBallCharacter::StartSneak);
+	EIC->BindAction(Input->Sneak, ETriggerEvent::Completed, this, &APlayerBallCharacter::StopSneak);
 	EIC->BindAction(Input->ToggleView, ETriggerEvent::Started, this, &APlayerBallCharacter::ToggleView);
 	EIC->BindAction(Input->CycleEmotion, ETriggerEvent::Started, this, &APlayerBallCharacter::CycleEmotion);
 	EIC->BindAction(Input->Attack, ETriggerEvent::Started, this, &APlayerBallCharacter::Attack);
@@ -144,6 +146,12 @@ void APlayerBallCharacter::Move(const FInputActionValue& Value)
 	{
 		const FVector Direction = Matrix.GetUnitAxis(EAxis::X) * Input.Y + Matrix.GetUnitAxis(EAxis::Y) * Input.X;
 		Horse->SetRiderInput(Direction, GetRideGait());
+		return;
+	}
+
+	// Busy with the dagger: the feet stay where they are
+	if (Melee->IsStabbing())
+	{
 		return;
 	}
 
@@ -187,6 +195,10 @@ void APlayerBallCharacter::Interact()
 	if (IsMounted())
 	{
 		Dismount();
+	}
+	else if (ABallCharacter* Victim = Melee->FindAssassinationTarget())
+	{
+		Melee->TryAssassinate(Victim);
 	}
 	else if (AHorse* Horse = FindHorseToMount())
 	{
@@ -311,6 +323,10 @@ FString APlayerBallCharacter::GetInteractPrompt() const
 	{
 		return TEXT("E  Get off");
 	}
+	if (Melee->FindAssassinationTarget())
+	{
+		return TEXT("E  Assassinate");
+	}
 	return FindHorseToMount() ? TEXT("E  Get on the horse") : FString();
 }
 
@@ -345,7 +361,11 @@ void APlayerBallCharacter::Tick(float DeltaTime)
 	// First-person: the view nudges forward with each punch so it lands with some weight
 	int32 PunchHand = 0;
 	const float PunchDrive = Melee->IsPunching() ? FMath::Max(Melee->GetPunchExtension(PunchHand), 0.f) : 0.f;
-	FirstPersonCamera->SetRelativeLocation(FirstPersonCameraOffset + FVector(PunchCameraNudge * PunchDrive, 0.f, -0.3f * PunchCameraNudge * PunchDrive));
+	// Sneaking: the view comes down with the body
+	SneakCameraBlend = FMath::FInterpTo(SneakCameraBlend, IsSneaking() ? 1.f : 0.f, DeltaTime, 8.f);
+	FirstPersonCamera->SetRelativeLocation(FirstPersonCameraOffset
+		+ FVector(PunchCameraNudge * PunchDrive, 0.f, -0.3f * PunchCameraNudge * PunchDrive - SneakCameraDrop * SneakCameraBlend));
+	CameraBoom->SetRelativeLocation(FVector(0.f, 0.f, GetBallCenterZ() - 0.5f * SneakCameraDrop * SneakCameraBlend));
 
 	// Third-person: pull the camera back in the saddle so the whole horse is in view
 	CameraBoom->TargetArmLength = FMath::FInterpTo(CameraBoom->TargetArmLength, IsMounted() ? CameraDistance.Y : CameraDistance.X, DeltaTime, 3.f);

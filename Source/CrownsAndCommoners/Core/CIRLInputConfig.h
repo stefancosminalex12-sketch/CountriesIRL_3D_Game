@@ -30,11 +30,14 @@ public:
 	UPROPERTY() TObjectPtr<UInputAction> Look;
 	UPROPERTY() TObjectPtr<UInputAction> Jump;
 	UPROPERTY() TObjectPtr<UInputAction> Sprint;
+
+	/** Hold to crouch and sneak (Ctrl; click the right stick) */
+	UPROPERTY() TObjectPtr<UInputAction> Sneak;
 	UPROPERTY() TObjectPtr<UInputAction> ToggleView;
 	UPROPERTY() TObjectPtr<UInputAction> Attack;
 	UPROPERTY() TObjectPtr<UInputAction> Guard;
 
-	/** Use what's in front of you: get on/off a horse (later doors, talking, looting) */
+	/** Use what's in front of you: get on/off a horse, stab someone from behind (later doors, talking, looting) */
 	UPROPERTY() TObjectPtr<UInputAction> Interact;
 
 	/** Opens the game menu (Esc; Start on a controller) */

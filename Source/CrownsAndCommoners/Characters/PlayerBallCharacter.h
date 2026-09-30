@@ -106,6 +106,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Camera")
 	float PunchCameraNudge = 6.f;
 
+	/** How far the first-person view sinks while sneaking (cm); the third-person camera comes down half as much */
+	UPROPERTY(EditAnywhere, Category="Camera")
+	float SneakCameraDrop = 24.f;
+
 	/** How close a horse must be to get on it (cm, center to center) */
 	UPROPERTY(EditAnywhere, Category="Riding")
 	float MountRange = 260.f;
@@ -139,6 +143,11 @@ private:
 	void Look(const FInputActionValue& Value);
 	void StartSprint();
 	void StopSprint();
+	void StartSneak() { SetSneaking(true); }
+	void StopSneak() { SetSneaking(false); }
+
+	/** 0 = standing, 1 = crouched (smoothed, for the cameras) */
+	float SneakCameraBlend = 0.f;
 
 	/** In the saddle: the gait asked for with W and Shift */
 	EHorseGait GetRideGait() const;

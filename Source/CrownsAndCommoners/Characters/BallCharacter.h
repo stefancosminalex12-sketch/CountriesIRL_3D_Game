@@ -50,7 +50,22 @@ public:
 	UFUNCTION(BlueprintPure, Category="Ball|Movement")
 	bool IsRunning() const { return bRunning; }
 
+	/** Whether the ball wants to sneak: crouched low, slow and quiet (hold). It can't run meanwhile */
+	UFUNCTION(BlueprintCallable, Category="Ball|Movement")
+	void SetSneaking(bool bNewSneaking) { bWantsToSneak = bNewSneaking; }
+
+	/** Crouched and sneaking right now (wants to, alive, on its own feet) */
+	UFUNCTION(BlueprintPure, Category="Ball|Movement")
+	bool IsSneaking() const;
+
+	/** Knows Other is there and is dealing with them (fighting them). Someone unaware can be stabbed from behind */
+	bool IsAwareOf(const ABallCharacter* Other) const;
+
+	/** A dagger in the neck from behind: dead at once, whatever the armour */
+	void Assassinated(ABallCharacter* By);
+
 	UStaminaComponent* GetStamina() const { return Stamina; }
+	UBallHeldItemsComponent* GetHeldItems() const { return HeldItems; }
 	UCIRLInventoryComponent* GetInventory() const { return Inventory; }
 	UBallWornGearComponent* GetWornGear() const { return WornGear; }
 
@@ -245,6 +260,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Ball|Movement")
 	float RunSpeed = 400.f;
 
+	/** Crouched and sneaking: half a walk */
+	UPROPERTY(EditAnywhere, Category="Ball|Movement")
+	float SneakSpeed = 110.f;
+
 	UPROPERTY(EditAnywhere, Category="Ball|Movement")
 	float JumpVelocity = 340.f;
 
@@ -290,6 +309,9 @@ protected:
 
 	/** Run key held */
 	bool bWantsToRun = false;
+
+	/** Sneak key held */
+	bool bWantsToSneak = false;
 
 	UPROPERTY(Transient)
 	TObjectPtr<AHorse> MountedHorse;

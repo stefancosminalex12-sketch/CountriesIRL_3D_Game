@@ -67,6 +67,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Fighter|Senses")
 	float NoticeRange = 400.f;
 
+	/** Someone sneaking (crouched) is heard only from this share of NoticeRange, and seen from this share of SightRange */
+	UPROPERTY(EditAnywhere, Category="Fighter|Senses")
+	float SneakNoticeScale = 0.3f;
+
+	UPROPERTY(EditAnywhere, Category="Fighter|Senses")
+	float SneakSightScale = 0.7f;
+
 	/** A fight this close draws it in: if another fighter is on one of its enemies within this distance, it joins */
 	UPROPERTY(EditAnywhere, Category="Fighter|Senses")
 	float JoinRange = 1000.f;

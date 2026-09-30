@@ -20,7 +20,10 @@ CONTROLS
   Space          jump (the horse jumps too)
   Left click     punch
   Right click    hold to raise your guard
+  Ctrl (hold)    crouch and sneak: slow, but you are not heard from behind
   E              get on / off a horse (stand close to it)
+                 behind someone who hasn't noticed you, with a dagger or knife
+                 on your belt: assassinate
   V              switch first-person / third-person view
   T              change your eyes' emotion (just for fun)
   M              map of England (drag to move, mouse wheel to zoom, Space finds you)

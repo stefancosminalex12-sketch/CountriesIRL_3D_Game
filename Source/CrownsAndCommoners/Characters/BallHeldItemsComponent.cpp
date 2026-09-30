@@ -71,7 +71,7 @@ void UBallHeldItemsComponent::Refresh()
 	// Hand 0 is the left (off hand), hand 1 the right (main hand)
 	const FCIRLItemRow* Items[2] = {
 		Things->IsSlotBlocked(ECIRLEquipSlot::WeaponOff) ? nullptr : Things->FindItem(Things->GetEquipped(ECIRLEquipSlot::WeaponOff)),
-		Things->FindItem(Things->GetEquipped(ECIRLEquipSlot::WeaponMain))
+		Things->FindItem(MainHandOverride.IsNone() ? Things->GetEquipped(ECIRLEquipSlot::WeaponMain) : MainHandOverride)
 	};
 	for (int32 Index = 0; Index < 2; ++Index)
 	{
@@ -88,6 +88,15 @@ void UBallHeldItemsComponent::Refresh()
 			Hand.Parts[Part]->SetVisibility(false);
 		}
 		Ball->GetAnimator()->SetHolding(Index, Items[Index] != nullptr && Items[Index]->Shape != ECIRLItemShape::None);
+	}
+}
+
+void UBallHeldItemsComponent::SetMainHandOverride(FName ItemId)
+{
+	if (MainHandOverride != ItemId)
+	{
+		MainHandOverride = ItemId;
+		Refresh();
 	}
 }
 

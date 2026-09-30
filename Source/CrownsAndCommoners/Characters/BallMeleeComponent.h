@@ -47,6 +47,26 @@ public:
 	/** The current (or last) strike is with a weapon, not a fist */
 	bool IsWeaponStrike() const { return Strike.bWeapon; }
 
+	/**
+	 *  Someone who can be stabbed from behind right now: alive, on foot, close, with their back to us, not aware of
+	 *  us, and we are facing them with a dagger or knife on the belt. nullptr = nobody.
+	 */
+	ABallCharacter* FindAssassinationTarget() const;
+
+	/** Draws the dagger and stabs Victim in the neck from behind: dead at once. Returns true if it started. */
+	bool TryAssassinate(ABallCharacter* Victim);
+
+	bool IsStabbing() const { return StabTime >= 0.f; }
+
+	/** For the animator: 0 at the start of the stab, StabImpactShare when the blade goes in, 1 at the end (-1 = not stabbing) */
+	float GetStabProgress() const { return IsStabbing() ? FMath::Clamp(StabTime / FMath::Max(StabDuration, 0.01f), 0.f, 1.f) : -1.f; }
+
+	/** Where the blade goes in (world): the back of the victim's neck, fixed when the stab began */
+	FVector GetStabPoint() const { return StabPoint; }
+
+	/** The share of the stab at which the blade goes in */
+	static constexpr float StabImpactShare = 0.5f;
+
 	/** Hold to keep the guard up (fists in front of the face) */
 	UFUNCTION(BlueprintCallable, Category="Melee")
 	void SetGuarding(bool bNewWantsGuard) { bWantsGuard = bNewWantsGuard; }
@@ -164,7 +184,27 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Melee|Guard")
 	float ShieldBlockScale = 2.f;
 
+	/** How close (centre to centre, cm) to stab someone from behind */
+	UPROPERTY(EditAnywhere, Category="Melee|Assassinate")
+	float AssassinateRange = 215.f;
+
+	/** How squarely behind: the victim's facing against the direction to us must be below minus this (0.25 = the back 150 degrees) */
+	UPROPERTY(EditAnywhere, Category="Melee|Assassinate")
+	float AssassinateBehindCosine = 0.25f;
+
+	/** Seconds the whole stab takes (raise the dagger, strike, pull it out) */
+	UPROPERTY(EditAnywhere, Category="Melee|Assassinate")
+	float StabDuration = 1.0f;
+
 private:
+
+	/** The dagger or knife on the belt (none = NAME_None) */
+	FName FindDagger() const;
+
+	float StabTime = -1.f;
+	bool bStabResolved = false;
+	FVector StabPoint = FVector::ZeroVector;
+	TWeakObjectPtr<ABallCharacter> StabVictim;
 
 	/** What the strike in progress is made with */
 	struct FStrike

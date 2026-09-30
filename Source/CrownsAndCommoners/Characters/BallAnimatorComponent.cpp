@@ -343,6 +343,7 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 	MoveBlend = FMath::FInterpTo(MoveBlend, Speed > 10.f && !bFalling ? 1.f : 0.f, DeltaTime, 6.f);
 	AirBlend = FMath::FInterpTo(AirBlend, bFalling ? 1.f : 0.f, DeltaTime, 10.f);
+	SneakBlend = FMath::FInterpTo(SneakBlend, Ball->IsSneaking() && !bFalling ? 1.f : 0.f, DeltaTime, 8.f);
 	FirstPersonBlend = FMath::FInterpTo(FirstPersonBlend, bFirstPersonHands ? 1.f : 0.f, DeltaTime, 8.f);
 	IdleTime += DeltaTime;
 
@@ -397,6 +398,19 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	const bool bPunching = Melee && Melee->IsPunching() && !bDead;
 	const float PunchEnvelope = bPunching ? Melee->GetPunchEnvelope() : 0.f;
 	const FVector AimLocal = Root.InverseTransformVectorNoScale(Ball->GetBaseAimRotation().Vector());
+
+	// Stab from behind: the right hand lifts the dagger high, drives it down into the back of the victim's neck,
+	// holds it there a moment and pulls it out, while the left hand takes hold of their shoulder
+	const float Stab = (Melee && !bDead) ? Melee->GetStabProgress() : -1.f;
+	const bool bStabbing = Stab >= 0.f;
+	const float StabImpact = UBallMeleeComponent::StabImpactShare;
+	const FVector NeckLocal = bStabbing ? Root.InverseTransformPosition(Melee->GetStabPoint()) : FVector::ZeroVector;
+	const FVector StabRaised = NeckLocal + FVector(-42.f, 12.f, 58.f);
+	const FVector StabAlong = (NeckLocal - StabRaised).GetSafeNormal();
+	// The fist stops a blade's length short: the blade is what goes in
+	const FVector StabSunk = NeckLocal - StabAlong * 14.f;
+	// 0 until the blade starts down, 1 when it is in
+	const float StabDrive = bStabbing ? FMath::InterpEaseIn(0.f, 1.f, FMath::Clamp((Stab - 0.34f) / (StabImpact - 0.34f), 0.f, 1.f), 2.5f) : 0.f;
 
 	// Hands: swing with the opposite foot (left hand forward when the right foot is forward)
 	const FVector ThirdPersonRest = HandRestLocation(Radius, CenterZ);
@@ -462,6 +476,32 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 			bFist = true;
 		}
 
+		// Crouched, the hands come down with the body
+		Hand.Z -= SneakDrop * SneakBlend;
+
+		if (bStabbing)
+		{
+			const float Lift = FMath::InterpEaseOut(0.f, 1.f, FMath::Clamp(Stab / 0.3f, 0.f, 1.f), 2.f);
+			const float Withdraw = FMath::InterpEaseInOut(0.f, 1.f, FMath::Clamp((Stab - 0.72f) / 0.28f, 0.f, 1.f), 2.f);
+			if (Index == 1)
+			{
+				const FVector Strike = FMath::Lerp(StabRaised, StabSunk, StabDrive);
+				Hand = FMath::Lerp(FMath::Lerp(Hand, Strike, Lift), Hand, Withdraw);
+				// The dagger leaves the fist on the thumb side, tilted back: turn the hand so the blade points along the stab
+				const FVector BladeInHand = FVector(-0.574f, -0.819f, 0.f);
+				TargetRotation = FRotationMatrix::MakeFromX(StabAlong).ToQuat() * FRotationMatrix::MakeFromX(BladeInHand).ToQuat().Inverse();
+				bDirectRotation = Withdraw <= 0.f && Lift >= 1.f;
+			}
+			else
+			{
+				// On their shoulder, beside the neck
+				const FVector Grip = NeckLocal + FVector(-6.f, -34.f, -14.f);
+				Hand = FMath::Lerp(FMath::Lerp(Hand, Grip, Lift), Hand, Withdraw);
+				TargetRotation = FRotationMatrix::MakeFromXZ(FVector(1.f, 0.f, -0.5f), FVector(0.f, 0.f, 1.f)).ToQuat();
+			}
+			bFist = true;
+		}
+
 		Hand = KeepHandOutOfWalls(Index, FVector(0.f, 0.f, CenterZ), Hand, DeltaTime);
 
 		// A hand with something in it stays closed around it
@@ -493,14 +533,16 @@ void UBallAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 	FVector MoveDirection = Ball->GetActorRotation().UnrotateVector(Velocity2D).GetSafeNormal2D();
 	SmoothedLean = FMath::VInterpTo(SmoothedLean, MoveDirection * SpeedAlpha, DeltaTime, 6.f);
-	const FRotator Lean(-MaxLean * SmoothedLean.X, 0.f, MaxLean * 0.6f * SmoothedLean.Y);
+	// Sneaking: hunched forward over bent knees. Stabbing: the body goes in with the blade
+	const float StabLunge = bStabbing ? StabDrive * (1.f - FMath::Clamp((Stab - 0.72f) / 0.28f, 0.f, 1.f)) : 0.f;
+	const FRotator Lean(-MaxLean * SmoothedLean.X - SneakLean * SneakBlend - 8.f * StabLunge, 0.f, MaxLean * 0.6f * SmoothedLean.Y);
 
 	// Lying on the ground, tipped back so the eyes face the sky (scale shrinks the body as it decays)
 	const float BodyScale = BodyPivot->GetRelativeScale3D().Z;
 	// Punching: the body winds up, then twists into the punch (the punching side goes forward), leans and lunges
 	const float Drive = bPunching ? PunchExtension : 0.f;
 	const FRotator PunchTurn(-PunchLean * FMath::Max(Drive, 0.f), -Side(PunchHand) * PunchTwist * Drive, 0.f);
-	const FVector AliveLocation(PunchLunge * FMath::Max(Drive, 0.f), 0.f, CenterZ + Bob);
+	const FVector AliveLocation(PunchLunge * FMath::Max(Drive, 0.f) + 9.f * StabLunge, 0.f, CenterZ + Bob - SneakDrop * SneakBlend);
 	const FVector DeadLocation(0.f, 0.f, GroundZ + Radius * BodyScale);
 	const FQuat Rotation = FQuat::Slerp((Lean + PunchTurn).Quaternion(), FRotator(70.f, 0.f, 12.f).Quaternion(), DeadBlend);
 
