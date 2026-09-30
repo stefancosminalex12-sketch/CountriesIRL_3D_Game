@@ -1,0 +1,72 @@
+NEXT ART TO MAKE (ChatGPT) - written 2026-09-30. Work down the list; one ChatGPT conversation per batch keeps the style the same.
+Save as PNG with the [file name] into the folder named for each batch. Tell Claude when a batch is in; Claude imports it.
+
+
+=== BATCH 1: GAME ICON (folder Art/AI/Menu) - 1 image, square ===
+[game_icon] Generate an image of an app icon for a medieval game called "Crowns & Commoners": a simple gold crown resting on top of a plain round ball painted white with a red cross (the flag of England), seen from the front. Painterly hand-painted style, warm colours, dark charcoal background with a thin worn-gold border, centred, bold and readable when very small, no text, no letters.
+
+
+=== BATCH 2: MARKERS for the map and the compass bar (folder Art/AI/MapIcons) - 7 images, square ===
+Same flat style as the other map icons: flat colours, bold dark-brown outline, no shading, no texture, no ground, transparent background.
+[marker_waypoint] Generate an image of a simple map symbol for a travel waypoint: a small banner flag on a short pole, deep red flag with a swallow-tail end. Flat colours, bold dark-brown outline, no shading, no texture, no ground. Must read at 20 pixels. Transparent background.
+[marker_pin] Generate an image of a simple map symbol for a custom map pin: a round-headed pin with a short point at the bottom, cream head with a dark-brown dot in the middle. Flat colours, bold dark-brown outline, no shading, no texture, no ground. Must read at 20 pixels. Transparent background.
+[marker_quest] Generate an image of a simple map symbol for a quest: a small rolled parchment scroll with a red wax seal. Flat colours (cream parchment, red seal), bold dark-brown outline, no shading, no texture, no ground, no writing. Must read at 20 pixels. Transparent background.
+[marker_enemy] Generate an image of a simple map symbol for danger or enemies: a plain kite shield, deep red, with one dark sword upright behind it. Flat colours, bold dark-brown outline, no shading, no texture, no ground. Must read at 20 pixels. Transparent background.
+[marker_army] Generate an image of a simple map symbol for your own army: two upright spears with a small square banner between them, banner in gold. Flat colours, bold dark-brown outline, no shading, no texture, no ground. Must read at 20 pixels. Transparent background.
+[marker_horse] Generate an image of a simple map symbol for your horse: a horse's head in profile facing right, warm brown. Flat colours, bold dark-brown outline, no shading, no texture, no ground, no bridle detail. Must read at 20 pixels. Transparent background.
+[marker_destroyed] Generate an image of a simple map symbol for a destroyed place: a bold X made of two crossed brush strokes, dark red. Flat, no shading, no texture, no ground. Must read at 15 pixels. Transparent background.
+
+
+=== BATCH 3: GROUND AND BUILDING TEXTURES for the first landscape and village (folder Art/AI/Textures) - 9 images, square ===
+Each must be a SEAMLESS TILEABLE texture seen straight from above (or straight on for walls), evenly lit, no shadows, no perspective, no objects, nothing that stands out when repeated.
+Style for all: painterly hand-painted game texture, soft brush strokes, realistic colours, not photorealistic, 15th-century England.
+[tex_grass] Generate an image of a seamless tileable texture: short English meadow grass seen from straight above, soft mid-green with slightly lighter and darker patches, a few tiny clover leaves, no flowers. Painterly hand-painted game texture, evenly lit, no shadows, no perspective.
+[tex_dirt_road] Generate an image of a seamless tileable texture: a packed-earth country road surface seen from straight above, warm grey-brown dirt with small stones and faint cart ruts running top to bottom. Painterly hand-painted game texture, evenly lit, no shadows, no perspective.
+[tex_mud_bank] Generate an image of a seamless tileable texture: damp dark riverbank mud with small pebbles seen from straight above. Painterly hand-painted game texture, evenly lit, no shadows, no perspective.
+[tex_cobbles] Generate an image of a seamless tileable texture: rounded grey river cobblestones set close together in earth, a medieval market street seen from straight above. Painterly hand-painted game texture, evenly lit, no shadows, no perspective.
+[tex_stone_wall] Generate an image of a seamless tileable texture: a Yorkshire drystone and rubble wall seen straight on, rough grey limestone blocks of mixed sizes in rough rows with pale lime mortar. Painterly hand-painted game texture, evenly lit, no shadows, no perspective.
+[tex_plaster] Generate an image of a seamless tileable texture: old cream-white lime plaster (wattle and daub) on a cottage wall seen straight on, slightly uneven with faint hairline cracks and soft stains. Painterly hand-painted game texture, evenly lit, no shadows, no perspective.
+[tex_thatch] Generate an image of a seamless tileable texture: a straw thatched roof seen straight on, golden-grey straw laid in rows running top to bottom, weathered. Painterly hand-painted game texture, evenly lit, no shadows, no perspective.
+[tex_oak_planks] Generate an image of a seamless tileable texture: wide weathered oak planks running top to bottom, grey-brown, with grain and a few iron nail heads. Painterly hand-painted game texture, evenly lit, no shadows, no perspective.
+[tex_timber_beam] Generate an image of a seamless tileable texture: dark tarred oak timber-frame beam wood, adze-cut surface, grain running top to bottom. Painterly hand-painted game texture, evenly lit, no shadows, no perspective.
+
+
+=== BATCH 4: HERALDRY (folder Art/AI/Heraldry) - 3 images, square ===
+To replace the Wikimedia coats of arms with our own before release. Claude draws the simple shapes (crosses, chevrons, checks) in code; only the animals need painting. Plain black shape, so it can be coloured in code.
+[charge_lion_rampant] Generate an image of a medieval heraldic lion rampant (standing on one hind leg, facing left, claws and tongue out, tail raised), drawn as a solid black silhouette in the style of 15th-century English heraldry. One shape only, no shield, no outline colour, no shading. Transparent background.
+[charge_lion_passant] Generate an image of a medieval heraldic lion passant guardant (walking to the left, one forepaw raised, face turned to the viewer), drawn as a solid black silhouette in the style of 15th-century English heraldry. One shape only, no shield, no shading. Transparent background.
+[charge_martlet] Generate an image of a medieval heraldic martlet (a small swallow-like bird with no feet, facing left), drawn as a solid black silhouette in the style of 15th-century English heraldry. One shape only, no shield, no shading. Transparent background.
+
+
+=== BATCH 5: MONEY AND TRADE ICONS for v0.2 buying and selling (folder Art/AI/Icons) - 14 images, square ===
+Same style as the item icons: game inventory icon, hand-painted, slightly stylized, not photorealistic, three-quarter view, centred, transparent background, no text.
+[coin_penny] Generate an image of a game inventory icon: a 15th-century English silver penny of Henry VI, small thin hammered coin with a long cross on it. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[coin_groat] Generate an image of a game inventory icon: a 15th-century English silver groat of Henry VI, a larger hammered silver coin with a crowned king's face. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[coin_noble] Generate an image of a game inventory icon: a 15th-century English gold noble coin, showing a king standing in a ship with a shield. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[food_bread] Generate an image of a game inventory icon: a round loaf of dark medieval peasant bread. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[food_cheese] Generate an image of a game inventory icon: a wedge of pale hard English cheese with a rind. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[food_pottage] Generate an image of a game inventory icon: a wooden bowl of thick medieval pottage (pea and barley stew) with a wooden spoon. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[food_salt_fish] Generate an image of a game inventory icon: two dried salted herrings tied together with string. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[food_apple] Generate an image of a game inventory icon: a small red-green English apple. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[drink_ale] Generate an image of a game inventory icon: a 15th-century wooden staved tankard of ale with a little foam. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[goods_wool] Generate an image of a game inventory icon: a tied sack of raw cream-coloured sheep's wool (a medieval woolsack). Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[goods_cloth] Generate an image of a game inventory icon: a folded bolt of plain undyed woollen cloth. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[goods_candle] Generate an image of a game inventory icon: three pale tallow candles tied with string. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[goods_bandage] Generate an image of a game inventory icon: a roll of clean linen bandage. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[goods_arrows] Generate an image of a game inventory icon: a sheaf of 15th-century English war arrows with goose-feather fletching, tied with a leather thong. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+
+
+=== BATCH 6: TROOPS AND ORDERS for v0.3 going to war (folder Art/AI/Icons) - 8 images, square ===
+Flat style like the map icons: flat colours, bold dark-brown outline, no shading, no texture, transparent background.
+[troop_billman] Generate an image of a simple game symbol for a billman: one English bill (a pole weapon with a hooked blade and a top spike) standing upright. Flat steel-grey and brown colours, bold dark-brown outline, no shading, no texture. Must read at 24 pixels. Transparent background.
+[troop_archer] Generate an image of a simple game symbol for a longbow archer: one strung English longbow standing upright with a single arrow across it. Flat colours, bold dark-brown outline, no shading, no texture. Must read at 24 pixels. Transparent background.
+[troop_man_at_arms] Generate an image of a simple game symbol for a man-at-arms: one 15th-century sallet helmet seen from the side. Flat steel-grey colour, bold dark-brown outline, no shading, no texture. Must read at 24 pixels. Transparent background.
+[troop_horseman] Generate an image of a simple game symbol for mounted soldiers: a horse's head in profile wearing a plain steel face plate. Flat colours, bold dark-brown outline, no shading, no texture. Must read at 24 pixels. Transparent background.
+[order_follow] Generate an image of a simple game symbol for the order "follow me": a hand pointing forward with a small arrow beside it. Flat cream colour, bold dark-brown outline, no shading, no texture. Must read at 24 pixels. Transparent background.
+[order_hold] Generate an image of a simple game symbol for the order "hold your ground": a raised open hand, palm facing out. Flat cream colour, bold dark-brown outline, no shading, no texture. Must read at 24 pixels. Transparent background.
+[order_charge] Generate an image of a simple game symbol for the order "charge": a single sword pointing up and to the right with two short speed lines behind it. Flat colours, bold dark-brown outline, no shading, no texture. Must read at 24 pixels. Transparent background.
+[order_loose] Generate an image of a simple game symbol for the order "loose arrows": three arrows flying up and to the right in an arc. Flat colours, bold dark-brown outline, no shading, no texture. Must read at 24 pixels. Transparent background.
+
+
+=== OPTIONAL ===
+[loading_05] (folder Art/AI/Menu, landscape 3:2) A fifth loading painting, e.g. an English alehouse interior in 1455 at night with countryball characters. Use the menu style block from Art/AI/README.md.
