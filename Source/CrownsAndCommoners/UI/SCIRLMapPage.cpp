@@ -3,6 +3,7 @@
 #include "UI/SCIRLMapPage.h"
 #include "UI/CIRLUIStyle.h"
 #include "World/CIRLWorldMap.h"
+#include "World/WorldSimulationSettings.h"
 #include "Brushes/SlateRoundedBoxBrush.h"
 #include "Engine/Texture2D.h"
 #include "Framework/Application/SlateApplication.h"
@@ -27,6 +28,12 @@ namespace
 
 	/** Height of your marker arrow on screen */
 	constexpr double MarkerArrowHeight = 34.0;
+
+	/** A town's map fades in over the world map while it grows from this many screen pixels tall to the second */
+	constexpr double LocalMapFade[2] = { 220.0, 520.0 };
+
+	/** Opening inside a town, its map fills this share of the view's height */
+	constexpr double TownViewShare = 0.92;
 
 	const TArray<FKey>& UpKeys()		{ static TArray<FKey> K = { EKeys::W, EKeys::Up }; return K; }
 	const TArray<FKey>& DownKeys()		{ static TArray<FKey> K = { EKeys::S, EKeys::Down }; return K; }
@@ -78,6 +85,42 @@ void SCIRLMapPage::Construct(const FArguments& InArgs)
 	{
 		Zoom = 1.f / FMath::Max(Map->UVPerGameKm.Y * OpeningViewGameKm, KINDA_SMALL_NUMBER);
 	}
+
+	// Towns' detailed maps, and where they lie
+	for (const TSoftObjectPtr<UCIRLMapDefinition>& Entry : GetDefault<UWorldSimulationSettings>()->LocalMaps)
+	{
+		UCIRLMapDefinition* Local = Entry.LoadSynchronous();
+		UTexture2D* LocalTexture = Local ? Local->Texture.LoadSynchronous() : nullptr;
+		if (!LocalTexture)
+		{
+			continue;
+		}
+		TSharedPtr<FLocalMap> Town = MakeShared<FLocalMap>();
+		Town->Map.Reset(Local);
+		Town->Texture.Reset(LocalTexture);
+		Town->Brush.SetResourceObject(LocalTexture);
+		Town->Brush.ImageSize = FVector2D(LocalTexture->GetSizeX(), LocalTexture->GetSizeY());
+		Town->Brush.DrawAs = ESlateBrushDrawType::Image;
+		const FVector2D TopLeftKm = Local->UVToGameKm(FVector2D(0.0, 0.0));
+		const FVector2D BottomRightKm = Local->UVToGameKm(FVector2D(1.0, 1.0));
+		Town->MinKm = FVector2D(TopLeftKm.X, BottomRightKm.Y);
+		Town->MaxKm = FVector2D(BottomRightKm.X, TopLeftKm.Y);
+		LocalMaps.Add(Town);
+	}
+
+	// Standing in a town: open on its map
+	if (const AActor* You = Player.Get(); You && Map)
+	{
+		const FVector2D Km = CIRLWorldMap::ToGameKm(You->GetWorld(), You->GetActorLocation());
+		for (const TSharedPtr<FLocalMap>& Town : LocalMaps)
+		{
+			if (Km.X >= Town->MinKm.X && Km.X <= Town->MaxKm.X && Km.Y >= Town->MinKm.Y && Km.Y <= Town->MaxKm.Y)
+			{
+				Zoom = TownViewShare / FMath::Max(Map->UVPerGameKm.Y * (Town->MaxKm.Y - Town->MinKm.Y), KINDA_SMALL_NUMBER);
+				break;
+			}
+		}
+	}
 	CenterOnPlayer();
 
 	RegisterActiveTimer(0.f, FWidgetActiveTimerDelegate::CreateSP(this, &SCIRLMapPage::Update));
@@ -104,11 +147,24 @@ FVector2D SCIRLMapPage::MapTopLeft() const
 	return ViewSize * 0.5 - ViewCenter * MapScreenSize();
 }
 
+double SCIRLMapPage::PixelsPerGameKm() const
+{
+	return MapScreenSize().Y * (Map ? Map->UVPerGameKm.Y : 0.01);
+}
+
 void SCIRLMapPage::ClampView()
 {
-	// From the whole map down to about 1.5 screen pixels per map pixel
+	// From the whole map down to about 1.5 screen pixels per map pixel (of the world map, or of the finest town map)
 	const float TextureHeight = Texture ? Texture->GetSizeY() : 4096.f;
-	const float MaxZoom = FMath::Max(1.5f * TextureHeight / FMath::Max(ViewSize.Y, 1.0), 2.f);
+	float MaxZoom = FMath::Max(1.5f * TextureHeight / FMath::Max(ViewSize.Y, 1.0), 2.f);
+	if (Map)
+	{
+		for (const TSharedPtr<FLocalMap>& Town : LocalMaps)
+		{
+			const double TownPixelsPerKm = Town->Brush.ImageSize.Y / FMath::Max(Town->MaxKm.Y - Town->MinKm.Y, 0.001);
+			MaxZoom = FMath::Max(MaxZoom, static_cast<float>(1.5 * TownPixelsPerKm / (FMath::Max(ViewSize.Y, 1.0) * Map->UVPerGameKm.Y)));
+		}
+	}
 	Zoom = FMath::Clamp(Zoom, 1.f, MaxZoom);
 	ViewCenter.X = FMath::Clamp(ViewCenter.X, 0.0, 1.0);
 	ViewCenter.Y = FMath::Clamp(ViewCenter.Y, 0.0, 1.0);
@@ -171,6 +227,21 @@ int32 SCIRLMapPage::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeo
 	const FVector2D TopLeft = MapTopLeft();
 	FSlateDrawElement::MakeBox(OutDrawElements, LayerId + 1,
 		AllottedGeometry.ToPaintGeometry(FVector2f(MapSize), FSlateLayoutTransform(FVector2f(TopLeft))), &MapBrush);
+
+	// Towns' own maps over it, fading in as you zoom in on them
+	for (const TSharedPtr<FLocalMap>& Town : LocalMaps)
+	{
+		const FVector2D A = TopLeft + Map->GameKmToUV(FVector2D(Town->MinKm.X, Town->MaxKm.Y)) * MapSize;
+		const FVector2D B = TopLeft + Map->GameKmToUV(FVector2D(Town->MaxKm.X, Town->MinKm.Y)) * MapSize;
+		const FVector2D TownSize = B - A;
+		const float Fade = FMath::Clamp(static_cast<float>((TownSize.Y - LocalMapFade[0]) / (LocalMapFade[1] - LocalMapFade[0])), 0.f, 1.f);
+		if (Fade > 0.f)
+		{
+			FSlateDrawElement::MakeBox(OutDrawElements, LayerId + 2,
+				AllottedGeometry.ToPaintGeometry(FVector2f(TownSize), FSlateLayoutTransform(FVector2f(A))), &Town->Brush,
+				ESlateDrawEffect::None, FLinearColor(1.f, 1.f, 1.f, Fade));
+		}
+	}
 
 	// You: the marker arrow pointing where you face (+X north = up, +Y east = right), or a drawn dot and needle
 	int32 TopLayer = LayerId + 1;

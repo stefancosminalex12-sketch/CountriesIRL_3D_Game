@@ -65,6 +65,21 @@ private:
 	TStrongObjectPtr<UTexture2D> MarkerTexture;
 	FSlateBrush MarkerBrush;
 
+	/** A town's detailed map, drawn over the world map when zoomed in on it */
+	struct FLocalMap
+	{
+		TStrongObjectPtr<UCIRLMapDefinition> Map;
+		TStrongObjectPtr<UTexture2D> Texture;
+		FSlateBrush Brush;
+		/** The game km it covers: south-west and north-east corners */
+		FVector2D MinKm = FVector2D::ZeroVector;
+		FVector2D MaxKm = FVector2D::ZeroVector;
+	};
+	TArray<TSharedPtr<FLocalMap>> LocalMaps;
+
+	/** On-screen pixels per game km at the current zoom */
+	double PixelsPerGameKm() const;
+
 	TWeakObjectPtr<AActor> Player;
 
 	/** The map point (0..1) in the middle of the view, and the zoom (1 = the whole map's height fits) */

@@ -33,6 +33,11 @@ public:
 	UPROPERTY(config, EditAnywhere, Category="Maps")
 	TSoftObjectPtr<UCIRLMapDefinition> WorldMap = TSoftObjectPtr<UCIRLMapDefinition>(FSoftObjectPath(TEXT("/Game/CrownsAndCommoners/UI/Map/DA_WorldMap_England1455.DA_WorldMap_England1455")));
 
+	/** Detailed maps of towns (Tools/Unreal/import_local_map.py): the Map tab shows one over the world map when you zoom
+	 *  in on it, and opens on it when you are inside it */
+	UPROPERTY(config, EditAnywhere, Category="Maps")
+	TArray<TSoftObjectPtr<UCIRLMapDefinition>> LocalMaps;
+
 	/** Test levels placed somewhere on the world map (the sandbox stands in for Middleham) */
 	UPROPERTY(config, EditAnywhere, Category="Maps")
 	TArray<FCIRLLevelMapAnchor> LevelMapAnchors;

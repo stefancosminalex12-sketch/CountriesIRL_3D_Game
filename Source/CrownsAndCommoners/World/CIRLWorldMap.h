@@ -45,6 +45,12 @@ public:
 	{
 		return FVector2D(OriginUV.X + GameKm.X * UVPerGameKm.X, OriginUV.Y - GameKm.Y * UVPerGameKm.Y);
 	}
+
+	/** Place on the picture (0..1 across, 0..1 down) -> game km (east, north) */
+	FVector2D UVToGameKm(const FVector2D& UV) const
+	{
+		return FVector2D((UV.X - OriginUV.X) / UVPerGameKm.X, (OriginUV.Y - UV.Y) / UVPerGameKm.Y);
+	}
 };
 
 /** Where a level's origin sits on the world map (for test levels that aren't built at their real place yet) */
