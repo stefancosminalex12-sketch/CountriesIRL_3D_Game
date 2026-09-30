@@ -26,7 +26,7 @@ enum class EBallFighterState : uint8
  *  count the same way.
  *
  *  It stands at its post until it sees an enemy (in front of it, or very close on any side, with nothing in the
- *  way) or is hit by one. Then it runs in, keeps just inside striking distance, circles, strikes when it can, and
+ *  way), is hit by one, or a fight against one of its enemies breaks out close by (it joins in). Then it runs in, keeps just inside striking distance, circles, strikes when it can, and
  *  sometimes raises its guard when the enemy swings. It gives up when the enemy gets too far away or it has been led
  *  too far from its post, and walks back.
  *
@@ -44,6 +44,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	EBallFighterState GetState() const { return State; }
+
+	/** Who it is fighting (nobody = nullptr) */
+	ABallCharacter* GetTarget() const { return Target; }
 
 protected:
 
@@ -63,6 +66,10 @@ protected:
 	/** Closer than this it notices an enemy on any side, even behind it */
 	UPROPERTY(EditAnywhere, Category="Fighter|Senses")
 	float NoticeRange = 400.f;
+
+	/** A fight this close draws it in: if another fighter is on one of its enemies within this distance, it joins */
+	UPROPERTY(EditAnywhere, Category="Fighter|Senses")
+	float JoinRange = 1000.f;
 
 	/** It gives up the chase when the enemy is further away than this */
 	UPROPERTY(EditAnywhere, Category="Fighter|Senses")
@@ -102,6 +109,9 @@ private:
 	void HandleDamaged(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
 
 	ABallCharacter* FindEnemy(const ABallCharacter* Ball) const;
+
+	/** The enemy of a fight going on within JoinRange (nullptr = all quiet) */
+	ABallCharacter* FindFightToJoin(const ABallCharacter* Ball) const;
 	void StartFight(ABallCharacter* Ball, ABallCharacter* Enemy);
 	void StopFight(ABallCharacter* Ball, bool bWon);
 	void TickFight(ABallCharacter* Ball, float DeltaTime);

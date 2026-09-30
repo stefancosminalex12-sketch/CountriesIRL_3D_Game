@@ -66,6 +66,26 @@ ABallCharacter* ABallFighterController::FindEnemy(const ABallCharacter* Ball) co
 	return Best;
 }
 
+ABallCharacter* ABallFighterController::FindFightToJoin(const ABallCharacter* Ball) const
+{
+	for (TActorIterator<ABallFighterController> It(GetWorld()); It; ++It)
+	{
+		const ABallFighterController* Other = *It;
+		const APawn* Fighter = Other->GetPawn();
+		ABallCharacter* Enemy = Other->GetTarget();
+		if (Other == this || Other->GetState() != EBallFighterState::Fight || !Fighter || !Enemy || Enemy == Ball || Enemy->IsDead() || !IsEnemy(Enemy))
+		{
+			continue;
+		}
+		// The noise of it carries: no need to see it
+		if (FVector::Dist2D(Fighter->GetActorLocation(), Ball->GetActorLocation()) <= JoinRange)
+		{
+			return Enemy;
+		}
+	}
+	return nullptr;
+}
+
 void ABallFighterController::SetFacesEnemy(ABallCharacter* Ball, bool bFaceEnemy)
 {
 	UCharacterMovementComponent* Movement = Ball->GetCharacterMovement();
@@ -131,7 +151,12 @@ void ABallFighterController::Tick(float DeltaTime)
 	if (LookTimer <= 0.f)
 	{
 		LookTimer = 0.25f;
-		if (ABallCharacter* Enemy = FindEnemy(Ball))
+		ABallCharacter* Enemy = FindEnemy(Ball);
+		if (!Enemy)
+		{
+			Enemy = FindFightToJoin(Ball);
+		}
+		if (Enemy)
 		{
 			StartFight(Ball, Enemy);
 			return;
