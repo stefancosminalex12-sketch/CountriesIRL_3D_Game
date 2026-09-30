@@ -28,6 +28,9 @@ AHorse::AHorse()
 
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
+	// A ball can land on the horse's back and stay there (by default the engine bounces characters off each other)
+	GetCapsuleComponent()->CanCharacterStepUpOn = ECB_Yes;
+
 	// An AI controller lets the horse move without a player possessing it (the rider steers it)
 	AIControllerClass = AAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
