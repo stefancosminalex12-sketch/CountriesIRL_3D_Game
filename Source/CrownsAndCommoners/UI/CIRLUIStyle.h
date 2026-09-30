@@ -84,6 +84,11 @@ namespace CIRLUIStyle
 	const FSlateBrush* DeathBackground();
 	const FSlateBrush* DeathEmblem();
 
+	/** Blood on the death screen: splatters in from the edges, and drips running down from the top edge
+	 *  (Art/AI/Menu/death_blood, death_blood_drips; nullptr until made) */
+	const FSlateBrush* DeathBlood();
+	const FSlateBrush* DeathBloodDrips();
+
 	/** White fading to clear left-to-right / top-to-bottom; tint it to darken part of a painting */
 	const FSlateBrush* GradientLeft();
 	const FSlateBrush* GradientBottom();

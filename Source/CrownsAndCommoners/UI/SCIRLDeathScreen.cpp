@@ -25,6 +25,8 @@ void SCIRLDeathScreen::Construct(const FArguments& InArgs)
 
 	const FSlateBrush* Background = DeathBackground();
 	const FSlateBrush* Emblem = DeathEmblem();
+	const FSlateBrush* Blood = DeathBlood();
+	const FSlateBrush* Drips = DeathBloodDrips();
 	auto Faded = [this](FLinearColor Color) { Color.A *= FadeIn(); return FSlateColor(Color); };
 	// The background darkens at the pace it had over the first seconds, and keeps going up to MaxDarkness (the world
 	// always shows through a little)
@@ -67,6 +69,24 @@ void SCIRLDeathScreen::Construct(const FArguments& InArgs)
 			SNew(SImage)
 			.Image(FCoreStyle::Get().GetBrush("WhiteBrush"))
 			.ColorAndOpacity_Lambda([Faded]() { return Faded(FLinearColor(0.55f, 0.02f, 0.01f, 0.16f)); })
+		]
+		// Blood splattered in from the edges
+		+ SOverlay::Slot()
+		[
+			SNew(SImage)
+			.Visibility(Blood ? EVisibility::HitTestInvisible : EVisibility::Collapsed)
+			.Image(Blood)
+			.ColorAndOpacity_Lambda([Faded]() { return Faded(FLinearColor::White); })
+		]
+		// ...and running down from the top: the drips slide down out of the top edge, fast at first, then slower
+		// as they thin out, so they seem to run and lengthen
+		+ SOverlay::Slot()
+		[
+			SAssignNew(DripsImage, SImage)
+			.Visibility(Drips ? EVisibility::HitTestInvisible : EVisibility::Collapsed)
+			.Image(Drips)
+			.ColorAndOpacity_Lambda([Faded]() { return Faded(FLinearColor::White); })
+			.RenderTransform_Lambda([this]() { return DripsTransform(); })
 		]
 		// Darker towards the edges
 		+ SOverlay::Slot()
@@ -123,6 +143,14 @@ void SCIRLDeathScreen::Construct(const FArguments& InArgs)
 			]
 		]
 	];
+}
+
+TOptional<FSlateRenderTransform> SCIRLDeathScreen::DripsTransform() const
+{
+	// Starts pulled up by DripsStart of the screen's height, and eases down to its place over DripsSeconds
+	const float Run = FMath::InterpEaseOut(0.f, 1.f, FMath::Clamp(Elapsed() / DripsSeconds, 0.f, 1.f), 2.5f);
+	const float Height = DripsImage.IsValid() ? DripsImage->GetCachedGeometry().GetLocalSize().Y : 0.f;
+	return FSlateRenderTransform(FVector2D(0.f, -(1.f - Run) * DripsStart * Height));
 }
 
 float SCIRLDeathScreen::Elapsed() const

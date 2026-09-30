@@ -251,6 +251,16 @@ namespace CIRLUIStyle
 		return OptionalImage(TEXT("T_death_emblem"), FVector2D(1024.f, 1024.f));
 	}
 
+	const FSlateBrush* DeathBlood()
+	{
+		return OptionalImage(TEXT("T_death_blood"), FVector2D(1536.f, 1024.f));
+	}
+
+	const FSlateBrush* DeathBloodDrips()
+	{
+		return OptionalImage(TEXT("T_death_blood_drips"), FVector2D(1536.f, 1024.f));
+	}
+
 	const FSlateBrush* GradientLeft()
 	{
 		static const FSlateBrush Brush = MakeImage(TEXT("/Game/CrownsAndCommoners/UI/Textures/T_gradient_left.T_gradient_left"), FVector2D(512.f, 4.f));

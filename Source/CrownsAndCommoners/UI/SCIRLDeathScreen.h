@@ -33,6 +33,15 @@ private:
 	/** Seconds since it appeared */
 	float Elapsed() const;
 
+	/** Moves the drips down out of the top edge as time goes on */
+	TOptional<FSlateRenderTransform> DripsTransform() const;
+
+	/** The drips start this share of the screen higher (hidden above the top edge) and run down over this many seconds */
+	static constexpr float DripsStart = 0.55f;
+	static constexpr float DripsSeconds = 9.f;
+
+	TSharedPtr<class SImage> DripsImage;
+
 	/** 0 when it appears, 1 once it has faded in */
 	float FadeIn() const;
 
