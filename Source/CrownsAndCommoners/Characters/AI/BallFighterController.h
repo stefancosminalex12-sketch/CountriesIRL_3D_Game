@@ -45,6 +45,12 @@ public:
 
 	EBallFighterState GetState() const { return State; }
 
+	/**
+	 *  Someone was stabbed to death close by: if it happened within earshot and the killer is one of its enemies, it
+	 *  turns on the killer (seen or not: it hears the man go down)
+	 */
+	void NoticeKilling(const ABallCharacter* Victim, ABallCharacter* Killer);
+
 	/** Who it is fighting (nobody = nullptr) */
 	ABallCharacter* GetTarget() const { return Target; }
 
@@ -73,6 +79,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="Fighter|Senses")
 	float SneakSightScale = 0.7f;
+
+	/** It hears someone being stabbed to death this close (cm) and turns on the killer */
+	UPROPERTY(EditAnywhere, Category="Fighter|Senses")
+	float KillingNoticeRange = 500.f;
 
 	/** A fight this close draws it in: if another fighter is on one of its enemies within this distance, it joins */
 	UPROPERTY(EditAnywhere, Category="Fighter|Senses")

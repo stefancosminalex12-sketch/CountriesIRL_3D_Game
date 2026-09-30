@@ -39,6 +39,19 @@ void ABallFighterController::HandleDamaged(AActor* DamagedActor, float Damage, c
 	}
 }
 
+void ABallFighterController::NoticeKilling(const ABallCharacter* Victim, ABallCharacter* Killer)
+{
+	ABallCharacter* Ball = Cast<ABallCharacter>(GetPawn());
+	if (!Ball || !Victim || !Killer || Ball == Victim || Ball == Killer || Ball->IsDead() || Killer->IsDead() || Target || !IsEnemy(Killer))
+	{
+		return;
+	}
+	if (FVector::Dist2D(Ball->GetActorLocation(), Victim->GetActorLocation()) <= KillingNoticeRange)
+	{
+		StartFight(Ball, Killer);
+	}
+}
+
 ABallCharacter* ABallFighterController::FindEnemy(const ABallCharacter* Ball) const
 {
 	ABallCharacter* Best = nullptr;

@@ -15,6 +15,7 @@
 #include "Characters/BallMeleeComponent.h"
 #include "Characters/Heraldry.h"
 #include "Characters/AI/BallFighterController.h"
+#include "EngineUtils.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/Texture2D.h"
 #include "Materials/MaterialInstanceDynamic.h"
@@ -196,6 +197,12 @@ void ABallCharacter::Assassinated(ABallCharacter* By)
 	{
 		DamageFlashTime = DamageFlashDuration;
 		Health->ApplyDamage(Health->GetHealth());
+
+		// A man going down is not silent: fighters close by hear it
+		for (TActorIterator<ABallFighterController> It(GetWorld()); It; ++It)
+		{
+			It->NoticeKilling(this, By);
+		}
 	}
 }
 
