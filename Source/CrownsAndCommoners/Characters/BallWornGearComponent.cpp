@@ -178,65 +178,69 @@ void UBallWornGearComponent::Refresh()
 		Boots && !Boots->Tint.IsEmpty() ? TOptional<FLinearColor>(Boots->GetTint(Leather)) : TOptional<FLinearColor>());
 }
 
+void UBallWornGearComponent::AddCap(float RimHeight, float TopRoom, const FLinearColor& Color, float LengthScale, float ShiftBack)
+{
+	// A dome that sits on the ball from RimHeight (share of the radius above the centre) upward. At the rim it is a
+	// little wider than the ball is there, and it rises TopRoom above the ball's top, so the ball never shows through
+	const float BallAtRim = FMath::Sqrt(FMath::Max(1.f - RimHeight * RimHeight, 0.01f));
+	const float HalfWidth = BallAtRim * 1.035f;
+	const float HalfHeight = (1.f - RimHeight) + TopRoom;
+	AddShell(-ShiftBack, RimHeight, HalfWidth * LengthScale, HalfWidth, HalfHeight, Color);
+}
+
 void UBallWornGearComponent::BuildHead(const FCIRLItemRow& Item, const FLinearColor& Color, bool bUnderHelmet)
 {
-	// Domes sit on top of the ball and stop above the eyes. Numbers are shares of the ball's radius:
-	// (how far back, how high the middle is, half length, half width, half height)
+	// A coif or hood under a helmet is covered by it: nothing of it is drawn (any part that stuck out clipped)
+	if (bUnderHelmet)
+	{
+		return;
+	}
+
+	// Rim heights are shares of the ball's radius above its centre; the eyes are around 0.15
 	switch (Item.Shape)
 	{
 	case ECIRLItemShape::KettleHat:
-		AddShell(0.f, 0.55f, 0.82f, 0.82f, 0.55f, Color);
+		AddCap(0.55f, 0.08f, Color);
 		// The wide iron brim
 		AddPart(EPartMesh::Cylinder, FVector(0.f, 0.f, 0.56f * R), FVector(2.30f * R, 2.30f * R, 3.f), Color);
 		break;
 	case ECIRLItemShape::Sallet:
 		// Longer front to back, with the tail over the neck
-		AddShell(-0.08f, 0.50f, 0.97f, 0.89f, 0.60f, Color);
+		AddCap(0.48f, 0.08f, Color, 1.08f, 0.05f);
 		break;
 	case ECIRLItemShape::Armet:
-		AddShell(0.f, 0.42f, 0.93f, 0.93f, 0.70f, Color);
+		AddCap(0.40f, 0.10f, Color);
 		// A low crest along the top
-		AddPart(EPartMesh::Cube, FVector(-0.05f * R, 0.f, 1.12f * R), FVector(0.9f * R, 3.f, 0.10f * R), Color);
+		AddPart(EPartMesh::Cube, FVector(-0.05f * R, 0.f, 1.10f * R), FVector(0.9f * R, 3.f, 0.10f * R), Color);
 		break;
 	case ECIRLItemShape::WideHat:
-		AddShell(0.f, 0.62f, 0.68f, 0.68f, 0.46f, Color);
-		AddPart(EPartMesh::Cylinder, FVector(0.f, 0.f, 0.64f * R), FVector(2.60f * R, 2.60f * R, 2.5f), Color);
+		// Perched high on top: a small crown and a very wide brim
+		AddCap(0.72f, 0.07f, Color);
+		AddPart(EPartMesh::Cylinder, FVector(0.f, 0.f, 0.73f * R), FVector(2.50f * R, 2.50f * R, 2.5f), Color);
 		break;
 	case ECIRLItemShape::Hat:
-		AddShell(0.f, 0.58f, 0.78f, 0.78f, 0.52f, Color);
-		AddPart(EPartMesh::Cylinder, FVector(0.f, 0.f, 0.60f * R), FVector(2.02f * R, 2.02f * R, 3.f), Color);
+		AddCap(0.66f, 0.10f, Color);
+		AddPart(EPartMesh::Cylinder, FVector(0.f, 0.f, 0.67f * R), FVector(1.95f * R, 1.95f * R, 3.f), Color);
 		break;
 	case ECIRLItemShape::Coif:
-		if (bUnderHelmet)
-		{
-			// Under a helmet only its edge shows: a band around the back and sides below the helmet's rim
-			// (the whole cap would poke out around the narrower dome)
-			AddShell(-0.12f, 0.18f, 0.97f, 1.0f, 0.50f, Color);
-			break;
-		}
-		// A close cap: further down the back and sides than a helmet, clear of the face
-		AddShell(-0.10f, 0.40f, 0.93f, 0.93f, 0.66f, Color);
+		// A close cap, lower than any helmet but clear of the eyes
+		AddCap(0.38f, 0.035f, Color);
 		break;
 	case ECIRLItemShape::Hood:
 	case ECIRLItemShape::FoolHood:
-		if (bUnderHelmet)
-		{
-			// Pushed back under the helmet: it shows around the neck and shoulders
-			AddShell(-0.16f, 0.12f, 1.0f, 1.0f, 0.62f, Color);
-			break;
-		}
-		AddShell(-0.16f, 0.30f, 1.0f, 0.97f, 0.78f, Color);
+		// Comes lower still, and a little further out at the back
+		AddCap(0.30f, 0.05f, Color, 1.05f, 0.04f);
 		if (Item.Shape == ECIRLItemShape::FoolHood)
 		{
 			// Two ass's ears with bells
 			for (const float Side : { -1.f, 1.f })
 			{
-				AddPart(EPartMesh::Sphere, FVector(-0.05f * R, Side * 0.45f * R, 1.12f * R), FVector(0.16f * R, 0.16f * R, 0.42f * R), FLinearColor(0.85f, 0.7f, 0.15f));
+				AddPart(EPartMesh::Sphere, FVector(-0.05f * R, Side * 0.45f * R, 1.10f * R), FVector(0.16f * R, 0.16f * R, 0.42f * R), FLinearColor(0.85f, 0.7f, 0.15f));
 			}
 		}
 		break;
 	default:
-		AddShell(0.f, 0.50f, 0.885f, 0.885f, 0.60f, Color);
+		AddCap(0.50f, 0.08f, Color);
 		break;
 	}
 }

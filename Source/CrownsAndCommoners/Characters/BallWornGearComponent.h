@@ -49,6 +49,10 @@ private:
 	/** A dome or band: an egg shape around a point on the ball's axis, sizes as shares of the ball's radius */
 	void AddShell(float CenterX, float CenterZ, float HalfLength, float HalfWidth, float HalfHeight, const FLinearColor& Color);
 
+	/** A hat or helmet dome sitting on the ball from RimHeight up (share of the radius above the centre), always a
+	 *  little wider and TopRoom taller than the ball inside it. LengthScale and ShiftBack stretch it toward the back */
+	void AddCap(float RimHeight, float TopRoom, const FLinearColor& Color, float LengthScale = 1.f, float ShiftBack = 0.f);
+
 	void BuildHead(const FCIRLItemRow& Item, const FLinearColor& Color, bool bUnderHelmet);
 	void BuildBody(ECIRLEquipSlot Slot, const FCIRLItemRow& Item, const FLinearColor& Color);
 	void BuildBeltItem(const FCIRLItemRow& Item, const FLinearColor& Color, float Side);
