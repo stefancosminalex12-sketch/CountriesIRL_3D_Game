@@ -142,6 +142,14 @@ private:
 	void TickFight(ABallCharacter* Ball, float DeltaTime);
 	void TickReturn(ABallCharacter* Ball);
 
+	/**
+	 *  Someone standing on its head: it stands still and throws them off, instead of walking about with them on top
+	 *  (which carried them along, as if they kept walking by themselves). Returns true while someone is up there.
+	 */
+	bool ShakeOffRider(ABallCharacter* Ball, float DeltaTime);
+
+	float ShakeTimer = 0.f;
+
 	/** Faces the enemy while fighting, and the way it walks otherwise */
 	void SetFacesEnemy(ABallCharacter* Ball, bool bFaceEnemy);
 

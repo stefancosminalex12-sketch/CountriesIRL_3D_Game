@@ -159,6 +159,11 @@ void ABallFighterController::Tick(float DeltaTime)
 		return;
 	}
 
+	if (ShakeOffRider(Ball, DeltaTime))
+	{
+		return;
+	}
+
 	if (State == EBallFighterState::Fight)
 	{
 		TickFight(Ball, DeltaTime);
@@ -185,6 +190,42 @@ void ABallFighterController::Tick(float DeltaTime)
 	{
 		TickReturn(Ball);
 	}
+}
+
+bool ABallFighterController::ShakeOffRider(ABallCharacter* Ball, float DeltaTime)
+{
+	ABallCharacter* Rider = nullptr;
+	for (TActorIterator<ABallCharacter> It(GetWorld()); It; ++It)
+	{
+		const UPrimitiveComponent* Base = It->GetMovementBase();
+		if (*It != Ball && !It->IsDead() && Base && Base->GetOwner() == Ball)
+		{
+			Rider = *It;
+			break;
+		}
+	}
+	if (!Rider)
+	{
+		ShakeTimer = 0.f;
+		return false;
+	}
+
+	// Nobody misses an enemy landing on their head
+	if (!Target && IsEnemy(Rider))
+	{
+		StartFight(Ball, Rider);
+	}
+	Ball->GetMelee()->SetGuarding(false);
+	Ball->SetSprinting(false);
+
+	ShakeTimer -= DeltaTime;
+	if (ShakeTimer <= 0.f)
+	{
+		ShakeTimer = 0.6f;
+		const FVector Side = Ball->GetActorRightVector() * (FMath::RandBool() ? 1.f : -1.f);
+		Rider->LaunchCharacter(Side * 320.f + FVector(0.f, 0.f, 260.f), true, true);
+	}
+	return true;
 }
 
 void ABallFighterController::TickReturn(ABallCharacter* Ball)
