@@ -21,6 +21,20 @@ struct FCIRLMusicTrack
 	FString Title;
 };
 
+/** The footstep recordings for one kind of ground; the variations are picked at random */
+USTRUCT()
+struct FCIRLFootstepSet
+{
+	GENERATED_BODY()
+
+	/** The ground's physical surface name (Project Settings > Physics > Physical Surface), e.g. Gravel */
+	UPROPERTY(EditAnywhere, Category = "Footsteps")
+	FName Surface;
+
+	UPROPERTY(EditAnywhere, Category = "Footsteps")
+	TArray<TSoftObjectPtr<USoundBase>> Sounds;
+};
+
 /**
  *  Which music plays where (Project Settings > Crowns & Commoners Audio). Music assets are in
  *  /Game/CrownsAndCommoners/Audio/Music (Tools/Unreal/import_audio.py); they don't loop, the playlist moves on.
@@ -50,7 +64,11 @@ public:
 	UPROPERTY(config, EditAnywhere, Category = "Sound Effects")
 	TSoftObjectPtr<USoundBase> DeathSound;
 
-	/** The player's footsteps (a loop, louder and quicker when running, quiet when sneaking). Later one per kind of ground */
+	/** Footsteps by kind of ground (looping recordings). The first set is used on any ground without its own */
 	UPROPERTY(config, EditAnywhere, Category = "Sound Effects")
-	TSoftObjectPtr<USoundBase> FootstepSound;
+	TArray<FCIRLFootstepSet> Footsteps;
+
+	/** Landing from a jump or a fall (one picked at random) */
+	UPROPERTY(config, EditAnywhere, Category = "Sound Effects")
+	TArray<TSoftObjectPtr<USoundBase>> LandingSounds;
 };

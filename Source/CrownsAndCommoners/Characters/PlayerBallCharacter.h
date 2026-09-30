@@ -101,6 +101,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
 	TObjectPtr<UCameraComponent> ThirdPersonCamera;
 
+	/** Our footsteps, by the ground under us */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	TObjectPtr<class UBallFootstepsComponent> Footsteps;
+
+	/** Landing from a jump or fall: a thump if it was a real drop */
+	virtual void Landed(const FHitResult& Hit) override;
+
 	/** The design calls for first-person by default */
 	UPROPERTY(EditAnywhere, Category="Camera")
 	bool bStartInFirstPerson = true;
@@ -159,11 +166,7 @@ private:
 	/** 0 = standing, 1 = crouched (smoothed, for the cameras) */
 	float SneakCameraBlend = 0.f;
 
-	/** Our own footsteps, and how loud they are now */
-	UPROPERTY(Transient)
-	TObjectPtr<class UAudioComponent> Footsteps;
-	float FootstepVolume = 0.f;
-	void UpdateFootsteps(float DeltaTime);
+
 
 	/** In the saddle: the gait asked for with W and Shift */
 	EHorseGait GetRideGait() const;

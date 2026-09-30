@@ -9,8 +9,7 @@
 #include "Engine/DamageEvents.h"
 #include "Core/CIRLInputConfig.h"
 #include "Core/CIRLPlayerController.h"
-#include "Audio/CIRLMusicSettings.h"
-#include "Components/AudioComponent.h"
+#include "Characters/BallFootstepsComponent.h"
 #include "Items/CIRLInventoryComponent.h"
 #include "Characters/BallWornGearComponent.h"
 #include "Items/CIRLItemDatabase.h"
@@ -42,6 +41,8 @@ APlayerBallCharacter::APlayerBallCharacter()
 	CameraBoom->bEnableCameraLag = true;
 	CameraBoom->CameraLagSpeed = 12.f;
 
+	Footsteps = CreateDefaultSubobject<UBallFootstepsComponent>(TEXT("Footsteps"));
+
 	ThirdPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ThirdPersonCamera"));
 	ThirdPersonCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	ThirdPersonCamera->bUsePawnControlRotation = false;
@@ -62,44 +63,6 @@ void APlayerBallCharacter::BeginPlay()
 	if (ItemSettings->bGiveAllItemsForTesting)
 	{
 		DevGiveAll();
-	}
-
-	// Footsteps: a loop that plays while we walk (heard as our own, not placed in the world)
-	if (USoundBase* Steps = GetDefault<UCIRLMusicSettings>()->FootstepSound.LoadSynchronous())
-	{
-		Footsteps = NewObject<UAudioComponent>(this);
-		Footsteps->SetupAttachment(GetCapsuleComponent());
-		Footsteps->bAutoActivate = false;
-		Footsteps->bAllowSpatialization = false;
-		Footsteps->SetSound(Steps);
-		Footsteps->RegisterComponent();
-	}
-}
-
-void APlayerBallCharacter::UpdateFootsteps(float DeltaTime)
-{
-	if (!Footsteps)
-	{
-		return;
-	}
-	// Louder and quicker the faster we go, soft when sneaking, silent in the air, in the saddle or dead
-	const float Speed = GetVelocity().Size2D();
-	const bool bWalking = !IsDead() && !IsMounted() && Speed > 20.f && GetCharacterMovement()->IsMovingOnGround();
-	const float Pace = Speed / FMath::Max(WalkSpeed, 1.f);
-	const float Target = bWalking ? FMath::Clamp(Pace, 0.35f, 1.3f) * (IsSneaking() ? 0.35f : 1.f) : 0.f;
-	FootstepVolume = FMath::FInterpTo(FootstepVolume, Target, DeltaTime, 10.f);
-	if (FootstepVolume > 0.01f)
-	{
-		if (!Footsteps->IsPlaying())
-		{
-			Footsteps->Play(FMath::FRandRange(0.f, 2.f));
-		}
-		Footsteps->SetVolumeMultiplier(FootstepVolume);
-		Footsteps->SetPitchMultiplier(FMath::Clamp(FMath::Sqrt(FMath::Max(Pace, 0.3f)), 0.75f, 1.35f));
-	}
-	else if (Footsteps->IsPlaying())
-	{
-		Footsteps->Stop();
 	}
 }
 
@@ -401,8 +364,6 @@ void APlayerBallCharacter::Tick(float DeltaTime)
 	// First-person: the view nudges forward with each punch so it lands with some weight
 	int32 PunchHand = 0;
 	const float PunchDrive = Melee->IsPunching() ? FMath::Max(Melee->GetPunchExtension(PunchHand), 0.f) : 0.f;
-	UpdateFootsteps(DeltaTime);
-
 	// Sneaking: the view comes down with the body
 	SneakCameraBlend = FMath::FInterpTo(SneakCameraBlend, IsSneaking() ? 1.f : 0.f, DeltaTime, 8.f);
 	FirstPersonCamera->SetRelativeLocation(FirstPersonCameraOffset
@@ -429,6 +390,13 @@ void APlayerBallCharacter::Tick(float DeltaTime)
 			SetSprinting(false);
 		}
 	}
+}
+
+void APlayerBallCharacter::Landed(const FHitResult& Hit)
+{
+	Super::Landed(Hit);
+	// Still falling at this moment: how hard we came down
+	Footsteps->OnLanded(-GetVelocity().Z);
 }
 
 void APlayerBallCharacter::HandleDeath(UHealthComponent* DepletedHealth)

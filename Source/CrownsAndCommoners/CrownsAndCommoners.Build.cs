@@ -19,7 +19,8 @@ public class CrownsAndCommoners : ModuleRules
 			"GameplayStateTreeModule",
 			"UMG",
 			"Slate",
-			"DeveloperSettings"
+			"DeveloperSettings",
+			"PhysicsCore"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "SlateCore", "EngineSettings" });
