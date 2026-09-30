@@ -62,7 +62,8 @@ ABallCharacter::ABallCharacter()
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> FlagMaterialAsset(TEXT("/Game/CrownsAndCommoners/Characters/Materials/M_BallArms.M_BallArms"));
 	if (FlagMaterialAsset.Succeeded())
 	{
-		BodyMesh->SetMaterial(0, FlagMaterialAsset.Object);
+		ArmsMaterial = FlagMaterialAsset.Object;
+		BodyMesh->SetMaterial(0, ArmsMaterial);
 	}
 	BodyMesh->SetRelativeScale3D(FVector(BallRadius, BallRadius, GetBallHalfHeight()) / 50.f);
 
@@ -119,12 +120,14 @@ void ABallCharacter::ApplyFlag()
 {
 	if (!FlagMaterial)
 	{
-		UMaterialInterface* Base = BodyMesh->GetMaterial(0);
-		if (!Base || !Base->GetName().Contains(TEXT("M_BallArms")))
+		if (!ArmsMaterial)
 		{
 			return;
 		}
-		FlagMaterial = BodyMesh->CreateDynamicMaterialInstance(0, Base);
+		// Always a fresh copy of M_BallArms, never the one a level saved with the ball: that one keeps the arms it was
+		// saved with, and goes blank if the material it was made from is renamed
+		FlagMaterial = UMaterialInstanceDynamic::Create(ArmsMaterial, BodyMesh);
+		BodyMesh->SetMaterial(0, FlagMaterial);
 	}
 	UTexture2D* Arms = Flag;
 	if (!Arms && CIRLHeraldry::All().Num() > 0)

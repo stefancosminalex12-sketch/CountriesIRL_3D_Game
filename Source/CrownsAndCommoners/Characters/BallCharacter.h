@@ -22,6 +22,7 @@ class UBallMeleeComponent;
 class AHorse;
 class UTexture2D;
 class UMaterialInstanceDynamic;
+class UMaterialInterface;
 
 /**
  *  Base class for every person in the game: a countryball with eyes, floating hands and feet.
@@ -210,7 +211,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ball|Look")
 	TObjectPtr<UTexture2D> Flag;
 
-	/** The ball's material with the coat of arms (made on first use) */
+	/** M_BallArms, the material that paints a coat of arms across the ball */
+	UPROPERTY(Transient)
+	TObjectPtr<UMaterialInterface> ArmsMaterial;
+
+	/** This ball's own copy of it, with its coat of arms (made on first use) */
 	UPROPERTY(Transient)
 	TObjectPtr<UMaterialInstanceDynamic> FlagMaterial;
 
