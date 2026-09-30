@@ -321,7 +321,8 @@ void ACIRLPlayerController::Respawn()
 	}
 	if (DeathSound)
 	{
-		DeathSound->FadeOut(1.5f, 0.f);
+		// Cut at once: back to life
+		DeathSound->Stop();
 		DeathSound = nullptr;
 	}
 	StartGameMusic();
