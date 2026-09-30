@@ -40,20 +40,20 @@ To replace the Wikimedia coats of arms with our own before release. Claude draws
 
 === BATCH 5: MONEY AND TRADE ICONS for v0.2 buying and selling (folder Art/AI/Icons) - 14 images, square ===
 Same style as the item icons: game inventory icon, hand-painted, slightly stylized, not photorealistic, three-quarter view, centred, transparent background, no text.
-[coin_penny] Generate an image of a game inventory icon: a 15th-century English silver penny of Henry VI, small thin hammered coin with a long cross on it. Hand-painted, slightly stylized, not photorealistic. Transparent background.
-[coin_groat] Generate an image of a game inventory icon: a 15th-century English silver groat of Henry VI, a larger hammered silver coin with a crowned king's face. Hand-painted, slightly stylized, not photorealistic. Transparent background.
-[coin_noble] Generate an image of a game inventory icon: a 15th-century English gold noble coin, showing a king standing in a ship with a shield. Hand-painted, slightly stylized, not photorealistic. Transparent background.
-[food_bread] Generate an image of a game inventory icon: a round loaf of dark medieval peasant bread. Hand-painted, slightly stylized, not photorealistic. Transparent background.
-[food_cheese] Generate an image of a game inventory icon: a wedge of pale hard English cheese with a rind. Hand-painted, slightly stylized, not photorealistic. Transparent background.
-[food_pottage] Generate an image of a game inventory icon: a wooden bowl of thick medieval pottage (pea and barley stew) with a wooden spoon. Hand-painted, slightly stylized, not photorealistic. Transparent background.
-[food_salt_fish] Generate an image of a game inventory icon: two dried salted herrings tied together with string. Hand-painted, slightly stylized, not photorealistic. Transparent background.
-[food_apple] Generate an image of a game inventory icon: a small red-green English apple. Hand-painted, slightly stylized, not photorealistic. Transparent background.
-[drink_ale] Generate an image of a game inventory icon: a 15th-century wooden staved tankard of ale with a little foam. Hand-painted, slightly stylized, not photorealistic. Transparent background.
-[goods_wool] Generate an image of a game inventory icon: a tied sack of raw cream-coloured sheep's wool (a medieval woolsack). Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[DONE 2026-09-30] [coin_penny] Generate an image of a game inventory icon: a 15th-century English silver penny of Henry VI, small thin hammered coin with a long cross on it. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[DONE 2026-09-30] [coin_groat] Generate an image of a game inventory icon: a 15th-century English silver groat of Henry VI, a larger hammered silver coin with a crowned king's face. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[DONE 2026-09-30] [coin_noble] Generate an image of a game inventory icon: a 15th-century English gold noble coin, showing a king standing in a ship with a shield. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[DONE 2026-09-30] [food_bread] Generate an image of a game inventory icon: a round loaf of dark medieval peasant bread. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[DONE 2026-09-30] [food_cheese] Generate an image of a game inventory icon: a wedge of pale hard English cheese with a rind. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[DONE 2026-09-30] [food_pottage] Generate an image of a game inventory icon: a wooden bowl of thick medieval pottage (pea and barley stew) with a wooden spoon. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[DONE 2026-09-30] [food_salt_fish] Generate an image of a game inventory icon: two dried salted herrings tied together with string. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[DONE 2026-09-30] [food_apple] Generate an image of a game inventory icon: a small red-green English apple. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[DONE 2026-09-30] [drink_ale] Generate an image of a game inventory icon: a 15th-century wooden staved tankard of ale with a little foam. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[DONE 2026-09-30] [goods_wool] Generate an image of a game inventory icon: a tied sack of raw cream-coloured sheep's wool (a medieval woolsack). Hand-painted, slightly stylized, not photorealistic. Transparent background.
 [goods_cloth] Generate an image of a game inventory icon: a folded bolt of plain undyed woollen cloth. Hand-painted, slightly stylized, not photorealistic. Transparent background.
-[goods_candle] Generate an image of a game inventory icon: three pale tallow candles tied with string. Hand-painted, slightly stylized, not photorealistic. Transparent background.
-[goods_bandage] Generate an image of a game inventory icon: a roll of clean linen bandage. Hand-painted, slightly stylized, not photorealistic. Transparent background.
-[goods_arrows] Generate an image of a game inventory icon: a sheaf of 15th-century English war arrows with goose-feather fletching, tied with a leather thong. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[DONE 2026-09-30] [goods_candle] Generate an image of a game inventory icon: three pale tallow candles tied with string. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[DONE 2026-09-30] [goods_bandage] Generate an image of a game inventory icon: a roll of clean linen bandage. Hand-painted, slightly stylized, not photorealistic. Transparent background.
+[DONE 2026-09-30] [goods_arrows] Generate an image of a game inventory icon: a sheaf of 15th-century English war arrows with goose-feather fletching, tied with a leather thong. Hand-painted, slightly stylized, not photorealistic. Transparent background.
 
 
 === BATCH 6: TROOPS AND ORDERS for v0.3 going to war (folder Art/AI/Icons) - 8 images, square ===
