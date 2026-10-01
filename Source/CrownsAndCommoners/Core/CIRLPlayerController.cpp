@@ -248,7 +248,7 @@ void ACIRLPlayerController::OnPlayerDied()
 	// The world's music is cut off; death has its own (if there is any)
 	if (GameMusic)
 	{
-		GameMusic->Stop(1.f);
+		GameMusic->Stop(0.f);
 	}
 	if (USoundBase* Sound = GetDefault<UCIRLMusicSettings>()->DeathSound.LoadSynchronous())
 	{
